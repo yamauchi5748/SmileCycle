@@ -1,4 +1,4 @@
-# 環境構築
+# 環境
 
 | Name | Vesion |
 | :--| :-- |
@@ -28,9 +28,9 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 #### 開発環境を立ち上げる
 
-下記コマンドを smile-cycle\laradock で実行
+##### 下記コマンドを smile-cycle\laradock で実行
 
-Laradockの.envファイルを作成
+laradockの.envファイルを作成
 
 `copy env-example .env`
 
@@ -38,11 +38,27 @@ Laradockの.envファイルを作成
 
 `docker-compose up -d`
 
-下記コマンドを smile-cycle\workspace で実行
+workspaceへログイン
+
+`docker-compose exec --user=laradock workspace bash`
+
+必要な各パッケージをインストール
+
+`composer install`
+
+`npm install`
+
+Laravelの.envのAPP_KEYを生成
+
+`php artisan key:generate`
+
+##### 下記コマンドを smile-cycle\workspace で実行
 
 workspaceの.envファイルを作成
 
 `copy env-example .env`
+
+
 
 http://localhost にアクセス
 
