@@ -22,6 +22,8 @@
 
 Dockerをインストールしていなければ下記のurlからダウンロードし、インストールする
 
+※DockerHubのアカウントが必要
+
 <https://hub.docker.com/editions/community/docker-ce-desktop-windows>
 
 #### 開発環境を立ち上げる
