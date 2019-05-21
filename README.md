@@ -30,19 +30,19 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 下記コマンドを smile-cycle\laradock で実行
 
-Laradockの.envファイルを作成する
+Laradockの.envファイルを作成
 
 `copy env-example .env`
 
-各コンテナを立ち上げる
+各コンテナを起動
 
 `docker-compose up -d`
 
 下記コマンドを smile-cycle\workspace で実行
 
-workspaceの.envファイルを作成する
+workspaceの.envファイルを作成
 
 `copy env-example .env`
 
-http://localhostにアクセスしてみる
+http://localhost にアクセス
 
