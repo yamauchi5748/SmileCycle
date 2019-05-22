@@ -28,6 +28,12 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 #### 開発環境を立ち上げる
 
+##### 下記コマンドを smile-cycle\workspace で実行
+
+workspaceの.envファイルを作成
+
+`copy env-example .env`
+
 ##### 下記コマンドを smile-cycle\laradock で実行
 
 laradockの.envファイルを作成
@@ -52,13 +58,7 @@ Laravelの.envのAPP_KEYを生成
 
 `php artisan key:generate`
 
-##### 下記コマンドを smile-cycle\workspace で実行
-
-workspaceの.envファイルを作成
-
-`copy env-example .env`
 
 
-
-http://localhost にアクセス
+http://localhost:8080 にアクセス
 
