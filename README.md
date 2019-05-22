@@ -60,5 +60,5 @@ Laravelの.envのAPP_KEYを生成
 
 
 
-http://localhost にアクセス
+http://localhost:8080 にアクセス
 
