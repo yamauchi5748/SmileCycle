@@ -206,6 +206,19 @@ services:
       user: "1000:50" # 追加
       command: --innodb-use-native-aio=0
 
+### Postfix ################################################
+    postfix:
+      build: ./postfix
+      privileged: true
+      volumes:
+        - ${DATA_PATH_HOST}/postfix/config/:/tmp/postfix
+      ports:
+        - "${POSTFIX_PORT}:25"
+        - "${POSTFIX_SUBMISSIION_PORT}:587"
+      networks:
+        - backend
+        - frontend
+
 ### Redis ################################################
     redis:
       build: ./redis

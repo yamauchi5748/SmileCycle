@@ -343,6 +343,10 @@ VARNISH_PORT=8080
 VARNISH_BACKEND_PORT=8888
 VARNISHD_PARAMS=-p default_ttl=3600 -p default_grace=3600
 
+### POSTFIX ################################################
+POSTFIX_PORT=25
+POSTFIX_SUBMISSIION_PORT=587
+
 ### Varnish ###############################################
 
 # Proxy 1
