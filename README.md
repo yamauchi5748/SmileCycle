@@ -8,7 +8,6 @@
 | PHP      | 7.2    |
 |MySQL|8.0|
 |redis|5.0.5|
-|Vue.js|2.9.6|
 |socket.io-client|2.2.0|
 |HTML|5|
 |CSS|3|
