@@ -215,6 +215,7 @@ services:
       ports:
         - "${POSTFIX_PORT}:25"
         - "${POSTFIX_SUBMISSIION_PORT}:587"
+        - "${POSTFIX_SMTPS_PORT}:465"
       networks:
         - backend
         - frontend

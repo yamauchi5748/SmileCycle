@@ -346,6 +346,7 @@ VARNISHD_PARAMS=-p default_ttl=3600 -p default_grace=3600
 ### POSTFIX ################################################
 POSTFIX_PORT=25
 POSTFIX_SUBMISSIION_PORT=587
+POSTFIX_SMTPS_PORT=465
 
 ### Varnish ###############################################
 
