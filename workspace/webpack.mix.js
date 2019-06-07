@@ -11,5 +11,33 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+/*
+# npm run watch-poll
+
+bladeに下記を挿入してください
+
+<script src="{{ mix('js/app.js') }}" defer></script>
+<link href="{{ mix('css/app.css') }}" rel="stylesheet">
+*/
+mix.browserSync({
+    proxy: "nginx",
+    port: 3000,
+    watchOptions: {
+        usePolling: true,
+        interval: 100
+    },
+    files: [
+        "./resources/js/app.js",
+        "./resources/js/components/*.vue",
+        "./resources/sass/*.scss",
+        "./resources/views/*.blade.php",
+        "./resources/views/**/*.blade.php",
+        "./resources/views/**/**/*.blade.php",
+        "./routes/**/*"
+    ],
+    open: false,
+    reloadOnRestart: true
+})
+    .js("resources/js/app.js", "public/js") 
+    .sass("resources/sass/app.scss", "public/css")
+    .version();

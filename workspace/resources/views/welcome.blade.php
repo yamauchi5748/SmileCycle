@@ -6,6 +6,9 @@
 
         <title>Laravel</title>
 
+        <script src="{{ mix('js/app.js') }}" defer></script>
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 

@@ -88,6 +88,8 @@ services:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
         - "${WORKSPACE_SSH_PORT}:22"
+        - "3000:3000" # webpackのbrwserSync
+        - "3001:3001" # webpackのbrwserSync UI
       tty: true
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
