@@ -208,7 +208,7 @@ services:
       user: "1000:50" # 追加
       command: --innodb-use-native-aio=0
 
-### Postfix ################################################
+### Postfix ################################################    
     postfix:
       build: ./postfix
       privileged: true
