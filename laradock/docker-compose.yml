@@ -11,9 +11,7 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   redis:
     driver: ${VOLUMES_DRIVER}
-  minio:
-    driver: ${VOLUMES_DRIVER}
-  
+
 services:
 
 ### Workspace Utilities ##################################
@@ -68,9 +66,12 @@ services:
           - INSTALL_PG_CLIENT=${WORKSPACE_INSTALL_PG_CLIENT}
           - INSTALL_PHALCON=${WORKSPACE_INSTALL_PHALCON}
           - INSTALL_SWOOLE=${WORKSPACE_INSTALL_SWOOLE}
+          - INSTALL_TAINT=${WORKSPACE_INSTALL_TAINT}
           - INSTALL_LIBPNG=${WORKSPACE_INSTALL_LIBPNG}
           - INSTALL_IONCUBE=${WORKSPACE_INSTALL_IONCUBE}
           - INSTALL_MYSQL_CLIENT=${WORKSPACE_INSTALL_MYSQL_CLIENT}
+          - INSTALL_PING=${WORKSPACE_INSTALL_PING}
+          - INSTALL_SSHPASS=${WORKSPACE_INSTALL_SSHPASS}
           - PUID=${WORKSPACE_PUID}
           - PGID=${WORKSPACE_PGID}
           - CHROME_DRIVER_VERSION=${WORKSPACE_CHROME_DRIVER_VERSION}
@@ -82,6 +83,10 @@ services:
           - BLACKFIRE_CLIENT_TOKEN=${BLACKFIRE_CLIENT_TOKEN}
           - INSTALL_POWERLINE=${WORKSPACE_INSTALL_POWERLINE}
           - INSTALL_FFMPEG=${WORKSPACE_INSTALL_FFMPEG}
+          - INSTALL_GNU_PARALLEL=${WORKSPACE_INSTALL_GNU_PARALLEL}
+          - http_proxy
+          - https_proxy
+          - no_proxy
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
       extra_hosts:
@@ -133,6 +138,7 @@ services:
           - INSTALL_LDAP=${PHP_FPM_INSTALL_LDAP}
           - INSTALL_PHALCON=${PHP_FPM_INSTALL_PHALCON}
           - INSTALL_SWOOLE=${PHP_FPM_INSTALL_SWOOLE}
+          - INSTALL_TAINT=${PHP_FPM_INSTALL_TAINT}
           - INSTALL_IMAGE_OPTIMIZERS=${PHP_FPM_INSTALL_IMAGE_OPTIMIZERS}
           - INSTALL_IMAGEMAGICK=${PHP_FPM_INSTALL_IMAGEMAGICK}
           - INSTALL_CALENDAR=${PHP_FPM_INSTALL_CALENDAR}
@@ -143,8 +149,13 @@ services:
           - INSTALL_RDKAFKA=${PHP_FPM_INSTALL_RDKAFKA}
           - INSTALL_ADDITIONAL_LOCALES=${PHP_FPM_INSTALL_ADDITIONAL_LOCALES}
           - INSTALL_MYSQL_CLIENT=${PHP_FPM_INSTALL_MYSQL_CLIENT}
+          - INSTALL_PING=${PHP_FPM_INSTALL_PING}
+          - INSTALL_SSHPASS=${PHP_FPM_INSTALL_SSHPASS}
           - ADDITIONAL_LOCALES=${PHP_FPM_ADDITIONAL_LOCALES}
           - INSTALL_FFMPEG=${PHP_FPM_FFMPEG}
+          - http_proxy
+          - https_proxy
+          - no_proxy
       volumes:
         - ./php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
@@ -171,6 +182,9 @@ services:
           - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
           - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
           - CHANGE_SOURCE=${CHANGE_SOURCE}
+          - http_proxy
+          - https_proxy
+          - no_proxy
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
@@ -185,6 +199,19 @@ services:
         - frontend
         - backend
 
+### Postfix ################################################    
+    postfix:
+      build: ./postfix
+      privileged: true
+      volumes:
+        - ${DATA_PATH_HOST}/postfix/config/:/tmp/postfix
+      ports:
+        - "${POSTFIX_PORT}:25"
+        - "${POSTFIX_SUBMISSIION_PORT}:587"
+        - "${POSTFIX_SMTPS_PORT}:465"
+      networks:
+        - backend
+        - frontend
 
 ### MySQL ################################################
     mysql:
@@ -207,20 +234,6 @@ services:
         - backend
       user: "1000:50" # 追加
       command: --innodb-use-native-aio=0
-
-### Postfix ################################################    
-    postfix:
-      build: ./postfix
-      privileged: true
-      volumes:
-        - ${DATA_PATH_HOST}/postfix/config/:/tmp/postfix
-      ports:
-        - "${POSTFIX_PORT}:25"
-        - "${POSTFIX_SUBMISSIION_PORT}:587"
-        - "${POSTFIX_SMTPS_PORT}:465"
-      networks:
-        - backend
-        - frontend
 
 ### Redis ################################################
     redis:
