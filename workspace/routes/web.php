@@ -105,3 +105,5 @@ Route::resource('admin/informations', 'Admin\InformationController')->only([
     "store" => "admin.informations.store",
     "show" => "admin.informations.show"
 ]);
+
+Auth::routes();
