@@ -23,7 +23,11 @@ class CreateMembersTable extends Migration
             $table->string('password');
             $table->string('profile_text', 64);
             $table->string('profile_image_url');
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')
+            ->references('id')->on('companies')
+            ->onUpdate('cascade')
+            ->onDelete('set null');
             $table->enum('department_name', ['愛媛', '鎌倉', '大阪', '東京']);
             $table->boolean('is_notification');
             $table->enum('notification_interval', ['0.5h', '1h', '3h', '5h']);
@@ -41,5 +45,6 @@ class CreateMembersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('members');
+        Schema::dropIfExists('companies');
     }
 }
