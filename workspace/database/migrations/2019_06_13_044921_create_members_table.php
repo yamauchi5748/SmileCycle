@@ -49,5 +49,6 @@ class CreateMembersTable extends Migration
         Schema::dropIfExists('members_stamps');
         Schema::dropIfExists('chat_rooms');
         Schema::dropIfExists('chats');
+        Schema::dropIfExists('chat_rooms_members');
     }
 }
