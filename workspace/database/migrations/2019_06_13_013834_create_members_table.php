@@ -28,6 +28,8 @@ class CreateMembersTable extends Migration
             $table->boolean('is_notification');
             $table->enum('notification_interval', ['0.5h', '1h', '3h', '5h']);
             $table->boolean('is_admin');
+
+            $table->primary(['name']);
         });
     }
 
