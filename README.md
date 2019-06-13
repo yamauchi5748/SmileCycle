@@ -11,7 +11,6 @@
 |socket.io-client|2.2.0|
 |HTML|5|
 |CSS|3|
-|Bootstrap|4.3.1|
 
 ### Windows 環境構築
 
