@@ -52,5 +52,6 @@ class CreateMembersTable extends Migration
         Schema::dropIfExists('chat_rooms_members');
         Schema::dropIfExists('bulletin_boards');
         Schema::dropIfExists('bulletin_boards_comments');
+        Schema::dropIfExists('informations');
     }
 }
