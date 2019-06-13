@@ -38,5 +38,6 @@ class CreateBulletinBoardsTable extends Migration
     {
         Schema::dropIfExists('bulletin_boards');
         Schema::dropIfExists('bulletin_boards_comments');
+        Schema::dropIfExists('bulletin_boards_contents');
     }
 }
