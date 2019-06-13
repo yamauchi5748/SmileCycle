@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStampGroupsTable extends Migration
+class CreateStampsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateStampGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stamp_groups', function (Blueprint $table) {
+        Schema::create('stamps', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('tab_image_url');
-            $table->boolean('is_all');
+            $table->uuid('stamp_group_id');
+            $table->string('image_url');
 
             $table->primary('id');
+
+            $table->foreign('stamp_group_id')
+            ->references('id')->on('stamp_groups')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
@@ -29,8 +34,6 @@ class CreateStampGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stamp_groups');
-        Schema::dropIfExists('members_stamps');
         Schema::dropIfExists('stamps');
     }
 }
