@@ -36,5 +36,6 @@ class ChatRoomsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('chat_rooms');
+        Schema::dropIfExists('chats');
     }
 }
