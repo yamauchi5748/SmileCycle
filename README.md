@@ -39,6 +39,8 @@ laradockの.envファイルを作成
 
 `copy env-example .env`
 
+`copy bac-docker-compose.yml docker-compose.yml`
+
 各コンテナを起動
 
 `docker-compose up -d`
