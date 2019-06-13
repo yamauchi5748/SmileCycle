@@ -19,7 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->string('address', 128);
             $table->string('telephone_number', 16);
 
-            $table->primary(['id']);
+            $table->primary('id');
         });
     }
 

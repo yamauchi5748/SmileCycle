@@ -18,7 +18,7 @@ class CreateStampGroupsTable extends Migration
             $table->string('tab_image_url');
             $table->boolean('is_all');
 
-            $table->primary(['id']);
+            $table->primary('id');
         });
     }
 
@@ -30,5 +30,6 @@ class CreateStampGroupsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('stamp_groups');
+        Schema::dropIfExists('members_stamps');
     }
 }
