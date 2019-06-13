@@ -4,6 +4,3 @@ workspace/public/css/app.css
 
 #laradock管理除外
 /laradock/*
-
-!bac-docker-compose.yml
-!postfix
