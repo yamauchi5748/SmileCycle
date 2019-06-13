@@ -37,5 +37,6 @@ class CreateBulletinBoardsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('bulletin_boards');
+        Schema::dropIfExists('bulletin_boards_comments');
     }
 }

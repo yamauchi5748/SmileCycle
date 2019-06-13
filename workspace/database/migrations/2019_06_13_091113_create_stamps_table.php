@@ -36,5 +36,6 @@ class CreateStampsTable extends Migration
     {
         Schema::dropIfExists('stamps');
         Schema::dropIfExists('chats');
+        Schema::dropIfExists('bulletin_boards_comments');
     }
 }
