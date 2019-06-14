@@ -13,7 +13,7 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   minio:
     driver: ${VOLUMES_DRIVER}
-  
+
 services:
 
 ### Workspace Utilities ##################################

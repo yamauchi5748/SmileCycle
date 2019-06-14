@@ -11,7 +11,6 @@
 |socket.io-client|2.2.0|
 |HTML|5|
 |CSS|3|
-|Bootstrap|4.3.1|
 
 ### Windows 環境構築
 
@@ -38,6 +37,8 @@ workspaceの.envファイルを作成
 laradockの.envファイルを作成
 
 `copy env-example .env`
+
+`copy bac-docker-compose.yml docker-compose.yml`
 
 各コンテナを起動
 
