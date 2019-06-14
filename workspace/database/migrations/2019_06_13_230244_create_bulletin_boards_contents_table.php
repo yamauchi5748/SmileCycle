@@ -20,7 +20,7 @@ class CreateBulletinBoardsContentsTable extends Migration
             $table->string('image_url')->nullable();
             $table->enum('content_type', ['text', 'image']);
 
-            $table->primary('bulletin_board_id');
+            $table->primary(['bulletin_board_id', 'placement_id']);
 
             $table->foreign('bulletin_board_id')
             ->references('id')->on('bulletin_boards')

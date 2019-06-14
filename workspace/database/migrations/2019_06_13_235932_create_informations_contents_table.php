@@ -20,7 +20,7 @@ class CreateInformationsContentsTable extends Migration
             $table->string('image_url')->nullable();
             $table->enum('content_type', ['text', 'image']);
 
-            $table->primary('information_id');
+            $table->primary(['information_id', 'placement_id']);
 
             $table->foreign('information_id')
             ->references('id')->on('informations')
