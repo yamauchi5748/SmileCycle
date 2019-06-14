@@ -19,4 +19,10 @@ class Company extends Model
     protected $fillable = [
         'id', 'name', 'address', 'telephone_number'
     ];
+
+    /*** modelの紐づけ ***/
+    public function members()
+    {
+        return $this->hasMany('App\Member');
+    }
 }

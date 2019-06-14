@@ -21,4 +21,15 @@ class ChatRoomMember extends Model
     protected $fillable = [
         'chat_room_id', 'member_id', 'checked_at'
     ];
+
+    /*** modelの紐づけ ***/
+    public function chatRoom()
+    {
+        return $this->belongsTo('App\ChatRoom');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member');
+    }
 }

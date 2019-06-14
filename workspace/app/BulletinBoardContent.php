@@ -21,4 +21,10 @@ class BulletinBoardContent extends Model
     protected $fillable = [
         'bulletin_board_id', 'placement_id', 'text', 'image_url', 'cotent_type'
     ];
+
+    /*** modelの紐づけ ***/
+    public function bulletinBoard()
+    {
+        return $this->belongsTo('App\BulletinBoard');
+    }
 }

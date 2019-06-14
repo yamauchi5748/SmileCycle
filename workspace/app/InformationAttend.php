@@ -21,4 +21,15 @@ class InformationAttend extends Model
     protected $fillable = [
         'information_id', 'member_id', 'attend_status'
     ];
+
+    /*** modelの紐づけ ***/
+    public function information()
+    {
+        return $this->belongsTo('App\Information');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member');
+    }
 }

@@ -21,4 +21,10 @@ class InformationContent extends Model
     protected $fillable = [
         'information_id', 'placement_id', 'text', 'image_url', 'cotent_type'
     ];
+
+    /*** modelの紐づけ ***/
+    public function information()
+    {
+        return $this->belongsTo('App\Information');
+    }
 }

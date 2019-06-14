@@ -19,4 +19,20 @@ class Information extends Model
     protected $fillable = [
         'id', 'post_member_id', 'title', 'template', 'deadline_at', 'created_at'
     ];
+
+    /*** modelの紐づけ ***/
+    public function informationAttends()
+    {
+        return $this->hasMany('App\InformationAttend');
+    }
+
+    public function informationContents()
+    {
+        return $this->hasMany('App\InformationContent');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member');
+    }
 }

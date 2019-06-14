@@ -19,4 +19,20 @@ class BulletinBoard extends Model
     protected $fillable = [
         'id', 'post_member_id', 'title', 'template', 'created_at'
     ];
+
+    /*** modelの紐づけ ***/
+    public function bulletinBoardComments()
+    {
+        return $this->hasMany('App\BulletinBoardComment');
+    }
+
+    public function bulletinBoardContents()
+    {
+        return $this->hasMany('App\BulletinBoardContent');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member');
+    }
 }

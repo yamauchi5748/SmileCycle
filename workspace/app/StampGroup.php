@@ -19,4 +19,15 @@ class StampGroup extends Model
     protected $fillable = [
         'id', 'tab_image_url', 'is_all'
     ];
+
+    /*** modelの紐づけ ***/
+    public function stamps()
+    {
+        return $this->hasMany('App\Stamp');
+    }
+
+    public function memberStamp()
+    {
+        return $this->hasMany('App\MemberStamp');
+    }
 }

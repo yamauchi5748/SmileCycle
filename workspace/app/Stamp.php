@@ -19,4 +19,15 @@ class Stamp extends Model
     protected $fillable = [
         'id', 'stamp_group_id', 'image_url'
     ];
+
+    /*** modelの紐づけ ***/
+    public function bulletinBoardComments()
+    {
+        return $this->hasMany('App\BulletinBoardComment');
+    }
+
+    public function stampGroup()
+    {
+        return $this->belongsTo('App\StampGroup');
+    }
 }

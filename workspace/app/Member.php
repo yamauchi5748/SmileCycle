@@ -25,4 +25,50 @@ class Member extends Model
     protected $hidden = [
         'password'
     ];
+
+    /*** modelの紐づけ ***/
+    public function bulletinBoards()
+    {
+        return $this->hasMany('App\BulletinBoard');
+    }
+
+    public function bulletinBoardComments()
+    {
+        return $this->hasMany('App\BulletinBoardComment');
+    }
+
+    public function informations()
+    {
+        return $this->hasMany('App\Information');
+    }
+
+    public function informationAttends()
+    {
+        return $this->hasMany('App\InfomationAttends');
+    }
+
+    public function chats()
+    {
+        return $this->hasMany('App\Chat');
+    }
+
+    public function chatRooms()
+    {
+        return $this->hasMany('App\ChatRoom');
+    }
+
+    public function chatRoomMember()
+    {
+        return $this->hasMany('App\ChatRoomMember');
+    }
+
+    public function memberStamp()
+    {
+        return $this->hasMany('App\MemberStamp');
+    }
+
+    public function companies()
+    {
+        return $this->belongsTo('App\Company');
+    }
 }

@@ -21,4 +21,15 @@ class MemberStamp extends Model
     protected $fillable = [
         'stamp_group_id', 'member_id'
     ];
+
+    /*** modelの紐づけ ***/
+    public function stampGroup()
+    {
+        return $this->belongsTo('App\stampGroup');
+    }
+
+    public function stamp()
+    {
+        return $this->belongsTo('App\Stamp');
+    }
 }

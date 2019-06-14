@@ -19,4 +19,20 @@ class BulletinBoardComment extends Model
     protected $fillable = [
         'id', 'bulletin_board_id', 'member_id', 'text', 'stamp_id', 'comment_type', 'created_at'
     ];
+
+    /*** modelの紐づけ ***/
+    public function stamp()
+    {
+        return $this->belongsTo('App\Stamp');
+    }
+
+    public function bulletinBoard()
+    {
+        return $this->belongsTo('App\BulletinBoard');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member');
+    }
 }
