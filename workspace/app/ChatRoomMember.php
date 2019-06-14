@@ -19,6 +19,6 @@ class ChatRoomMember extends Model
 
     //　member_stampプロパティ
     protected $fillable = [
-        'stamp_group_id', 'member_id', 'checked_at'
+        'chat_room_id', 'member_id', 'checked_at'
     ];
 }
