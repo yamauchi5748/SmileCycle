@@ -45,7 +45,6 @@ class CreateMembersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('members');
         Schema::dropIfExists('members_stamps');
         Schema::dropIfExists('chat_rooms');
         Schema::dropIfExists('chats');
@@ -53,5 +52,7 @@ class CreateMembersTable extends Migration
         Schema::dropIfExists('bulletin_boards');
         Schema::dropIfExists('bulletin_boards_comments');
         Schema::dropIfExists('informations');
+        Schema::dropIfExists('informations_attends');
+        Schema::dropIfExists('members');
     }
 }

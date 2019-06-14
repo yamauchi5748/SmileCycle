@@ -37,6 +37,7 @@ class CreateInformationsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('informations_attends');
         Schema::dropIfExists('informations');
     }
 }
