@@ -26,7 +26,7 @@ class CreateInformationsTable extends Migration
             $table->foreign('post_member_id')
             ->references('id')->on('members')
             ->onUpdate('cascade')
-            ->onDelete('set null');
+            ->onDelete('cascade');
         });
     }
 
