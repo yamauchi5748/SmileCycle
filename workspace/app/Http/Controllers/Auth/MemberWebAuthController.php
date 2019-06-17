@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-class MemberAuthController extends Controller
+class MemberWebAuthController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -14,7 +15,7 @@ class MemberAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:web,api');
+        $this->middleware('auth:web');
 
         if($Auth::user()->is_admin)
         {

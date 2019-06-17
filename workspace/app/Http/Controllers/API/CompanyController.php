@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\CommonAuthController;
 
-class CompanyController extends CommonCommonController
+class CompanyController extends CommonController
 {
     /**
      * Display a listing of the resource.

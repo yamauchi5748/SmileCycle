@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Auth\AdminWebAuthController;
 
-class AdminHomeController extends AdminAuthController
+class AdminHomeController extends AdminWebAuthController
 {
     /**
      * Show the application dashboard.
