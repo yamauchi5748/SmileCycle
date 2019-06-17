@@ -21,6 +21,9 @@ Route::get('/', 'HomeController@index')->name('home');
 //help
 Route::get('/help', 'HelpController@index')->name('help');
 
+//admin.home
+Route::get('/admin', 'AdminHomeController@index')->name('admin.home');
+
 //***リソースコントローラ***//
 //members
 Route::resource('members', 'MemberController')->only([
