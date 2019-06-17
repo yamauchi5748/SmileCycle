@@ -62,6 +62,9 @@ Route::resource('chats', 'ChatController')->only([
     "index" => "chat.index"
 ]);
 
+//admin.home
+Route::get('/admin', 'AdminHomeController@index')->name('admin.home');
+
 //admin.members
 Route::resource('admin/members', 'Admin\MemberController')->only([
     "index", "edit", "create", "store", "update", "destroy"
