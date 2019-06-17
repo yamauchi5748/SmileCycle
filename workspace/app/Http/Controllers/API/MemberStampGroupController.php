@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\CommonAuthController;
 
-class MemberStampGroupController extends Controller
+class MemberStampGroupController extends CommonController
 {
     /**
      * Display a listing of the resource.
