@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Auth\AdminWebAuthController;
 
-class StampGroupController extends AdminAuthController
+class StampGroupController extends AdminWebAuthController
 {
     /**
      * Display a listing of the resource.

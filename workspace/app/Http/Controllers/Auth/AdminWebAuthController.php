@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class CommonAuthController extends Controller
+class AdminWebAuthController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -15,6 +15,13 @@ class CommonAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:web,api');
+        $this->middleware('auth:web');
+
+        if(!$Auth::user()->is_admin)
+        {
+            return response()
+            ->view('error', null, 401)
+            ->header('Content-Type', "text/html");
+        }
     }
 }

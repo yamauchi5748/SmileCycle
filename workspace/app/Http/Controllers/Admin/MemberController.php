@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Auth\AdminWebAuthController;
 
-class MemberController extends AdminAuthController
+class MemberController extends AdminWebAuthController
 {
     /**
      * Display a listing of the resource.

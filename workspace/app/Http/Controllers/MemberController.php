@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Member;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\MemberAuthController;
+use App\Http\Controllers\Auth\MemberWebAuthController;
 
-class MemberController extends MemberAuthController
+class MemberController extends MemberWebAuthController
 {
     /**
      * Display a listing of the resource.

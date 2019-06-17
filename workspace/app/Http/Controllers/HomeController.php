@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\MemberAuthController;
+use App\Http\Controllers\Auth\MemberWebAuthController;
 
-class HomeController extends MemberAuthController
+class HomeController extends MemberWebAuthController
 {
     /**
      * Create a new controller instance.
