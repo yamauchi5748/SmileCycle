@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\MemberAuthController;
 
-class BulletinBoardController extends Controller
+class BulletinBoardController extends MemberAuthController
 {
     /**
      * Display a listing of the resource.

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\MemberAuthController;
 
-class InformationController extends Controller
+class InformationController extends MemberAuthController
 {
     /**
      * Display a listing of the resource.
