@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\AdminAuthController;
 
-class InformationController extends Controller
+class InformationController extends AdminAuthController
 {
     /**
      * Display a listing of the resource.
