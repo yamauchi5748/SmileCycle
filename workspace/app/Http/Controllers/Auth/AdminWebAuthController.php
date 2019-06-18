@@ -17,10 +17,10 @@ class AdminWebAuthController extends Controller
     {
         $this->middleware('auth:web');
 
-        if(!$Auth::user()->is_admin)
+        if(!Auth::user()['is_admin'])
         {
             return response()
-            ->view('error', null, 401)
+            ->view('error', [], 401)
             ->header('Content-Type', "text/html");
         }
     }

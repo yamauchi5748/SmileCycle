@@ -17,10 +17,10 @@ class AdminApiAuthController extends Controller
     {
         $this->middleware('auth:api');
 
-        if(!$Auth::user()->is_admin)
+        if(!Auth::user()['is_admin'])
         {
             return response()
-            ->view('error', null, 401)
+            ->view('error', [], 401)
             ->header('Content-Type', "text/html");
         }
     }
