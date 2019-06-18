@@ -19,9 +19,7 @@ class MemberWebAuthController extends Controller
 
         if(Auth::user()['is_admin'])
         {
-            return response()
-            ->view('error', [], 401)
-            ->header('Content-Type', "text/html");
+            abort(401);
         }
     }
 }
