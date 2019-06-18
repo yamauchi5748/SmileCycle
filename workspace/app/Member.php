@@ -2,18 +2,24 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Member extends Model
+class Member extends Authenticatable
 {
+    use Notifiable;
+
     // テーブル名
     protected $table = 'members';
 
     //　主キーのタイプを指定
-    protected $keyType = string;
+    protected $keyType = 'string';
 
     //　自動インクリメントを無効
     public $incrementing = false;
+
+    // timestmapの自動付与を無効
+    public $timestamps = false;
 
     //　memberプロパティ
     protected $fillable = [
