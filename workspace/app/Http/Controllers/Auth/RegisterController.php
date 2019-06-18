@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Member;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -28,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -38,6 +39,9 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+
+        //　画像をストレージに保存し、URLを生成
+        //$this->middleware('profile_image_register');
     }
 
     /**
@@ -49,8 +53,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:64', 'unique:members'],
+            'ruby' => ['required', 'string', 'max:128'],
+            'post' => ['required', 'string', 'max:32'],
+            'profile_text' => ['required', 'string', 'max:64'],
+            'company_id' => ['required', 'uuid'],
+            'department_name' => ['required', 'string'],
+            'mail' => ['required', 'string', 'email', 'max:256', 'unique:members'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -59,14 +68,26 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Member
      */
     protected function create(array $data)
     {
-        return User::create([
+        return Member::create([
+            'id' => (string) Str::uuid(),
+            'api_token' => Str::random(60),
+            'is_notification' => true,
+            'notification_interval' => '0.5h',
+            'is_admin' => false,
             'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'ruby' => $data['ruby'],
+            'post' => $data['post'],
+            'profile_text' => $data['profile_text'],
+            'profile_image_url' => $data['profile_image_url'],
+            'profile_image_url' => 'ojoj',
+            'company_id' => $data['company_id'],
+            'department_name' => $data['department_name'],
+            'mail' => $data['mail'],
+            'password' => Hash::make($data['password'])
         ]);
     }
 }

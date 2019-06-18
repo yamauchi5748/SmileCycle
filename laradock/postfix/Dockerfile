@@ -13,11 +13,15 @@ ENV AUTH_PASSWORD password
 
 ENV DISABLE_SMTP_AUTH_ON_PORT_25 true
 
-# SMTP
-EXPOSE 25
-# Submission
-EXPOSE 587
-# SMTPS
+COPY main.cf master.cf /etc/postfix/
+
+COPY smtpd.conf /etc/postfix/sasl/smtpd.conf
+
+# SMTP  
+EXPOSE 25  
+# Submission  
+EXPOSE 587  
+# SMTPS  
 EXPOSE 465
 
 # update yum
@@ -28,8 +32,10 @@ RUN yum update -y && \
 RUN yum install -y epel-release && \
     yum clean all
 
-RUN yum install -y httpd php && \
+RUN yum install -y httpd php postfix cyrus-sasl cyrus-sasl-plain && \
     yum clean all && \
-    systemctl enable httpd.service
+    systemctl enable httpd.service && \
+    systemctl enable postfix && \
+    systemctl enable saslauthd
 
 CMD /sbin/init
