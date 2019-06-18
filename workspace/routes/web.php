@@ -22,7 +22,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/help', 'HelpController@index')->name('help');
 
 //admin.home
-Route::get('/admin', 'AdminHomeController@index')->name('admin.home');
+Route::get('/admin', 'Admin\AdminHomeController@index')->name('admin.home');
 
 //***リソースコントローラ***//
 //members
