@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 
 class AdminApiAuthController extends Controller
 {
@@ -16,10 +15,6 @@ class AdminApiAuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
-
-        if(!Auth::user()['is_admin'])
-        {
-            abort(401);
-        }
+        $this->middleware('admin_authority');
     }
 }
