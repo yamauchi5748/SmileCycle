@@ -202,15 +202,9 @@ NGINX_PHP_UPSTREAM_CONTAINER=php-fpm
 NGINX_PHP_UPSTREAM_PORT=9000
 NGINX_SSL_PATH=./nginx/ssl/
 
-### MYSQL #################################################
+### MONGODB ###############################################
 
-MYSQL_VERSION=5.7
-MYSQL_DATABASE=SmileCycle
-MYSQL_USER=laradock
-MYSQL_PASSWORD=secret
-MYSQL_PORT=3306
-MYSQL_ROOT_PASSWORD=root
-MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d
+MONGODB_PORT=27017
 
 ### REDIS #################################################
 

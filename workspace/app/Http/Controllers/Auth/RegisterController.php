@@ -52,6 +52,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        /*
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:64', 'unique:members'],
             'ruby' => ['required', 'string', 'max:128'],
@@ -60,6 +61,12 @@ class RegisterController extends Controller
             'company_id' => ['required', 'uuid'],
             'department_name' => ['required', 'string'],
             'mail' => ['required', 'string', 'email', 'max:256', 'unique:members'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+        */
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:64', 'unique:members'],
+            'email' => ['required', 'string', 'email', 'max:256', 'unique:members'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -72,6 +79,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        /*
         return Member::create([
             'id' => (string) Str::uuid(),
             'api_token' => Str::random(60),
@@ -87,6 +95,17 @@ class RegisterController extends Controller
             'company_id' => $data['company_id'],
             'department_name' => $data['department_name'],
             'mail' => $data['mail'],
+            'password' => Hash::make($data['password'])
+        ]);
+        */
+        return Member::create([
+            'id' => (string) Str::uuid(),
+            'api_token' => Str::random(60),
+            'is_notification' => true,
+            'notification_interval' => '0.5h',
+            'is_admin' => false,
+            'name' => $data['name'],
+            'mail' => $data['email'],
             'password' => Hash::make($data['password'])
         ]);
     }

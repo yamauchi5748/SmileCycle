@@ -2,11 +2,11 @@
 
 | Name | Vesion |
 | :--| :-- |
-| Docker   | 18.x   |
-|docker-compose|1.20.x|
+| Docker   | 19.03.1 |
+|docker-compose|1.24.1|
 | Laravel  | 5.8    |
 | PHP      | 7.2    |
-|MySQL|8.0|
+|MongoDB|4.2.0|
 |redis|5.0.5|
 |socket.io-client|2.2.0|
 |HTML|5|
@@ -20,49 +20,45 @@
 
 Dockerをインストールしていなければ下記のurlからダウンロードし、インストールする
 
+<a href="https://hub.docker.com/editions/community/docker-ce-desktop-windows">DockerHub公式</a>
+
 ※DockerHubのアカウントが必要
 
-<https://hub.docker.com/editions/community/docker-ce-desktop-windows>
+※DockerHubのアップデートも確認しておく
 
 #### 開発環境を立ち上げる
 
-##### 下記コマンドを smile-cycle\workspace で実行
+##### .\smile-cycle直下のバッチファイルを実行
 
-workspaceの.envファイルを作成
+`setup.bat`
 
-`copy env-example .env`
-
-##### 下記コマンドを smile-cycle\laradock で実行
-
-laradockの.envファイルを作成
-
-`copy env-example .env`
-
-`copy bac-docker-compose.yml docker-compose.yml`
-
-各コンテナを起動
-
-`docker-compose up -d`
-
-workspaceへログイン
-
-`docker-compose exec --user=laradock workspace bash`
-
-必要な各パッケージをインストール
-
-`composer install`
-
-`npm install`
-
-Laravelの.envのAPP_KEYを生成
-
-`php artisan key:generate`
-
-LaravelMixによるBuildを実行
-
-`npm run watch`
+http://localhost:3000 にアクセス
 
 
 
-http://localhost:8080 にアクセス
+#### ※ Makefile
+
+```makefile
+FIG = docker-compose
+
+# コンテナ操作コマンド等
+build:
+	@$(FIG) build
+ps:
+	@$(FIG) ps
+up:
+	@$(FIG) up -d
+down:
+	@$(FIG) down
+restart:
+	@$(FIG) stop
+	@$(FIG) start
+clean:
+	@docker image prune
+	@docker volume prune
+delete:
+	@docker image prune -a
+```
+
+Makefileが扱える環境であればコンテナを立ち上げたいときに　`make up -d`　など便利 
 
