@@ -32,7 +32,7 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 `setup.bat`
 
-http://localhost:8080 にアクセス
+http://localhost:3000 にアクセス
 
 
 
