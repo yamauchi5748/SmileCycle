@@ -26,31 +26,13 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 #### 開発環境を立ち上げる
 
-##### 下記コマンドを smile-cycle\workspace で実行
+##### 下記コマンドを .\smile-cycle で実行
 
-workspaceの.envファイルを作成
-
-`copy env-example .env`
-
-##### 下記コマンドを smile-cycle\laradock で実行
-
-laradockの.envファイルを作成
-
-`copy env-example .env`
-
-`copy bac-docker-compose.yml docker-compose.yml`
-
-各コンテナを起動
-
-`docker-compose up -d`
-
-workspaceへログイン
-
-`docker-compose exec --user=laradock workspace bash`
+`setup.bat`
 
 必要な各パッケージをインストール
 
-`composer install`
+`composer install --ignore-platform-reqs`
 
 `npm install`
 
