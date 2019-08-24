@@ -2,11 +2,11 @@
 
 | Name | Vesion |
 | :--| :-- |
-| Docker   | 18.x   |
-|docker-compose|1.20.x|
+| Docker   | 19.03.1 |
+|docker-compose|1.24.1|
 | Laravel  | 5.8    |
 | PHP      | 7.2    |
-|MySQL|8.0|
+|MongoDB|4.2.0|
 |redis|5.0.5|
 |socket.io-client|2.2.0|
 |HTML|5|
@@ -29,22 +29,6 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 ##### 下記コマンドを .\smile-cycle で実行
 
 `setup.bat`
-
-必要な各パッケージをインストール
-
-`composer install --ignore-platform-reqs`
-
-`npm install`
-
-Laravelの.envのAPP_KEYを生成
-
-`php artisan key:generate`
-
-LaravelMixによるBuildを実行
-
-`npm run watch`
-
-
 
 http://localhost:8080 にアクセス
 
