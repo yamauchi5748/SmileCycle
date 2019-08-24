@@ -58,6 +58,10 @@ Laravelの.envのAPP_KEYを生成
 
 `php artisan key:generate`
 
+LaravelMixによるBuildを実行
+
+`npm run watch`
+
 
 
 http://localhost:8080 にアクセス
