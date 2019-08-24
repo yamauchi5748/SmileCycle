@@ -36,29 +36,13 @@ http://localhost:3000 にアクセス
 
 
 
-#### ※ Makefile
+#### Makefile
 
-```makefile
-FIG = docker-compose
+下記コマンドでmakefileが作成できる
 
-# コンテナ操作コマンド等
-build:
-	@$(FIG) build
-ps:
-	@$(FIG) ps
-up:
-	@$(FIG) up -d
-down:
-	@$(FIG) down
-restart:
-	@$(FIG) stop
-	@$(FIG) start
-clean:
-	@docker image prune
-	@docker volume prune
-delete:
-	@docker image prune -a
-```
+`copy makefile-example makefile`
 
-Makefileが扱える環境であればコンテナを立ち上げたいときに　`make up -d`　など便利 
+Makefileが扱える環境であればコンテナを立ち上げたいときに　`make up`　など便利 
+
+※細かい内容はmakefileを確認
 
