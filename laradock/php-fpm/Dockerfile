@@ -242,10 +242,10 @@ RUN if [ ${INSTALL_TAINT} = true ]; then \
 # MongoDB:
 ###########################################################################
 
-ARG INSTALL_MONGO=false
+ARG INSTALL_MONGO=true
 
-RUN if [ ${INSTALL_MONGO} = true ]; then \
-    # Install the mongodb extension
+RUN if [ ${INSTALL_MONGO} = true ]; \
+      Install the mongodb extension \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       pecl install mongo && \
       docker-php-ext-enable mongo \
