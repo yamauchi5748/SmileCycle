@@ -32,3 +32,31 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 http://localhost:8080 にアクセス
 
+
+
+#### ※ Makefile
+
+```makefile
+FIG = docker-compose
+
+# コンテナ操作コマンド等
+build:
+	@$(FIG) build
+ps:
+	@$(FIG) ps
+up:
+	@$(FIG) up -d
+down:
+	@$(FIG) down
+restart:
+	@$(FIG) stop
+	@$(FIG) start
+clean:
+	@docker image prune
+	@docker volume prune
+delete:
+	@docker image prune -a
+```
+
+Makefileが扱える環境であればコンテナを立ち上げたいときは　`make up -d`　など便利 
+
