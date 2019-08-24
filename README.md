@@ -20,9 +20,11 @@
 
 Dockerをインストールしていなければ下記のurlからダウンロードし、インストールする
 
+<a href="https://hub.docker.com/editions/community/docker-ce-desktop-windows">DockerHub公式</a>
+
 ※DockerHubのアカウントが必要
 
-<https://hub.docker.com/editions/community/docker-ce-desktop-windows>
+※DockerHubのアップデートも確認しておく
 
 #### 開発環境を立ち上げる
 
@@ -58,5 +60,5 @@ delete:
 	@docker image prune -a
 ```
 
-Makefileが扱える環境であればコンテナを立ち上げたいときは　`make up -d`　など便利 
+Makefileが扱える環境であればコンテナを立ち上げたいときに　`make up -d`　など便利 
 
