@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\MemberApiAuthController;
+use App\Http\Controllers\Auth\AuthController;
 
-class ChatController extends MemberApiAuthController
+class SettingController extends AuthController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class ChatController extends MemberApiAuthController
      */
     public function index()
     {
-        return [ "response" => "return chats.index"];
+        return [ "response" => "return settings.index"];
     }
 
     /**
@@ -25,40 +25,40 @@ class ChatController extends MemberApiAuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return chats.store"];
+        return [ "response" => "return settings.store"];
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $chat_room_id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($chat_room_id)
+    public function show($id)
     {
-        return [ "response" => "return chats.show"];
+        return [ "response" => "return settings.show"];
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $chat_room_id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $chat_room_id)
+    public function update(Request $request)
     {
-        return [ "response" => "return chats.update"];
+        return [ "response" => "return settings.update"];
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $chat_room_id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($chat_room_id)
+    public function destroy($id)
     {
-        return [ "response" => "return chats.destroy"];
+        return [ "response" => "return settings.delete"];
     }
 }

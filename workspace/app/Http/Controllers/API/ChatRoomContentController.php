@@ -5,16 +5,16 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 
-class MemberController extends AuthController
+class ChatRoomContentController extends AuthController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($chat_room_id)
     {
-        return [ "response" => "return members.index"];
+        return [ "response" => "return chat_room.contents.index"];
     }
 
     /**
@@ -23,9 +23,9 @@ class MemberController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $chat_room_id)
     {
-        return [ "response" => "return members.store"];
+        return [ "response" => "return chat_room.contents.store"];
     }
 
     /**
@@ -34,9 +34,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show($chat_room_id, $content_id)
     {
-        return [ "response" => "return members.show"];
+        return [ "response" => "return chat_room.contents.show"];
     }
 
     /**
@@ -46,9 +46,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $member_id)
+    public function update(Request $request, $chat_room_id, $content_id)
     {
-        return [ "response" => "return members.update"];
+        return [ "response" => "return chat_room.contents.update"];
     }
 
     /**
@@ -57,8 +57,8 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($member_id)
+    public function destroy($chat_room_id, $content_id)
     {
-        return [ "response" => "return members.delete"];
+        return [ "response" => "return chat_room.contents.destroy"];
     }
 }
