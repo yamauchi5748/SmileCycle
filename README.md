@@ -28,7 +28,7 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 #### 開発環境を立ち上げる
 
-プロジェクトをでHTTPSでクローン
+プロジェクトをHTTPSでクローン
 
 `git clone https://gitlab.com/kbc-itw/smile-cycle.git  `
 
