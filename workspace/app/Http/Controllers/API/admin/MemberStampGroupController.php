@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AdminAuthController;
 
-class MemberController extends AuthController
+class MemberStampGroupController extends AdminAuthController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($member_id)
     {
-        return [ "response" => "return members.index"];
+        return [ "response" => "return admin.members.stamp_groups.index"];
     }
 
     /**
@@ -23,9 +23,9 @@ class MemberController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $member_id)
     {
-        return [ "response" => "return members.store"];
+        return [ "response" => "return admin.members.stamp_groups.store"];
     }
 
     /**
@@ -34,9 +34,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show($member_id, $stamp_group_id)
     {
-        return [ "response" => "return members.show"];
+        return [ "response" => "return admin.members.stamp_groups.show"];
     }
 
     /**
@@ -46,9 +46,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $member_id)
+    public function update(Request $request, $member_id, $stamp_group_id)
     {
-        return [ "response" => "return members.update"];
+        return [ "response" => "return admin.members.stamp_groups.update"];
     }
 
     /**
@@ -57,8 +57,8 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($member_id)
+    public function destroy($member_id, $stamp_group_id)
     {
-        return [ "response" => "return members.delete"];
+        return [ "response" => "return admin.members.stamp_groups.destroy"];
     }
 }

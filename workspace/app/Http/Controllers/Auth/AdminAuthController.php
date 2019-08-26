@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class MemberWebAuthController extends Controller
+class AdminAuthController extends AuthController
 {
     /**
      * Create a new controller instance.
@@ -14,7 +14,7 @@ class MemberWebAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:web');
-        $this->middleware('member_authority');
+        // MiddlewareのAdminAuthority.phpを経由
+        $this->middleware('admin_authority');
     }
 }

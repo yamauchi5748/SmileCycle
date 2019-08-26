@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AdminAuthController;
 
-class MemberController extends AuthController
+class InvitationController extends AdminAuthController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class MemberController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return members.index"];
+        return [ "response" => "return admin.invitations.index"];
     }
 
     /**
@@ -25,7 +25,7 @@ class MemberController extends AuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return members.store"];
+        return [ "response" => "return admin.invitations.store"];
     }
 
     /**
@@ -34,9 +34,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show($id)
     {
-        return [ "response" => "return members.show"];
+        return [ "response" => "return admin.invitations.show"];
     }
 
     /**
@@ -46,9 +46,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $member_id)
+    public function update(Request $request, $id)
     {
-        return [ "response" => "return members.update"];
+        return [ "response" => "return admin.invitations.update"];
     }
 
     /**
@@ -57,8 +57,8 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($member_id)
+    public function destroy($id)
     {
-        return [ "response" => "return members.delete"];
+        return [ "response" => "return admin.invitations.delete"];
     }
 }

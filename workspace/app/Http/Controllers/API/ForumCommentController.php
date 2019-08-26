@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 
-class MemberController extends AuthController
+class ForumCommentController extends AuthController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class MemberController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return members.index"];
+        return [ "response" => "return forum.comments.index"];
     }
 
     /**
@@ -25,7 +25,7 @@ class MemberController extends AuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return members.store"];
+        return [ "response" => "return forum.comments.store"];
     }
 
     /**
@@ -34,9 +34,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show($forum_comment_id)
     {
-        return [ "response" => "return members.show"];
+        return [ "response" => "return forum.comments.show"];
     }
 
     /**
@@ -46,9 +46,9 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $member_id)
+    public function update(Request $request, $forum_comment_id)
     {
-        return [ "response" => "return members.update"];
+        return [ "response" => "return forum.comments.update"];
     }
 
     /**
@@ -57,8 +57,8 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($member_id)
+    public function destroy($forum_comment_id)
     {
-        return [ "response" => "return members.delete"];
+        return [ "response" => "return forum.comments.delete"];
     }
 }
