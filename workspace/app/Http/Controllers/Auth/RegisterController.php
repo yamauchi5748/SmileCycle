@@ -105,6 +105,9 @@ class RegisterController extends Controller
             'notification_interval' => '0.5h',
             'is_admin' => false,
             'name' => $data['name'],
+            'post' => 'post',
+            'company_id' => 'company_id',
+            'department_name' => 'department_name',
             'mail' => $data['email'],
             'password' => Hash::make($data['password'])
         ]);
