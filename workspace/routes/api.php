@@ -29,7 +29,7 @@ Route::apiResource('members', 'API\admin\MemberController')->only([
 ]);
 
 //members
-Route::apiResource('members', 'API/MemberController')->only([
+Route::apiResource('members', 'API\MemberController')->only([
     "index", "show"
 ])->names([
     "index" => "members.index",
@@ -135,7 +135,7 @@ Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentCon
 ]);
 
 //chat.members
-Route::delete('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberController@destroies')->name("chat.members.destroies");
+Route::delete('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberController@destroies')->name("chat_room.members.destroies");
 Route::apiResource('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberController')->only([
     "index", "store", "destroy"
 ])->names([

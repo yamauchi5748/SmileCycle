@@ -13,9 +13,13 @@ copy env-example .env
 rem 各コンテナを起動
 docker-compose up -d
 
+rem mongodbをインストール
+docker-compose exec workspace ^
+pecl install mongodb
+
 rem composerをインストール
 docker-compose exec --user=laradock workspace ^
-composer install --ignore-platform-reqs
+composer install
 
 rem npmをインストール
 docker-compose exec --user=laradock workspace ^

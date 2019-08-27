@@ -100,7 +100,8 @@ RUN sed -i 's/\r//' /root/aliases.sh && \
     echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source ~/aliases.sh" >> ~/.bashrc && \
-	  echo "" >> ~/.bashrc
+	  echo "" >> ~/.bashrc && \
+    echo "extension=mongodb.so" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini 
 
 USER laradock
 
