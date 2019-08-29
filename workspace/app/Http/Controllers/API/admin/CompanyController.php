@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API\admin;
 
+use App\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
+use Illuminate\Support\Str;
 
 class CompanyController extends AdminAuthController
 {
@@ -25,7 +27,19 @@ class CompanyController extends AdminAuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return admin.companies.store"];
+        /** 会社を作成 **/
+        $this->response["company"] = Company::create(
+            [
+                /* 各データを設定 */
+                'id' => (string) Str::uuid(),
+                'name' => $request->name,
+                'address' => $request->address,
+                'fax' => $request->fax,
+                'tel' => $request->tel
+            ]
+        );
+
+        return $this->response;
     }
 
     /**

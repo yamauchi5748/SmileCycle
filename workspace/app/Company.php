@@ -2,22 +2,19 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class Company extends Model
+class Company extends Eloquent
 {
     // テーブル名
     protected $table = 'companies';
 
-    //　主キーのタイプを指定
-    protected $keyType = string;
-
-    //　自動インクリメントを無効
-    public $incrementing = false;
+    // timestmapの自動付与を無効
+    public $timestamps = false;
 
     //　companyプロパティ
     protected $fillable = [
-        'id', 'name', 'address', 'telephone_number'
+        'id', 'name', 'address', 'fax', 'tel'
     ];
 
     /*** modelの紐づけ ***/
