@@ -59,8 +59,7 @@ class MemberController extends AuthController
      */
     public function show($member_id)
     {
-        /** 会員の詳細情報のJsonデータを生成 **/
-        /* MongoDBCollectionからcursorを生成 */
+        /** 会員の詳細情報を取得 **/
         $member = Member::raw()->aggregate(
             [
                 /* 送られたmember_idに対応する会員を指定 */
@@ -77,7 +76,7 @@ class MemberController extends AuthController
                         'name' => 1,                // 会員名を返す
                         'ruby' => 1,                // 会員のふりがなを返す
                         'post' => 1,                // 会員の役職を返す
-                        'tel' => 1,                // 会員の電話番号を返す
+                        'tel' => 1,                 // 会員の電話番号を返す
                         'mail' => 1,                // 会員のメールアドレスを返す
                         'profile_image_url' => [    // プロフィール画像のURLを追加
                             '$concat' => [
