@@ -31,4 +31,4 @@ php artisan key:generate
 
 rem LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace ^
-npm run watch
+npm run watch-poll
