@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use Jenssegers\Mongodb;
 
 class MemberController extends AuthController
 {
@@ -13,36 +14,31 @@ class MemberController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $response = [
-            "auth" => true,
-            "result" => true
-        ];
-        // データを整形して返す
-        $response["members"] = Member::raw(function ($collection) {
-            return $collection->aggregate(
+        /* 会員の情報を一覧にまとめてJsonデータを生成 */
+        $this->response["members"] = Member::raw()->aggregate(
+            [
+                /* 取得するデータを指定 */
                 [
-                    [
-                        '$project' => [
-                            'id' => 1,                  // 会員のidを返す
-                            'name' => 1,                // 会員名を返す
-                            'post' => 1,                // 会員の役職を返す
-                            'mail' => 1,                // 会員のメールアドレスを返す
-                            'profile_image_url' => [    // プロフィール画像のURLを追加 
-                                '$concat' => [ 
-                                    'https://', '$id' 
-                                ] 
-                            ],
-                            'department_name' => 1,     // 部門名を返す
-                            'company_id' => 1,          // 会社のidを返す
-                        ]
+                    '$project' => [
+                        'id' => 1,                  // 会員のidを返す
+                        'name' => 1,                // 会員名を返す
+                        'post' => 1,                // 会員の役職を返す
+                        'mail' => 1,                // 会員のメールアドレスを返す
+                        'profile_image_url' => [    // プロフィール画像のURLを追加
+                            '$concat' => [
+                                'https://', '$id'
+                            ]
+                        ],
+                        'department_name' => 1,     // 部門名を返す
+                        'company_id' => 1,          // 会社のidを返す
                     ]
-                ] 
-            );
-        });
+                ]
+            ]
+        )->toArray();
 
-        return $response;
+        return $this->response;
     }
 
     /**
@@ -64,7 +60,44 @@ class MemberController extends AuthController
      */
     public function show($member_id)
     {
-        return [ "response" => "return members.show"];
+        /** 会員の詳細情報のJsonデータを生成 **/
+        /* MongoDBCollectionからcursorを生成 */
+        $member = Member::raw()->aggregate(
+            [
+                /* 送られたmember_idに対応する会員を指定 */
+                [
+                    '$match' => [
+                        'id' => $member_id
+                    ]
+                ],
+                /* 取得するデータを指定 */
+                [
+                    '$project' => [
+                        'id' => 1,                  // 会員のidを返す
+                        'name' => 1,                // 会員名を返す
+                        'post' => 1,                // 会員の役職を返す
+                        'mail' => 1,                // 会員のメールアドレスを返す
+                        'profile_image_url' => [    // プロフィール画像のURLを追加
+                            '$concat' => [
+                                'https://', '$id'
+                            ]
+                        ],
+                        'department_name' => 1,     // 部門名を返す
+                        'company_id' => 1,          // 会社のidを返す
+                    ]
+                ]
+            ]
+        )->toArray();
+
+        /* 会員が取得できたかチェック */
+        if(head($member)){
+            $this->response['member'] = head($member);
+        }else {
+            $this->response['result'] = false; 
+        }
+
+        return $this->response;
+        ;
     }
 
     /**
