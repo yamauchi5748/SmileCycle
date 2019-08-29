@@ -12,7 +12,7 @@
 |HTML|5|
 |CSS|3|
 
-### Windows 開発環境構築
+### 開発環境構築
 
 ----
 
@@ -34,11 +34,15 @@ Dockerをインストールしていなければ下記のurlからダウンロ�
 
 クローンしたプロジェクトの直下で下記コマンドを実行
 
-`setup.bat`
+#### Windows 環境の場合
+
+`setup`
+
+#### Mac,Linux 環境の場合
+
+`sh setup.sh`
 
 http://localhost:3000 にアクセス
-
-
 
 #### Makefile
 
