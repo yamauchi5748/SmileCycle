@@ -10,13 +10,7 @@ class Member extends Authenticatable
     use Notifiable;
 
     // テーブル名
-    protected $table = 'members';
-
-    //　主キーのタイプを指定
-    protected $keyType = 'string';
-
-    //　自動インクリメントを無効
-    public $incrementing = false;
+    protected $collection = 'members';
 
     // timestmapの自動付与を無効
     public $timestamps = false;
