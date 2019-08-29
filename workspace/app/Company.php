@@ -7,7 +7,7 @@ use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 class Company extends Eloquent
 {
     // テーブル名
-    protected $table = 'companies';
+    protected $collection = 'companies';
 
     // timestmapの自動付与を無効
     public $timestamps = false;

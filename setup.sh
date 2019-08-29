@@ -24,5 +24,8 @@ docker-compose exec --user=laradock workspace npm install
 #Laravelの.envのAPP_KEYを生成
 docker-compose exec --user=laradock workspace php artisan key:generate
 
+#テストデータを生成
+docker-compose exec --user=laradock workspace php artisan db:seed
+
 #LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace npm run watch-poll

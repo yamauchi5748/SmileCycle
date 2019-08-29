@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Member;
+use App\Company;
 use Illuminate\Support\Str;
-use Faker\Generator as Faker;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +16,21 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Member::class, function (Faker $faker) {
+$factory->define(Member::class, function () {
+    $faker = Faker\Factory::create('ja_JP');
     return [
         'id' => (string) Str::uuid(),
         'api_token' => Str::random(60),
         'is_notification' => true,
         'notification_interval' => '0.5h',
         'is_admin' => false,
-        'ruby' => 'unti',
+        'name' => $faker->unique()->name,
+        'ruby' => $faker->unique()->kanaName,
         'post' => 'post',
         'tel' => $faker->phoneNumber,
-        'company_id' => 'company_id',
-        'department_name' => 'department_name',
-        'name' => $faker->unique()->name,
+        'company_id' => $faker->randomElement(Company::select('id')->get()),
+        'department_name' => $faker->randomElement(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会']),
         'mail' => $faker->safeEmail,
-        'password' => Hash::make(Str::random(10)),
-        'remember_token' => Str::random(10),
+        'password' => Hash::make(Str::random(10))
     ];
 });
