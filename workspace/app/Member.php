@@ -23,7 +23,7 @@ class Member extends Authenticatable
 
     //　memberプロパティ
     protected $fillable = [
-        'id', 'name', 'ruby', 'post', 'mail', 'api_token', 'password', 'profile_text', 'profile_image_url',
+        'id', 'name', 'ruby', 'post', 'mail', 'api_token', 'password', 'tel',
         'company_id', 'department_name', 'is_notification', 'notification_interval', 'is_admin'
     ];
 
