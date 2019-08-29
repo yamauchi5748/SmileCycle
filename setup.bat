@@ -29,6 +29,10 @@ rem Laravelの.envのAPP_KEYを生成
 docker-compose exec --user=laradock workspace ^
 php artisan key:generate
 
+rem テストデータを生成
+docker-compose exec --user=laradock workspace ^
+php artisan db:seed
+
 rem LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace ^
 npm run watch-poll
