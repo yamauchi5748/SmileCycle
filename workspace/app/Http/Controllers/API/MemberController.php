@@ -24,6 +24,7 @@ class MemberController extends AuthController
                     '$project' => [
                         'id' => 1,                  // 会員のidを返す
                         'name' => 1,                // 会員名を返す
+                        'ruby' => 1,                // 会員のふりがなを返す
                         'post' => 1,                // 会員の役職を返す
                         'mail' => 1,                // 会員のメールアドレスを返す
                         'profile_image_url' => [    // プロフィール画像のURLを追加
@@ -73,8 +74,10 @@ class MemberController extends AuthController
                 /* 取得するデータを指定 */
                 [
                     '$project' => [
+                        '_id' => 0,
                         'id' => 1,                  // 会員のidを返す
                         'name' => 1,                // 会員名を返す
+                        'ruby' => 1,                // 会員のふりがなを返す
                         'post' => 1,                // 会員の役職を返す
                         'mail' => 1,                // 会員のメールアドレスを返す
                         'profile_image_url' => [    // プロフィール画像のURLを追加
