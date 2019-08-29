@@ -50,6 +50,19 @@ class MemberController extends AdminAuthController
 
         $member = Member::raw()->aggregate(
             [
+                /* 会社collectionと結合 */
+                [
+                    '$lookup' => [
+                        'from' => 'companies',
+                        'localField' => "company_id",
+                        'foreignField' => "id",
+                        'as' => 'company'
+                    ]
+                ],
+                /* companyインベントリを展開 */
+                [
+                    '$unwind' => '$company'
+                ],
                 /* 作成した会員を指定 */
                 [
                     '$match' => [
@@ -60,20 +73,20 @@ class MemberController extends AdminAuthController
                 [
                     '$project' => [
                         '_id' => 0,
-                        'id' => 1,                  // 会員のidを返す
-                        'name' => 1,                // 会員名を返す
-                        'ruby' => 1,                // 会員のふりがなを返す
-                        'post' => 1,                // 会員の役職を返す
-                        'tel' => 1,                 // 会員の電話番号を返す
-                        'mail' => 1,                // 会員のメールアドレスを返す
-                        'profile_image_url' => [    // プロフィール画像のURLを追加
+                        'id' => 1,                              // 会員のidを返す
+                        'name' => 1,                            // 会員名を返す
+                        'ruby' => 1,                            // 会員のふりがなを返す
+                        'post' => 1,                            // 会員の役職を返す
+                        'tel' => 1,                             // 会員の電話番号を返す
+                        'mail' => 1,                            // 会員のメールアドレスを返す
+                        'profile_image_url' => [                // プロフィール画像のURLを追加
                             '$concat' => [
                                 'https://', '$id', '.png'
                             ]
                         ],
-                        'department_name' => 1,     // 部門名を返す
-                        'company_id' => 1,          // 会社のidを返す
-                        'company_name' => 'test',          // 会社名を返す
+                        'department_name' => 1,                 // 部門名を返す
+                        'company_id' => 1,                      // 会社のidを返す
+                        'company_name' => '$company.name',      // 会社名を返す
                     ]
                 ]
             ]
