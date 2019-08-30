@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
+    /* 認証ユーザーを保持 */
+    protected $auther;
+
     /* レスポンスの枠組み変数 */
     protected $response = [
         "auth" => true,
@@ -20,6 +23,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
+        $this->auther= Auth::guard('api')->user();
         $this->middleware('auth:api');
     }
 }

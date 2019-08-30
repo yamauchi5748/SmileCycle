@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Member;
 
@@ -29,6 +28,18 @@ class MemberController extends AdminAuthController
      */
     public function store(Request $request)
     {
+        /* リクエストのバリデート */
+        $request->validate([
+            'name' => ['required', 'string', 'max:64', 'unique:members'],
+            'ruby' => ['required', 'string', 'max:128'],
+            'post' => ['required', 'string', 'max:32'],
+            'tel' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
+            'company_id' => ['required', 'uuid', 'exists:companies,id'],
+            'department_name' => ['required', 'string'],
+            'mail' => ['required', 'string', 'email', 'max:256'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
         /** 会員の作成 **/
         $id = (string) Str::uuid(); // uuidを生成
         
