@@ -27,11 +27,6 @@ class MemberController extends AuthController
                         'name' => 1,                // 会員名を返す
                         'ruby' => 1,                // 会員のふりがなを返す
                         'post' => 1,                // 会員の役職を返す
-                        'profile_image_url' => [    // プロフィール画像のURLを追加
-                            '$concat' => [
-                                'https://', '$id', '.png'
-                            ]
-                        ]
                     ]
                 ]
             ]
@@ -91,11 +86,6 @@ class MemberController extends AuthController
                         'post' => 1,                            // 会員の役職を返す
                         'tel' => 1,                             // 会員の電話番号を返す
                         'mail' => 1,                            // 会員のメールアドレスを返す
-                        'profile_image_url' => [                // プロフィール画像のURLを追加
-                            '$concat' => [
-                                'https://', '$id'
-                            ]
-                        ],
                         'department_name' => 1,                 // 部門名を返す
                         'company_id' => 1,                      // 会社のidを返す
                         'company_name' => '$company.name'       // 会社名を返す
