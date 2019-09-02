@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
@@ -14,12 +14,6 @@ class Company extends Eloquent
 
     //　companyプロパティ
     protected $fillable = [
-        'id', 'name', 'address', 'fax', 'tel'
+        '_id', 'name', 'address', 'fax', 'telephone_number', 'members'
     ];
-
-    /*** modelの紐づけ ***/
-    public function members()
-    {
-        return $this->hasMany('App\Member');
-    }
 }

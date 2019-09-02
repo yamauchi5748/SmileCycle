@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Member;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Jenssegers\Mongodb;
