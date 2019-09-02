@@ -28,7 +28,7 @@ $factory->define(Member::class, function () {
         'ruby' => $faker->unique()->kanaName,
         'post' => 'post',
         'tel' => $faker->phoneNumber,
-        'company_id' => $faker->randomElement(Company::select('id')->get()),
+        'company_id' => $faker->randomElement(Company::select()->get())->id,
         'department_name' => $faker->randomElement(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会']),
         'mail' => $faker->safeEmail,
         'password' => Hash::make(Str::random(10))

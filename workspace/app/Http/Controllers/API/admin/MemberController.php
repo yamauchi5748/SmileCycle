@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Member;
 
 class MemberController extends AdminAuthController
 {
@@ -25,7 +28,84 @@ class MemberController extends AdminAuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return admin.members.store"];
+        /* リクエストのバリデート */
+        $request->validate([
+            'name' => ['required', 'string', 'max:64', 'unique:members'],
+            'ruby' => ['required', 'string', 'max:128'],
+            'post' => ['required', 'string', 'max:32'],
+            'tel' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
+            'company_id' => ['required', 'uuid', 'exists:companies,id'],
+            'department_name' => ['required', 'string'],
+            'mail' => ['required', 'string', 'email', 'max:256'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        /** 会員の作成 **/
+        $id = (string) Str::uuid(); // uuidを生成
+        
+        Member::raw()->insertOne([
+            'id' => $id,                                        // 会員id
+            'api_token' => Str::random(60),                     // api_token
+            'is_notification' => true,                          // 通知の可否情報
+            'notification_interval' => '0.5h',                  // 通知間隔
+            'is_admin' => false,                                // 管理者かどうか
+            'name' => $request->name,                           // 会員名
+            'ruby' => $request->ruby,                           // ふりがな
+            'post' => $request->post,                           // 役職名
+            'tel' => $request->tel,                             // 電話番号
+            'company_id' => $request->company_id,               // 会社id
+            'department_name' => $request->department_name,     // 部門名
+            'mail' => $request->mail,                           // メールアドレス
+            'password' => Hash::make($request->password)        // パスワード
+        ]);
+
+        $member = Member::raw()->aggregate(
+            [
+                /* 会社collectionと結合 */
+                [
+                    '$lookup' => [
+                        'from' => 'companies',
+                        'localField' => "company_id",
+                        'foreignField' => "id",
+                        'as' => 'company'
+                    ]
+                ],
+                /* companyインベントリを展開 */
+                [
+                    '$unwind' => '$company'
+                ],
+                /* 作成した会員を指定 */
+                [
+                    '$match' => [
+                        'id' => $id
+                    ]
+                ],
+                /* 取得するデータを指定 */
+                [
+                    '$project' => [
+                        '_id' => 0,
+                        'id' => 1,                              // 会員のidを返す
+                        'name' => 1,                            // 会員名を返す
+                        'ruby' => 1,                            // 会員のふりがなを返す
+                        'post' => 1,                            // 会員の役職を返す
+                        'tel' => 1,                             // 会員の電話番号を返す
+                        'mail' => 1,                            // 会員のメールアドレスを返す
+                        'department_name' => 1,                 // 部門名を返す
+                        'company_id' => 1,                      // 会社のidを返す
+                        'company_name' => '$company.name',      // 会社名を返す
+                    ]
+                ]
+            ]
+        )->toArray();
+
+        /* 会員が作成できたかチェック */
+        if(head($member) && head($member)['company_name']){
+            $this->response['member'] = head($member);
+        }else {
+            $this->response['result'] = false; 
+        }
+
+        return $this->response;
     }
 
     /**
