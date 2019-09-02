@@ -11,12 +11,12 @@
 |
 */
 
-//home
-Route::get('/', 'HomeController@index')->name('home');
-
-//help
-Route::get('/help', 'HelpController@index')->name('help');
-
 
 //login,logout
 Auth::routes();
+
+//home
+Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');
+
+//help
+Route::get('/help', 'HelpController@index')->name('help');
