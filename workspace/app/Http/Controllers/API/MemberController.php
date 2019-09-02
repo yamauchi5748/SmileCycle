@@ -32,7 +32,12 @@ class MemberController extends AuthController
             ]
         )->toArray();
 
-        return $this->response;
+        return response()->json(
+            ['data' => $this->response],
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -101,8 +106,12 @@ class MemberController extends AuthController
             $this->response['result'] = false; 
         }
 
-        return $this->response;
-        ;
+        return response()->json(
+            ['data' => $this->response],
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
