@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Member;
+use App\Http\Requests\MemberPost;
 
 class MemberController extends AdminAuthController
 {
@@ -26,7 +27,7 @@ class MemberController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MemberPost $request)
     {        
         /** 会員の作成 **/
         $id = (string) Str::uuid(); // uuidを生成
