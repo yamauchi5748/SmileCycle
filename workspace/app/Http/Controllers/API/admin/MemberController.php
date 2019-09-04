@@ -7,7 +7,9 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Member;
+use App\Models\Company;
 use App\Http\Requests\MemberPost;
+use App\Http\Requests\MemberPut;
 
 class MemberController extends AdminAuthController
 {
@@ -28,12 +30,12 @@ class MemberController extends AdminAuthController
      * @return \Illuminate\Http\Response
      */
     public function store(MemberPost $request)
-    {        
+    {
         /** 会員の作成 **/
-        $id = (string) Str::uuid(); // uuidを生成
+        $member_id = (string) Str::uuid(); // uuidを生成
         
         Member::raw()->insertOne([
-            '_id' => $id,                                        // 会員id
+            '_id' => $member_id,                                // 会員id
             'api_token' => Str::random(60),                     // api_token
             'is_notification' => true,                          // 通知の可否情報
             'notification_interval' => '0.5h',                  // 通知間隔
@@ -41,59 +43,44 @@ class MemberController extends AdminAuthController
             'name' => $request->name,                           // 会員名
             'ruby' => $request->ruby,                           // ふりがな
             'post' => $request->post,                           // 役職名
-            'telephone_number' => $request->telephone_number,                             // 電話番号
-            'company_id' => $request->company_id,               // 会社id
+            'telephone_number' => $request->telephone_number,   // 電話番号
             'department_name' => $request->department_name,     // 部門名
             'mail' => $request->mail,                           // メールアドレス
-            'password' => Hash::make($request->password)        // パスワード
+            'password' => Hash::make($request->password),       // パスワード
+            'stamp_groups' => array(),                          // 会員が使用できるスタンプ
+            'invitations' => array(),                           // 会員が投稿した掲示板
         ]);
-
-        $member = Member::raw()->aggregate(
+        
+        /** 会社の会員情報を更新 **/
+        Company::raw()->updateOne(
             [
-                /* 会社collectionと結合 */
-                [
-                    '$lookup' => [
-                        'from' => 'companies',
-                        'localField' => "company_id",
-                        'foreignField' => "_id",
-                        'as' => 'company'
-                    ]
+                '_id' => $request->company_id
+            ],
+            [
+                '$push' => [
+                    'members' => $member_id                     // 会員のidを追加
                 ],
-                /* companyインベントリを展開 */
-                [
-                    '$unwind' => '$company'
-                ],
-                /* 作成した会員を指定 */
-                [
-                    '$match' => [
-                        '_id' => $id
-                    ]
-                ],
-                /* 取得するデータを指定 */
-                [
-                    '$project' => [
-                        '_id' => 1,                            // 会員のidを返す
-                        'name' => 1,                            // 会員名を返す
-                        'ruby' => 1,                            // 会員のふりがなを返す
-                        'post' => 1,                            // 会員の役職を返す
-                        'telephone_number' => 1,                             // 会員の電話番号を返す
-                        'mail' => 1,                            // 会員のメールアドレスを返す
-                        'department_name' => 1,                 // 部門名を返す
-                        'company_id' => 1,                      // 会社のidを返す
-                        'company_name' => '$company.name',      // 会社名を返す
-                    ]
+                '$currentDate' => [
+                    'lastModified' => true
                 ]
             ]
-        )->toArray();
+        );
+
+        $member = $this->getMember($member_id);
 
         /* 会員が作成できたかチェック */
-        if(head($member) && head($member)['company_name']){
-            $this->response['member'] = head($member);
-        }else {
-            $this->response['result'] = false; 
+        if ($member) {
+            $this->response['member'] = $member;
+        } else {
+            $this->response['result'] = false;
         }
 
-        return $this->response;
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -114,9 +101,45 @@ class MemberController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $member_id)
+    public function update(MemberPut $request, $member_id)
     {
-        return [ "response" => "return admin.members.update"];
+        /** 会員の更新 **/
+        Member::raw()->updateOne(
+            [
+                '_id' => $member_id
+            ],
+            [
+                '$set' => [
+                    'name' => $request->name,                           // 会員名
+                    'ruby' => $request->ruby,                           // ふりがな
+                    'post' => $request->post,                           // 役職名
+                    'telephone_number' => $request->telephone_number,   // 電話番号
+                    'company_id' => $request->company_id,               // 会社id
+                    'department_name' => $request->department_name,     // 部門名
+                    'mail' => $request->mail,                           // メールアドレス
+                    'password' => Hash::make($request->password)        // パスワード
+                ],
+                '$currentDate' => [
+                    'lastModified' => true
+                ]
+            ]
+        );
+
+        $member = $this->getMember($member_id);
+
+        /* 会員が更新できたかチェック */
+        if ($member) {
+            $this->response['member'] = $member;
+        } else {
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -127,6 +150,95 @@ class MemberController extends AdminAuthController
      */
     public function destroy($member_id)
     {
-        return [ "response" => "return admin.members.destroy"];
+        /* 削除する会員を取得 */
+        $member = $this->getMember($member_id);
+
+        /* 会員を取得できなかった場合 */
+        if(!$member){
+            $this->response['result'] = false;
+            return $this->response;
+        }
+
+        /** 会社の会員情報を削除 **/
+        Company::raw()->updateOne(
+            [
+                '_id' => $member->company_id
+            ],
+            [
+                '$pull' => [
+                    'members' => $member_id                     // 会員のidを削除
+                ]
+            ]
+        );
+
+        /** 会員の削除 **/
+        Member::raw()->deleteOne(
+            [
+                '_id' => $member_id
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    /**指定された会員を取得
+     *
+     * @param  int  $id
+     * @return \App\Models\Member
+     */
+    public function getMember($member_id)
+    {
+        $member = Member::raw()->aggregate(
+            [
+                /* 会員を指定 */
+                [
+                    '$match' => [
+                        '_id' => $member_id
+                    ]
+                ],
+                /* 会社collectionと結合 */
+                [
+                    '$lookup' => [
+                        'from' => 'companies',
+                        'pipeline' => [
+                            [
+                                '$unwind' => '$members'
+                            ],
+                            [
+                                '$match' => [
+                                    'members' => $member_id
+                                ]
+                            ]
+                        ],
+                        'as' => 'company'
+                    ]
+                ],
+                /* companyインベントリを展開 */
+                [
+                    '$unwind' => '$company'
+                ],
+                /* 取得するデータを指定 */
+                [
+                    '$project' => [
+                        '_id' => 1,                             // 会員のidを返す
+                        'name' => 1,                            // 会員名を返す
+                        'ruby' => 1,                            // 会員のふりがなを返す
+                        'post' => 1,                            // 会員の役職を返す
+                        'telephone_number' => 1,                // 会員の電話番号を返す
+                        'mail' => 1,                            // 会員のメールアドレスを返す
+                        'department_name' => 1,                 // 部門名を返す
+                        'company_id' => '$company._id',         // 会社のidを返す
+                        'company_name' => '$company.name',      // 会社名を返す
+                    ]
+                ]
+            ]
+        )->toArray();
+
+        return head($member);
     }
 }
