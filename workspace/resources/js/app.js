@@ -4,7 +4,10 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import Controls from "./components/controls/Controls";
+
+import ControlsInvitation from "./components/controls/Invitation";
 import ControlsMember from "./components/controls/Member";
+import ControlsCompany from "./components/controls/Company";
 
 const router = new VueRouter({
     mode: "history",
@@ -14,9 +17,19 @@ const router = new VueRouter({
             component: Controls,
             children: [
                 {
+                    path: "invitation",
+                    name: "controls-invitation",
+                    component: ControlsInvitation
+                },
+                {
                     path: "member",
                     name: "controls-member",
                     component: ControlsMember
+                },
+                {
+                    path: "company",
+                    name: "controls-company",
+                    component: ControlsCompany
                 }
             ]
         }

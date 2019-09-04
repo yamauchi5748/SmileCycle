@@ -36,7 +36,6 @@ html {
 }
 
 .normal-btn {
-
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -80,5 +79,17 @@ html {
     border-radius: 4px;
     background-color: $base-sub-color;
     border: solid $gray 1px;
+}
+.input {
+    display:block;
+    width: 100%;
+    font-size: 15px;
+    margin: 6px 0;
+    border: none;
+    border-bottom: solid $accent-color 2px;
+    &.multi-line{
+        height: 120px;
+        resize: none;
+    }
 }
 </style>

@@ -1,25 +1,21 @@
 <template>
     <section class="pane">
         <div class="pane-header">
-            <h2 class="item-count">208人</h2>
-            <button @click="openDialog" class="normal-btn m-l-auto">会員を登録する</button>
+            <h2 class="item-count">12社</h2>
+            <button @click="openDialog" class="normal-btn m-l-auto">会社を登録する</button>
             <div class="mask" :class="{open:isDialogOpen}">
                 <div class="dialog">
                     <div class="dialog-header">
-                        <h2 class="dialog-title">会員登録</h2>
+                        <h2 class="dialog-title">会社登録</h2>
                         <button @click="closeDialog" class="dialog-hide-btn">
                             <img src="/img/close.png" />
                         </button>
                     </div>
                     <div class="dialog-body">
-                        <input class="input" placeholder="会員名" />
-                        <input class="input" placeholder="ふりがな" />
+                        <input class="input" placeholder="会社名" />
+                        <input class="input" placeholder="住所" />
                         <input class="input" placeholder="電話番号" />
-                        <input class="input" placeholder="メールアドレス" />
-                        <input class="input" placeholder="部門" />
-                        <input class="input" placeholder="会社" />
-                        <input class="input" placeholder="役職名" />
-                        <input class="input" placeholder="パスワード" />
+                        <input class="input" placeholder="FAX" />
                     </div>
                     <div class="dialog-footer">
                         <button @click="closeDialog" class="flat-btn">取り消し</button>
@@ -31,20 +27,12 @@
         <table class="pane-body controls-table">
             <thead class="table-head">
                 <tr class="table-head-item">
-                    <th>プロフィール画像</th>
-                    <th>会員名</th>
-                    <th>ふりがな</th>
-                    <th>役職名</th>
+                    <th>会社名</th>
                 </tr>
             </thead>
             <tbody class="table-body">
                 <tr class="table-body-item" v-for="n in 10" :key="n">
-                    <td>
-                        <img />
-                    </td>
-                    <td>滝藤松之助</td>
-                    <td>たきとうまつのすけ</td>
-                    <td>営業部理事長</td>
+                    <td>サンプルカンパニー</td>
                 </tr>
             </tbody>
         </table>

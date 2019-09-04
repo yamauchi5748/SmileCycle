@@ -31,6 +31,7 @@ mix
     files: [
         "./resources/js/app.js",
         "./resources/js/components/*.vue",
+        "./resources/js/components/*/*.vue",
         "./resources/sass/*.scss",
         "./resources/views/*.blade.php",
         "./resources/views/**/*.blade.php",
