@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+require('./bootstrap');
+
 Vue.use(VueRouter)
 
 import Controls from "./components/controls/Controls";
