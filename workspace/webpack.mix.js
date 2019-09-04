@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
+require('laravel-mix-sass-resources-loader');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -19,16 +19,19 @@ bladeに下記を挿入してください
 <script src="{{ mix('js/app.js') }}" defer></script>
 <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 */
-mix.browserSync({
+mix
+.sassResources("./resources/sass/_variables.scss")
+.browserSync({
     proxy: "nginx",
     port: 3000,
     watchOptions: {
-        usePolling: true,
+        usePolling: true, 
         interval: 100
     },
     files: [
         "./resources/js/app.js",
         "./resources/js/components/*.vue",
+        "./resources/js/components/*/*.vue",
         "./resources/sass/*.scss",
         "./resources/views/*.blade.php",
         "./resources/views/**/*.blade.php",
