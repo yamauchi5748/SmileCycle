@@ -38,7 +38,6 @@ $factory->define(Member::class, function () {
         'ruby' => $faker->unique()->kanaName,
         'post' => 'post',
         'telephone_number' => $faker->phoneNumber,
-        'company_id' => $company_id,
         'department_name' => $faker->randomElement(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会']),
         'stamp_groups' => [(string) Str::uuid(), (string) Str::uuid()],
         'mail' => $faker->safeEmail,
