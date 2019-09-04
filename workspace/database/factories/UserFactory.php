@@ -36,10 +36,11 @@ $factory->define(Member::class, function () {
         'is_admin' => false,
         'name' => $faker->unique()->name,
         'ruby' => $faker->unique()->kanaName,
-        'post' => 'post',
+        'post' => $faker->randomElement(['社長', '会長', '取締役', '社員']),
         'telephone_number' => $faker->phoneNumber,
         'department_name' => $faker->randomElement(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会']),
         'stamp_groups' => [(string) Str::uuid(), (string) Str::uuid()],
+        'invitations' => [],
         'mail' => $faker->safeEmail,
         'password' => Hash::make(Str::random(10))
     ];
