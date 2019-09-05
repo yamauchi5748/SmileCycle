@@ -34,7 +34,7 @@ class MemberPut extends FormRequest
             'department_name' => ['string'],
             'mail' => ['string', 'email', 'max:256'],
             'password' => ['string', 'min:8', 'confirmed'],
-
+            'profile_image' => ['image']
         ];
     }
 
