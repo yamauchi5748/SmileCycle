@@ -4,6 +4,8 @@
 use App\Models\Member;
 use App\Models\Company;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,12 @@ $factory->define(Member::class, function () {
     array_push($members, $_id);
     $company->members = $members;
     $company->save();
+
+    // プロフィール画像のパス名をランダムに取得
+    $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
+
+    // 会員のプロフィール画像をストレージに保存
+    Storage::putFileAs('public/images', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'public');
 
     return [
         '_id' => $_id,

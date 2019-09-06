@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\Models\Member;
 use App\Models\Company;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class MembersSeeder extends Seeder
 {
@@ -23,6 +25,12 @@ class MembersSeeder extends Seeder
         array_push($members, $_id);
         $company->members = $members;
         $company->save();
+
+        // プロフィール画像のパス名をランダムに取得
+        $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
+
+        // 管理者のプロフィール画像をストレージに保存
+        Storage::putFileAs('public/images', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'public');
     
         Member::create([
             'id' => $_id,
