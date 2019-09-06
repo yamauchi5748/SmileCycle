@@ -37,12 +37,4 @@ rem LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace ^
 npm run watch-poll
 
-rem 保存されたローカルの画像を削除
-cd ../workspace/storage/app/public
-rd /s /q .\images
-
-rem 各コンテナを停止
-cd ../../../../laradock
-docker-compose down
-
 cd ..
