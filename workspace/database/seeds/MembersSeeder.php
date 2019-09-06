@@ -32,8 +32,8 @@ class MembersSeeder extends Seeder
         // 管理者のプロフィール画像をストレージに保存
         Storage::putFileAs('public/images', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'public');
     
-        Member::create([
-            'id' => $_id,
+        Member::raw()->insertOne([
+            '_id' => $_id,
             'api_token' => Str::random(60),
             'is_notification' => true,
             'notification_interval' => '0.5h',
