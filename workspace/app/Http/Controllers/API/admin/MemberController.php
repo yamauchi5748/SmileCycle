@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Member;
 use App\Models\Company;
@@ -50,6 +51,9 @@ class MemberController extends AdminAuthController
             'stamp_groups' => array(),                          // 会員が使用できるスタンプ
             'invitations' => array(),                           // 会員が投稿した掲示板
         ]);
+
+        // 会員のプロフィール画像をストレージに保存
+        Storage::putFileAs('public/images', $request->profile_image, $member_id . '.png', 'public');
         
         /** 会社の会員情報を更新 **/
         Company::raw()->updateOne(

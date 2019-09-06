@@ -34,7 +34,7 @@ class MemberPost extends FormRequest
             'department_name' => ['required', 'string'],
             'mail' => ['required', 'string', 'email', 'max:256'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-
+            'profile_image' => ['required', 'image']
         ];
     }
 
