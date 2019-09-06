@@ -26,15 +26,14 @@ class MemberPut extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['string', 'max:64', 'unique:members'],
-            'ruby' => ['string', 'max:128'],
-            'post' => ['string', 'max:32'],
-            'telephone_number' => ['string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
-            'company_id' => ['uuid', 'exists:companies,_id'],
-            'department_name' => ['string'],
-            'mail' => ['string', 'email', 'max:256'],
-            'password' => ['string', 'min:8', 'confirmed'],
-            'profile_image' => ['image']
+            'name' => ['required' ,'string', 'max:64', 'unique:members'],
+            'ruby' => ['required' ,'string', 'max:128'],
+            'post' => ['required' ,'string', 'max:32'],
+            'telephone_number' => ['required' ,'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
+            'company_id' => ['required' ,'uuid', 'exists:companies,_id'],
+            'department_name' => ['required' ,'string'],
+            'mail' => ['required' ,'string', 'email', 'max:256'],
+            'password' => ['required' ,'string', 'min:8', 'confirmed']
         ];
     }
 
