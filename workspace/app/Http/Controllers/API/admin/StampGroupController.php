@@ -68,24 +68,21 @@ class StampGroupController extends AdminAuthController
             $stamp_group['stamps'][] = $stamp['exist'] ? $stamp['image'] : $stamp_id;
         }
 
-        /* スタンプグループが個人用ならばモデルに会員を追加 */
-        if (!$request->is_all) {
-            /* Memberモデルにスタンプグループを追加 */
-            foreach ($stamp_group['members'] as $member) {
-                Member::raw()->updateOne(
-                    [
-                        '_id' => $member
+        /* Memberモデルにスタンプグループを追加 */
+        foreach ($stamp_group['members'] as $member) {
+            Member::raw()->updateOne(
+                [
+                    '_id' => $member
+                ],
+                [
+                    '$push' => [
+                        'stamp_groups' => $stamp_group['_id']
                     ],
-                    [
-                        '$push' => [
-                            'stamp_groups' => $stamp_group['_id']
-                        ],
-                        '$currentDate' => [
-                            'lastModified' => true
-                        ]
+                    '$currentDate' => [
+                        'lastModified' => true
                     ]
-                );
-            }
+                ]
+            );
         }
 
         /* スタンプグループを登録 */
@@ -128,11 +125,21 @@ class StampGroupController extends AdminAuthController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        return [ "response" => "return admin.stamp_groups.destroy"];
+        $member_stamp_group = Member::raw()->aggregate([
+            [
+                '$unwind' => '$stamp_groups'
+            ],
+            [
+                '$match' => [
+                    'stamp_groups' => $request->delete_stamp_groups
+                ] 
+            ]
+        ])->toArray();
+        return $member_stamp_group;
     }
 }

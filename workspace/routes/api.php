@@ -78,10 +78,9 @@ Route::apiResource('stamp-groups', 'API\admin\StampGroupController')->only([
 
 //stamp_groups
 Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
-    "index", "show"
+    "index"
 ])->names([
     "index" => "stamp_groups.index",
-    "show" => "stamp_groups.show"
 ]);
 
 //admin.invitations
