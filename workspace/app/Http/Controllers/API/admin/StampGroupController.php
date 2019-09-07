@@ -38,6 +38,9 @@ class StampGroupController extends AdminAuthController
             'members' => $request->members, // 使用可能な会員のidを格納
         ];
 
+        /* 管理者を追加 */
+        $stamp_group['members'][] = $this->author->_id;
+
         /** スタンプグループの作成 **/
         /* タブ画像が既存でなければストレージに保存 */
         if (!$request->tab_image['exist']) {
@@ -45,7 +48,7 @@ class StampGroupController extends AdminAuthController
             $tab_image_id = (string) Str::uuid();
 
             /* タブ画像を保存 */
-            Storage::putFileAs('public/images/stamps', $request->tab_image['image'], $tab_image_id . '.png', 'public');
+            Storage::putFileAs('public/images/stamps', $request->tab_image['image'], $tab_image_id . '.png', 'private');
         }
 
         /* モデルにタブ画像のidをセット */
@@ -59,7 +62,7 @@ class StampGroupController extends AdminAuthController
                 $stamp_id = (string) Str::uuid();
 
                 /* スタンプ画像を保存 */
-                Storage::putFileAs('public/images/stamps', $stamp['image'], $stamp_id . '.png', 'public');
+                Storage::putFileAs('public/images/stamps', $stamp['image'], $stamp_id . '.png', 'private');
             }
             /* モデルにスタンプ画像のidを追加 */
             $stamp_group['stamps'][] = $stamp['exist'] ? $stamp['image'] : $stamp_id;

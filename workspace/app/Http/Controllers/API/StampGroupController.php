@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Member;
+use App\Models\StampGroup;
 
 class StampGroupController extends AuthController
 {
@@ -14,7 +17,28 @@ class StampGroupController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return stamp_groups.index"];
+        $stamp_groups = StampGroup::raw()->aggregate([
+        
+            /* 会員collectionと結合 */
+            [
+                '$lookup' => [
+                    'from' => 'members',
+                    'pipeline' => [
+                        [
+                            '$unwind' => '$stamp_groups'
+                        ],
+                        [
+                            '$match' => [
+                                '_id' => $this->author->_id
+                            ]
+                        ]
+                    ],
+                    'as' => 'member'
+                ]
+            ]
+        ])->toArray();
+        
+        return $stamp_groups;
     }
 
     /**
