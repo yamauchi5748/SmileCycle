@@ -125,11 +125,21 @@ class StampGroupController extends AdminAuthController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        return [ "response" => "return admin.stamp_groups.destroy"];
+        $member_stamp_group = Member::raw()->aggregate([
+            [
+                '$unwind' => '$stamp_groups'
+            ],
+            [
+                '$match' => [
+                    'stamp_groups' => $request->delete_stamp_groups
+                ] 
+            ]
+        ])->toArray();
+        return $member_stamp_group;
     }
 }

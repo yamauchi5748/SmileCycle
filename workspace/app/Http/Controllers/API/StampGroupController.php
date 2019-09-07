@@ -17,28 +17,33 @@ class StampGroupController extends AuthController
      */
     public function index()
     {
-        $stamp_groups = StampGroup::raw()->aggregate([
-        
-            /* 会員collectionと結合 */
+        /** 認証会員が使用可能なスタンプグループを返す **/
+        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([
+            /*  会員を指定 */
             [
-                '$lookup' => [
-                    'from' => 'members',
-                    'pipeline' => [
-                        [
-                            '$unwind' => '$stamp_groups'
-                        ],
-                        [
-                            '$match' => [
-                                '_id' => $this->author->_id
-                            ]
-                        ]
-                    ],
-                    'as' => 'member'
+                '$unwind' => '$members'
+            ],
+            [
+                '$match' => [
+                    'members' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'tab_image_id' => 1,
+                    'is_all' => 1,
+                    'stamps' => 1
                 ]
             ]
         ])->toArray();
         
-        return $stamp_groups;
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
