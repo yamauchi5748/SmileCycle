@@ -58,6 +58,7 @@ export default {};
     margin-bottom: 48px;
     padding: 28px 56px;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+
     background-color: $base-color;
     .pane-header {
         display: flex;

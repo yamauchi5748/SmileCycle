@@ -35,61 +35,66 @@ html {
     height: 100%;
 }
 
-.normal-btn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-
+.normal-button {
+    display: flex;
     height: 36px;
     min-width: 80px;
+    padding: 0 12px;
+    border-radius: 4px;
 
     font-size: 15px;
     font-weight: 700;
-    padding: 0 12px;
 
+    color: $base-color;
+    background-color: $accent-color;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+
+    justify-content: center;
+    align-items: center;
     user-select: none;
     transition: all 80ms linear;
     cursor: pointer;
-
-    border-radius: 4px;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
-    color: $base-color;
-    background-color: $accent-color;
-
     &:active {
         box-shadow: 0 8px 8px rgba(0, 0, 0, 0.24);
     }
 }
-.flat-btn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+.flat-button {
+    display: flex;
 
     height: 36px;
     min-width: 80px;
+    padding: 0 12px;
+    border: solid $gray 1px;
+    border-radius: 4px;
 
     font-size: 15px;
     font-weight: 700;
-    padding: 0 12px;
 
+    background-color: $base-sub-color;
+
+    justify-content: center;
+    align-items: center;
     user-select: none;
     transition: all 80ms linear;
     cursor: pointer;
+}
+.input-wrapper{
 
-    border-radius: 4px;
-    background-color: $base-sub-color;
-    border: solid $gray 1px;
 }
 .input {
-    display:block;
+    display: block;
     width: 100%;
-    font-size: 15px;
-    margin: 6px 0;
     border: none;
     border-bottom: solid $accent-color 2px;
-    &.multi-line{
+    font-size: 16px;
+    &.multi-line {
         height: 120px;
         resize: none;
     }
+}
+.counter {
+    display: flex;
+    font-size:14px;
+    justify-content:flex-end;
 }
 </style>
