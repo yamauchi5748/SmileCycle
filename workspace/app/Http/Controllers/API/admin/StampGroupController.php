@@ -130,16 +130,27 @@ class StampGroupController extends AdminAuthController
      */
     public function destroy(Request $request)
     {
-        $member_stamp_group = Member::raw()->aggregate([
+        /** 会員のスタンプグループ情報を更新 **/
+        Member::raw()->updateMany(
+            [],
             [
-                '$unwind' => '$stamp_groups'
-            ],
-            [
-                '$match' => [
-                    'stamp_groups' => $request->delete_stamp_groups
-                ] 
+                '$pull' => [
+                    'stamp_groups' => [
+                        '$in' => $request->delete_stamp_groups
+                    ]
+                ]
             ]
-        ])->toArray();
-        return $member_stamp_group;
+        );
+
+        /** スタンプグループの削除 **/
+        StampGroup::raw()->deleteOne(
+            [
+                '_id' => [
+                    '$in' => $request->delete_stamp_groups
+                ]
+            ]
+        );
+
+        return $this->response;
     }
 }
