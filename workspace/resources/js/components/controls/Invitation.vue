@@ -60,6 +60,8 @@ export default {
     :nth-child(n) {
         margin: 8px 0;
     }
+}
+.pane-footer{
     .layout-submit-button {
         margin-left: auto;
     }
