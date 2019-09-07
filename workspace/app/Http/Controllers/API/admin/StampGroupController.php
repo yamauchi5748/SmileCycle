@@ -68,24 +68,21 @@ class StampGroupController extends AdminAuthController
             $stamp_group['stamps'][] = $stamp['exist'] ? $stamp['image'] : $stamp_id;
         }
 
-        /* スタンプグループが個人用ならばモデルに会員を追加 */
-        if (!$request->is_all) {
-            /* Memberモデルにスタンプグループを追加 */
-            foreach ($stamp_group['members'] as $member) {
-                Member::raw()->updateOne(
-                    [
-                        '_id' => $member
+        /* Memberモデルにスタンプグループを追加 */
+        foreach ($stamp_group['members'] as $member) {
+            Member::raw()->updateOne(
+                [
+                    '_id' => $member
+                ],
+                [
+                    '$push' => [
+                        'stamp_groups' => $stamp_group['_id']
                     ],
-                    [
-                        '$push' => [
-                            'stamp_groups' => $stamp_group['_id']
-                        ],
-                        '$currentDate' => [
-                            'lastModified' => true
-                        ]
+                    '$currentDate' => [
+                        'lastModified' => true
                     ]
-                );
-            }
+                ]
+            );
         }
 
         /* スタンプグループを登録 */
