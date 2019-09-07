@@ -2,12 +2,12 @@
     <section class="pane">
         <div class="pane-header">
             <h2 class="item-count">12社</h2>
-            <button @click="openDialog" class="normal-btn m-l-auto">会社を登録する</button>
+            <button @click="openDialog" class="normal-button m-l-auto">会社を登録する</button>
             <div class="mask" :class="{open:isDialogOpen}">
                 <div class="dialog">
                     <div class="dialog-header">
                         <h2 class="dialog-title">会社登録</h2>
-                        <button @click="closeDialog" class="dialog-hide-btn">
+                        <button @click="closeDialog" class="dialog-hide-button">
                             <img src="/img/close.png" />
                         </button>
                     </div>
@@ -18,8 +18,8 @@
                         <input class="input" placeholder="FAX" />
                     </div>
                     <div class="dialog-footer">
-                        <button @click="closeDialog" class="flat-btn">取り消し</button>
-                        <button class="normal-btn">登録する</button>
+                        <button @click="closeDialog" class="flat-button">取り消し</button>
+                        <button class="normal-button">登録する</button>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@ export default {
         .dialog-title {
             font-size: 22px;
         }
-        .dialog-hide-btn {
+        .dialog-hide-button {
             display: flex;
             align-items: center;
             margin:0;
