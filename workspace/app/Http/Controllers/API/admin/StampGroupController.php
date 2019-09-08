@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Requests\StampGroupPost;
+use App\Http\Requests\StampGroupDelete;
 use App\Models\Member;
 use App\Models\StampGroup;
 
@@ -27,7 +29,7 @@ class StampGroupController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StampGroupPost $request)
     {
         /* スタンプグループモデル */
         $stamp_group = [
@@ -42,30 +44,27 @@ class StampGroupController extends AdminAuthController
         $stamp_group['members'][] = $this->author->_id;
 
         /** スタンプグループの作成 **/
-        /* タブ画像が既存でなければストレージに保存 */
-        if (!$request->tab_image['exist']) {
-            /* タブ画像のuuidを生成 */
-            $tab_image_id = (string) Str::uuid();
+        /* タブ画像のuuidを生成 */
+        $tab_image_id = (string) Str::uuid();
 
-            /* タブ画像を保存 */
-            Storage::putFileAs('public/images/stamps', $request->tab_image['image'], $tab_image_id . '.png', 'private');
-        }
+        /* タブ画像を保存 */
+        Storage::putFileAs('public/images/stamps', $request->tab_image, $tab_image_id . '.png', 'private');
+    
 
         /* モデルにタブ画像のidをセット */
-        $stamp_group['tab_image_id'] = $request->tab_image['exist'] ? $request->tab_image['image'] : $tab_image_id;
+        $stamp_group['tab_image_id'] = $tab_image_id;
 
         /* 各スタンプの処理 */
         foreach ($request->stamps as $stamp) {
             /* スタンプ画像が既存でなければストレージに保存 */
-            if (!$stamp['exist']) {
-                /* スタンプのuuidを生成 */
-                $stamp_id = (string) Str::uuid();
+            /* スタンプのuuidを生成 */
+            $stamp_id = (string) Str::uuid();
 
-                /* スタンプ画像を保存 */
-                Storage::putFileAs('public/images/stamps', $stamp['image'], $stamp_id . '.png', 'private');
-            }
+            /* スタンプ画像を保存 */
+            Storage::putFileAs('public/images/stamps', $stamp, $stamp_id . '.png', 'private');
+        
             /* モデルにスタンプ画像のidを追加 */
-            $stamp_group['stamps'][] = $stamp['exist'] ? $stamp['image'] : $stamp_id;
+            $stamp_group['stamps'][] = $stamp_id;
         }
 
         /* Memberモデルにスタンプグループを追加 */
@@ -128,7 +127,7 @@ class StampGroupController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(StampGroupDelete $request)
     {
         /** 会員のスタンプグループ情報を更新 **/
         Member::raw()->updateMany(
