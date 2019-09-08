@@ -71,9 +71,10 @@ Route::apiResource('companies', 'API\CompanyController')->only([
 //admin.stamp_groups
 Route::delete('stamp-groups', 'API\admin\StampGroupController@destroy')->name('admin.stamp_groups.destroy');
 Route::apiResource('stamp-groups', 'API\admin\StampGroupController')->only([
-    "store"
+    "store", "update"
 ])->names([
     "store" => "admin.stamp_groups.store",
+    "update" => "admin.stamp_groups.update",
 ]);
 
 //stamp_groups

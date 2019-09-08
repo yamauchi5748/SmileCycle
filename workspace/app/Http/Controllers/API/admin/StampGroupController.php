@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\StampGroupPost;
+use App\Http\Requests\StampGroupPut;
 use App\Http\Requests\StampGroupDelete;
 use App\Models\Member;
 use App\Models\StampGroup;
@@ -84,7 +85,7 @@ class StampGroupController extends AdminAuthController
             );
         }
 
-        /* スタンプグループを登録 */
+        /* スタンプグループをDBに登録 */
         StampGroup::raw()->insertOne($stamp_group);
 
         /* レスポンスデータを整形 */
@@ -116,9 +117,97 @@ class StampGroupController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $stamp_group_id)
+    public function update(StampGroupPut $request, $stamp_group_id)
     {
-        return [ "response" => "return admin.stamp_groups.update"];
+        /* 追加するスタンプがあればidを生成し、ストレージに保存 */
+        $new_stamps = [];
+        foreach($request->add_stamps as $new_stamp)
+        {
+            /* スタンプのuuidを生成 */
+            $stamp_id = (string) Str::uuid();
+
+            /* スタンプ画像を保存 */
+            Storage::putFileAs('public/images/stamps', $new_stamp, $stamp_id . '.png', 'private');
+        
+            /* モデルにスタンプ画像のidを追加 */
+            $new_stamps[] = $stamp_id;
+        }
+
+        /** スタンプグループの追加処理 **/
+        StampGroup::raw()->updateMany(
+            // スタンプグループを指定
+            [
+                '_id' => $stamp_group_id
+            ],
+            [
+                '$push' => [
+                    // 会員を追加
+                    'members' => [
+                        '$each' => $request->add_members
+                    ],
+                    // スタンプを追加
+                    'stamps' => [
+                        '$each' => $new_stamps
+                    ]
+                ]
+            ]
+        );
+
+        /** スタンプグループの削除処理 **/
+        StampGroup::raw()->updateMany(
+            // スタンプグループを指定
+            [
+                '_id' => $stamp_group_id
+            ],
+            [
+                
+                '$pullAll' => [
+                    // 会員を削除
+                    'members' => $request->remove_members,
+                    'stamps' => $request->remove_stamps
+                ]
+            ]
+        );
+
+        /** 会員の追加処理 **/
+        Member::raw()->updateMany(
+            // 会員を指定
+            [
+                '_id' => [
+                    '$in' => $request->add_members
+                ]
+            ],
+            [
+                '$push' => [
+                    // スタンプグループを追加
+                    'stamp_groups' => $stamp_group_id,
+                ]
+            ]
+        );
+
+        /** 会員の削除処理 **/
+        Member::raw()->updateMany(
+            // 会員を指定
+            [
+                '_id' => [
+                    '$in' => $request->remove_members
+                ]
+            ],
+            [
+                
+                '$pull' => [
+                    // スタンプグループを削除
+                    'stamp_groups' => $stamp_group_id
+                ]
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -150,6 +239,11 @@ class StampGroupController extends AdminAuthController
             ]
         );
 
-        return $this->response;
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
