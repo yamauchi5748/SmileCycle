@@ -14,6 +14,6 @@ class Forum extends Eloquent
 
     //　stamp_groupプロパティ
     protected $fillable = [
-        'id', 'post_member_id', 'title', 'text', 'images', 'created_at', 'comments'
+        '_id', 'post_member_id', 'title', 'text', 'images', 'created_at', 'comments'
     ];
 }
