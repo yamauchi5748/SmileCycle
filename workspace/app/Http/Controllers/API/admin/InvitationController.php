@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Requests\InvitationPost;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\Invitation;
@@ -28,7 +29,7 @@ class InvitationController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InvitationPost $request)
     {
         $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
 
@@ -44,52 +45,58 @@ class InvitationController extends AdminAuthController
         ];
 
         /* 画像コンテンツの処理 */
-        foreach ($request->images as $image) {
-            /* 画像のuuidを生成 */
-            $image_id = (string) Str::uuid();
-
-            /* 画像を保存 */
-            Storage::putFileAs('public/images/invitaions', $image, $image_id . '.png', 'private');
-        
-            /* モデルに画像のidを追加 */
-            $invitation['images'][] = $image_id;
+        if ($request->images) {
+            foreach ($request->images as $image) {
+                /* 画像のuuidを生成 */
+                $image_id = (string) Str::uuid();
+    
+                /* 画像を保存 */
+                Storage::putFileAs('public/images/invitaions', $image, $image_id . '.png', 'private');
+            
+                /* モデルに画像のidを追加 */
+                $invitation['images'][] = $image_id;
+            }
         }
 
-        /* 会員の会のご案内追加 */
-        Member::raw()->updateMany(
-            [
-                // 会員を指定
-                '_id' => [
-                    '$in' => $request->attend_members 
-                ]
-            ],
-            [
-                '$push' => [
-                    // 会のご案内を追加
-                    'invitations' => $invitation['_id']
-                ]
-            ]
-        );
-
-        /* 会員の整形データを取得 */
-        $attend_members = Member::raw()->aggregate([
-            // 会員を指定
-            [
-                '$match' => [
+        $attend_members = [];
+        /* 会のご案内へ招待される会員がいる場合 */
+        if ($request->attend_members) {
+            /* 会員の会のご案内追加 */
+            Member::raw()->updateMany(
+                [
+                    // 会員を指定
                     '_id' => [
-                        '$in' => $request->attend_members 
+                        '$in' => $request->attend_members
+                    ]
+                ],
+                [
+                    '$push' => [
+                        // 会のご案内を追加
+                        'invitations' => $invitation['_id']
                     ]
                 ]
-            ],
-            [
-                '$project' => [
-                    '_id' => 1,
-                    'name' => 1,
-                    'ruby' => 1,
-                    'status' => '3',
+            );
+
+            /* 会員の整形データを取得 */
+            $attend_members = Member::raw()->aggregate([
+                // 会員を指定
+                [
+                    '$match' => [
+                        '_id' => [
+                            '$in' => $request->attend_members
+                        ]
+                    ]
+                ],
+                [
+                    '$project' => [
+                        '_id' => 1,
+                        'name' => 1,
+                        'ruby' => 1,
+                        'status' => '3',
+                    ]
                 ]
-            ]
-        ])->toArray();
+            ])->toArray();
+        }
 
         /* モデルに会員を追加 */
         $invitation['attend_members'] = $attend_members;
