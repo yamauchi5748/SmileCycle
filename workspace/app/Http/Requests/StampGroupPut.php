@@ -26,13 +26,13 @@ class StampGroupPut extends FormRequest
     public function rules()
     {
         return [
-            'add_members' => ['required', 'array'],
-            'add_members.*' => ['uuid'],
-            'add_stamps' => ['required', 'array'],
+            'add_members' => ['array'],
+            'add_members.*' => ['uuid', 'exists:members,_id'],
+            'add_stamps' => ['array'],
             'add_stamps.*' => ['image', 'mimes:jpeg,png,jpg,gif'], 
-            'remove_members' => ['required', 'array'],
-            'remove_members.*' => ['uuid'],
-            'remove_stamps' => ['required', 'array'],
+            'remove_members' => ['array'],
+            'remove_members.*' => ['uuid', 'exists:members,_id'],
+            'remove_stamps' => ['array'],
             'remove_stamps.*' => ['uuid']
         ];
     }

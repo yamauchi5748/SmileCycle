@@ -119,6 +119,12 @@ class StampGroupController extends AdminAuthController
      */
     public function update(StampGroupPut $request, $stamp_group_id)
     {
+        /* リクエストのパラメタをチェック */
+        if(!$request->add_stamps) $request->add_stamps = [];
+        if(!$request->remove_stamps) $request->remove_stamps = [];
+        if(!$request->add_members) $request->add_members = [];
+        if(!$request->remove_members) $request->remove_members = [];
+
         /* 追加するスタンプがあればidを生成し、ストレージに保存 */
         $new_stamps = [];
         foreach($request->add_stamps as $new_stamp)
@@ -201,6 +207,15 @@ class StampGroupController extends AdminAuthController
                 ]
             ]
         );
+
+        /* レスポンスデータを整形 */
+        $this->response['stamp_group'] = head(StampGroup::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $stamp_group_id
+                ]
+            ]
+        ])->toArray());
 
         return response()->json(
             $this->response,
