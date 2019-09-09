@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\Invitation;
 
 class InvitationController extends AuthController
 {
@@ -14,7 +15,32 @@ class InvitationController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return invitations.index"];
+        $this->response['invitations'] = Invitation::raw()->aggregate([
+            [
+                '$unwind' => '$attend_members'
+            ],
+            [
+                '$match' => [
+                    'attend_members' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'created_at' => 1
+                ]
+            ]
+        ])->toArray();
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
