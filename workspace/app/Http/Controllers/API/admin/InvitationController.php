@@ -20,7 +20,26 @@ class InvitationController extends AdminAuthController
      */
     public function index()
     {
-        return [ "response" => "return admin.invitations.index"];
+        /** 会のご案内の一覧取得 **/
+        $this->response['invitations'] = Invitation::raw()->aggregate([
+            /* 返すプロパティを指定 */
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'created_at' => 1
+                ]
+            ]
+        ])->toArray();
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -104,8 +123,12 @@ class InvitationController extends AdminAuthController
         /* モデルをDBに登録 */
         Invitation::raw()->insertOne($invitation);
 
-        /* レスポンスデータを整形 */
-        $this->response['invitation'] = $invitation;
+        /* 返すレスポンスデータを整形 */
+        if($invitation){
+            $this->response['invitation'] = $invitation;
+        }else{
+            $this->response['result'] = false;
+        }
 
         return response()->json(
             $this->response,
@@ -121,9 +144,41 @@ class InvitationController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($invitation_id)
     {
-        return [ "response" => "return admin.invitations.show"];
+        $invitation = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id     // idを指定
+                ]
+            ],
+            /* 返すプロパティを指定 */
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'attend_members' => 1,
+                    'deadline_at' => 1,
+                    'created_at' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        if(head($invitation)){
+            $this->response['invitation'] = head($invitation);
+        }else{
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

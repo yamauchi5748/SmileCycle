@@ -17,7 +17,7 @@ class InvitationController extends AuthController
     public function index()
     {
         /** 会のご案内の一覧取得 **/
-        $this->response['invitations'] = Invitation::raw()->aggregate([
+        $invitation = Invitation::raw()->aggregate([
             /* プロパティを展開 */
             [
                 '$unwind' => '$attend_members'
@@ -39,6 +39,13 @@ class InvitationController extends AuthController
                 ]
             ]
         ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        if($invitation){
+            $this->response['invitation'] = $invitation;
+        }else{
+            $this->response['result'] = false;
+        }
         
         return response()->json(
             $this->response,
