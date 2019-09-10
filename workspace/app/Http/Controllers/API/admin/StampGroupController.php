@@ -21,7 +21,24 @@ class StampGroupController extends AdminAuthController
      */
     public function index()
     {
-        return [ "response" => "return admin.stamp_groups.index"];
+        /** すべてのスタンプグループを返す **/
+        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'tab_image_id' => 1,
+                    'is_all' => 1,
+                    'stamps' => 1
+                ]
+            ]
+        ])->toArray();
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -40,9 +57,6 @@ class StampGroupController extends AdminAuthController
             'stamps' => [],                 // スタンプのidを格納
             'members' => $request->members, // 使用可能な会員のidを格納
         ];
-
-        /* 管理者を追加 */
-        $stamp_group['members'][] = $this->author->_id;
 
         /** スタンプグループの作成 **/
         /* タブ画像のuuidを生成 */

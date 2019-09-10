@@ -69,6 +69,7 @@ Route::apiResource('companies', 'API\CompanyController')->only([
 ]);
 
 //admin.stamp_groups
+Route::get('admin-stamp-groups', 'API\admin\StampGroupController@index')->name('admin.stamp_groups.index');
 Route::delete('stamp-groups', 'API\admin\StampGroupController@destroy')->name('admin.stamp_groups.destroy');
 Route::apiResource('stamp-groups', 'API\admin\StampGroupController')->only([
     "store", "update"
@@ -91,6 +92,7 @@ Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only(
     "index" => "admin.invitations.index",
     "show" => "admin.invitations.show"
 ]);
+//admin.invitations
 Route::apiResource('invitations', 'API\admin\InvitationController')->only([
     "store"
 ])->names([
