@@ -15,15 +15,19 @@ class InvitationController extends AuthController
      */
     public function index()
     {
+        /** 会のご案内の一覧取得 **/
         $this->response['invitations'] = Invitation::raw()->aggregate([
+            /* プロパティを展開 */
             [
                 '$unwind' => '$attend_members'
             ],
+            /* 認証会員が招待されている会のご案内を指定 */
             [
                 '$match' => [
                     'attend_members._id' => $this->author->_id
                 ]
             ],
+            /* 返すプロパティを指定 */
             [
                 '$project' => [
                     '_id' => 1,
@@ -65,9 +69,11 @@ class InvitationController extends AuthController
         $invitation = Invitation::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $invitation_id
+                    '_id' => $invitation_id,                    // idを指定
+                    'attend_members._id' => $this->author->_id  // 認証会員が招待されている会のご案内を指定
                 ]
             ],
+            /* 返すプロパティを指定 */
             [
                 '$project' => [
                     '_id' => 1,
@@ -81,6 +87,7 @@ class InvitationController extends AuthController
             ]
         ])->toArray();
 
+        /* 返すレスポンスデータを整形 */
         $this->response['invitation'] = head($invitation);
         
         return response()->json(
@@ -98,9 +105,54 @@ class InvitationController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $invitation_id)
     {
-        return [ "response" => "return invitations.update"];
+        /** 会員の会のご案内出席状況を更新 **/
+        Invitation::raw()->updateOne(
+            /* 更新する会のご案内を指定 */
+            [
+                '_id' => $invitation_id,
+                'attend_members._id' => $this->author->_id
+            ],
+            /* プロパティをセット */
+            [
+                '$set' => [
+                    'attend_members.$.status' => $request->attend_status
+                ]
+            ]
+        );
+
+        /* 更新された会のご案内を取得 */
+        $invitation = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id,                    // idを指定
+                    'attend_members._id' => $this->author->_id  // 認証会員が招待されている会のご案内を指定
+                ]
+            ],
+            /* 返すプロパティを指定 */
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'attend_members' => 1,
+                    'deadline_at' => 1,
+                    'created_at' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $this->response['invitation'] = head($invitation);
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

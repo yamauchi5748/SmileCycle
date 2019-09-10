@@ -93,17 +93,11 @@ Route::apiResource('invitations', 'API\admin\InvitationController')->only([
 
 //invitations
 Route::apiResource('invitations', 'API\InvitationController')->only([
-    "index", "show"
+    "index", "show", "update"
 ])->names([
     "index" => "invitations.index",
-    "show" => "invitations.show"
-]);
-
-//invitation.members
-Route::apiResource('invitations/{invitation_id}/members', 'API\InvitationMemberController')->only([
-    "update"
-])->names([
-    "update" => "invitation.members.update",
+    "show" => "invitations.show",
+    "update" => "invitations.update"
 ]);
 
 //forums
