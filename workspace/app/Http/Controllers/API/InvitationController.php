@@ -21,7 +21,7 @@ class InvitationController extends AuthController
             ],
             [
                 '$match' => [
-                    'attend_members' => $this->author->_id
+                    'attend_members._id' => $this->author->_id
                 ]
             ],
             [
@@ -60,9 +60,35 @@ class InvitationController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($invitation_id)
     {
-        return [ "response" => "return invitations.show"];
+        $invitation = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'attend_members' => 1,
+                    'deadline_at' => 1,
+                    'created_at' => 1
+                ]
+            ]
+        ])->toArray();
+
+        $this->response['invitation'] = head($invitation);
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

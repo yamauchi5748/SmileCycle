@@ -44,7 +44,7 @@ $factory->define(Invitation::class, function () {
     /* 会員データと紐づけ */
     $members = Member::get();
     $member_count = Member::get()->count();
-    $member_id = [];
+    $attend_members = [];
 
     // 等確率で全会員またはランダムな会員を会のご案内に招待する
     if ($faker->boolean) {
@@ -55,14 +55,19 @@ $factory->define(Invitation::class, function () {
     // 会員と会のご案内データの紐づけ
     foreach ($members as $member) {
         // 会員の_idのみ格納しておく
-        $member_id[] = $member->_id;
+        $attend_members[] = [
+            '_id' => $member->_id,
+            'name' => $member->name,
+            'ruby' => $member->ruby,
+            'status' => '3'
+        ];
         $member_invitations = $member['invitations'] ? $member['invitations'] : [];
         array_push($member_invitations, $invitation['_id']);
         $member->invitations = $member_invitations;
         $member->save();
     }
 
-    $invitation['attend_members'] = $member_id;
+    $invitation['attend_members'] = $attend_members;
 
     return $invitation;
 });
