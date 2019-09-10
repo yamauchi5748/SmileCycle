@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\InvitationPut;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Invitation;
 
@@ -88,7 +89,11 @@ class InvitationController extends AuthController
         ])->toArray();
 
         /* 返すレスポンスデータを整形 */
-        $this->response['invitation'] = head($invitation);
+        if(head($invitation)){
+            $this->response['invitation'] = head($invitation);
+        }else{
+            $this->response['result'] = false;
+        }
         
         return response()->json(
             $this->response,
@@ -105,7 +110,7 @@ class InvitationController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $invitation_id)
+    public function update(InvitationPut $request, $invitation_id)
     {
         /** 会員の会のご案内出席状況を更新 **/
         Invitation::raw()->updateOne(
@@ -145,7 +150,11 @@ class InvitationController extends AuthController
         ])->toArray();
 
         /* 返すレスポンスデータを整形 */
-        $this->response['invitation'] = head($invitation);
+        if(head($invitation)){
+            $this->response['invitation'] = head($invitation);
+        }else{
+            $this->response['result'] = false;
+        }
         
         return response()->json(
             $this->response,
