@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Models\Member;
 use App\Models\Forum;
 
 class ForumController extends AuthController
