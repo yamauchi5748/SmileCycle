@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CompaniesSeeder::class);
         $this->call(StampGroupSeeder::class);
         $this->call(MembersSeeder::class);
+        $this->call(InvitationSeeder::class);
     }
 }

@@ -4,6 +4,7 @@
 use App\Models\Member;
 use App\Models\Company;
 use App\Models\StampGroup;
+use App\Models\Invitation;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
@@ -43,8 +44,7 @@ $factory->define(Member::class, function () {
     $stamp_groups = $faker->randomElements($private_stamp_groups_obj, $faker->numberBetween(1, $private_stamp_groups_count));
 
     // スタンプグループにmemberを追加
-    foreach($stamp_groups as $stamp_group)
-    {
+    foreach ($stamp_groups as $stamp_group) {
         $stamp_group_members = $stamp_group->members;
         array_push($stamp_group_members, $_id);
         $stamp_group->members = $stamp_group_members;
@@ -52,12 +52,10 @@ $factory->define(Member::class, function () {
     }
 
     // スタンプグループの_idのみ配列に格納
-    foreach($stamp_groups as $stamp_group)
-    {
+    foreach ($stamp_groups as $stamp_group) {
         $stamp_groups_id[] = $stamp_group->_id;
     }
-    foreach($public_stamp_groups_obj as $stamp_group)
-    {
+    foreach ($public_stamp_groups_obj as $stamp_group) {
         $stamp_groups_id[] = $stamp_group->_id;
     }
 
