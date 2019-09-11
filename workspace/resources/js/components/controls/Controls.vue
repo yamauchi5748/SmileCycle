@@ -20,7 +20,7 @@
 <script>
 export default {};
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .controls {
     margin: 0 60px;
     .controls-header {
@@ -63,8 +63,6 @@ export default {};
     .pane-header {
         display: flex;
         align-items: center;
-    }
-    .pane-body {
     }
     .item-count {
         margin-right: auto;

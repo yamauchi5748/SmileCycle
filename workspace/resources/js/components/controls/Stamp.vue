@@ -1,12 +1,12 @@
 <template>
     <section class="view">
         <div class="layout-flex --align-items-center">
-            <h2 class="item-count">208人</h2>
-            <button @click="openDialog" class="normal-button margin-left-auto">会員を登録する</button>
+            <h2 class="item-count">12種</h2>
+            <button @click="openDialog" class="normal-button margin-left-auto">スタンプを登録する</button>
             <div class="mask" :class="{open:isDialogOpen}">
                 <div class="dialog">
                     <div class="dialog-header">
-                        <h2 class="dialog-title">会員登録</h2>
+                        <h2 class="dialog-title">スタンプ登録</h2>
                         <button @click="closeDialog" class="dialog-hide-button"></button>
                     </div>
                     <div class="dialog-body">
@@ -26,33 +26,25 @@
                 </div>
             </div>
         </div>
-        <table class="table">
-            <thead class="table-head">
-                <tr class="table-head-item">
-                    <th>プロフィール画像</th>
-                    <th>会員名</th>
-                    <th>ふりがな</th>
-                    <th>役職名</th>
-                </tr>
-            </thead>
-            <tbody class="table-body">
-                <tr class="table-body-item" v-for="n in 10" :key="n">
-                    <td>
-                        <img />
-                    </td>
-                    <td>滝藤松之助</td>
-                    <td>たきとうまつのすけ</td>
-                    <td>営業部理事長</td>
-                </tr>
-            </tbody>
-        </table>
+        <ul
+            class="debug p-layout-stamp-tab-list layout-grid --justify-content-space-between margin-top-big"
+        >
+            <li v-for="n in 10" :key="n">
+                <router-link :to="'test'" append>
+                    <img class="debug" height="120" width="120" />
+                </router-link>
+            </li>
+        </ul>
     </section>
 </template>
 <script>
 export default {
     data() {
         return {
-            isDialogOpen: false
+            isDialogOpen: false,
+            title: "",
+            text: "",
+            files: []
         };
     },
     methods: {
@@ -61,9 +53,25 @@ export default {
         },
         openDialog() {
             this.isDialogOpen = true;
+        },
+        handleDragOver(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+        },
+        handleDrop(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            for (let file of event.dataTransfer.files) {
+                this.files.push(file);
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
+.p-layout-stamp-tab-list {
+    grid-template-columns: repeat(3, 120px);
+    grid-row-gap: 16px;
+}
 </style>

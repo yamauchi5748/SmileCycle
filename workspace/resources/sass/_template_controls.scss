@@ -1,0 +1,102 @@
+//管理画面の各タブの要素数を出力する用
+.item-count {
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+.table {
+    width: 100%;
+    .table-head-item {
+        text-align: left;
+        border-bottom: solid 1px $gray;
+        th {
+            padding: 20px 0 8px 16px;
+            font-size: 13px;
+            color: $gray;
+        }
+    }
+    .table-body-item {
+        text-align: left;
+        border-bottom: solid 1px $gray;
+        td {
+            height: 64px;
+            padding-left: 16px;
+            color: $gray;
+            vertical-align: middle;
+        }
+    }
+}
+.mask {
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    &.open {
+        visibility: visible;
+    }
+}
+.dialog {
+    width: 640px;
+    border-radius: 8px;
+    background-color: $base-color;
+    .dialog-header {
+        display: flex;
+        padding: 16px 24px;
+        align-items: center;
+        .dialog-title {
+            font-size: 22px;
+        }
+        .dialog-hide-button {
+            display: inline-flex;
+            margin: 0;
+            margin-left: auto;
+            padding: 0;
+            justify-items: center;
+            align-items: center;
+            &:after {
+                font-size: 40px;
+                color: $gray;
+                content: "×";
+            }
+        }
+    }
+    .dialog-body {
+        display: flex;
+        flex-direction: column;
+        padding: 16px 24px;
+        border-top: solid $gray 1px;
+        border-bottom: solid $gray 1px;
+    }
+    .dialog-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 20px 24px;
+        :last-child {
+            margin-left: 12px;
+        }
+    }
+}
+
+.drag-and-drop-area {
+    display: flex;
+    border: dashed 1px;
+    justify-content: center;
+    align-items: center;
+}
+.files {
+    .file {
+        display: flex;
+        height: 32px;
+        padding: 0 12px;
+        align-items: center;
+
+        border-radius: 5px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    }
+}
