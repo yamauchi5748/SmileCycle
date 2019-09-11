@@ -26,7 +26,6 @@ class ForumPost extends FormRequest
     public function rules()
     {
         return [
-            'sender_id' => ['required', 'uuid', 'exists:members,_id'],
             'title' => ['required', 'string', 'min:1', 'max:20'],
             'text' => ['string', 'nullable', 'max:500'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif'],

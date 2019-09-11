@@ -37,8 +37,8 @@ class ForumController extends AuthController
         /* 掲示板のモデル */
         $forum = [
             '_id' => (string) Str::uuid(),          // 掲示板のid
-            'sender_id' => $request->sender_id,     // 掲示板の投稿者id
-            'sender_name' => '',                    // 掲示板の投稿者名
+            'sender_id' => $this->author->_id,      // 掲示板の投稿者id
+            'sender_name' => $this->author->name,   // 掲示板の投稿者名
             'title' => $request->title,             // 掲示板のタイトル
             'text' => $request->text,               // 掲示板のテキスト
             'images' => [],                         // 掲示板の画像
@@ -59,24 +59,6 @@ class ForumController extends AuthController
                 $forum['images'][] = $image_id;
             }
         }
-
-        /* 投稿者名を取得 */
-        $sender_name_corsor = Member::raw()->aggregate([
-            [
-                '$match' => [
-                    '_id' => $forum['sender_id']
-                ]
-            ],
-            [
-                '$project' => [
-                    '_id' => 0,
-                    'name' => 1
-                ]
-            ]
-        ])->toArray();
-
-        /* 投稿者名のデータを整形し、モデルにセット */
-        $forum['sender_name'] = head($sender_name_corsor)->name;
 
         /* モデルをDBに登録 */
         Forum::raw()->insertOne($forum);
