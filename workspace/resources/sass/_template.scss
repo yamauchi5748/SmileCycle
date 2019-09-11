@@ -1,0 +1,84 @@
+@import "variables";
+//デバッグ用
+.debug-stamp-tab {
+    @extend .debug;
+    display: block;
+    height: 180px;
+    width: 180px;
+}
+.debug-stamp {
+    @extend .debug;
+    display: block;
+    height: 65px;
+    width: 65px;
+}
+.debug {
+    border: solid 1px rgb(119, 110, 110);
+    filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.7));
+}
+/**************************************************************/
+
+
+/*
+    router-viewでの切り替え先の親要素に指定する
+*/
+.view{
+    display: block;
+}
+
+/**************************************************************/
+
+// ボタン
+//ベース
+%button {
+    display: flex;
+    height: 36px;
+    min-width: 80px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: all 80ms linear;
+    cursor: pointer;
+}
+.normal-button {
+    @extend %button;
+    color: $base-color;
+    background-color: $accent-color;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .24);
+    flex-shrink: 0;
+    &.--disabled{
+        color:$gray;
+        background-color: rgba(99,99,99,.2);
+    }
+}
+.flat-button {
+    @extend %button;
+    border: solid $gray 1px;
+    background-color: $base-sub-color;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: all 80ms linear;
+    cursor: pointer;
+}
+/**************************************************************/
+
+//入力
+.input {
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: solid $accent-color 2px;
+    font-size: 16px;
+    //textarea用
+    &.multi-line {
+        height: 120px;
+        resize: none;
+    }
+}
+/**************************************************************/

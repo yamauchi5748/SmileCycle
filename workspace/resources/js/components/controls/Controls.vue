@@ -23,7 +23,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .controls {
   margin: 0 60px;
   .controls-header {
@@ -58,20 +58,19 @@ export default {
   }
 }
 .controls-pane {
-  margin-bottom: 48px;
-  padding: 28px 56px;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: $base-color;
-  .pane-header {
-    display: flex;
-    align-items: center;
-  }
-  .pane-body {
-  }
-  .item-count {
-    margin-right: auto;
-    font-size: 1.25rem;
-    font-weight: 900;
-  }
+    margin-bottom: 48px;
+    padding: 28px 56px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+
+    background-color: $base-color;
+    .pane-header {
+        display: flex;
+        align-items: center;
+    }
+    .item-count {
+        margin-right: auto;
+        font-size: 1.25rem;
+        font-weight: 900;
+    }
 }
 </style>

@@ -10,12 +10,13 @@ import Controls from "./components/controls/Controls";
 import ControlsInvitation from "./components/controls/Invitation";
 import ControlsMember from "./components/controls/Member";
 import ControlsCompany from "./components/controls/Company";
-
+import ControlsStamp from "./components/controls/Stamp";
+import ControlsStampDetails from "./components/controls/StampDetails"
 const router = new VueRouter({
     mode: "history",
     routes: [
         {
-            path: "/controls/",
+            path: "/controls",
             component: Controls,
             children: [
                 {
@@ -32,6 +33,15 @@ const router = new VueRouter({
                     path: "company",
                     name: "controls-company",
                     component: ControlsCompany
+                },
+                {
+                    path: "stamp",
+                    name: "controls-stamp",
+                    component: ControlsStamp,
+                },
+                {
+                    path: "stamp/:id",
+                    component: ControlsStampDetails
                 }
             ]
         }
