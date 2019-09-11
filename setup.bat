@@ -36,3 +36,5 @@ php artisan db:seed
 rem LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace ^
 npm run watch-poll
+
+cd ..

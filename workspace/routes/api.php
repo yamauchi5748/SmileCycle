@@ -44,7 +44,7 @@ Route::apiResource('settings', 'API\SettingController')->only([
     "index" => "settings.index",
 ]);
 
-//member.stamp_groups
+//admin.member.stamp_groups
 Route::apiResource('members/{member_id}/stamp_groups', 'API\admin\MemberStampGroupController')->only([
     "index"
 ])->names([
@@ -69,21 +69,29 @@ Route::apiResource('companies', 'API\CompanyController')->only([
 ]);
 
 //admin.stamp_groups
+Route::get('admin-stamp-groups', 'API\admin\StampGroupController@index')->name('admin.stamp_groups.index');
 Route::delete('stamp-groups', 'API\admin\StampGroupController@destroy')->name('admin.stamp_groups.destroy');
 Route::apiResource('stamp-groups', 'API\admin\StampGroupController')->only([
-    "store"
+    "store", "update"
 ])->names([
     "store" => "admin.stamp_groups.store",
+    "update" => "admin.stamp_groups.update",
 ]);
 
 //stamp_groups
 Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
-    "index", "show"
+    "index"
 ])->names([
     "index" => "stamp_groups.index",
-    "show" => "stamp_groups.show"
 ]);
 
+//admin.invitations
+Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
+    "index", "show"
+])->names([
+    "index" => "admin.invitations.index",
+    "show" => "admin.invitations.show"
+]);
 //admin.invitations
 Route::apiResource('invitations', 'API\admin\InvitationController')->only([
     "store"
@@ -93,17 +101,11 @@ Route::apiResource('invitations', 'API\admin\InvitationController')->only([
 
 //invitations
 Route::apiResource('invitations', 'API\InvitationController')->only([
-    "index", "show"
+    "index", "show", "update"
 ])->names([
     "index" => "invitations.index",
-    "show" => "invitations.show"
-]);
-
-//invitation.members
-Route::apiResource('invitations/{invitation_id}/members', 'API\InvitationMemberController')->only([
-    "update"
-])->names([
-    "update" => "invitation.members.update",
+    "show" => "invitations.show",
+    "update" => "invitations.update"
 ]);
 
 //forums

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class MemberPost extends FormRequest
+class InvitationPost extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +26,11 @@ class MemberPost extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:64', 'unique:members'],
-            'ruby' => ['required', 'string', 'max:128'],
-            'post' => ['required', 'string', 'max:32'],
-            'telephone_number' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
-            'company_id' => ['required', 'uuid', 'exists:companies,_id'],
-            'department_name' => ['required', 'string'],
-            'mail' => ['required', 'string', 'email', 'max:256'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif']
+            'title' => ['required', 'string', 'max:32'],
+            'text' => ['required', 'string'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif'],
+            'attend_members.*' => ['uuid'],
+            'deadline_at' => ['required', 'date_format:Y-m-d']
         ];
     }
 
