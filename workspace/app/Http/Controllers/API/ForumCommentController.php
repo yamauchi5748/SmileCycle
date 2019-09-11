@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ForumCommentPost;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -27,7 +28,7 @@ class ForumCommentController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($forum_id, Request $request)
+    public function store($forum_id, ForumCommentPost $request)
     {
         /** 掲示板にコメント投稿 **/
         $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
