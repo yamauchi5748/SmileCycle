@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ForumPost;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -28,7 +29,7 @@ class ForumController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ForumPost $request)
     {
         /** 掲示板を登録 **/
         $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
@@ -36,8 +37,8 @@ class ForumController extends AuthController
         /* 掲示板のモデル */
         $forum = [
             '_id' => (string) Str::uuid(),          // 掲示板のid
-            'sender_id' => '',                 // 掲示板の投稿者id
-            'sender_name' => '',               // 掲示板の投稿者名
+            'sender_id' => $request->sender_id,     // 掲示板の投稿者id
+            'sender_name' => '',                    // 掲示板の投稿者名
             'title' => $request->title,             // 掲示板のタイトル
             'text' => $request->text,               // 掲示板のテキスト
             'images' => [],                         // 掲示板の画像
@@ -63,7 +64,7 @@ class ForumController extends AuthController
         $sender_name_corsor = Member::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $request->post_member_id
+                    '_id' => $forum['sender_id']
                 ]
             ],
             [
