@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StampGroupSeeder::class);
         $this->call(MembersSeeder::class);
         $this->call(InvitationSeeder::class);
+        $this->call(ForumSeeder::class);
     }
 }
