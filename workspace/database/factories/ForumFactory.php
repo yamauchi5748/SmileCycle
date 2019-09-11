@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 use App\Models\Member;
 use App\Models\Forum;
+use App\Models\StampGroup;
 use Carbon\Carbon;
 
 $factory->define(Forum::class, function () {
@@ -41,6 +42,36 @@ $factory->define(Forum::class, function () {
         
         /* モデルに画像のidを追加 */
         $forum['images'][] = $image_id;
+    }
+
+    /* コメント追加処理 */
+    for ($i=0; $i < $faker->numberBetween(0, 20); $i++) {
+        $commenter = $faker->randomElement($members);
+        $stamp_groups = StampGroup::whereIn('members', [$commenter->_id])->get();
+        $stamps = $faker->randomElement($stamp_groups)->stamps;
+
+        $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
+
+        /* コメントのモデル */
+        $comment = [
+            '_id' => (string) Str::uuid(),                          // コメントのid
+            'sender_id' => $commenter->_id,                         // コメントの投稿者id
+            'sender_name' => $commenter->name,                      // コメントの投稿者名
+            'comment_type' => $faker->randomElement(["1", "2"]),    // コメントのタイプ
+            'created_at' => $now                                    // コメント投稿日
+        ];
+
+        /* コメントタイプ別に処理 */
+        if ($comment['comment_type'] == 1) {
+            /* テキスト */
+            $comment['text'] = $faker->realText;
+        } elseif ($comment['comment_type'] == 2) {
+            /* スタンプ */
+            $comment['stamp_id'] = $faker->randomElement($stamps);
+        }
+
+        /* モデルにコメントを追加 */
+        $forum['comments'][] = $comment;
     }
 
     // モデルをDBに登録
