@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ForumCommentGet;
 use App\Http\Requests\ForumCommentPost;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
@@ -17,9 +18,39 @@ class ForumCommentController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($forum_id)
+    public function index($forum_id, ForumCommentGet $request)
     {
-        return [ "response" => "return forum.comments.index"];
+        /** 特定の掲示板のコメントを取得 **/
+        $forums_comments_corsor = Forum::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $forum_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'comments' => [
+                        '$slice' => [ '$comments', (int) $request->comment_count, 10 ]
+                    ]
+                ]
+            ]
+        ])->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        $comments = head($forums_comments_corsor)['comments'];
+        if(head($comments)){
+            $this->response['comments'] = $comments;
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
