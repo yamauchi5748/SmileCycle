@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ForumGet;
 use App\Http\Requests\ForumPost;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,7 @@ class ForumController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(ForumGet $request)
     {
         /* Mongoクエリ作成 */
         $query = [];
