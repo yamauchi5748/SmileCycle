@@ -13,7 +13,8 @@ use Carbon\Carbon;
 $factory->define(Forum::class, function () {
     $faker = Faker\Factory::create('ja_JP');
 
-    $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
+    $time = '2019-09-10 17:' . $faker->numberBetween(10, 59);
+    $now  = (string) Carbon::createFromFormat('Y-m-d H:i', $time); // 現在時刻
     $members = Member::get();
     $member = $faker->randomElement($members);
 
@@ -50,7 +51,7 @@ $factory->define(Forum::class, function () {
         $stamp_groups = StampGroup::whereIn('members', [$commenter->_id])->get();
         $stamps = $faker->randomElement($stamp_groups)->stamps;
 
-        $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
+        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $faker->numberBetween(10, 59), 'Asia/Tokyo'); // 現在時刻
 
         /* コメントのモデル */
         $comment = [

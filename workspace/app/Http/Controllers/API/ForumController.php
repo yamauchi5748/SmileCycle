@@ -17,9 +17,70 @@ class ForumController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return [ "response" => "return forums.index"];
+        /* Mongoクエリ作成 */
+        $query = [];
+
+        if($request->member_id)
+        {
+            /* 特定会員の投稿した掲示板を指定 */
+            $query[] = [
+                '$match' => [
+                    'sender_id' => $request->member_id
+                ]
+            ];
+        }
+
+        /*返すプロパティを指定 */
+        $query[] = [
+            '$project' => [
+                '_id' => 1,
+                'sender_id' => 1,
+                'sender_name' => 1,
+                'title' => 1,
+                'text' => 1,
+                'images' => 1,
+                'created_at' => 1,
+            ]
+        ];
+
+        /*　日付の昇順 */
+        $query[] = [
+            '$sort' => [
+                'created_at' => 1
+            ]
+        ];
+
+        if($request->forum_count)
+        {
+            /* 指定されたインデックス以降の掲示板を取得 */
+            $query[] = [
+                '$skip' => (int) $request->forum_count
+            ];
+        }
+
+        /* 最大15件 */
+        $query[] = [
+            '$limit' => 15
+        ];
+
+        /** 掲示板の一覧を取得 **/
+        $forums = Forum::raw()->aggregate($query)->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        if($forums){
+            $this->response['forums'] = $forums;
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -85,7 +146,42 @@ class ForumController extends AuthController
      */
     public function show($forum_id)
     {
-        return [ "response" => "return forums.show"];
+        /** 特定の掲示板を取得 **/
+        $forum = Forum::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $forum_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'sender_id' => 1,
+                    'sender_name' => 1,
+                    'title' => 1,
+                    'text' => 1,
+                    'images' => 1,
+                    'comments' => [
+                        '$slice' => [ '$comments', 10 ]
+                    ],
+                    'created_at' => 1,
+                ]
+            ]
+        ])->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        if(head($forum)){
+            $this->response['forum'] = head($forum);
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

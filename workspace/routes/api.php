@@ -119,10 +119,9 @@ Route::apiResource('forums', 'API\ForumController')->only([
 
 //forum.comments
 Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->only([
-    "index", "store"
+    "index"
 ])->names([
-    "index" => "forum.comments.index",
-    "store" => "forum.comments.store"
+    "index" => "forum.comments.index"
 ]);
 
 //chat_rooms
