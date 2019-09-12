@@ -122,9 +122,6 @@ class MemberController extends AdminAuthController
                     'department_name' => $request->department_name,     // 部門名
                     'mail' => $request->mail,                           // メールアドレス
                     'password' => Hash::make($request->password)        // パスワード
-                ],
-                '$currentDate' => [
-                    'lastModified' => true
                 ]
             ]
         );
