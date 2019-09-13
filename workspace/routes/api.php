@@ -36,6 +36,9 @@ Route::apiResource('members', 'API\MemberController')->only([
     "show" => "members.show",
 ]);
 
+// member.image
+Route::get('members/{member_id}/profile-image', 'API\ImageController@memberImage')->name("member.image");
+
 //settings
 Route::put('settings', 'API\SettingController@update')->name('settings.update');
 Route::apiResource('settings', 'API\SettingController')->only([

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\Member;
 use App\Models\StampGroup;
 use App\Models\Forum;
 use App\Models\Invitation;
@@ -21,6 +22,26 @@ class ImageController extends AuthController
     {
         parent::__construct();
         $this->response['result'] = false;
+    }
+
+    /**
+     * 特定の会員のプロフィール画像
+     * 認可された画像を返す
+    **/
+    public function memberImage($member_id)
+    {
+        /* 会員が存在するかチェック */
+        $has_member_corsor = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $member_id 
+                ]
+            ]
+        ])->toArray();
+
+        /* 認可できれば画像を返す */
+        return head($has_member_corsor) ? 
+            Storage::download('private/images/profile_images/' . $member_id . '.png') : $this->response;
     }
 
     /**
