@@ -8,9 +8,13 @@ Vue.use(VueRouter)
 import Controls from "./components/controls/Controls";
 
 import ControlsInvitation from "./components/controls/Invitation";
+import ControlsInvitationCreate from "./components/controls/InvitationCreate";
 import ControlsMember from "./components/controls/Member";
+import ControlsMemberCreate from "./components/controls/MemberCreate";
 import ControlsCompany from "./components/controls/Company";
+import ControlsCompanyCreate from "./components/controls/CompanyCreate";
 import ControlsStamp from "./components/controls/Stamp";
+import ControlsStampCreate from "./components/controls/StampCreate";
 import ControlsStampDetails from "./components/controls/StampDetails"
 const router = new VueRouter({
     mode: "history",
@@ -25,9 +29,19 @@ const router = new VueRouter({
                     component: ControlsInvitation
                 },
                 {
+                    path: "invitation/create",
+                    name: "controls-invitation-create",
+                    component: ControlsInvitationCreate
+                },
+                {
                     path: "member",
                     name: "controls-member",
                     component: ControlsMember
+                },
+                {
+                    path: "member/create",
+                    name: "controls-member-create",
+                    component: ControlsMemberCreate
                 },
                 {
                     path: "company",
@@ -35,9 +49,19 @@ const router = new VueRouter({
                     component: ControlsCompany
                 },
                 {
+                    path: "company/create",
+                    name: "controls-company-create",
+                    component: ControlsCompanyCreate
+                },
+                {
                     path: "stamp",
                     name: "controls-stamp",
                     component: ControlsStamp,
+                },
+                {
+                    path: "stamp/create",
+                    name: "controls-stamp-create",
+                    component: ControlsStampCreate,
                 },
                 {
                     path: "stamp/:id",
