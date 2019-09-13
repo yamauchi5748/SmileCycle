@@ -39,7 +39,7 @@ $factory->define(Forum::class, function () {
         $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
 
         /* 画像を保存 */
-        Storage::putFileAs('public/images/forums', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
+        Storage::putFileAs('private/images/forums', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
         
         /* モデルに画像のidを追加 */
         $forum['images'][] = $image_id;

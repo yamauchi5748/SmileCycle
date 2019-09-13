@@ -35,7 +35,7 @@ $factory->define(Invitation::class, function () {
         $path_name = $faker->randomElement(['stamp1', 'stamp2', 'stamp3', 'stamp4']);
 
         /* 画像を保存 */
-        Storage::putFileAs('public/images/invitaions', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
+        Storage::putFileAs('private/images/invitaions', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
         
         /* モデルに画像のidを追加 */
         $invitation['images'][] = $image_id;

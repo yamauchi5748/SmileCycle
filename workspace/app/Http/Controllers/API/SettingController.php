@@ -103,7 +103,7 @@ class SettingController extends AuthController
         );
 
         // 会員のプロフィール画像を更新
-        Storage::putFileAs('public/images', $request->profile_image, $this->author->_id . '.png', 'public');
+        Storage::putFileAs('public/images/profile_images', $request->profile_image, $this->author->_id . '.png', 'public');
 
         $member = Member::raw()->aggregate([
             /* 会員を指定 */
