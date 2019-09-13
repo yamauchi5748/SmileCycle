@@ -6,25 +6,25 @@
                 <router-link
                     :to="{name:'controls-invitation'}"
                     class="p-tab-link"
-                    exact-active-class="active"
+                    active-class="active"
                     tag="li"
                 >会のご案内</router-link>
                 <router-link
                     :to="{name:'controls-member'}"
                     class="p-tab-link"
-                    exact-active-class="active"
+                    active-class="active"
                     tag="li"
                 >会員</router-link>
                 <router-link
                     :to="{name:'controls-company'}"
                     class="p-tab-link"
-                    exact-active-class="active"
+                    active-class="active"
                     tag="li"
                 >会社</router-link>
                 <router-link
                     :to="{name:'controls-stamp'}"
                     class="p-tab-link"
-                    exact-active-class="active"
+                    active-class="active"
                     tag="li"
                 >スタンプ</router-link>
             </ul>
