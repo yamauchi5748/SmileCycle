@@ -66,10 +66,7 @@ const router = new VueRouter({
                 },
                 {
                     path: "stamp/:id",
-                    components: {
-                        default: ControlsStamp,
-                        secondary: ControlsStampDetails
-                    }
+                    component: ControlsStampDetails,
                 }
             ]
         }
