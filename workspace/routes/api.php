@@ -123,6 +123,8 @@ Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->
 ])->names([
     "index" => "forum.comments.index"
 ]);
+// forum.stamp
+Route::get('forums/{forum_id}/stamps/{stamp_id}', 'API\ImageController@forumStamp')->name("forum.stamp");
 
 //chat_rooms
 Route::apiResource('chat-rooms', 'API\ChatRoomController');
