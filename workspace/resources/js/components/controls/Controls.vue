@@ -32,9 +32,6 @@
         <div class="p-primary-view">
             <router-view></router-view>
         </div>
-        <div class="p-secondary-view">
-            <router-view name="secondary"></router-view>
-        </div>
     </div>
 </template>
 <script>
@@ -72,23 +69,8 @@ export default {};
 }
 .p-primary-view {
     width: 600px;
-    padding: 28px 48px;
     border-left: solid 1px rgba(0, 0, 0, 0.2);
     border-right: solid 1px rgba(0, 0, 0, 0.2);
-    .pane-header {
-        display: flex;
-        align-items: center;
-    }
-    .item-count {
-        margin-right: auto;
-        font-size: 1.25rem;
-        font-weight: 900;
-    }
-}
-
-.p-secondary-view {
-    width: 500px;
-    padding: 28px 48px;
     .pane-header {
         display: flex;
         align-items: center;
