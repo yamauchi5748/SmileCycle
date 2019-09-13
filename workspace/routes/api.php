@@ -88,6 +88,10 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
     "index" => "stamp_groups.index",
 ]);
 
+// stamp.image
+Route::get('stamp-images/{image_id}', 'API\ImageController@stampImage')->name("stamp.image");
+
+
 //admin.invitations
 Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
     "index", "store", "show"
@@ -124,9 +128,6 @@ Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->
 ])->names([
     "index" => "forum.comments.index"
 ]);
-
-// forum.stamp
-Route::get('forums/{forum_id}/stamps/{stamp_id}', 'API\ImageController@forumStamp')->name("forum.stamp");
 
 // forum.image
 Route::get('forums/{forum_id}/images/{image_id}', 'API\ImageController@forumImage')->name("forum.image");

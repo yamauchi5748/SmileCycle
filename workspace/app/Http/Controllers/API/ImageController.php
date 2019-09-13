@@ -34,41 +34,34 @@ class ImageController extends AuthController
         $has_member_corsor = Member::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $member_id 
+                    '_id' => $member_id
                 ]
             ]
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        return head($has_member_corsor) ? 
+        return head($has_member_corsor) ?
             Storage::download('private/images/profile_images/' . $member_id . '.png') : $this->response;
     }
 
     /**
-     * 特定の掲示板に投稿されたスタンプ
-     * 認可されたスタンプを返す
+     * スタンプ画像
+     * 認可されたスタンプ画像を返す
     **/
-    public function forumStamp($forum_id, $stamp_id)
+    public function stampImage($image_id)
     {
-        /* スタンプが掲示板に投稿されているかチェック */
-        $has_stamp_corsor = Forum::raw()->aggregate([
+        /* スタンプが存在するかチェック */
+        $has_stamp_corsor = StampGroup::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $forum_id 
-                ]
-            ],
-            [
-                '$project' => [
-                    'stamp' => [
-                        '$in' => [ $stamp_id, '$comments.stamp_id' ]
-                    ]
+                    'stamps' => $image_id
                 ]
             ]
         ])->toArray();
 
         /* 認可できればスタンプを返す */
-        return head($has_stamp_corsor)['stamp'] ? 
-            Storage::download('private/images/stamps/' . $stamp_id . '.png') : $this->response;
+        return head($has_stamp_corsor) ?
+            Storage::download('private/images/stamps/' . $image_id . '.png') : $this->response;
     }
 
     /**
@@ -81,7 +74,7 @@ class ImageController extends AuthController
         $has_image_corsor = Forum::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $forum_id 
+                    '_id' => $forum_id
                 ]
             ],
             [
@@ -94,7 +87,7 @@ class ImageController extends AuthController
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        return head($has_image_corsor)['image'] ? 
+        return head($has_image_corsor)['image'] ?
             Storage::download('private/images/forums/' . $image_id . '.png') : $this->response;
     }
     
@@ -109,7 +102,7 @@ class ImageController extends AuthController
         $has_image_corsor = Invitation::raw()->aggregate([
             [
                 '$match' => [
-                    '_id' => $invitation_id 
+                    '_id' => $invitation_id
                 ]
             ],
             [
@@ -125,7 +118,7 @@ class ImageController extends AuthController
         ])->toArray();
         
         /* 管理者もしくは、認可できれば画像を返す */
-        if(head($has_image_corsor)['image'] && ($this->author->is_admin || head($has_image_corsor)['member']) ){
+        if (head($has_image_corsor)['image'] && ($this->author->is_admin || head($has_image_corsor)['member'])) {
             return Storage::download('private/images/invitations/' . $image_id . '.png');
         }
         return $this->response;
