@@ -105,6 +105,7 @@ class ImageController extends AuthController
     public function invitationImage($invitation_id, $image_id)
     {
         /* 画像が会のご案内に投稿されているかチェック */
+        /* 認証会員が会のご案内に招待されているかチェック */
         $has_image_corsor = Invitation::raw()->aggregate([
             [
                 '$match' => [
@@ -115,13 +116,18 @@ class ImageController extends AuthController
                 '$project' => [
                     'image' => [
                         '$in' => [ $image_id, '$images' ]
+                    ],
+                    'member' => [
+                        '$in' => [ $this->author->_id, '$attend_members._id' ]
                     ]
                 ]
             ]
         ])->toArray();
-
-        /* 認可できれば画像を返す */
-        return head($has_image_corsor)['image'] ? 
-            Storage::download('private/images/invitations/' . $image_id . '.png') : $this->response;
+        
+        /* 管理者もしくは、認可できれば画像を返す */
+        if(head($has_image_corsor)['image'] && ($this->author->is_admin || head($has_image_corsor)['member']) ){
+            return Storage::download('private/images/invitations/' . $image_id . '.png');
+        }
+        return $this->response;
     }
 }
