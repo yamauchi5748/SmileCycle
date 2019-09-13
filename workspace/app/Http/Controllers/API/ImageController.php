@@ -24,7 +24,7 @@ class ImageController extends AuthController
 
     /**
      * 特定の掲示板に投稿されたスタンプ
-     * 認可されたスタンプ画像を返す
+     * 認可されたスタンプを返す
     **/
     public function forumStamp($forum_id, $stamp_id)
     {
@@ -44,8 +44,35 @@ class ImageController extends AuthController
             ]
         ])->toArray();
 
-        /* 認可できれば画像を返す */
+        /* 認可できればスタンプを返す */
         return head($has_stamp_corsor)['stamp'] ? 
             Storage::download('private/images/stamps/' . $stamp_id . '.png') : $this->response;
+    }
+
+    /**
+     * 特定の掲示板に投稿された画像
+     * 認可された画像を返す
+    **/
+    public function forumImage($forum_id, $image_id)
+    {
+        /* 画像が掲示板に投稿されているかチェック */
+        $has_image_corsor = Forum::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $forum_id 
+                ]
+            ],
+            [
+                '$project' => [
+                    'image' => [
+                        '$in' => [ $image_id, '$images' ]
+                    ]
+                ]
+            ]
+        ])->toArray();
+
+        /* 認可できれば画像を返す */
+        return head($has_image_corsor)['image'] ? 
+            Storage::download('private/images/forums/' . $image_id . '.png') : $this->response;
     }
 }
