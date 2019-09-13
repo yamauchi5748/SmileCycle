@@ -16,6 +16,7 @@ import ControlsCompanyCreate from "./components/controls/CompanyCreate";
 import ControlsStamp from "./components/controls/Stamp";
 import ControlsStampCreate from "./components/controls/StampCreate";
 import ControlsStampDetails from "./components/controls/StampDetails"
+import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
     routes: [
@@ -66,7 +67,7 @@ const router = new VueRouter({
                 {
                     path: "stamp/:id",
                     components: {
-                        default:ControlsStamp,
+                        default: ControlsStamp,
                         secondary: ControlsStampDetails
                     }
                 }
@@ -79,5 +80,31 @@ Vue.component('home-component', require('./components/TheHomeComponent.vue').def
 
 const app = new Vue({
     router,
-    el: '#app'
+    el: '#app',
+    data: {
+        members: [],
+    },
+    methods: {
+        /* レスポンスの認証チェック */
+        checkAuth: function(res){
+            if(res.data.auth){
+                return res;
+            }
+            /* エラー */
+            console.log('認証エラー');
+            return Promise.reject();
+        },
+
+        /* 会員一覧取得 */
+        loadMembers: function () {
+            return axios.get('/api/members')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.members = res.data.members;
+                })
+                .catch(error => {});
+        }
+    }
 });
+
+window.app = app;

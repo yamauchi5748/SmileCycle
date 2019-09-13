@@ -1,7 +1,7 @@
 <template>
     <section class="view">
         <div class="layout-flex --align-items-center">
-            <h2 class="item-count">208人</h2>
+            <h2 class="item-count">{{ this.$root.members.length }}人</h2>
             <router-link class="normal-button margin-left-auto" :to="{name:'controls-member-create'}">会員を登録する</router-link>
         </div>
         <table class="table">
@@ -14,13 +14,13 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr class="table-body-item" v-for="n in 10" :key="n">
+                <tr class="table-body-item" v-for="member in this.$root.members" :key="member._id">
                     <td>
                         <img />
                     </td>
-                    <td>滝藤松之助</td>
-                    <td>たきとうまつのすけ</td>
-                    <td>営業部理事長</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.ruby }}</td>
+                    <td>{{ member.post }}</td>
                 </tr>
             </tbody>
         </table>
@@ -33,13 +33,8 @@ export default {
             isDialogOpen: false
         };
     },
-    methods: {
-        closeDialog() {
-            this.isDialogOpen = false;
-        },
-        openDialog() {
-            this.isDialogOpen = true;
-        }
+    mounted: function(){
+        this.$root.loadMembers();
     }
 };
 </script>
