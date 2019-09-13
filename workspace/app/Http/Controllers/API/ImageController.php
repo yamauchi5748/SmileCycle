@@ -18,6 +18,7 @@ class ImageController extends AuthController
      */
     public function __construct()
     {
+        parent::__construct();
         $this->response['result'] = false;
     }
 
