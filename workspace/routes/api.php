@@ -36,6 +36,9 @@ Route::apiResource('members', 'API\MemberController')->only([
     "show" => "members.show",
 ]);
 
+// member.image
+Route::get('members/{member_id}/profile-image', 'API\ImageController@memberImage')->name("member.image");
+
 //settings
 Route::put('settings', 'API\SettingController@update')->name('settings.update');
 Route::apiResource('settings', 'API\SettingController')->only([
@@ -87,16 +90,11 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
 
 //admin.invitations
 Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
-    "index", "show"
+    "index", "store", "show"
 ])->names([
     "index" => "admin.invitations.index",
-    "show" => "admin.invitations.show"
-]);
-//admin.invitations
-Route::apiResource('invitations', 'API\admin\InvitationController')->only([
-    "store"
-])->names([
     "store" => "admin.invitations.store",
+    "show" => "admin.invitations.show"
 ]);
 
 //invitations
@@ -107,6 +105,9 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
     "show" => "invitations.show",
     "update" => "invitations.update"
 ]);
+
+// invitation.image
+Route::get('invitations/{invitation_id}/images/{image_id}', 'API\ImageController@invitationImage')->name("invitation.image");
 
 //forums
 Route::apiResource('forums', 'API\ForumController')->only([
@@ -123,6 +124,12 @@ Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->
 ])->names([
     "index" => "forum.comments.index"
 ]);
+
+// forum.stamp
+Route::get('forums/{forum_id}/stamps/{stamp_id}', 'API\ImageController@forumStamp')->name("forum.stamp");
+
+// forum.image
+Route::get('forums/{forum_id}/images/{image_id}', 'API\ImageController@forumImage')->name("forum.image");
 
 //chat_rooms
 Route::apiResource('chat-rooms', 'API\ChatRoomController');

@@ -53,7 +53,7 @@ class MemberController extends AdminAuthController
         ]);
 
         // 会員のプロフィール画像をストレージに保存
-        Storage::putFileAs('public/images', $request->profile_image, $member_id . '.png', 'public');
+        Storage::putFileAs('private/images/profile_images', $request->profile_image, $member_id . '.png', 'private');
         
         /** 会社の会員情報を更新 **/
         Company::raw()->updateOne(
@@ -63,9 +63,6 @@ class MemberController extends AdminAuthController
             [
                 '$push' => [
                     'members' => $member_id                     // 会員のidを追加
-                ],
-                '$currentDate' => [
-                    'lastModified' => true
                 ]
             ]
         );
