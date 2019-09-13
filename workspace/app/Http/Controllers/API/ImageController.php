@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\StampGroup;
 use App\Models\Forum;
+use App\Models\Invitation;
 
 class ImageController extends AuthController
 {
@@ -74,5 +75,32 @@ class ImageController extends AuthController
         /* 認可できれば画像を返す */
         return head($has_image_corsor)['image'] ? 
             Storage::download('private/images/forums/' . $image_id . '.png') : $this->response;
+    }
+    
+    /**
+     * 特定の会のご案内に投稿された画像
+     * 認可された画像を返す
+    **/
+    public function invitationImage($invitation_id, $image_id)
+    {
+        /* 画像が会のご案内に投稿されているかチェック */
+        $has_image_corsor = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id 
+                ]
+            ],
+            [
+                '$project' => [
+                    'image' => [
+                        '$in' => [ $image_id, '$images' ]
+                    ]
+                ]
+            ]
+        ])->toArray();
+
+        /* 認可できれば画像を返す */
+        return head($has_image_corsor)['image'] ? 
+            Storage::download('private/images/invitations/' . $image_id . '.png') : $this->response;
     }
 }
