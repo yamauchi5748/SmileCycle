@@ -1,30 +1,8 @@
 <template>
     <section class="view">
         <div class="layout-flex --align-items-center">
-            <h2 class="item-count">208人</h2>
-            <button @click="openDialog" class="normal-button margin-left-auto">会員を登録する</button>
-            <div class="mask" :class="{open:isDialogOpen}">
-                <div class="dialog">
-                    <div class="dialog-header">
-                        <h2 class="dialog-title">会員登録</h2>
-                        <button @click="closeDialog" class="dialog-hide-button"></button>
-                    </div>
-                    <div class="dialog-body">
-                        <input class="input" placeholder="会員名" />
-                        <input class="input" placeholder="ふりがな" />
-                        <input class="input" placeholder="電話番号" />
-                        <input class="input" placeholder="メールアドレス" />
-                        <input class="input" placeholder="部門" />
-                        <input class="input" placeholder="会社" />
-                        <input class="input" placeholder="役職名" />
-                        <input class="input" placeholder="パスワード" />
-                    </div>
-                    <div class="dialog-footer">
-                        <button @click="closeDialog" class="flat-button">取り消し</button>
-                        <button class="normal-button">登録する</button>
-                    </div>
-                </div>
-            </div>
+            <h2 class="item-count">{{ this.$root.members.length }}人</h2>
+            <router-link class="normal-button margin-left-auto" :to="{name:'controls-member-create'}">会員を登録する</router-link>
         </div>
         <table class="table">
             <thead class="table-head">
@@ -36,13 +14,13 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr class="table-body-item" v-for="n in 10" :key="n">
+                <tr class="table-body-item" v-for="member in this.$root.members" :key="member._id">
                     <td>
                         <img />
                     </td>
-                    <td>滝藤松之助</td>
-                    <td>たきとうまつのすけ</td>
-                    <td>営業部理事長</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.ruby }}</td>
+                    <td>{{ member.post }}</td>
                 </tr>
             </tbody>
         </table>
@@ -55,13 +33,8 @@ export default {
             isDialogOpen: false
         };
     },
-    methods: {
-        closeDialog() {
-            this.isDialogOpen = false;
-        },
-        openDialog() {
-            this.isDialogOpen = true;
-        }
+    mounted: function(){
+        this.$root.loadMembers();
     }
 };
 </script>
