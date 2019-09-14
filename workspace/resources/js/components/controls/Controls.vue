@@ -1,5 +1,5 @@
 <template>
-    <div class="layout-flex">
+    <div class="p-controls layout-flex">
         <div class="p-controls-sidebar layout-flex --flex-direction-column">
             <div class="p-sidebar-header">管理</div>
             <ul class="p-sidebar-content">
@@ -38,6 +38,9 @@
 export default {};
 </script>
 <style lang="scss" scoped>
+.p-controls{
+    height:100%;
+}
 .p-controls-sidebar {
     width: 180px;
     flex-shrink: 0;
@@ -71,6 +74,7 @@ export default {};
     width: 600px;
     border-left: solid 1px rgba(0, 0, 0, 0.2);
     border-right: solid 1px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
     .pane-header {
         display: flex;
         align-items: center;

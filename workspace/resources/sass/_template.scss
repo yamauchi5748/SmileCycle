@@ -31,7 +31,7 @@
 // ボタン
 //ベース
 %button {
-    display: flex;
+    display: inline-flex;
     height: 36px;
     min-width: 80px;
     padding: 0 12px;
@@ -80,6 +80,16 @@
     &.multi-line {
         height: 120px;
         resize: none;
+    }
+}
+//カウンターを付けるときに使用する
+.input-wrapper{
+    display: flex;
+    flex-direction: column;
+    .counter{
+        display: block;
+        margin-top: 6px;
+        margin-left: auto;
     }
 }
 /**************************************************************/

@@ -1,7 +1,7 @@
 <template>
-    <div class="page">
-        <the-global-header></the-global-header>
-        <main class="content">
+    <div class="p-page">
+        <the-global-header class="p-header"></the-global-header>
+        <main class="p-content">
             <router-view></router-view>
         </main>
     </div>
@@ -23,9 +23,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.content {
-    width: 100%;
+<style lang="scss" scoped>
+.p-page{
+    height: 100vh;
+    width: 100vw;
+}
+.p-header{
+    height:60px;
+}
+.p-content{
     height: 100%;
 }
 </style>
