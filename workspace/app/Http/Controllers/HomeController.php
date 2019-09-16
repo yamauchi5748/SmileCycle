@@ -28,10 +28,9 @@ class HomeController extends AuthController
             'to_name' => env('MAIL_TO_NAME', ''),
             'subject' => 'テストメールです'
         ];
-
-        $job = (new ProcessPodcast('contact.mail', ['count' => 10], $mail))->delay(10);
+        
         // jobs テーブルに登録
-        dispatch($job);
+        ProcessPodcast::dispatch('contact.mail', ['count' => 10], $mail);
     }
 
     /**

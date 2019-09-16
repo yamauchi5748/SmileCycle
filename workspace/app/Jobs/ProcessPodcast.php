@@ -23,6 +23,7 @@ class ProcessPodcast implements ShouldQueue
  
      public function __construct($view, $data, $mail)
      {
+        Log::info('Jddd');
          $this->view = $view;
          $this->data = $data;
          $this->mail = $mail;
