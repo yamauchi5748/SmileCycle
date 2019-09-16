@@ -218,10 +218,10 @@ REDIS_PORT=6379
 ### LARAVEL ECHO SERVER ###################################
 
 LARAVEL_ECHO_SERVER_PORT=6001
-### POSTFIX ################################################
-POSTFIX_PORT=25
-POSTFIX_SUBMISSIION_PORT=587
-POSTFIX_SMTPS_PORT=465
+
+### MAILHOG ################################################
+MAILHOG_PORT=1025
+MAILHOG_SUBMISSIION_PORT=8025
 
 ### BLACKFIRE #############################################
 
