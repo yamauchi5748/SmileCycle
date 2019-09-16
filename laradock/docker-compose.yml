@@ -200,7 +200,6 @@ services:
 
 ### Mailhog ################################################   
     mailhog:
-    mailhog:
       build: ./mailhog
       ports:
         - "${MAILHOG_PORT}:1025"
@@ -208,6 +207,21 @@ services:
       networks:
         - backend
         - frontend
+
+### Postfix ################################################    
+    postfix:
+      build: ./postfix
+      privileged: true
+      volumes:
+        - ${DATA_PATH_HOST}/postfix/config/:/tmp/postfix
+      ports:
+        - "${POSTFIX_PORT}:25"
+        - "${POSTFIX_SUBMISSIION_PORT}:587"
+        - "${POSTFIX_SMTPS_PORT}:465"
+      networks:
+        - backend
+        - frontend
+
 
 ### Redis ################################################
     redis:

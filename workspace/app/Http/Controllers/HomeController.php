@@ -20,17 +20,12 @@ class HomeController extends AuthController
     {
         $this->middleware('auth');
 
-        /* メール通知を飛ばす */
-        $mail = [
-            'from'    => env('MAIL_FROM_ADDRESS', ''),
-            'f_name'  => env('MAIL_FROM_NAME', ''),
-            'to'      => env('MAIL_TO_NAME', ''),
-            'to_name' => env('MAIL_TO_NAME', ''),
-            'subject' => 'テストメールです'
-        ];
-        
-        // jobs テーブルに登録
-        ProcessPodcast::dispatch('contact.mail', ['count' => 10], $mail);
+        for ($i=0; $i < 50; $i++) {
+            /* メール通知を飛ばす */
+            $job = (new ProcessPodcast)->delay(3);
+            // jobs テーブルに登録
+            dispatch($job);
+        }
     }
 
     /**
@@ -40,7 +35,6 @@ class HomeController extends AuthController
      */
     public function index()
     {
-
         $member = Auth::user();
         return view('home', [ "member" => $member]);
     }

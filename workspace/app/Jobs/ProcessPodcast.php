@@ -20,10 +20,18 @@ class ProcessPodcast implements ShouldQueue
     /** @var array メールの送信先等の属性 */
     protected $mail;
  
-    public function __construct($view, $data, $mail)
+    public function __construct()
     {
-        $this->view = $view;
-        $this->data = $data;
+        $mail = [
+            'from'    => env('MAIL_FROM_ADDRESS', ''),
+            'f_name'  => env('MAIL_FROM_NAME', ''),
+            'to'      => env('MAIL_TO_NAME', ''),
+            'to_name' => env('MAIL_TO_NAME', ''),
+            'subject' => 'テストメールです'
+        ];
+
+        $this->view = 'contact.mail';
+        $this->data = ['count' => 10];
         $this->mail = $mail;
     }
  
@@ -32,7 +40,6 @@ class ProcessPodcast implements ShouldQueue
      */
     public function handle(Mailer $mailer)
     {
-        \Log::debug('test');
         $mail = $this->mail;
         $mailer->send($this->view, $this->data, function ($message) use ($mail) {
             $message->subject($mail['subject'])
