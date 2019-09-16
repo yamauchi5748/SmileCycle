@@ -6,6 +6,8 @@ cd laradock
 rem 保存されたローカルの画像を削除
 cd ../workspace/storage/app/public
 rd /s /q .\images
+cd ../private
+rd /s /q .\images
 
 rem 各コンテナを停止
 cd ../../../../laradock

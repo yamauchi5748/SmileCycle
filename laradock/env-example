@@ -8,6 +8,10 @@
 #APP_CODE_PATH_HOST=../            
 APP_CODE_PATH_HOST=../workspace/
 
+#worker
+WORKER_CONF_HOST=../workspace/laravel-worker.conf
+WORKER_CONF_CONTAINER=/etc/supervisor/conf.d/laravel-worker.conf
+
 # Point to where the `APP_CODE_PATH_HOST` should be in the container
 APP_CODE_PATH_CONTAINER=/var/www
 
