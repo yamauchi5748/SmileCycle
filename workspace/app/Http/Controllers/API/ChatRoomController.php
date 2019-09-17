@@ -4,6 +4,12 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Http\Requests\InvitationPost;
+use Carbon\Carbon;
+use App\Models\Member;
+use App\Models\ChatRoom;
 
 class ChatRoomController extends AuthController
 {
@@ -25,7 +31,23 @@ class ChatRoomController extends AuthController
      */
     public function store(Request $request)
     {
-        return [ "response" => "return chat_rooms.store"];
+        /** チャットグループ作成 **/
+        // モデル作成
+        $chat_group = [
+            '_id' => (string) Str::uuid(),              // チャットグループのid
+            'is_group' => $request->is_group,           // チャットグループの種類
+            'admin_member_id' => $this->author->_id,    // チャットグループの管理者
+            'group_name' => $request->group_name,       // チャットグループのグループ名
+            'members' => $request->members,             // チャットグループの会員
+            'contents' => [],
+        ];
+
+        // 投稿者もグループ会員に追加
+        $chat_group['members'][] = $this->author->_id;
+
+        /* DBにモデル登録 */
+        ChatRoom::raw()->insertOne($chat_group);
+        return $chat_group;
     }
 
     /**
