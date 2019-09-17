@@ -20,12 +20,10 @@ class HomeController extends AuthController
     {
         $this->middleware('auth');
 
-        for ($i=0; $i < 50; $i++) {
-            /* メール通知を飛ばす */
-            $job = (new ProcessPodcast)->delay(3);
-            // jobs テーブルに登録
-            dispatch($job);
-        }
+        /* メール通知を飛ばす */
+        $job = (new ProcessPodcast)->delay(3);
+        // jobs テーブルに登録
+        dispatch($job);
     }
 
     /**
