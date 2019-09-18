@@ -43,7 +43,8 @@ $factory->define(ChatRoom::class, function () {
             'is_hurry' => $faker->boolean,
             'content_type' => $faker->randomElement(["1", "2", "3", "4"]),
             'sender_id' => $faker->randomElement($chat_members),
-            'created_at' => $now
+            'created_at' => $now,
+            'already_read' => []
         ];
 
         // チャットコンテンツのタイプによって処理

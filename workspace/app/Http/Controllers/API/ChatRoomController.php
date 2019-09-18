@@ -19,7 +19,103 @@ class ChatRoomController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return chat_rooms.index"];
+        /* 会員が属しているルームを返す */
+        $room = ChatRoom::raw()->aggregate([
+            /* 会員のルームを指定 */
+            [
+                '$match' => [
+                    'members' => [
+                        '$in' => [$this->author->_id, '$members']
+                    ]
+                ]
+            ],
+            /* 各コンテンツを展開 */
+            [
+                '$unwind' => '$contents'
+            ],
+            /* membersコレクションと結合 */
+            [
+                '$lookup' => [
+                    'from' => 'members',
+                    'localField' => 'contents.sender_id',
+                    'foreignField' => '_id',
+                    'as' => 'Members'
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'is_group' => 1,
+                    'admin_member_id' => 1,
+                    'group_name' => 1,
+                    'members' => 1,
+                    'contents' => [
+                        '_id' => 1,
+                        'content_type' => 1,
+                        'created_at' => 1,
+                        'already_read' => [
+                            '$size' => '$contents.already_read'
+                        ],
+                        'message' => 1,
+                        'stamp_id' => 1,
+                        'content_id' => 1,
+                        'sender_id' => 1,
+                        'sender_name' => [
+                            '$arrayElemAt' => ['$Members.name', 0]
+                        ],
+                    ]
+                ]
+            ],
+            /* コンテンツの投稿日時順にソート */
+            [
+                '$sort' => [
+                    'contents.created_at' => 1
+                ]
+            ],
+            /* 展開したプロパティをまとめる */
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'is_group' => [
+                        '$first' => '$is_group'
+                    ],
+                    'admin_member_id' => 
+                    [
+                        '$first' => '$admin_member_id'
+                    ],                    
+                    'group_name' => 
+                    [
+                        '$first' => '$group_name'
+                    ],
+                    'members' => 
+                    [
+                        '$first' => '$members'
+                    ],
+                    'contents' => [
+                        '$push' => '$contents'
+                    ]
+                ]
+            ],
+            [
+                '$sort' => [
+                    'contents.created_at' => 1
+                ]
+            ],
+            /* 返すプロパティを指定 */
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'is_group' => 1,
+                    'admin_member_id' => 1,
+                    'group_name' => 1,
+                    'members' => 1,
+                    'contents' => [
+                        '$slice' => ['$contents', 0, 10]
+                    ]
+                ]
+            ]
+        ])->toArray();
+        return $room;
     }
 
     /**

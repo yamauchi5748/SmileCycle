@@ -40,7 +40,8 @@ class ChatRoomContentController extends AuthController
             'is_hurry' => $request->is_hurry,           // 急ぎチャットかどうか
             'content_type' => $request->content_type,   // チャットの種類
             'sender_id' => $this->author->_id,          // 送信者のid
-            'created_at' => $now                        // 送信日時
+            'created_at' => $now,                       // 送信日時
+            'already_read' => []                        // 既読した会員のidを格納
         ];
 
         // チャットコンテンツのタイプによって処理
