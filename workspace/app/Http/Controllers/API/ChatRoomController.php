@@ -20,7 +20,7 @@ class ChatRoomController extends AuthController
     public function index()
     {
         /* 会員が属しているルームを返す */
-        $room = ChatRoom::raw()->aggregate([
+        $rooms_corsor = ChatRoom::raw()->aggregate([
             /* 会員のルームを指定 */
             [
                 '$match' => [
@@ -115,7 +115,21 @@ class ChatRoomController extends AuthController
                 ]
             ]
         ])->toArray();
-        return $room;
+        
+        /* 返すレスポンスデータを整形 */
+        $head_corsor = head($rooms_corsor);
+        if($head_corsor){
+            $this->response['rooms'] = $rooms_corsor;
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

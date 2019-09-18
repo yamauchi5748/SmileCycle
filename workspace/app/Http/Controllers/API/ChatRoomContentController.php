@@ -20,7 +20,94 @@ class ChatRoomContentController extends AuthController
      */
     public function index($chat_room_id)
     {
-        return [ "response" => "return chat_room.contents.index"];
+        /* 会員が属しているルームを返す */
+        $contents_corsor = ChatRoom::raw()->aggregate([
+            /* 会員のルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'members' => [
+                        '$in' => [$this->author->_id, '$members']
+                    ]
+                ]
+            ],
+            /* 各コンテンツを展開 */
+            [
+                '$unwind' => '$contents'
+            ],
+            /* membersコレクションと結合 */
+            [
+                '$lookup' => [
+                    'from' => 'members',
+                    'localField' => 'contents.sender_id',
+                    'foreignField' => '_id',
+                    'as' => 'Members'
+                ]
+            ],
+            [
+                '$project' => [
+                    'contents' => [
+                        '_id' => 1,
+                        'content_type' => 1,
+                        'created_at' => 1,
+                        'already_read' => [
+                            '$size' => '$contents.already_read'
+                        ],
+                        'message' => 1,
+                        'stamp_id' => 1,
+                        'content_id' => 1,
+                        'sender_id' => 1,
+                        'sender_name' => [
+                            '$arrayElemAt' => ['$Members.name', 0]
+                        ],
+                    ]
+                ]
+            ],
+            /* コンテンツの投稿日時順にソート */
+            [
+                '$sort' => [
+                    'contents.created_at' => 1
+                ]
+            ],
+            /* 展開したプロパティをまとめる */
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'contents' => [
+                        '$push' => '$contents'
+                    ]
+                ]
+            ],
+            [
+                '$sort' => [
+                    'contents.created_at' => 1
+                ]
+            ],
+            /* 返すプロパティを指定 */
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'contents' => [
+                        '$slice' => ['$contents', 0, 10]
+                    ]
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $head_corsor = head($contents_corsor);
+        if($head_corsor && head($head_corsor['contents'])){
+            $this->response['contents'] = $head_corsor['contents'];
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
