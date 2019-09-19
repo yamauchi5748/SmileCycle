@@ -34,8 +34,9 @@ $factory->define(ChatRoom::class, function () {
 
     /** チャットコンテンツ投稿 **/
     for ($i=0; $i < $faker->numberBetween(1, 30); $i++) {
-        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $faker->numberBetween(10, 59), 'Asia/Tokyo'); // 現在時刻
-
+        $second = $i < 10 ? '0'.$i : $i;
+        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo'); // 現在時刻
+        $now = Str::limit($now, 16, '');
 
         /* チャットモデル */
         $chat = [

@@ -20,9 +20,9 @@ class ChatRoomContentController extends AuthController
      */
     public function index($chat_room_id)
     {
-        /* 会員が属しているルームを返す */
+        /* ルームのコンテンツを返す */
         $contents_corsor = ChatRoom::raw()->aggregate([
-            /* 会員のルームを指定 */
+            /* ルームを指定 */
             [
                 '$match' => [
                     '_id' => $chat_room_id,
@@ -61,12 +61,6 @@ class ChatRoomContentController extends AuthController
                             '$arrayElemAt' => ['$Members.name', 0]
                         ],
                     ]
-                ]
-            ],
-            /* コンテンツの投稿日時順にソート */
-            [
-                '$sort' => [
-                    'contents.created_at' => 1
                 ]
             ],
             /* 展開したプロパティをまとめる */
