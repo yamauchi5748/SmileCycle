@@ -15,6 +15,7 @@ import Chat from "./components/controls/Chat";
 
 import ChatGroup from "./components/controls/ChatGroup";
 import ChatMember from "./components/controls/ChatMember";
+import RoomDetails from "./components/controls/RoomDetails";
 
 const router = new VueRouter({
     mode: "history",
@@ -48,12 +49,20 @@ const router = new VueRouter({
                 {
                     path: "group",
                     name: "chat-group",
-                    component: ChatGroup
+                    components: {
+                        default: ChatGroup,
+                        details: RoomDetails
+                    }
                 },
                 {
                     path: "member",
                     name: "chat-member",
                     component: ChatMember
+                },
+                {
+                    path: "details",
+                    name: "room-details",
+                    component: RoomDetails
                 }
             ]
         },

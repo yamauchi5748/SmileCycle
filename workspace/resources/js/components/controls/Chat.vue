@@ -18,8 +18,8 @@
                    <button class="add-button"><img src="/img/add-button.png" alt="button"></button>
                 </div>
             </div>
-            <div class="contents">
-                <p></p>
+            <div class="details">
+                <router-view name="details"></router-view>
             </div>
         </div>
     </div>
@@ -28,7 +28,8 @@
 export default {
     data() {
         return {
-            type:  "group"
+            type:  "group",
+            roomName: ""
         };
     },
     methods: {
@@ -128,12 +129,11 @@ export default {
     }
 }
 
-.contents {
+.details {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
     background-color: $base-color;
     height: 800px;
-    width: 349.95px;
 }
 </style>
