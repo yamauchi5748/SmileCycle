@@ -124,9 +124,10 @@ Route::apiResource('forums', 'API\ForumController')->only([
 
 //forum.comments
 Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->only([
-    "index"
+    "index", "store"
 ])->names([
-    "index" => "forum.comments.index"
+    "index" => "forum.comments.index",
+    "store" => "forum.comments.store",
 ]);
 
 // forum.image

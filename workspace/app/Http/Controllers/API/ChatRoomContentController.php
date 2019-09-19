@@ -107,7 +107,7 @@ class ChatRoomContentController extends AuthController
      */
     public function store(Request $request, $chat_room_id)
     {
-        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y/m/d H:i'); // 現在時刻
+        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
 
         /** チャットコンテンツ投稿 **/
         /* チャットモデル */
@@ -161,7 +161,10 @@ class ChatRoomContentController extends AuthController
             ],
             [
                 '$push' => [
-                    'contents' => $chat 
+                    'contents' => [
+                        '$each' => [$chat],
+                        '$position' => 0
+                    ]
                 ]
             ]
         );
