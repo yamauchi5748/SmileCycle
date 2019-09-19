@@ -66,12 +66,6 @@ class ChatRoomController extends AuthController
                     ]
                 ]
             ],
-            /* コンテンツの投稿日時順にソート */
-            [
-                '$sort' => [
-                    'contents.created_at' => 1
-                ]
-            ],
             /* 展開したプロパティをまとめる */
             [
                 '$group' => [
@@ -94,11 +88,6 @@ class ChatRoomController extends AuthController
                     'contents' => [
                         '$push' => '$contents'
                     ]
-                ]
-            ],
-            [
-                '$sort' => [
-                    'contents.created_at' => 1
                 ]
             ],
             /* 返すプロパティを指定 */

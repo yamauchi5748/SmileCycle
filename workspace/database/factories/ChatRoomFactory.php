@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\StampGroup;
 use App\Models\ChatRoom;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 use Carbon\Carbon;
@@ -91,6 +92,7 @@ $factory->define(ChatRoom::class, function () {
         }
         $chat_group['contents'][] = $chat;
     }
+    $chat_group['contents'] = collect($chat_group['contents'])->reverse()->values()->toArray();
 
     return $chat_group;
 });

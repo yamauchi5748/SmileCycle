@@ -3,6 +3,7 @@
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 use App\Models\Member;
@@ -77,6 +78,7 @@ $factory->define(Forum::class, function () {
         /* モデルにコメントを追加 */
         $forum['comments'][] = $comment;
     }
+    $forum['comments'] = collect($forum['comments'])->reverse()->values()->toArray();
 
     // モデルをDBに登録
     return $forum;

@@ -18,7 +18,7 @@ class ChatRoomContentController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($chat_room_id)
+    public function index(Request $request, $chat_room_id)
     {
         /* ルームのコンテンツを返す */
         $contents_corsor = ChatRoom::raw()->aggregate([
@@ -60,7 +60,7 @@ class ChatRoomContentController extends AuthController
                         'sender_name' => [
                             '$arrayElemAt' => ['$Members.name', 0]
                         ],
-                    ]
+                    ],
                 ]
             ],
             /* 展開したプロパティをまとめる */
@@ -72,17 +72,12 @@ class ChatRoomContentController extends AuthController
                     ]
                 ]
             ],
-            [
-                '$sort' => [
-                    'contents.created_at' => 1
-                ]
-            ],
             /* 返すプロパティを指定 */
             [
                 '$project' => [
                     '_id' => 0,
                     'contents' => [
-                        '$slice' => ['$contents', 0, 10]
+                        '$slice' => ['$contents', (int) $request->content_count, 10]
                     ]
                 ]
             ]
