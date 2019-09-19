@@ -3,25 +3,51 @@
         <div class="controls-body">
             <div class="room-list">
                 <div class="type-tab">
-                    <router-link :to="{name:'chat-group'}" class="tab-link active">グループ</router-link>
-                    <router-link :to="{name:'chat-member'}" class="tab-link">会員</router-link>
+                    <router-link :to="{name:'chat-group'}" class="tab-link" exact-active-class="active" @click.native="isGroup">グループ</router-link>
+                    <router-link :to="{name:'chat-member'}" class="tab-link" exact-active-class="active" @click.native="isMember">会員</router-link>
                 </div>
                 <div>
                     <div class="search-box">
                         <img src="/img/search-icon.png" alt="検索アイコン">
-                        <input type="text" placeholder="グループ名検索">
+                        <input type="text" v-if="type === 'group'"  placeholder="グループ名検索">
+                        <input type="text" v-if="type === 'member'"  placeholder="会員名検索">
                     </div>
-                    <div class="contents">
+                    <div class="room">
                         <router-view></router-view>
                     </div>
                    <button class="add-button"><img src="/img/add-button.png" alt="button"></button>
                 </div>
             </div>
+            <div class="contents">
+                <p></p>
+            </div>
         </div>
     </div>
 </template>
+<script>
+export default {
+    data() {
+        return {
+            type:  "group"
+        };
+    },
+    methods: {
+        isGroup() {
+            this.type = "group";
+        },
+        isMember() {
+            this.type = "member";
+        }
+    }
+};
+</script>
 <style lang="scss">
 .chat {
+}
+
+.controls-body {
+    display: flex;
+    justify-content: start;
 }
 
 .room-list {
@@ -57,7 +83,6 @@
         font-size: 16px;
         font-weight: bold;
         color: $black;
-
         &.active {
             color: $accent-color;
         }
@@ -85,7 +110,7 @@
     }
 }
 
-.contents {
+.room {
     display: flex;
     ol {
         display: flex;
@@ -101,5 +126,14 @@
             margin-bottom: 40px;
         }
     }
+}
+
+.contents {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    background-color: $base-color;
+    height: 800px;
+    width: 349.95px;
 }
 </style>

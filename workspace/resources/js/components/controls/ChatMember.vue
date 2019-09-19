@@ -1,10 +1,10 @@
 <template>
     <div>
         <ol>
-            <img src="/img/profile.png" alt="profile"><li>testname</li>
-            <img src="/img/profile.png" alt="profile"><li>testname</li>
-            <img src="/img/profile.png" alt="profile"><li>testname</li>
-            <img src="/img/profile.png" alt="profile"><li>testname</li>
+            <li><img src="" alt="profile">testname</li>
+            <li><img src="" alt="profile">testname</li>
+            <li><img src="" alt="profile">testname</li>
+            <li><img src="" alt="profile">testname</li>
         </ol>
     </div>
 </template>
