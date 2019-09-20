@@ -123,7 +123,49 @@ class ChatRoomController extends AuthController
      */
     public function update(Request $request, $chat_room_id)
     {
-        return [ "response" => "return chat_rooms.update"];
+        /** グループ名を更新 **/
+        ChatRoom::raw()->updateOne(
+            [
+                '_id' => $chat_room_id
+            ],
+            [
+                '$set' => [
+                    'group_name' => $request->new_group_name
+                ]
+            ]
+        );
+
+        /* 更新したルーム情報を取得 */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'group_name' => 1,
+
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $room = head($room_corsor);
+        if($room){
+            $this->response['room'] = $room;
+        }else{
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
