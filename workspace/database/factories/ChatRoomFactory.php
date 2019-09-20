@@ -13,21 +13,23 @@ use Carbon\Carbon;
 
 $factory->define(ChatRoom::class, function () {
     $faker = Faker\Factory::create('ja_JP');
-    $members = Member::get();
+    $members = Member::select('_id','name')->get();
     $member_count = Member::get()->count();
 
-    $members_id = [];
+    $chat_members = [];
     foreach ($members as $member) {
-        $members_id[] = $member->_id;
+        $chat_member['_id'] = $member->_id;
+        $chat_member['name'] = $member->name;
+        $chat_members[] = $chat_member;
     }
-    $chat_members = $faker->randomElements($members_id, $faker->numberBetween(2, $member_count-1));
+    $chat_members = $faker->randomElements($chat_members, $faker->numberBetween(2, $member_count-1));
     
     /** チャットグループ作成 **/
     // モデル作成
     $chat_group = [
         '_id' => (string) Str::uuid(),
         'is_group' => true,
-        'admin_member_id' => $faker->randomElement($chat_members),
+        'admin_member_id' => $faker->randomElement($chat_members)['_id'],
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
         'members' => $chat_members,
         'contents' => [],
@@ -38,13 +40,14 @@ $factory->define(ChatRoom::class, function () {
         $second = $i < 10 ? '0'.$i : $i;
         $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo'); // 現在時刻
         $now = Str::limit($now, 16, '');
-
+        $chat_member = $faker->randomElement($chat_members);
         /* チャットモデル */
         $chat = [
             '_id' => (string) Str::uuid(),
             'is_hurry' => $faker->boolean,
             'content_type' => $faker->randomElement(["1", "2", "3", "4"]),
-            'sender_id' => $faker->randomElement($chat_members),
+            'sender_id' => $chat_member['_id'],
+            'sender_name' => $chat_member['name'],
             'created_at' => $now,
             'already_read' => []
         ];
