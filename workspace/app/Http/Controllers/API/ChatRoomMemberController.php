@@ -124,9 +124,68 @@ class ChatRoomMemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($chat_room_id, $member_id)
+    public function destroy($chat_room_id)
     {
-        return [ "response" => "return chat_room.members.destroy"];
+        /** 会員がルームから退出 **/
+        /* 会員の情報を取得 */
+        $member = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /** ルーム管理者ならばルームを削除 **/
+        ChatRoom::raw()->deleteOne(
+            [
+                '_id' => $chat_room_id,
+                /* ルームの管理者認証 */
+                'admin_member_id' => $this->author->_id
+            ]
+        );
+
+        /* ルーム更新 */
+        ChatRoom::raw()->updateOne(
+            [
+                '_id' => $chat_room_id 
+            ],
+            [
+                '$pullAll' => [
+                    'members' => $member
+                ]
+            ]
+        );
+        
+        /* ルームを取得 存在チェックのため */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'members' => $member
+                ]
+            ]
+        ])->toArray();
+
+        /* ルーム、会員が削除されたか */
+        $room = head($room_corsor);
+        if ($room) {
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -158,13 +217,15 @@ class ChatRoomMemberController extends AuthController
         /* ルーム更新 */
         ChatRoom::raw()->updateOne(
             [
-                '_id' => $chat_room_id,
-                /* ルームの管理者認証 */
-                'admin_member_id' => $this->author->_id,
-                'admin_member_id' => [
-                    '$not' => [
-                        '$in' => $request->delete_members
-                    ]
+                '$and' => [
+                    ['_id' => $chat_room_id],
+                    /* ルームの管理者認証 */
+                    ['admin_member_id' => $this->author->_id],
+                    ['admin_member_id' => [
+                        '$not' => [
+                            '$in' => $request->delete_members
+                        ]
+                    ]]
                 ]
             ],
             [
@@ -179,13 +240,15 @@ class ChatRoomMemberController extends AuthController
             /* ルームを指定 */
             [
                 '$match' => [
-                    '_id' => $chat_room_id,
-                    /* 管理者認証、管理者が削除されてないか */
-                    'admin_member_id' => $this->author->_id,
-                    'admin_member_id' => [
-                        '$not' => [
-                            '$in' => $request->delete_members
-                        ]
+                    '$and' => [
+                        ['_id' => $chat_room_id],
+                        /* 管理者認証、管理者が削除されてないか */
+                        ['admin_member_id' => $this->author->_id],
+                        ['admin_member_id' => [
+                            '$not' => [
+                                '$in' => $request->delete_members
+                            ]
+                        ]]
                     ]
                 ]
             ],
