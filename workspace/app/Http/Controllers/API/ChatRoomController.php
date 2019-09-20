@@ -176,6 +176,36 @@ class ChatRoomController extends AuthController
      */
     public function destroy($chat_room_id)
     {
-        return [ "response" => "return chat_rooms.destroy"];
+        /** ルームを削除 **/
+        ChatRoom::raw()->deleteOne(
+            [
+                '_id' => $chat_room_id,
+                /* ルームの管理者認証 */
+                'admin_member_id' => $this->author->_id
+            ]
+        );
+        
+        /* ルームを取得 存在チェックのため */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                ]
+            ]
+        ])->toArray();
+
+        /* ルームが削除されたか */
+        $room = head($room_corsor);
+        if ($room) {
+            $this->response['result'] = false;
+        } 
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
