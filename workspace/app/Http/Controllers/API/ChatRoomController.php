@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Str;
-use App\Http\Requests\InvitationPost;
+use App\Http\Requests\ChatRoomPost;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -64,7 +64,7 @@ class ChatRoomController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ChatRoomPost $request)
     {
         /** チャットグループ作成 **/
         // モデル作成
