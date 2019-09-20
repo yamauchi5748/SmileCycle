@@ -34,6 +34,7 @@ class ChatRoomContentController extends AuthController
             [
                 '$project' => [
                     '_id' => 1,
+                    'is_hurry' => 1,
                     'is_group' => 1,
                     'admin_member_id' => 1,
                     'group_name' => 1,
