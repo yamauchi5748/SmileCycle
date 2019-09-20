@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Http\Requests\InvitationPost;
+use App\Http\Requests\ChatRoomContentPost;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -20,7 +20,7 @@ class ChatRoomContentController extends AuthController
      */
     public function index(Request $request, $chat_room_id)
     {
-        /* ルームのコンテンツを返す */
+        /** ルームのコンテンツを返す **/
         $contents_corsor = ChatRoom::raw()->aggregate([
             /* ルームを指定 */
             [
@@ -31,14 +31,30 @@ class ChatRoomContentController extends AuthController
                     ]
                 ]
             ],
+            /* コンテンツを展開 */
+            [
+                '$unwind' => '$contents' 
+            ],
+            /* 既読数をセット */
+            [
+                '$set' => [
+                    'contents.already_read' => [
+                        '$size' => '$contents.already_read'
+                    ]
+                ]
+            ],
+            /* コンテンツをまとめる */
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'contents' => [
+                        '$push' => '$contents'
+                    ]
+                ]
+            ],
+            // コンテンツを最大10件取得
             [
                 '$project' => [
-                    '_id' => 1,
-                    'is_hurry' => 1,
-                    'is_group' => 1,
-                    'admin_member_id' => 1,
-                    'group_name' => 1,
-                    'members' => 1,
                     'contents' => [
                         '$slice' => [ '$contents', (int) $request->content_count, 10]
                     ]
@@ -68,7 +84,7 @@ class ChatRoomContentController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $chat_room_id)
+    public function store(ChatRoomContentPost $request, $chat_room_id)
     {
         $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
 
@@ -99,7 +115,7 @@ class ChatRoomContentController extends AuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('private/images/chats', $request->content, $image_id . '.png', 'private');
+                Storage::putFileAs('private/images/chats', $request->image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $chat['content_id'] = $image_id;
@@ -110,7 +126,7 @@ class ChatRoomContentController extends AuthController
                 $video_id = (string) Str::uuid();
     
                 /* 動画を保存 */
-                Storage::putFileAs('private/videos/', $request->content, $video_id . '.' . $request->content->extension(), 'private');
+                Storage::putFileAs('private/videos/', $request->video, $video_id . '.' . $request->video->extension(), 'private');
             
                 /* モデルに動画のidを追加 */
                 $chat['content_id'] = $video_id;
@@ -147,8 +163,16 @@ class ChatRoomContentController extends AuthController
                 ]
             ]
         );
+
+        /* 返すレスポンスデータを整形 */
+        $this->response['content'] = $chat;
         
-        return $chat;
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

@@ -28,11 +28,11 @@ class ChatRoomContentPost extends FormRequest
     {
         return [
             'is_hurry' => ['required', 'boolean'],
+            'content_type' => ['required',  Rule::in(['1', '2', '3', '4'])],
             'message' => ['required_if:content_type,1', 'string', 'max:500', 'min:1'],
             'stamp_id' => ['required_if:content_type,2', 'uuid', 'exists:stamp_groups,stamps'],
-            'content' => ['required_if:content_type,3', 'image', 'mimes:jpeg,png,jpg,gif'],
-            'content' => ['required_if:content_type,4', 'video', 'mimetypes:video/avi,video/mpeg,video/quicktime'],
-            'content_type' => ['required',  Rule::in(['1', '2', '3', '4'])]
+            'image' => ['required_if:content_type,3', 'image', 'mimes:jpeg,png,jpg,gif'],
+            'video' => ['required_if:content_type,4', 'mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime']
         ];
     }
 

@@ -29,15 +29,50 @@ class ChatRoomController extends AuthController
                     ]
                 ]
             ],
+            // コンテンツを最大10件取得
             [
                 '$project' => [
                     '_id' => 1,
-                    'is_hurry' => 1,
                     'is_group' => 1,
                     'admin_member_id' => 1,
                     'group_name' => 1,
                     'members' => 1,
-                    'contents' => 1
+                    'contents' => [
+                        '$slice' => [ '$contents', 0, 10]
+                    ]
+                ]
+            ],
+            /* コンテンツを展開 */
+            [
+                '$unwind' => '$contents' 
+            ],
+            /* 既読数をセット */
+            [
+                '$set' => [
+                    'contents.already_read' => [
+                        '$size' => '$contents.already_read'
+                    ]
+                ]
+            ],
+            /* ルームをまとめる */
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'is_group' => [
+                        '$first' => '$is_group'
+                    ],
+                    'admin_member_id' => [
+                        '$first' => '$admin_member_id'
+                    ],
+                    'group_name' => [
+                        '$first' => '$group_name'
+                    ],
+                    'members' => [
+                        '$first' => '$members'
+                    ],
+                    'contents' => [
+                        '$push' => '$contents'
+                    ]
                 ]
             ]
         ])->toArray();
@@ -100,7 +135,16 @@ class ChatRoomController extends AuthController
 
         /* DBにモデル登録 */
         ChatRoom::raw()->insertOne($chat_group);
-        return $chat_group;
+
+        /* 返すレスポンスデータを整形 */
+        $this->response['chat_room'] = $chat_group;
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
