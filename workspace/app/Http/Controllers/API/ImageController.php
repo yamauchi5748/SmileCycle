@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\StampGroup;
 use App\Models\Forum;
 use App\Models\Invitation;
+use App\Models\ChatRoom;
 
 class ImageController extends AuthController
 {
@@ -120,6 +121,37 @@ class ImageController extends AuthController
         /* 管理者もしくは、認可できれば画像を返す */
         if (head($has_image_corsor)['image'] && ($this->author->is_admin || head($has_image_corsor)['member'])) {
             return Storage::download('private/images/invitations/' . $image_id . '.png');
+        }
+        return $this->response;
+    }
+
+     /**
+     * 特定のチャットルームに投稿された画像
+     * 認可された画像を返す
+    **/
+    public function chatRoomImage($chat_room_id, $image_id)
+    {
+        /* 画像がチャットルームに投稿されているかチェック */
+        /* 認証会員がチャットルームに属しているかチェック */
+        $has_image_corsor = ChatRoom::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'members._id' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    'image' => [
+                        '$in' => [ $image_id, '$contents.content_id' ]
+                    ]
+                ]
+            ]
+        ])->toArray();
+        
+        /* 認可できれば画像を返す */
+        if (head($has_image_corsor)['image']) {
+            return Storage::download('private/images/chats/' . $image_id . '.png');
         }
         return $this->response;
     }

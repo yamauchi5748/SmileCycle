@@ -159,3 +159,6 @@ Route::apiResource('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberContr
     "store" => "chat_room.members.store",
     "destroy" => "chat_room.members.destroy"
 ]);
+
+// chat.image
+Route::get('chat-rooms/{chat_room_id}/images/{image_id}', 'API\ImageController@chatRoomImage')->name("chat_room.image");
