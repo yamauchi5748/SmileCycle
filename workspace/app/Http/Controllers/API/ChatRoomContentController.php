@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Requests\ChatRoomContentGet;
 use App\Http\Requests\ChatRoomContentPost;
 use Carbon\Carbon;
 use App\Models\Member;
@@ -18,7 +19,7 @@ class ChatRoomContentController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $chat_room_id)
+    public function index(ChatRoomContentGet $request, $chat_room_id)
     {
         /** ルームのコンテンツを返す **/
         $contents_corsor = ChatRoom::raw()->aggregate([
