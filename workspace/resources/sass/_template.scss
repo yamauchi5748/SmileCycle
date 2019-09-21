@@ -1,32 +1,4 @@
 @import "variables";
-//デバッグ用
-.debug-stamp-tab {
-    @extend .debug;
-    display: block;
-    height: 160px;
-    width: 160px;
-}
-.debug-stamp {
-    @extend .debug;
-    display: block;
-    height: 65px;
-    width: 65px;
-}
-.debug {
-    border: solid 1px rgb(119, 110, 110);
-    filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.7));
-}
-/**************************************************************/
-
-
-/*
-    router-viewでの切り替え先の親要素に指定する
-*/
-.view{
-    display: block;
-}
-
-/**************************************************************/
 
 // ボタン
 //ベース
@@ -50,11 +22,11 @@
     @extend %button;
     color: $base-color;
     background-color: $accent-color;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, .24);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
     flex-shrink: 0;
-    &.--disabled{
-        color:$gray;
-        background-color: rgba(99,99,99,.2);
+    &.--disabled {
+        color: $gray;
+        background-color: rgba(99, 99, 99, 0.2);
     }
 }
 .flat-button {
@@ -67,29 +39,22 @@
     transition: all 80ms linear;
     cursor: pointer;
 }
-/**************************************************************/
 
-//入力
-.input {
-    display: block;
-    width: 100%;
-    border: none;
-    border-bottom: solid $accent-color 2px;
-    font-size: 16px;
-    //textarea用
-    &.multi-line {
-        height: 120px;
-        resize: none;
+
+
+.images {
+    margin: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 90px);
+    grid-row-gap: 20px;
+    justify-content: space-between;
+    .image-wrapper {
+    }
+    .image {
+        width: 90px;
+        height: 90px;
+        border: solid 1px;
     }
 }
-//カウンターを付けるときに使用する
-.input-wrapper{
-    display: flex;
-    flex-direction: column;
-    .counter{
-        display: block;
-        margin-top: 6px;
-        margin-left: auto;
-    }
-}
+
 /**************************************************************/

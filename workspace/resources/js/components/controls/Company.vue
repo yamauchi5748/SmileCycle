@@ -1,8 +1,11 @@
 <template>
-    <section class="view">
+    <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">12社</h2>
-            <router-link class="normal-button margin-left-auto" :to="{name:'controls-company-create'}">会社を登録する</router-link>
+            <router-link
+                class="normal-button margin-left-auto"
+                :to="{name:'controls-company-create'}"
+            >会社を登録する</router-link>
         </div>
         <table class="table">
             <thead class="table-head">
@@ -19,21 +22,7 @@
     </section>
 </template>
 <script>
-export default {
-    data() {
-        return {
-            isDialogOpen: false
-        };
-    },
-    methods: {
-        closeDialog() {
-            this.isDialogOpen = false;
-        },
-        openDialog() {
-            this.isDialogOpen = true;
-        }
-    }
-};
+export default {};
 </script>
 <style lang="scss" scoped>
 </style>

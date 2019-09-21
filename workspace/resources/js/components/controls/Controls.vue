@@ -1,88 +1,46 @@
 <template>
-    <div class="p-controls layout-flex">
-        <div class="p-controls-sidebar layout-flex --flex-direction-column">
-            <div class="p-sidebar-header">管理</div>
-            <ul class="p-sidebar-content">
-                <router-link
-                    :to="{name:'controls-invitation'}"
-                    class="p-tab-link"
-                    active-class="active"
-                    tag="li"
-                >会のご案内</router-link>
-                <router-link
-                    :to="{name:'controls-member'}"
-                    class="p-tab-link"
-                    active-class="active"
-                    tag="li"
-                >会員</router-link>
-                <router-link
-                    :to="{name:'controls-company'}"
-                    class="p-tab-link"
-                    active-class="active"
-                    tag="li"
-                >会社</router-link>
-                <router-link
-                    :to="{name:'controls-stamp'}"
-                    class="p-tab-link"
-                    active-class="active"
-                    tag="li"
-                >スタンプ</router-link>
-            </ul>
-        </div>
+    <div class="p-controls">
+        <sidebar class="p-siebar"></sidebar>
         <div class="p-primary-view">
-            <router-view></router-view>
+            <router-view class="p-content"></router-view>
         </div>
     </div>
 </template>
 <script>
-export default {};
+import Sidebar from "./ControlsSidebar";
+export default {
+    components: {
+        Sidebar
+    }
+};
 </script>
 <style lang="scss" scoped>
-.p-controls{
-    height:100%;
+.p-controls {
+    display: grid;
+    grid-template-columns: 180px 1fr;
 }
-.p-controls-sidebar {
-    width: 180px;
-    flex-shrink: 0;
-}
-.p-sidebar-header{
-    display: flex;
-    padding: 16px 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    justify-content: center;
-    align-items: center;
-}
-.p-tab-link {
-    display: flex;
-    padding: 16px 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    font-size: 16px;
-    color: $gray;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    &.active {
-        border-left: solid 4px $accent-color;
-        color: $accent-color;
+/*
+@media screen and (max-width: $inner-width) {
+    .p-controls {
+        grid-template-columns: unset;
+    }
+    .p-sidebar{
+        order: 1;
+    }
+    .p-primary-view{
+        order: 2;
     }
 }
+*/
 .p-primary-view {
-    width: 600px;
+    display: flex;
+    justify-content: center;
     border-left: solid 1px rgba(0, 0, 0, 0.2);
     border-right: solid 1px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-    .pane-header {
-        display: flex;
-        align-items: center;
-    }
-    .item-count {
-        margin-right: auto;
-        font-size: 1.25rem;
-        font-weight: 900;
-    }
+}
+.p-content {
+    width: 100%;
+    max-width: 650px;
+    min-width: 320px;
 }
 </style>

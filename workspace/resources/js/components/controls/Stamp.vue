@@ -1,15 +1,18 @@
 <template>
-    <section class="view">
+    <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">12種</h2>
-            <router-link class="normal-button margin-left-auto" :to="{name:'controls-stamp-create'}">スタンプを登録する</router-link>
+            <router-link
+                class="normal-button margin-left-auto"
+                :to="{name:'controls-stamp-create'}"
+            >スタンプを登録する</router-link>
         </div>
         <ul
-            class="debug p-layout-stamp-tab-list layout-grid --justify-content-space-between margin-top-big"
+            class="p-stamp-tab-list"
         >
-            <li v-for="n in 10" :key="n">
-                <router-link :to="'test'" append>
-                    <img class="debug" height="120" width="120" />
+            <li v-for="(stamp,index) in stamp_list" :key="index">
+                <router-link :to="index.toString()" append>
+                    <img class="p-stamp" src="/img/demo_stamp.png" />
                 </router-link>
             </li>
         </ul>
@@ -19,31 +22,22 @@
 export default {
     data() {
         return {
-            isDialogOpen: false,
-            title: "",
-            text: "",
-            files: []
+            stamp_list: new Array(30)
         };
-    },
-    methods: {
-        handleDragOver(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "copy";
-        },
-        handleDrop(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            for (let file of event.dataTransfer.files) {
-                this.files.push(file);
-            }
-        }
     }
 };
 </script>
 <style lang="scss" scoped>
-.p-layout-stamp-tab-list {
-    grid-template-columns: repeat(3, 120px);
-    grid-row-gap: 16px;
+.p-stamp {
+    display: block;
+    width: 120px;
+    height: 120px;
+}
+.p-stamp-tab-list {
+    display: grid;
+    margin-top: 32px;
+    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, 120px);
+    grid-gap: 24px;
 }
 </style>

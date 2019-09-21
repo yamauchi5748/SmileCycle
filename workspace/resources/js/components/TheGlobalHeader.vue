@@ -22,12 +22,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .header {
+    display: flex;
+    width: 100%;
     background-color: $sub-color;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+    align-items: center;
 }
 .header-container {
     display: flex;
-    padding: 1rem 60px;
+    width: 100%;
+    padding: 0 60px;
+    align-items: center;
 }
 .breadcrumbs-list {
     display: flex;

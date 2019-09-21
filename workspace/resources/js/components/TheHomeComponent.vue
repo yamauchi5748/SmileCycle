@@ -25,13 +25,11 @@ export default {
 
 <style lang="scss" scoped>
 .p-page{
-    height: 100vh;
-    width: 100vw;
+    display: grid;
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: 1fr;
 }
 .p-header{
     height:60px;
-}
-.p-content{
-    height: 100%;
 }
 </style>
