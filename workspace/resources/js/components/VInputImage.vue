@@ -1,6 +1,6 @@
 <template>
     <ul
-        class="drag-and-drop --size-area upload-files"
+        class="p-drag-and-drop --size-area upload-files"
         @dragover="handleDragOver"
         @drop="handleDrop"
     >
@@ -13,11 +13,10 @@
 <script>
 export default {
     props: {
-        value: {}
+        value: { type: Array, required: true }
     },
     data: function() {
         return {
-            files: [],
             dataURL_list: []
         };
     },
@@ -28,8 +27,8 @@ export default {
             event.preventDefault();
         },
         handleDrop(event) {
-            for (let file of event.dataTransfer.files) {
-                this.files.push(file);
+            let new_files = event.dataTransfer.files;
+            for (let file of new_files) {
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => {
@@ -37,8 +36,10 @@ export default {
                     this.dataURL_list.push(reader.result);
                 };
             }
+            this.$emit("input", [...new_files, ...this.value]);
             event.stopPropagation();
             event.preventDefault();
+            console.log(this.value);
         }
     }
 };
@@ -46,7 +47,7 @@ export default {
 
 <style lang="scss" scoped>
 //ドラッグアンドドッロプ用のスタイル
-.drag-and-drop {
+.p-drag-and-drop {
     border: dashed 1px;
     background-size: 40%;
     background-repeat: no-repeat;

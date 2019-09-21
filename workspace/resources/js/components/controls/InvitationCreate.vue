@@ -10,19 +10,7 @@
                 <v-input v-model="text" counter :max="500" multiline>本文</v-input>
                 <div class="input-wrapper">
                     <span class="input-title">画像</span>
-                    <ul
-                        class="drag-and-drop --size-area upload-files"
-                        @dragover="handleDragOver"
-                        @drop="handleDrop"
-                    >
-                        <li
-                            class="upload-wrapper"
-                            v-for="(dataURL, index) in dataURL_list"
-                            :key="index"
-                        >
-                            <img class="upload-image" :src="dataURL" alt="スタンプ" />
-                        </li>
-                    </ul>
+                    <v-input-image v-model="images"></v-input-image>
                 </div>
             </div>
         </div>
@@ -34,17 +22,13 @@
 </template>
 <script>
 import VInput from "../VInput";
+import VInputImage from "../VInputImage"
 export default {
     data: function() {
         return {
             title: "",
             text: "",
             images: [],
-            dataURL_list: [],
-            list: {
-                controls: "管理",
-                invitation: "会のご案内"
-            }
         };
     },
     mounted() {
@@ -55,27 +39,10 @@ export default {
         goBack: function() {
             this.$router.back();
         },
-        handleDragOver(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "copy";
-        },
-        handleDrop(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            for (let file of event.dataTransfer.files) {
-                this.images.push(file);
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    //thisの参照先が変わるから
-                    this.dataURL_list.push(reader.result);
-                };
-            }
-        }
     },
     components: {
-        VInput
+        VInput,
+        VInputImage
     }
 };
 </script>

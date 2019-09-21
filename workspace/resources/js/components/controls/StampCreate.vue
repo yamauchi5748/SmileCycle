@@ -14,6 +14,7 @@
                 </div>
                 <div class="input-wrapper">
                     <span class="input-title">スタンプ</span>
+                    {{stamp_images.map(e=>e.name)}}
                     <v-input-image v-model="stamp_images"></v-input-image>
                 </div>
                 <div class="input-wrapper">
