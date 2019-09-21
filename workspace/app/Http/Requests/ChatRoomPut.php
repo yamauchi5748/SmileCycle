@@ -19,6 +19,17 @@ class ChatRoomPut extends FormRequest
     }
 
     /**
+     * ルート引数は対象にならないのでマージする
+     * @return 配列
+     */
+    protected function validationData()
+    {
+        return array_merge($this->request->all(), [
+            'chat_room_id' => $this->chat_room
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -26,6 +37,7 @@ class ChatRoomPut extends FormRequest
     public function rules()
     {
         return [
+            'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
             'new_group_name' => ['required', 'string', 'max:16']
         ];
     }
