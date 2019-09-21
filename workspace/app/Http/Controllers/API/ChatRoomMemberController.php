@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Requests\ChatRoomMemberPost;
+use App\Http\Requests\ChatRoomMemberDeleteAll;
+use App\Http\Requests\ChatRoomMemberDelete;
 use App\Models\Member;
 use App\Models\ChatRoom;
 
@@ -125,7 +127,7 @@ class ChatRoomMemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($chat_room_id)
+    public function destroy(ChatRoomMemberDelete $request, $chat_room_id)
     {
         /** 会員がルームから退出 **/
         /* 会員の情報を取得 */
@@ -195,7 +197,7 @@ class ChatRoomMemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroies(Request $request, $chat_room_id)
+    public function destroies(ChatRoomMemberDeleteAll $request, $chat_room_id)
     {
         /** 会員をルームから退出させる **/
         /* 会員の情報を取得 */
