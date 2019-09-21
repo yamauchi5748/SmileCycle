@@ -1,8 +1,11 @@
 <template>
-    <section class="view">
+    <section v-once class="view controls-primary-view">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">{{ this.$root.members.length }}人</h2>
-            <router-link class="normal-button margin-left-auto" :to="{name:'controls-member-create'}">会員を登録する</router-link>
+            <router-link
+                class="normal-button margin-left-auto"
+                :to="{name:'controls-member-create'}"
+            >会員を登録する</router-link>
         </div>
         <table class="table">
             <thead class="table-head">
@@ -29,11 +32,9 @@
 <script>
 export default {
     data() {
-        return {
-            isDialogOpen: false
-        };
+        return {};
     },
-    mounted: function(){
+    mounted: function() {
         this.$root.loadMembers();
     }
 };
