@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Str;
 use App\Http\Requests\ChatRoomPost;
 use App\Http\Requests\ChatRoomPut;
+use App\Http\Requests\ChatRoomDelete;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -219,7 +220,7 @@ class ChatRoomController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($chat_room_id)
+    public function destroy(ChatRoomDelete $request, $chat_room_id)
     {
         /** ルームを削除 **/
         ChatRoom::raw()->deleteOne(
