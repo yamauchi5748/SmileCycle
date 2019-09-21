@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Requests\ChatRoomMemberPost;
 use App\Models\Member;
 use App\Models\ChatRoom;
 
@@ -25,7 +26,7 @@ class ChatRoomMemberController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $chat_room_id)
+    public function store(ChatRoomMemberPost $request, $chat_room_id)
     {
         /** 会員をルームに追加する **/
         /* 会員の情報を取得 */
