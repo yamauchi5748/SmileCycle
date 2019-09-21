@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Str;
 use App\Http\Requests\ChatRoomPost;
+use App\Http\Requests\ChatRoomPut;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -165,7 +166,7 @@ class ChatRoomController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $chat_room_id)
+    public function update(ChatRoomPut $request, $chat_room_id)
     {
         /** グループ名を更新 **/
         ChatRoom::raw()->updateOne(
