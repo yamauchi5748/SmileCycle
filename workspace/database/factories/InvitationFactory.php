@@ -12,8 +12,11 @@ use Carbon\Carbon;
 $factory->define(Invitation::class, function () {
     $faker = Faker\Factory::create('ja_JP');
 
-    $now  = (string) Carbon::now('Asia/Tokyo');             // 現在時刻
-    $yestarday = (string) Carbon::yesterday('Asia/Tokyo');  // 昨日
+    $second = $faker->numberBetween(10, 59);
+    $created_at  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo');
+    $created_at = Str::limit($created_at, 16, '');
+    $deadline_at = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-12 15:' . $second, 'Asia/Tokyo');
+    $deadline_at = Str::limit($deadline_at, 16, '');
 
     /* 会のご案内モデル */
     $invitation = [
@@ -22,8 +25,8 @@ $factory->define(Invitation::class, function () {
             'text' => $faker->realText,                 // 会のご案内のテキスト
             'images' => [],                             // 会のご案内の画像
             'attend_members' => [],                     // 会のご案内に招待される会員
-            'deadline_at' => $yestarday,                // 会のご案内出席の締め切り日
-            'created_at' => $now                        // 会のご案内投稿日
+            'deadline_at' => $deadline_at,              // 会のご案内出席の締め切り日
+            'created_at' => $created_at                 // 会のご案内投稿日
         ];
 
     /* 画像コンテンツの処理 */

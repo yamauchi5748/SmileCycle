@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MembersSeeder::class);
         $this->call(InvitationSeeder::class);
         $this->call(ForumSeeder::class);
+        $this->call(ChatRoomSeeder::class);
     }
 }

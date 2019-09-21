@@ -124,16 +124,23 @@ Route::apiResource('forums', 'API\ForumController')->only([
 
 //forum.comments
 Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->only([
-    "index"
+    "index", "store"
 ])->names([
-    "index" => "forum.comments.index"
+    "index" => "forum.comments.index",
+    "store" => "forum.comments.store",
 ]);
 
 // forum.image
 Route::get('forums/{forum_id}/images/{image_id}', 'API\ImageController@forumImage')->name("forum.image");
 
 //chat_rooms
-Route::apiResource('chat-rooms', 'API\ChatRoomController');
+Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
+    "index" => "chat_room.index",
+    "store" => "chat_room.store",
+    "show" => "chat_room.show",
+    "update" => "chat_room.update",
+    "destroy" => "chat_room.destroy"
+]);
 
 //chat_room.contents
 Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentController')->only([
@@ -152,3 +159,6 @@ Route::apiResource('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberContr
     "store" => "chat_room.members.store",
     "destroy" => "chat_room.members.destroy"
 ]);
+
+// chat.image
+Route::get('chat-rooms/{chat_room_id}/images/{image_id}', 'API\ImageController@chatRoomImage')->name("chat_room.image");

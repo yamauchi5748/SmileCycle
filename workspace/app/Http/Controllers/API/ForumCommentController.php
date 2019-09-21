@@ -62,7 +62,7 @@ class ForumCommentController extends AuthController
     public function store($forum_id, ForumCommentPost $request)
     {
         /** 掲示板にコメント投稿 **/
-        $now  = (string) Carbon::now('Asia/Tokyo'); // 現在時刻
+        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
 
         /* コメントのモデル */
         $comment = [
@@ -91,7 +91,10 @@ class ForumCommentController extends AuthController
             ],
             [
                 '$push' => [
-                    'comments' => $comment
+                    'comments' => [
+                        '$each' => [$comment],
+                        '$position' => 0
+                    ]
                 ]
             ]
         );

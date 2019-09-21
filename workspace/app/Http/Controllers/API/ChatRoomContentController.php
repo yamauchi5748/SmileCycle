@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Http\Requests\InvitationPost;
+use App\Http\Requests\ChatRoomContentGet;
+use App\Http\Requests\ChatRoomContentPost;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -18,9 +19,64 @@ class ChatRoomContentController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($chat_room_id)
+    public function index(ChatRoomContentGet $request, $chat_room_id)
     {
-        return [ "response" => "return chat_room.contents.index"];
+        /** ルームのコンテンツを返す **/
+        $contents_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'members._id' => [
+                        '$in' => [ $this->author->_id, '$members._id']
+                    ]
+                ]
+            ],
+            /* コンテンツを展開 */
+            [
+                '$unwind' => '$contents' 
+            ],
+            /* 既読数をセット */
+            [
+                '$set' => [
+                    'contents.already_read' => [
+                        '$size' => '$contents.already_read'
+                    ]
+                ]
+            ],
+            /* コンテンツをまとめる */
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'contents' => [
+                        '$push' => '$contents'
+                    ]
+                ]
+            ],
+            // コンテンツを最大10件取得
+            [
+                '$project' => [
+                    'contents' => [
+                        '$slice' => [ '$contents', (int) $request->content_count, 10]
+                    ]
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $head_corsor = head($contents_corsor);
+        if($head_corsor && head($head_corsor['contents'])){
+            $this->response['contents'] = $head_corsor['contents'];
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -29,9 +85,9 @@ class ChatRoomContentController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $chat_room_id)
+    public function store(ChatRoomContentPost $request, $chat_room_id)
     {
-        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y/m/d H:i'); // 現在時刻
+        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
 
         /** チャットコンテンツ投稿 **/
         /* チャットモデル */
@@ -40,7 +96,8 @@ class ChatRoomContentController extends AuthController
             'is_hurry' => $request->is_hurry,           // 急ぎチャットかどうか
             'content_type' => $request->content_type,   // チャットの種類
             'sender_id' => $this->author->_id,          // 送信者のid
-            'created_at' => $now                        // 送信日時
+            'created_at' => $now,                       // 送信日時
+            'already_read' => []                        // 既読した会員のidを格納
         ];
 
         // チャットコンテンツのタイプによって処理
@@ -59,7 +116,7 @@ class ChatRoomContentController extends AuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('private/images/chats', $request->content, $image_id . '.png', 'private');
+                Storage::putFileAs('private/images/chats', $request->image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $chat['content_id'] = $image_id;
@@ -70,12 +127,28 @@ class ChatRoomContentController extends AuthController
                 $video_id = (string) Str::uuid();
     
                 /* 動画を保存 */
-                Storage::putFileAs('private/videos/', $request->content, $video_id . '.' . $request->content->extension(), 'private');
+                Storage::putFileAs('private/videos/', $request->video, $video_id . '.' . $request->video->extension(), 'private');
             
                 /* モデルに動画のidを追加 */
                 $chat['content_id'] = $video_id;
                 break;
         }
+
+        /* 会員の情報を取得 */
+        $sender_corsor = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $chat['sender_id']
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+        $chat['sender_name'] = head($sender_corsor)->name;
 
         /* DBにモデル登録 */
         ChatRoom::raw()->updateOne(
@@ -84,12 +157,23 @@ class ChatRoomContentController extends AuthController
             ],
             [
                 '$push' => [
-                    'contents' => $chat 
+                    'contents' => [
+                        '$each' => [$chat],
+                        '$position' => 0
+                    ]
                 ]
             ]
         );
+
+        /* 返すレスポンスデータを整形 */
+        $this->response['content'] = $chat;
         
-        return $chat;
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
