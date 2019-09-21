@@ -79,8 +79,8 @@ const app = new Vue({
     router,
     el: '#app',
     data: {
-        members: [],
-        stamp_groups: [],
+        member_list: [],
+        stamp_group_list: [],
     },
     methods: {
         /* レスポンスの認証チェック */
@@ -98,7 +98,7 @@ const app = new Vue({
             return axios.get('/api/members')
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    this.members = res.data.members;
+                    this.member_list = res.data.members;
                 })
                 .catch(error => {});
         },
@@ -108,7 +108,7 @@ const app = new Vue({
             return axios.get('/api/admin-stamp-groups')
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    this.stamp_groups = res.data.stamp_groups;
+                    this.stamp_group_list = res.data.stamp_groups;
                 })
                 .catch(error => {});
         },
