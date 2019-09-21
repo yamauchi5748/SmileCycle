@@ -20,15 +20,30 @@ class ChatRoomContentPost extends FormRequest
     }
 
     /**
+     * ルート引数は対象にならないのでマージする
+     * @return 配列
+     */
+    protected function validationData()
+    {
+        return array_merge($this->request->all(), [
+            'chat_room_id' => $this->chat_room_id,
+            'image' => $this->image,
+            'video' => $this->video,
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules()
     {
+        \Log::debug(request());
         return [
+            'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
             'is_hurry' => ['required', 'boolean'],
-            'content_type' => ['required',  Rule::in(['1', '2', '3', '4'])],
+            'content_type' => ['required', Rule::in(['1', '2', '3', '4'])],
             'message' => ['required_if:content_type,1', 'string', 'max:500', 'min:1'],
             'stamp_id' => ['required_if:content_type,2', 'uuid', 'exists:stamp_groups,stamps'],
             'image' => ['required_if:content_type,3', 'image', 'mimes:jpeg,png,jpg,gif'],
