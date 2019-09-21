@@ -39,7 +39,7 @@ class ChatRoomMemberDelete extends FormRequest
 
         return array_merge($this->request->all(), [
             'chat_room_id' => $this->chat_room_id,
-            'member_id' => Auth::id()
+            'member_id' => $this->member
         ]);
     }
 
@@ -52,7 +52,7 @@ class ChatRoomMemberDelete extends FormRequest
     {   
         return [
             'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
-            'member_id' => ['required', Rule::exists('chat_rooms', 'members._id')->where('_id', $this->room['_id'])]
+            'member_id' => ['required', Rule::in([Auth::id()]), Rule::exists('chat_rooms', 'members._id')->where('_id', $this->room['_id'])]
         ];
     }
 
