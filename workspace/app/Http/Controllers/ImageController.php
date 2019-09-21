@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Member;
@@ -12,7 +13,7 @@ use App\Models\Forum;
 use App\Models\Invitation;
 use App\Models\ChatRoom;
 
-class ImageController extends AuthController
+class ImageController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -21,8 +22,8 @@ class ImageController extends AuthController
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->response['result'] = false;
+        $this->middleware('auth');
+        $thid->author = Auth::user();
     }
 
     /**
@@ -41,8 +42,11 @@ class ImageController extends AuthController
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        return head($has_member_corsor) ?
-            Storage::download('private/images/profile_images/' . $member_id . '.png') : $this->response;
+        if(head($has_member_corsor)){
+            $image = storage_path('app/private/images/profile_images/' . $image_id . '.png');
+
+            return response()->file($image);
+        }
     }
 
     /**
@@ -55,14 +59,24 @@ class ImageController extends AuthController
         $has_stamp_corsor = StampGroup::raw()->aggregate([
             [
                 '$match' => [
-                    'stamps' => $image_id
+                    '$or' => [
+                        [
+                            'tab_image_id' => $image_id,
+                        ],
+                        [
+                            'stamps' => $image_id
+                        ]
+                    ]
                 ]
             ]
         ])->toArray();
 
         /* 認可できればスタンプを返す */
-        return head($has_stamp_corsor) ?
-            Storage::download('private/images/stamps/' . $image_id . '.png') : $this->response;
+        if(head($has_stamp_corsor)){
+            $image = storage_path('app/private/images/stamps/' . $image_id . '.png');
+
+            return response()->file($image);
+        }
     }
 
     /**
@@ -88,8 +102,11 @@ class ImageController extends AuthController
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        return head($has_image_corsor)['image'] ?
-            Storage::download('private/images/forums/' . $image_id . '.png') : $this->response;
+        if(head($has_image_corsor)){
+            $image = storage_path('app/private/images/forums/' . $image_id . '.png');
+
+            return response()->file($image);
+        }
     }
     
     /**
@@ -119,10 +136,11 @@ class ImageController extends AuthController
         ])->toArray();
         
         /* 管理者もしくは、認可できれば画像を返す */
-        if (head($has_image_corsor)['image'] && ($this->author->is_admin || head($has_image_corsor)['member'])) {
-            return Storage::download('private/images/invitations/' . $image_id . '.png');
+        if(head($has_image_corsor)){
+            $image = storage_path('app/private/images/invitations/' . $image_id . '.png');
+
+            return response()->file($image);
         }
-        return $this->response;
     }
 
      /**
@@ -150,9 +168,10 @@ class ImageController extends AuthController
         ])->toArray();
         
         /* 認可できれば画像を返す */
-        if (head($has_image_corsor)['image']) {
-            return Storage::download('private/images/chats/' . $image_id . '.png');
+        if(head($has_image_corsor)){
+            $image = storage_path('app/private/images/chats/' . $image_id . '.png');
+
+            return response()->file($image);
         }
-        return $this->response;
     }
 }

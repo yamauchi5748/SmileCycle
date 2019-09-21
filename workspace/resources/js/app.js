@@ -80,6 +80,7 @@ const app = new Vue({
     el: '#app',
     data: {
         members: [],
+        stamp_groups: [],
     },
     methods: {
         /* レスポンスの認証チェック */
@@ -100,7 +101,17 @@ const app = new Vue({
                     this.members = res.data.members;
                 })
                 .catch(error => {});
-        }
+        },
+
+        /* スタンプグループ一覧取得 */
+        loadAdminStampGroups: function () {
+            return axios.get('/api/admin-stamp-groups')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.stamp_groups = res.data.stamp_groups;
+                })
+                .catch(error => {});
+        },
     }
 });
 

@@ -88,10 +88,6 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
     "index" => "stamp_groups.index",
 ]);
 
-// stamp.image
-Route::get('stamp-images/{image_id}', 'API\ImageController@stampImage')->name("stamp.image");
-
-
 //admin.invitations
 Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
     "index", "store", "show"
