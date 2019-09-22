@@ -15,8 +15,11 @@
 //login,logout
 Auth::routes();
 
-//home
-Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');
+// stamp.image
+Route::get('/stamp-images/{image_id}', 'ImageController@stampImage')->name("stamp.image");
 
 //help
 Route::get('/help', 'HelpController@index')->name('help');
+
+//home
+Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');
