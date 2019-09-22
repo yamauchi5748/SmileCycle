@@ -36,9 +36,6 @@ Route::apiResource('members', 'API\MemberController')->only([
     "show" => "members.show",
 ]);
 
-// member.image
-Route::get('members/{member_id}/profile-image', 'API\ImageController@memberImage')->name("member.image");
-
 //settings
 Route::put('settings', 'API\SettingController@update')->name('settings.update');
 Route::apiResource('settings', 'API\SettingController')->only([
@@ -106,9 +103,6 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
     "update" => "invitations.update"
 ]);
 
-// invitation.image
-Route::get('invitations/{invitation_id}/images/{image_id}', 'API\ImageController@invitationImage')->name("invitation.image");
-
 //forums
 Route::apiResource('forums', 'API\ForumController')->only([
     "index", "show", "store"
@@ -125,9 +119,6 @@ Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->
     "index" => "forum.comments.index",
     "store" => "forum.comments.store",
 ]);
-
-// forum.image
-Route::get('forums/{forum_id}/images/{image_id}', 'API\ImageController@forumImage')->name("forum.image");
 
 //chat_rooms
 Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
@@ -155,6 +146,3 @@ Route::apiResource('chat-rooms/{chat_room_id}/members', 'API\ChatRoomMemberContr
     "store" => "chat_room.members.store",
     "destroy" => "chat_room.members.destroy"
 ]);
-
-// chat.image
-Route::get('chat-rooms/{chat_room_id}/images/{image_id}', 'API\ImageController@chatRoomImage')->name("chat_room.image");

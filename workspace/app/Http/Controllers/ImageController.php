@@ -43,7 +43,7 @@ class ImageController extends Controller
 
         /* 認可できれば画像を返す */
         if(head($has_member_corsor)){
-            $image = storage_path('app/private/images/profile_images/' . $image_id . '.png');
+            $image = storage_path('app/private/images/profile_images/' . $member_id . '.png');
 
             return response()->file($image);
         }

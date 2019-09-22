@@ -19,7 +19,7 @@
             <tbody class="table-body">
                 <tr class="table-body-item" v-for="member in this.$root.member_list" :key="member._id">
                     <td>
-                        <img />
+                        <img :src="'/members/' + member._id + '/profile-image'"/>
                     </td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>
