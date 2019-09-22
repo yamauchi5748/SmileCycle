@@ -109,6 +109,7 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     this.stamp_group_list = res.data.stamp_groups;
+                    return res;
                 })
                 .catch(error => {});
         },

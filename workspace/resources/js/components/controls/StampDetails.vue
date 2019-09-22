@@ -6,14 +6,14 @@
         </div>
         <div class="controls-secondary-body">
             <div class="p-wrapper">
-                <img class="p-tab-stamp" src="/img/demo_stamp.png" alt="タブ画像" />
+                <img class="p-tab-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" alt="ロード中" />
                 <ul class="drag-and-drop">
 
                 </ul>
             </div>
             <ul class="p-stamp-list">
-                <li v-for="(stamp,index) in stamp_list" :key="index">
-                    <img class="p-stamp" src="/img/demo_stamp.png" />
+                <li v-for="(stamp_id,index) in stamp_list" :key="index">
+                    <img class="p-stamp" :src="'/stamp-images/' + stamp_id" alt="ロード中" />
                 </li>
             </ul>
         </div>
@@ -24,14 +24,33 @@
 export default {
     data: function() {
         return {
-            stamp_list: [{}, {}, {}, {}, {}, {}]
+            stamp_group: {},
+            stamp_list: [],
         };
     },
+    mounted: function() {
+        /* スタンプグループ情報がなければ取得 */
+        if(this.$root.stamp_group_list.length > 0) {
+            this.setData();
+        }else {
+            // 対象のスタンプグループ情報を取得
+            this.$root.loadAdminStampGroups()
+            .then(res => {
+                this.setData();
+            });
+        }
+    },
     methods: {
-        //1つ前のページに戻る
+        // 1つ前のページに戻る
         goBack: function() {
             this.$router.back();
-        }
+        },
+        // データをセット
+        setData: function() {
+            const index = this.$route.params['id'];
+            this.stamp_group = this.$root.stamp_group_list[index];
+            this.stamp_list = this.stamp_group.stamps;
+        },
     }
 };
 </script>

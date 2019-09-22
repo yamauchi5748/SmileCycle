@@ -23,7 +23,7 @@ class ImageController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $thid->author = Auth::user();
+        $this->author = Auth::user();
     }
 
     /**
