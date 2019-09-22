@@ -1,5 +1,5 @@
 <template>
-    <section v-once class="view controls-primary-view">
+    <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">{{ this.$root.member_list.length }}人</h2>
             <router-link
@@ -31,9 +31,6 @@
 </template>
 <script>
 export default {
-    data() {
-        return {};
-    },
     mounted: function() {
         this.$root.loadMembers();
     }
