@@ -1,24 +1,28 @@
 <template>
-    <div class="view controls-secondary-view">
-        <div class="controls-secondary-header">
-            <button @click="goBack" class="go-back-button">←</button>
-            <h2 class="title">会社作成</h2>
-        </div>
-        <div class="controls-secondary-body">
+    <secondary-view>
+        <template #title>会社登録</template>
+        <template #body>
             <div class="input-area">
-                <v-input v-model="name" counter :max="140">会社名</v-input>
-                <v-input v-model="address">住所</v-input>
-                <v-input v-model="phone_number">電話番号</v-input>
+                <div class="input-wrapper">
+                    <v-input v-model="name" counter :max="140">会社名</v-input>
+                </div>
+                <div class="input-wrapper">
+                    <v-input v-model="address">住所</v-input>
+                </div>
+                <div class="input-wrapper">
+                    <v-input v-model="phone_number">電話番号</v-input>
+                </div>
+                <div class="buttons-wrapper">
+                    <button class="flat-button">取り消し</button>
+                    <button class="normal-button">登録する</button>
+                </div>
             </div>
-        </div>
-        <div class="controls-secondary-footer">
-            <button class="flat-button">取り消し</button>
-            <button class="normal-button">登録する</button>
-        </div>
-    </div>
+        </template>
+    </secondary-view>
 </template>
 
 <script>
+import SecondaryView from "./SecondaryView.vue";
 import VInput from "../VInput";
 export default {
     data: function() {
@@ -28,17 +32,9 @@ export default {
             phone_number: ""
         };
     },
-    methods: {
-        //1つ前のページに戻る
-        goBack: function() {
-            this.$router.back();
-        }
-    },
     components: {
-        VInput
+        VInput,
+        SecondaryView
     }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
