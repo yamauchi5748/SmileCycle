@@ -18,7 +18,7 @@
 export default {
     props: {
         value: { type: Array, required: true },
-        only: { type: Boolean, default: false }
+        only: { type: Boolean, default: false },
     },
     data: function() {
         return {
@@ -40,17 +40,14 @@ export default {
                 let reader = new FileReader();
                 reader.readAsDataURL(new_files[0]);
                 reader.onload = () => {
-                    //thisの参照先が変わるから
                     this.dataURL_list.splice(0, 1, reader.result);
                 };
-                console.log(new_files[0]);
                 this.$emit("input", [new_files[0]]);
             } else {
                 for (let file of new_files) {
                     let reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = () => {
-                        //thisの参照先が変わるから
                         this.dataURL_list.push(reader.result);
                     };
                 }

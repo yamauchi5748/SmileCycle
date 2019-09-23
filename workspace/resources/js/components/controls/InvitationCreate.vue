@@ -2,7 +2,6 @@
     <secondary-view>
         <template #title>会のご案内投稿</template>
         <template #body>
-            <div class="input-area">
                 <div class="inputwrapper">
                     <v-input v-model="title" counter :max="25">タイトル</v-input>
                 </div>
@@ -16,7 +15,6 @@
                     <button class="flat-button">取り消し</button>
                     <button class="normal-button">登録する</button>
                 </div>
-            </div>
         </template>
     </secondary-view>
 </template>

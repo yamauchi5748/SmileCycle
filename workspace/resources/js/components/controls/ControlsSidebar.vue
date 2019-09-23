@@ -59,7 +59,7 @@ export default {};
     align-items: center;
 }
 .p-tab-link {
-    color: $gray;
+    color: $black;
     cursor: pointer;
     &.active {
         border-left: solid 4px $accent-color;

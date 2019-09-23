@@ -47,6 +47,7 @@ export default {
     }
     .p-body {
         display: flex;
+        flex-direction: column;
         width: 100%;
         max-width: 650px;
         min-width: 320px;

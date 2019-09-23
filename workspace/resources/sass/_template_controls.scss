@@ -1,4 +1,4 @@
-.controls-primary-view{
+.controls-primary-view {
     padding: 32px;
 }
 
@@ -8,13 +8,17 @@
 }
 .table {
     width: 100%;
+    border-collapse: collapse;
+    border: solid 1px $gray;
     .table-head-item {
         text-align: left;
         border-bottom: solid 1px $gray;
         th {
-            padding: 20px 0 8px 16px;
-            font-size: 13px;
-            color: $gray;
+            height: 64px;
+            padding: 1px 16px;
+            font-weight: 700;
+            color: $black;
+            vertical-align: middle;
         }
     }
     .table-body-item {
@@ -22,25 +26,28 @@
         border-bottom: solid 1px $gray;
         td {
             height: 64px;
-            padding-left: 16px;
-            color: $gray;
+            padding: 1px 16px;
+            color: $black;
             vertical-align: middle;
         }
+        &:hover {
+            background-color: $gray;
+        }
     }
-}
-
-.input-area {
-    width: 100%;
-    .input-wrapper {
-        padding: 24px 0;
+    .profile-img {
+        height: 100%;
     }
 }
 .input-wrapper {
     width: 100%;
+    padding: 24px 0;
 }
 .buttons-wrapper {
     display: flex;
     justify-content: flex-end;
+    &.--space-between {
+        justify-content: space-between
+    }
     :last-child {
         margin-left: 16px;
     }

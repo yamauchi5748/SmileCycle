@@ -11,8 +11,10 @@ import ControlsInvitation from "./components/controls/Invitation";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate";
 import ControlsMember from "./components/controls/Member";
 import ControlsMemberCreate from "./components/controls/MemberCreate";
+import ControlsMemberDetails from "./components/controls/MemberDetails";
 import ControlsCompany from "./components/controls/Company";
 import ControlsCompanyCreate from "./components/controls/CompanyCreate";
+import ControlsCompanyDetails from "./components/controls/CompanyDetails"
 import ControlsStamp from "./components/controls/Stamp";
 import ControlsStampCreate from "./components/controls/StampCreate";
 import ControlsStampDetails from "./components/controls/StampDetails"
@@ -45,6 +47,10 @@ const router = new VueRouter({
                     component: ControlsMemberCreate
                 },
                 {
+                    path: "member/:id",
+                    component: ControlsMemberDetails
+                },
+                {
                     path: "company",
                     name: "controls-company",
                     component: ControlsCompany
@@ -53,6 +59,10 @@ const router = new VueRouter({
                     path: "company/create",
                     name: "controls-company-create",
                     component: ControlsCompanyCreate
+                },
+                {
+                    path: "company/:id",
+                    component: ControlsCompanyDetails
                 },
                 {
                     path: "stamp",
@@ -83,8 +93,8 @@ const app = new Vue({
     },
     methods: {
         /* レスポンスの認証チェック */
-        checkAuth: function(res){
-            if(res.data.auth){
+        checkAuth: function (res) {
+            if (res.data.auth) {
                 return res;
             }
             /* エラー */
@@ -99,7 +109,7 @@ const app = new Vue({
                 .then(res => {
                     this.members = res.data.members;
                 })
-                .catch(error => {});
+                .catch(error => { });
         }
     }
 });

@@ -2,7 +2,6 @@
     <secondary-view>
         <template #title>会社登録</template>
         <template #body>
-            <div class="input-area">
                 <div class="input-wrapper">
                     <v-input v-model="name" counter :max="140">会社名</v-input>
                 </div>
@@ -16,7 +15,6 @@
                     <button class="flat-button">取り消し</button>
                     <button class="normal-button">登録する</button>
                 </div>
-            </div>
         </template>
     </secondary-view>
 </template>
