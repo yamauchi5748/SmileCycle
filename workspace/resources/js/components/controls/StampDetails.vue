@@ -13,7 +13,7 @@
             </div>
             <ul class="p-stamp-list">
                 <li v-for="(stamp_id,index) in stamp_list" :key="index">
-                    <img class="p-stamp" :src="'/stamp-images/' + stamp_id" alt="ロード中" />
+                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp_id + '.png'" alt="ロード中" />
                 </li>
             </ul>
         </div>

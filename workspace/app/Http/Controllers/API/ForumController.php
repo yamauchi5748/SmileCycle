@@ -114,7 +114,7 @@ class ForumController extends AuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('private/images/forums', $image, $image_id . '.png', 'private');
+                Storage::putFileAs('public/images/forums', $image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $forum['images'][] = $image_id;

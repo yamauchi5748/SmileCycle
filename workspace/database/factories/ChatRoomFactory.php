@@ -73,6 +73,7 @@ $factory->define(ChatRoom::class, function () {
                 $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
 
                 /* 画像を保存 */
+                Storage::putFileAs('public/images/chats', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
                 Storage::putFileAs('private/images/chats', new File('storage/app/images/' . $path_name . '.png'), $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
@@ -87,6 +88,7 @@ $factory->define(ChatRoom::class, function () {
                 $path_name = $faker->randomElement(['video1', 'video2', 'video3']);
     
                 /* 動画を保存 */
+                Storage::putFileAs('public/videos/', new File('storage/app/videos/' . $path_name . '.mp4'), $video_id . '.mp4', 'private');
                 Storage::putFileAs('private/videos/', new File('storage/app/videos/' . $path_name . '.mp4'), $video_id . '.mp4', 'private');
             
                 /* モデルに動画のidを追加 */

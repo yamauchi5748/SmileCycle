@@ -12,7 +12,7 @@
         >
             <li v-for="(stamp_group,index) in this.$root.stamp_group_list" :key="index">
                 <router-link :to="index.toString()" append>
-                    <img class="p-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" />
+                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp_group.tab_image_id + '.png'" />
                 </router-link>
             </li>
         </ul>
