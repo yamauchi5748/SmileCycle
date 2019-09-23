@@ -63,6 +63,7 @@ $factory->define(Member::class, function () {
     $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
 
     // 会員のプロフィール画像をストレージに保存
+    Storage::putFileAs('public/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
     Storage::putFileAs('private/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
 
     return [

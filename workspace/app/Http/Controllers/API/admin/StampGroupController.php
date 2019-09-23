@@ -63,7 +63,7 @@ class StampGroupController extends AdminAuthController
         $tab_image_id = (string) Str::uuid();
 
         /* タブ画像を保存 */
-        Storage::putFileAs('private/images/stamps', $request->tab_image, $tab_image_id . '.png', 'private');
+        Storage::putFileAs('public/images/stamps', $request->tab_image, $tab_image_id . '.png', 'private');
     
 
         /* モデルにタブ画像のidをセット */
@@ -76,7 +76,7 @@ class StampGroupController extends AdminAuthController
             $stamp_id = (string) Str::uuid();
 
             /* スタンプ画像を保存 */
-            Storage::putFileAs('private/images/stamps', $stamp, $stamp_id . '.png', 'private');
+            Storage::putFileAs('public/images/stamps', $stamp, $stamp_id . '.png', 'private');
         
             /* モデルにスタンプ画像のidを追加 */
             $stamp_group['stamps'][] = $stamp_id;
@@ -147,7 +147,7 @@ class StampGroupController extends AdminAuthController
             $stamp_id = (string) Str::uuid();
 
             /* スタンプ画像を保存 */
-            Storage::putFileAs('private/images/stamps', $new_stamp, $stamp_id . '.png', 'private');
+            Storage::putFileAs('public/images/stamps', $new_stamp, $stamp_id . '.png', 'private');
         
             /* モデルにスタンプ画像のidを追加 */
             $new_stamps[] = $stamp_id;
