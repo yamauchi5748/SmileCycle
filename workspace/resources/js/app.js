@@ -127,7 +127,7 @@ const app = new Vue({
     methods: {
         /* レスポンスの認証チェック */
         checkAuth: function (res) {
-            if (res.data.auth) {
+            if (!res.data.auth) {
                 return res;
             }
             /* エラー */
