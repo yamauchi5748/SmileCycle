@@ -1,7 +1,7 @@
 <template>
-    <section v-once class="view controls-primary-view">
-        <div class="layout-flex --align-items-center margin-bottom-big">
-            <h2 class="item-count">{{ this.$root.members.length }}人</h2>
+    <section class="view controls-primary-view">
+        <div class="layout-flex --align-items-center">
+            <h2 class="item-count">{{ this.$root.member_list.length }}人</h2>
             <router-link
                 class="normal-button margin-left-auto"
                 :to="{name:'controls-member-create'}"
@@ -38,10 +38,7 @@
 </template>
 <script>
 export default {
-    data() {
-        return {};
-    },
-    created: function() {
+    mounted: function() {
         this.$root.loadMembers();
     }
 };

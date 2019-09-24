@@ -16,6 +16,7 @@ $factory->define(StampGroup::class, function () {
 
     /* タブ画像を保存 */
     Storage::putFileAs('public/images/stamps', new File('storage/app/images/' . $path_name . '.png'), $tab_image_id . '.png', 'private');
+    Storage::putFileAs('private/images/stamps', new File('storage/app/images/' . $path_name . '.png'), $tab_image_id . '.png', 'private');
 
     // スタンプをランダムに生成
     $stamps = [];
@@ -27,6 +28,8 @@ $factory->define(StampGroup::class, function () {
 
         // スタンプ画像をストレージに保存
         Storage::putFileAs('public/images/stamps', new File('storage/app/images/' . $path_name . '.png'), $stamp_id . '.png', 'private');
+        Storage::putFileAs('private/images/stamps', new File('storage/app/images/' . $path_name . '.png'), $stamp_id . '.png', 'private');
+        
         $stamps[] = $stamp_id;
     }
 

@@ -8,6 +8,10 @@
 #APP_CODE_PATH_HOST=../            
 APP_CODE_PATH_HOST=../workspace/
 
+#worker
+WORKER_CONF_HOST=../workspace/laravel-worker.conf
+WORKER_CONF_CONTAINER=/etc/supervisor/conf.d/laravel-worker.conf
+
 # Point to where the `APP_CODE_PATH_HOST` should be in the container
 APP_CODE_PATH_CONTAINER=/var/www
 
@@ -214,6 +218,11 @@ REDIS_PORT=6379
 ### LARAVEL ECHO SERVER ###################################
 
 LARAVEL_ECHO_SERVER_PORT=6001
+
+### MAILHOG ################################################
+MAILHOG_PORT=1025
+MAILHOG_SUBMISSIION_PORT=8025
+
 ### POSTFIX ################################################
 POSTFIX_PORT=25
 POSTFIX_SUBMISSIION_PORT=587
