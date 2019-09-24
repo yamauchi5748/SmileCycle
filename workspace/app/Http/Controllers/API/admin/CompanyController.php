@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\API\admin;
 
-use App\Company;
+use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Http\Requests\CompanyPost;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Str;
 
@@ -25,21 +26,29 @@ class CompanyController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyPost $request)
     {
         /** 会社を作成 **/
-        $this->response["company"] = Company::create(
-            [
-                /* 各データを設定 */
-                'id' => (string) Str::uuid(),
-                'name' => $request->name,
-                'address' => $request->address,
-                'fax' => $request->fax,
-                'tel' => $request->tel
-            ]
-        );
+        /* モデル作成 */
+        $company = [
+            /* 各データを設定 */
+            '_id' => (string) Str::uuid(),
+            'name' => $request->name,
+            'address' => $request->address,
+            'fax' => $request->fax,
+            'telephone_number' => $request->telephone_number,
+            'members' => []
+        ];
 
-        return $this->response;
+        Company::raw()->insertOne($company);
+        $this->response['company'] = $company;
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
