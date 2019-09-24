@@ -5,8 +5,12 @@ require('./bootstrap');
 
 Vue.use(VueRouter)
 
-import Controls from "./components/controls/Controls";
+import Chat from "./components/chats/Chat";
+import ChatGroup from "./components/chats/ChatGroup";
+import ChatMember from "./components/chats/ChatMember";
+import RoomDetails from "./components/chats/RoomDetails";
 
+import Controls from "./components/controls/Controls";
 import ControlsInvitation from "./components/controls/Invitation";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate";
 import ControlsMember from "./components/controls/Member";
@@ -22,6 +26,34 @@ import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
     routes: [
+        {
+            path: "/chats/",
+            component: Chat,
+            redirect: "/chats/group/",
+            children: [
+                {
+                    path: "group",
+                    name: "chat-group",
+                    components: {
+                        default: ChatGroup,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "member",
+                    name: "chat-member",
+                    components: {
+                        default: ChatMember,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "details",
+                    name: "room-details",
+                    component: RoomDetails
+                }
+            ]
+        },
         {
             path: "/controls",
             component: Controls,
@@ -80,35 +112,6 @@ const router = new VueRouter({
                 }
             ]
         },
-
-        {
-            path: "/chats/",
-            component: Chat,
-            redirect: "/chats/group/",
-            children: [
-                {
-                    path: "group",
-                    name: "chat-group",
-                    components: {
-                        default: ChatGroup,
-                        details: RoomDetails
-                    }
-                },
-                {
-                    path: "member",
-                    name: "chat-member",
-                    components: {
-                        default: ChatMember,
-                        details: RoomDetails
-                    }
-                },
-                {
-                    path: "details",
-                    name: "room-details",
-                    component: RoomDetails
-                }
-            ]
-        },
     ]
 });
 
@@ -128,8 +131,7 @@ const app = new Vue({
                 return res;
             }
             /* エラー */
-            console.log('認証エラー');
-            return Promise.reject();
+            return Promise.reject('認証エラー');
         },
 
         /* 会員一覧取得 */
@@ -139,7 +141,9 @@ const app = new Vue({
                 .then(res => {
                     this.member_list = res.data.members;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
 
         /* スタンプグループ一覧取得 */
@@ -149,7 +153,9 @@ const app = new Vue({
                 .then(res => {
                     this.stamp_group_list = res.data.stamp_groups;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
     }
 });
