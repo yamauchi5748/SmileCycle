@@ -11,11 +11,11 @@ import ControlsInvitation from "./components/controls/Invitation";
 import ControlsMember from "./components/controls/Member";
 import ControlsCompany from "./components/controls/Company";
 
-import Chat from "./components/controls/Chat";
+import Chat from "./components/chats/Chat";
 
-import ChatGroup from "./components/controls/ChatGroup";
-import ChatMember from "./components/controls/ChatMember";
-import RoomDetails from "./components/controls/RoomDetails";
+import ChatGroup from "./components/chats/ChatGroup";
+import ChatMember from "./components/chats/ChatMember";
+import RoomDetails from "./components/chats/RoomDetails";
 
 const router = new VueRouter({
     mode: "history",
@@ -43,9 +43,9 @@ const router = new VueRouter({
         },
 
         {
-            path: "/chat/",
+            path: "/chats/",
             component: Chat,
-            redirect: "/chat/group/",
+            redirect: "/chats/group/",
             children: [
                 {
                     path: "group",

@@ -5,6 +5,14 @@
         </div>
         <div class="contents">
             <div class="history">
+                <div class="content">
+                    <div class="profile"><img src="" alt="profile"></div>
+                    <div class="message">
+                        <span>myName</span>
+                        <span>2019/10/10 01:10</span>
+                        <p>aaa</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -25,6 +33,7 @@ export default {
       margin: 0px;
       margin-top: 20px
     }
+
     .name {
         border-bottom: 1px solid #707070;
         display: flex;
@@ -37,7 +46,24 @@ export default {
         font-weight: bold;
         color: $black;
     }
-    .history {
+    
+    .contents {
+        margin: 0 auto;
+        width: 93%;
+        display: flex;
+        .history {
+            display: flex;
+            width: 100%;
+            .content {
+                display: flex;
+                justify-content: start;
+                background-color: #F2F2F2;
+                .profile {
+                    background-color: red;
+                }
+            }
+        }
     }
+
 }
 </style>
