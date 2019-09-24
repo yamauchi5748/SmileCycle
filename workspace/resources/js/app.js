@@ -79,7 +79,36 @@ const router = new VueRouter({
                     component: ControlsStampDetails,
                 }
             ]
-        }
+        },
+
+        {
+            path: "/chats/",
+            component: Chat,
+            redirect: "/chats/group/",
+            children: [
+                {
+                    path: "group",
+                    name: "chat-group",
+                    components: {
+                        default: ChatGroup,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "member",
+                    name: "chat-member",
+                    components: {
+                        default: ChatMember,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "details",
+                    name: "room-details",
+                    component: RoomDetails
+                }
+            ]
+        },
     ]
 });
 
