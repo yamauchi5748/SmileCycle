@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyPost;
 use App\Http\Requests\CompanyPut;
+use App\Http\Requests\CompanyDelete;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Str;
 
@@ -113,8 +114,20 @@ class CompanyController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($company_id)
+    public function destroy(CompanyDelete $request, $company_id)
     {
-        return [ "response" => "return admin.companies.destroy"];
+        /** 会社の削除 **/
+        Company::raw()->deleteOne(
+            [
+                '_id' => $company_id
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
