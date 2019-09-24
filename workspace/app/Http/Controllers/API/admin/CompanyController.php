@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\API\admin;
 
-use App\Company;
+use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Http\Requests\CompanyPost;
+use App\Http\Requests\CompanyPut;
+use App\Http\Requests\CompanyDelete;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Str;
 
@@ -25,21 +28,29 @@ class CompanyController extends AdminAuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyPost $request)
     {
         /** 会社を作成 **/
-        $this->response["company"] = Company::create(
-            [
-                /* 各データを設定 */
-                'id' => (string) Str::uuid(),
-                'name' => $request->name,
-                'address' => $request->address,
-                'fax' => $request->fax,
-                'tel' => $request->tel
-            ]
-        );
+        /* モデル作成 */
+        $company = [
+            /* 各データを設定 */
+            '_id' => (string) Str::uuid(),
+            'name' => $request->name,
+            'address' => $request->address,
+            'fax' => $request->fax,
+            'telephone_number' => $request->telephone_number,
+            'members' => []
+        ];
 
-        return $this->response;
+        Company::raw()->insertOne($company);
+        $this->response['company'] = $company;
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -60,9 +71,41 @@ class CompanyController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $company_id)
+    public function update(CompanyPut $request, $company_id)
     {
-        return [ "response" => "return admin.companies.update"];
+        /** 会社を作成 **/
+        /* モデル作成 */
+        $company = [
+            /* 各データを設定 */
+            'name' => $request->name,
+            'address' => $request->address,
+            'fax' => $request->fax,
+            'telephone_number' => $request->telephone_number
+        ];
+
+        $this->response['company'] = $company;
+
+        Company::raw()->updateOne(
+            [
+                '_id' => $company_id
+            ],
+            [
+                '$set' => [
+                    /* 各データを設定 */
+                    'name' => $request->name,
+                    'address' => $request->address,
+                    'fax' => $request->fax,
+                    'telephone_number' => $request->telephone_number
+                ]
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -71,8 +114,20 @@ class CompanyController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($company_id)
+    public function destroy(CompanyDelete $request, $company_id)
     {
-        return [ "response" => "return admin.companies.destroy"];
+        /** 会社の削除 **/
+        Company::raw()->deleteOne(
+            [
+                '_id' => $company_id
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
