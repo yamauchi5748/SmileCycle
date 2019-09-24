@@ -95,12 +95,10 @@ const app = new Vue({
     methods: {
         /* レスポンスの認証チェック */
         checkAuth: function (res) {
-            if (res.data.auth) {
+            if (!res.data.auth) {
                 return res;
             }
-            /* エラー */
-            console.log('認証エラー');
-            return Promise.reject();
+            return Promise.reject('認証エラー');
         },
 
         /* 会員一覧取得 */
@@ -110,7 +108,9 @@ const app = new Vue({
                 .then(res => {
                     this.member_list = res.data.members;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
 
         /* スタンプグループ一覧取得 */
@@ -120,7 +120,9 @@ const app = new Vue({
                 .then(res => {
                     this.stamp_group_list = res.data.stamp_groups;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
     }
 });
