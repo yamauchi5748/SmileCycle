@@ -15,8 +15,23 @@
 //login,logout
 Auth::routes();
 
-//home
-Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');
+// stamp.image
+Route::get('/stamp-images/{image_id}', 'ImageController@stampImage')->name("stamp.image");
+
+// member.image
+Route::get('/members/{member_id}/profile-image', 'ImageController@memberImage')->name("member.image");
+
+// invitation.image
+Route::get('/invitations/{invitation_id}/images/{image_id}', 'ImageController@invitationImage')->name("invitation.image");
+
+// forum.image
+Route::get('/forums/{forum_id}/images/{image_id}', 'ImageController@forumImage')->name("forum.image");
+
+// chat.image
+Route::get('/chat-rooms/{chat_room_id}/images/{image_id}', 'ImageController@chatRoomImage')->name("chat_room.image");
 
 //help
 Route::get('/help', 'HelpController@index')->name('help');
+
+//home
+Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');

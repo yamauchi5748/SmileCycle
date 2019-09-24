@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use App\Models\Member;
 
 class MemberPut extends FormRequest
 {
@@ -25,8 +27,11 @@ class MemberPut extends FormRequest
      */
     public function rules()
     {
+        $request = request();
+        $member = Member::where('_id', $request->member_id)->first();
         return [
-            'name' => ['required' ,'string', 'max:64', 'unique:members'],
+            'member_id' => ['bail', 'required' ,'uuid'],
+            'name' => ['required' ,'string', 'max:64', Rule::unique('members')->ignore($member)], 
             'ruby' => ['required' ,'string', 'max:128'],
             'post' => ['required' ,'string', 'max:32'],
             'telephone_number' => ['required' ,'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],

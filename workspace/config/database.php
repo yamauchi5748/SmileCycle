@@ -42,6 +42,13 @@ return [
             'port' => env('DB_PORT', 27017),
             'database' => env('DB_DATABASE', 'SmileCycle'),
         ],
+        
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => '{default}',
+            'retry_after' => 90,
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',

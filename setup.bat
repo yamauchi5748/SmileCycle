@@ -33,6 +33,10 @@ rem テストデータを生成
 docker-compose exec --user=laradock workspace ^
 php artisan db:seed
 
+rem サービスワーカー起動
+docker-compose exec workspace ^
+service supervisor start
+
 rem LaravelMixによるBuildを実行
 docker-compose exec --user=laradock workspace ^
 npm run watch-poll
