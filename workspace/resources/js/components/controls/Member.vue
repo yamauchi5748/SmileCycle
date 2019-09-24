@@ -17,14 +17,21 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr class="table-body-item" v-for="member in this.$root.member_list" :key="member._id">
+                <router-link
+                    class="table-body-item"
+                    v-for="member in $root.members"
+                    :key="member._id"
+                    tag="tr"
+                    :to="member._id"
+                    append
+                >
                     <td>
-                        <img :src="'/storage/images/profile_images/' + member._id + '.png'"/>
+                        <img class="profile-img" src="/img/demo_stamp.png" />
                     </td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>
                     <td>{{ member.post }}</td>
-                </tr>
+                </router-link>
             </tbody>
         </table>
     </section>

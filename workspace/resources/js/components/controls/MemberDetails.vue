@@ -1,6 +1,6 @@
 <template>
     <secondary-view>
-        <template #title>会員作成</template>
+        <template #title>会員詳細</template>
         <template #body>
             <div class="input-wrapper">
                 <v-input v-model="ruby" counter :max="50">ふりがな</v-input>
@@ -23,9 +23,9 @@
             <div class="input-wrapper">
                 <v-input v-model="password" type="password" counter>パスワード</v-input>
             </div>
-            <div class="buttons-wrapper">
-                <button class="flat-button">取り消し</button>
-                <button class="normal-button">登録する</button>
+            <div class="buttons-wrapper --space-between">
+                <button class="flat-button">削除する</button>
+                <button class="normal-button">保存する</button>
             </div>
         </template>
     </secondary-view>
@@ -48,9 +48,20 @@ export default {
             password: ""
         };
     },
+    created: function() {
+        this.$root.loadMembers();
+        console.log(
+            this.$root.members.find(member => {
+                return member._id == this.$route.params.id;
+            })
+        );
+    },
     components: {
         VInput,
         SecondaryView
     }
 };
 </script>
+
+<style lang="scss" scoped>
+</style>

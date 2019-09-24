@@ -40,21 +40,4 @@
     cursor: pointer;
 }
 
-
-
-.images {
-    margin: 16px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 90px);
-    grid-row-gap: 20px;
-    justify-content: space-between;
-    .image-wrapper {
-    }
-    .image {
-        width: 90px;
-        height: 90px;
-        border: solid 1px;
-    }
-}
-
 /**************************************************************/

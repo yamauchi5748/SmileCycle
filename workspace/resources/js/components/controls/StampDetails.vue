@@ -1,26 +1,23 @@
 <template>
-    <div class="view controls-secondary-view">
-        <div class="controls-secondary-header">
-            <button @click="goBack" class="go-back-button">←</button>
-            <h2 class="title">スタンプ詳細</h2>
-        </div>
-        <div class="controls-secondary-body">
-            <div class="p-wrapper">
-                <img class="p-tab-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" alt="ロード中" />
-                <ul class="drag-and-drop">
-
-                </ul>
+    <secondary-view>
+        <template #title>スタンプ詳細</template>
+        <template #body>
+            <div class="p-tab-stamp-wrapper">
+                <img class="p-tab-stamp" src="/img/demo_stamp.png" alt="タブ画像" />
             </div>
             <ul class="p-stamp-list">
-                <li v-for="(stamp_id,index) in stamp_list" :key="index">
-                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp_id + '.png'" alt="ロード中" />
+                <li v-for="(stamp,index) in stamp_list" :key="index">
+                    <span></span>
+                    <img class="p-stamp" src="/img/demo_stamp.png" />
                 </li>
             </ul>
-        </div>
-    </div>
+        </template>
+    </secondary-view>
 </template>
 
 <script>
+import SecondaryView from "./SecondaryView.vue";
+import VInputImage from "../VInputImage";
 export default {
     data: function() {
         return {
@@ -56,14 +53,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.p-wrapper {
+.p-tab-stamp-wrapper {
     display: flex;
     .p-tab-stamp {
-        border: solid 1px;
         width: 150px;
         height: 150px;
     }
-
 }
 .p-stamp {
     display: block;

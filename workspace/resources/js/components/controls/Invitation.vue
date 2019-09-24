@@ -1,6 +1,6 @@
 <template>
     <section class="view controls-primary-view">
-        <div class="layout-flex --align-items-center">
+        <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">30記事</h2>
             <router-link
                 class="normal-button margin-left-auto"

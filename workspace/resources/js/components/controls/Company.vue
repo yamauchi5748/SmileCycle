@@ -1,6 +1,6 @@
 <template>
     <section class="view controls-primary-view">
-        <div class="layout-flex --align-items-center">
+        <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">12社</h2>
             <router-link
                 class="normal-button margin-left-auto"
@@ -14,9 +14,16 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr class="table-body-item" v-for="n in 10" :key="n">
+                <router-link
+                    class="table-body-item"
+                    v-for="n in 10"
+                    :key="n"
+                    tag="tr"
+                    :to="n.toString()"
+                    append
+                >
                     <td>サンプルカンパニー</td>
-                </tr>
+                </router-link>
             </tbody>
         </table>
     </section>
