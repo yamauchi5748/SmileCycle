@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\admin;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyPost;
+use App\Http\Requests\CompanyPut;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Str;
 
@@ -69,9 +70,41 @@ class CompanyController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $company_id)
+    public function update(CompanyPut $request, $company_id)
     {
-        return [ "response" => "return admin.companies.update"];
+        /** 会社を作成 **/
+        /* モデル作成 */
+        $company = [
+            /* 各データを設定 */
+            'name' => $request->name,
+            'address' => $request->address,
+            'fax' => $request->fax,
+            'telephone_number' => $request->telephone_number
+        ];
+
+        $this->response['company'] = $company;
+
+        Company::raw()->updateOne(
+            [
+                '_id' => $company_id
+            ],
+            [
+                '$set' => [
+                    /* 各データを設定 */
+                    'name' => $request->name,
+                    'address' => $request->address,
+                    'fax' => $request->fax,
+                    'telephone_number' => $request->telephone_number
+                ]
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
