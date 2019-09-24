@@ -27,7 +27,7 @@ class StampGroupDelete extends FormRequest
     {
         return [
             'delete_stamp_groups' => ['required', 'array'],
-            'delete_stamp_groups.*' => ['uuid', 'exists:members,_id']
+            'delete_stamp_groups.*' => ['uuid', 'exists:stamp_groups,_id']
         ];
     }
 

@@ -22,7 +22,7 @@ class CompanyGet extends FormRequest
      * ルート引数は対象にならないのでマージする
      * @return 配列
      */
-    protected function validationData()
+    public function validationData()
     {
         return array_merge($this->request->all(), [
             'company_id' => $this->company
