@@ -45,6 +45,7 @@ const router = new VueRouter({
         {
             path: "/chat/",
             component: Chat,
+            redirect: "/chat/group/",
             children: [
                 {
                     path: "group",
@@ -57,7 +58,10 @@ const router = new VueRouter({
                 {
                     path: "member",
                     name: "chat-member",
-                    component: ChatMember
+                    components: {
+                        default: ChatMember,
+                        details: RoomDetails
+                    }
                 },
                 {
                     path: "details",

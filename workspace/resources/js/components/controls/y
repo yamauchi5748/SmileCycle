@@ -1,7 +1,9 @@
 <template>
     <div>
+        <span>{{ roomName }}</span>
+        {{ test }}
         <ol>
-            <li v-on:click="getName">testname</li><div class="unread"></div>
+            <li v-on:click="roomName = 'zz'">testname</li><div class="unread"></div>
             <li>testname</li><div class="unread"></div>
             <li>testname</li><div class="unread"></div>
             <li>testname</li><div class="unread"></div>
@@ -10,11 +12,11 @@
 </template>
 <script>
 export default {
-    props: ["roomName", "showDetails"],
+    props: ["roomName"],
     methods: {
         getName(e) {
-            this.$emit('setName', e.srcElement.innerHTML);
-            
+            console.log(e.srcElement.innerHTML);
+            console.log(this);
         }
     }
 }

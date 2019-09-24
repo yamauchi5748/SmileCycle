@@ -13,14 +13,14 @@
                         <input type="text" v-if="type === 'member'"  placeholder="会員名検索">
                     </div>
                     <div class="room">
-                        <router-view></router-view>
+                        <router-view v-bind:roomName="roomName" v-on:setName="setName"></router-view>
                     </div>
                    <button class="add-button"><img src="/img/add-button.png" alt="button"></button>
                 </div>
             </div>
-            <div class="details">
-                <router-view name="details"></router-view>
-            </div>
+            <router-view name="details" v-bind:showDetails="showDetails" v-if="showDetails === true">
+                <h1>{{ roomName }}</h1>
+            </router-view>
         </div>
     </div>
 </template>
@@ -29,7 +29,8 @@ export default {
     data() {
         return {
             type:  "group",
-            roomName: ""
+            roomName: "",
+            showDetails: false
         };
     },
     methods: {
@@ -38,8 +39,12 @@ export default {
         },
         isMember() {
             this.type = "member";
+        },
+        setName(name) {
+            this.roomName = name;
+            this.showDetails = true;
         }
-    }
+    },
 };
 </script>
 <style lang="scss">
@@ -129,11 +134,4 @@ export default {
     }
 }
 
-.details {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    background-color: $base-color;
-    height: 800px;
-}
 </style>
