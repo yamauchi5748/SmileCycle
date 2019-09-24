@@ -3,12 +3,12 @@
         <template #title>スタンプ詳細</template>
         <template #body>
             <div class="p-tab-stamp-wrapper">
-                <img class="p-tab-stamp" src="/img/demo_stamp.png" alt="タブ画像" />
+                <img class="p-tab-stamp" :src="'/storage/images/stamps/' + stamp_group.tab_image_id + '.png'" alt="タブ画像" />
             </div>
             <ul class="p-stamp-list">
                 <li v-for="(stamp,index) in stamp_list" :key="index">
                     <span></span>
-                    <img class="p-stamp" src="/img/demo_stamp.png" />
+                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp + '.png'" />
                 </li>
             </ul>
         </template>
@@ -19,6 +19,10 @@
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
 export default {
+    components: {
+        VInputImage,
+        SecondaryView
+    },
     data: function() {
         return {
             stamp_group: {},
@@ -30,6 +34,7 @@ export default {
         if(this.$root.stamp_group_list.length > 0) {
             this.setData();
         }else {
+            console.log('aa')
             // 対象のスタンプグループ情報を取得
             this.$root.loadAdminStampGroups()
             .then(res => {
@@ -44,8 +49,9 @@ export default {
         },
         // データをセット
         setData: function() {
-            const index = this.$route.params['id'];
-            this.stamp_group = this.$root.stamp_group_list[index];
+            this.stamp_group = this.$root.stamp_group_list.find(stamp_group => {
+                return stamp_group._id == this.$route.params.id;
+            });
             this.stamp_list = this.stamp_group.stamps;
         },
     }

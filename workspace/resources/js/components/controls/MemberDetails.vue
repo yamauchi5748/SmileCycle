@@ -51,7 +51,7 @@ export default {
     created: function() {
         this.$root.loadMembers();
         console.log(
-            this.$root.members.find(member => {
+            this.$root.member_list.find(member => {
                 return member._id == this.$route.params.id;
             })
         );
