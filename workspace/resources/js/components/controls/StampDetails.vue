@@ -34,7 +34,6 @@ export default {
         if(this.$root.stamp_group_list.length > 0) {
             this.setData();
         }else {
-            console.log('aa')
             // 対象のスタンプグループ情報を取得
             this.$root.loadAdminStampGroups()
             .then(res => {

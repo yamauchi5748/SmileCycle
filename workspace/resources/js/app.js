@@ -149,7 +149,7 @@ const app = new Vue({
 
         /* 特定会員取得 */
         getMember: function (member_id) {
-            return axios.get('/api/companies/' + member_id)
+            return axios.get('/api/members/' + member_id)
                 .then(res => this.checkAuth(res))
                 .catch(error => {
                     console.log(error);
