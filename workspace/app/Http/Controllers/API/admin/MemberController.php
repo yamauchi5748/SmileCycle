@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use App\Models\Member;
 use App\Models\Company;
@@ -52,7 +53,7 @@ class MemberController extends AdminAuthController
         ];
 
         // 会員のプロフィール画像をストレージに保存
-        Storage::putFileAs('public/images/profile_images', $request->profile_image, $member['_id'] . '.png', 'private');
+        Storage::copy('images/boy_3.png', 'public/images/profile_images/' . $member['_id'] . '.png');
         
         /* 会員モデルをDBに登録 */
         Member::raw()->insertOne($member);
