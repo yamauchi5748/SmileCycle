@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use App\Http\Requests\MemberGet;
 use App\Http\Controllers\Auth\AuthController;
 use Jenssegers\Mongodb;
 
@@ -65,7 +66,7 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show(MemberGet $request, $member_id)
     {
         /** 会員の詳細情報を取得 **/
         $member = Member::raw()->aggregate(
