@@ -107,29 +107,32 @@ class MemberController extends AdminAuthController
     public function update(MemberPut $request, $member_id)
     {
         /** 会員の更新 **/
+        /* 更新会員のモデル */
+        $member = [
+            'name' => $request->name,                           // 会員名
+            'ruby' => $request->ruby,                           // ふりがな
+            'post' => $request->post,                           // 役職名
+            'telephone_number' => $request->telephone_number,   // 電話番号
+            'company_id' => $request->company_id,               // 会社id
+            'department_name' => $request->department_name,     // 部門名
+            'mail' => $request->mail,                           // メールアドレス
+        ];
+        if ($request->password) {
+            $member['password'] = Hash::make($request->password);   // パスワード
+        }
         Member::raw()->updateOne(
             [
                 '_id' => $member_id
             ],
             [
-                '$set' => [
-                    'name' => $request->name,                           // 会員名
-                    'ruby' => $request->ruby,                           // ふりがな
-                    'post' => $request->post,                           // 役職名
-                    'telephone_number' => $request->telephone_number,   // 電話番号
-                    'company_id' => $request->company_id,               // 会社id
-                    'department_name' => $request->department_name,     // 部門名
-                    'mail' => $request->mail,                           // メールアドレス
-                    'password' => Hash::make($request->password)        // パスワード
-                ]
+                '$set' => $member
             ]
         );
 
-        $member = $this->getMember($member_id);
-
         /* 会員が更新できたかチェック */
-        if ($member) {
-            $this->response['member'] = $member;
+        $return_member = $this->getMember($member_id);
+        if ($return_member) {
+            $this->response['member'] = $return_member;
         } else {
             $this->response['result'] = false;
         }
@@ -154,7 +157,7 @@ class MemberController extends AdminAuthController
         $member = $this->getMember($member_id);
 
         /* 会員を取得できなかった場合 */
-        if(!$member){
+        if (!$member) {
             $this->response['result'] = false;
             return $this->response;
         }
