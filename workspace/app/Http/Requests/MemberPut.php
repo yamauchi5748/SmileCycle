@@ -21,23 +21,33 @@ class MemberPut extends FormRequest
     }
 
     /**
+     * ルート引数は対象にならないのでマージする
+     * @return 配列
+     */
+    public function validationData()
+    {
+        return array_merge($this->request->all(), [
+            'member_id' => $this->member
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules()
     {
-        $request = request();
-        $member = Member::where('_id', $request->member_id)->first();
+        $member = Member::where('_id', $this->member)->first();
         return [
-            'member_id' => ['bail', 'required' ,'uuid'],
-            'name' => ['required' ,'string', 'max:64', Rule::unique('members')->ignore($member)], 
-            'ruby' => ['required' ,'string', 'max:128'],
-            'post' => ['required' ,'string', 'max:32'],
+            'member_id' => ['required' ,'uuid', 'exists:members,_id'],
+            'name' => ['required' ,'string', 'max:15', 'min:2', Rule::unique('members')->ignore($member)],
+            'ruby' => ['required' ,'string', 'max:30', 'min:2'],
+            'post' => ['required' ,'string', 'max:50', 'min:1'],
             'telephone_number' => ['required' ,'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
             'company_id' => ['required' ,'uuid', 'exists:companies,_id'],
-            'department_name' => ['required' ,'string'],
-            'mail' => ['required' ,'string', 'email', 'max:256'],
+            'department_name' => ['required', Rule::in(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会'])],
+            'mail' => ['required', 'email', 'max:256'],
             'password' => ['required' ,'string', 'min:8', 'confirmed']
         ];
     }

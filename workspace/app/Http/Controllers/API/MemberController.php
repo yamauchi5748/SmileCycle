@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use App\Http\Requests\MemberGet;
 use App\Http\Controllers\Auth\AuthController;
 use Jenssegers\Mongodb;
 
@@ -17,7 +18,7 @@ class MemberController extends AuthController
     public function index()
     {
         /* 会員の情報を一覧にまとめてJsonデータを生成 */
-        $this->response["members"] = Member::raw()->aggregate(
+        $members = Member::raw()->aggregate(
             [
                 /* 取得するデータを指定 */
                 [
@@ -31,6 +32,14 @@ class MemberController extends AuthController
                 ]
             ]
         )->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $head = head($members);
+        if($head){
+            $this->response['members'] = $members;
+        }else{
+            $this->response['result'] = false;
+        }
 
         return response()->json(
             $this->response,
@@ -57,7 +66,7 @@ class MemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($member_id)
+    public function show(MemberGet $request, $member_id)
     {
         /** 会員の詳細情報を取得 **/
         $member = Member::raw()->aggregate(
@@ -105,7 +114,6 @@ class MemberController extends AuthController
                 ]
             ]
         )->toArray();
-
 
         /* 会員が取得できたかチェック */
         if(head($member)){
