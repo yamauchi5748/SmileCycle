@@ -17,7 +17,7 @@ class MemberController extends AuthController
     public function index()
     {
         /* 会員の情報を一覧にまとめてJsonデータを生成 */
-        $this->response["members"] = Member::raw()->aggregate(
+        $members = Member::raw()->aggregate(
             [
                 /* 取得するデータを指定 */
                 [
@@ -31,6 +31,14 @@ class MemberController extends AuthController
                 ]
             ]
         )->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $head = head($members);
+        if($head){
+            $this->response['members'] = $members;
+        }else{
+            $this->response['result'] = false;
+        }
 
         return response()->json(
             $this->response,
@@ -105,7 +113,6 @@ class MemberController extends AuthController
                 ]
             ]
         )->toArray();
-
 
         /* 会員が取得できたかチェック */
         if(head($member)){
