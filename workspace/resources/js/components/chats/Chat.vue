@@ -53,7 +53,7 @@ export default {
 
 .controls-body {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .room-list {

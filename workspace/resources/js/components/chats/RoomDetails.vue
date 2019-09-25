@@ -39,7 +39,7 @@ export default {
         display: flex;
         height: 48px;
         padding: 0 16px;
-        justify-content: start;
+        justify-content: flex-start;
         align-items: center;
         text-decoration: none;
         font-size: 16px;
@@ -56,7 +56,7 @@ export default {
             width: 100%;
             .content {
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 background-color: #F2F2F2;
                 .profile {
                     background-color: red;
