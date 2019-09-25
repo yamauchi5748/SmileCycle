@@ -33,10 +33,9 @@ class MemberController extends AdminAuthController
     public function store(MemberPost $request)
     {
         /** 会員の作成 **/
-        $member_id = (string) Str::uuid(); // uuidを生成
-        
-        Member::raw()->insertOne([
-            '_id' => $member_id,                                // 会員id
+        /* 会員モデル */
+        $member = [
+            '_id' => (string) Str::uuid(),                      // 会員id
             'api_token' => Str::random(60),                     // api_token
             'is_notification' => true,                          // 通知の可否情報
             'notification_interval' => '0.5h',                  // 通知間隔
@@ -48,13 +47,16 @@ class MemberController extends AdminAuthController
             'department_name' => $request->department_name,     // 部門名
             'mail' => $request->mail,                           // メールアドレス
             'password' => Hash::make($request->password),       // パスワード
-            'stamp_groups' => array(),                          // 会員が使用できるスタンプ
-            'invitations' => array(),                           // 会員が投稿した掲示板
-        ]);
+            'stamp_groups' => [],                               // 会員が使用できるスタンプ
+            'invitations' => [],                                // 会員が投稿した掲示板
+        ];
 
         // 会員のプロフィール画像をストレージに保存
-        Storage::putFileAs('public/images/profile_images', $request->profile_image, $member_id . '.png', 'private');
+        Storage::putFileAs('public/images/profile_images', $request->profile_image, $member['_id'] . '.png', 'private');
         
+        /* 会員モデルをDBに登録 */
+        Member::raw()->insertOne($member);
+
         /** 会社の会員情報を更新 **/
         Company::raw()->updateOne(
             [
@@ -62,16 +64,15 @@ class MemberController extends AdminAuthController
             ],
             [
                 '$push' => [
-                    'members' => $member_id                     // 会員のidを追加
+                    'members' => $member['_id']                 // 会員のidを追加
                 ]
             ]
         );
 
-        $member = $this->getMember($member_id);
-
         /* 会員が作成できたかチェック */
-        if ($member) {
-            $this->response['member'] = $member;
+        $return_member = $this->getMember($member['_id']);
+        if ($return_member) {
+            $this->response['member'] = $return_member;
         } else {
             $this->response['result'] = false;
         }
