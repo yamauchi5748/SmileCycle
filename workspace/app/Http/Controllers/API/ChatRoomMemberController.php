@@ -4,6 +4,11 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Requests\ChatRoomMemberPost;
+use App\Http\Requests\ChatRoomMemberDeleteAll;
+use App\Http\Requests\ChatRoomMemberDelete;
+use App\Models\Member;
+use App\Models\ChatRoom;
 
 class ChatRoomMemberController extends AuthController
 {
@@ -23,9 +28,74 @@ class ChatRoomMemberController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $chat_room_id)
+    public function store(ChatRoomMemberPost $request, $chat_room_id)
     {
-        return [ "response" => "return chat_room.members.store"];
+        /** 会員をルームに追加する **/
+        /* 会員の情報を取得 */
+        $members = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => [
+                        '$in' => $request->add_members
+                    ]
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /* ルーム更新 */
+        ChatRoom::raw()->updateOne(
+            [
+                '_id' => $chat_room_id,
+                /* ルームの管理者認証 */
+                'admin_member_id' => $this->author->_id
+            ],
+            [
+                '$push' => [
+                    'members' => [
+                        '$each' => $members
+                    ]
+                ]
+            ]
+        );
+        
+        /* 更新したルーム情報を取得 */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'admin_member_id' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'members' => 1,
+
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $room = head($room_corsor);
+        if($room){
+            $this->response['room'] = $room;
+        }else{
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -57,9 +127,68 @@ class ChatRoomMemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($chat_room_id, $member_id)
+    public function destroy(ChatRoomMemberDelete $request, $chat_room_id)
     {
-        return [ "response" => "return chat_room.members.destroy"];
+        /** 会員がルームから退出 **/
+        /* 会員の情報を取得 */
+        $member = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $this->author->_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /** ルーム管理者ならばルームを削除 **/
+        ChatRoom::raw()->deleteOne(
+            [
+                '_id' => $chat_room_id,
+                /* ルームの管理者認証 */
+                'admin_member_id' => $this->author->_id
+            ]
+        );
+
+        /* ルーム更新 */
+        ChatRoom::raw()->updateOne(
+            [
+                '_id' => $chat_room_id 
+            ],
+            [
+                '$pullAll' => [
+                    'members' => $member
+                ]
+            ]
+        );
+        
+        /* ルームを取得 存在チェックのため */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'members' => $member
+                ]
+            ]
+        ])->toArray();
+
+        /* ルーム、会員が削除されたか */
+        $room = head($room_corsor);
+        if ($room) {
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -68,8 +197,86 @@ class ChatRoomMemberController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroies(Request $request, $chat_room_id)
+    public function destroies(ChatRoomMemberDeleteAll $request, $chat_room_id)
     {
-        return [ "response" => "return chat_room.members.destroies"];
+        /** 会員をルームから退出させる **/
+        /* 会員の情報を取得 */
+        $members = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => [
+                        '$in' => $request->delete_members
+                    ]
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /* ルーム更新 */
+        ChatRoom::raw()->updateOne(
+            [
+                '$and' => [
+                    ['_id' => $chat_room_id],
+                    /* ルームの管理者認証 */
+                    ['admin_member_id' => $this->author->_id],
+                    ['admin_member_id' => [
+                        '$not' => [
+                            '$in' => $request->delete_members
+                        ]
+                    ]]
+                ]
+            ],
+            [
+                '$pullAll' => [
+                    'members' => $members
+                ]
+            ]
+        );
+        
+        /* 更新したルーム情報を取得 */
+        $room_corsor = ChatRoom::raw()->aggregate([
+            /* ルームを指定 */
+            [
+                '$match' => [
+                    '$and' => [
+                        ['_id' => $chat_room_id],
+                        /* 管理者認証、管理者が削除されてないか */
+                        ['admin_member_id' => $this->author->_id],
+                        ['admin_member_id' => [
+                            '$not' => [
+                                '$in' => $request->delete_members
+                            ]
+                        ]]
+                    ]
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'members' => 1,
+
+                ]
+            ]
+        ])->toArray();
+
+        /* 返すレスポンスデータを整形 */
+        $room = head($room_corsor);
+        if($room){
+            $this->response['room'] = $room;
+        }else{
+            $this->response['result'] = false;
+        }
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }

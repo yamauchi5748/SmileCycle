@@ -21,13 +21,33 @@ import VInputImage from "../VInputImage";
 export default {
     data: function() {
         return {
-            stamp_list: new Array(20),
-            add_stamp_list: []
+            stamp_group: {},
+            stamp_list: [],
         };
     },
-    components: {
-        VInputImage,
-        SecondaryView
+    mounted: function() {
+        /* スタンプグループ情報がなければ取得 */
+        if(this.$root.stamp_group_list.length > 0) {
+            this.setData();
+        }else {
+            // 対象のスタンプグループ情報を取得
+            this.$root.loadAdminStampGroups()
+            .then(res => {
+                this.setData();
+            });
+        }
+    },
+    methods: {
+        // 1つ前のページに戻る
+        goBack: function() {
+            this.$router.back();
+        },
+        // データをセット
+        setData: function() {
+            const index = this.$route.params['id'];
+            this.stamp_group = this.$root.stamp_group_list[index];
+            this.stamp_list = this.stamp_group.stamps;
+        },
     }
 };
 </script>

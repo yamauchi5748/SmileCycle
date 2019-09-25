@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Member;
 use App\Models\StampGroup;
 

@@ -87,16 +87,11 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
 
 //admin.invitations
 Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
-    "index", "show"
+    "index", "store", "show"
 ])->names([
     "index" => "admin.invitations.index",
-    "show" => "admin.invitations.show"
-]);
-//admin.invitations
-Route::apiResource('invitations', 'API\admin\InvitationController')->only([
-    "store"
-])->names([
     "store" => "admin.invitations.store",
+    "show" => "admin.invitations.show"
 ]);
 
 //invitations
@@ -122,11 +117,17 @@ Route::apiResource('forums/{forum_id}/comments', 'API\ForumCommentController')->
     "index", "store"
 ])->names([
     "index" => "forum.comments.index",
-    "store" => "forum.comments.store"
+    "store" => "forum.comments.store",
 ]);
 
 //chat_rooms
-Route::apiResource('chat-rooms', 'API\ChatRoomController');
+Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
+    "index" => "chat_room.index",
+    "store" => "chat_room.store",
+    "show" => "chat_room.show",
+    "update" => "chat_room.update",
+    "destroy" => "chat_room.destroy"
+]);
 
 //chat_room.contents
 Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentController')->only([

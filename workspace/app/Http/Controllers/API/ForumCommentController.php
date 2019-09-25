@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ForumCommentGet;
+use App\Http\Requests\ForumCommentPost;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use App\Models\Forum;
 
 class ForumCommentController extends AuthController
 {
@@ -12,9 +18,39 @@ class ForumCommentController extends AuthController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($forum_id, ForumCommentGet $request)
     {
-        return [ "response" => "return forum.comments.index"];
+        /** 特定の掲示板のコメントを取得 **/
+        $forums_comments_corsor = Forum::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $forum_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'comments' => [
+                        '$slice' => [ '$comments', (int) $request->comment_count, 10 ]
+                    ]
+                ]
+            ]
+        ])->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        $comments = head($forums_comments_corsor)['comments'];
+        if(head($comments)){
+            $this->response['comments'] = $comments;
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -23,9 +59,55 @@ class ForumCommentController extends AuthController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($forum_id, ForumCommentPost $request)
     {
-        return [ "response" => "return forum.comments.store"];
+        /** 掲示板にコメント投稿 **/
+        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
+
+        /* コメントのモデル */
+        $comment = [
+            '_id' => (string) Str::uuid(),              // コメントのid
+            'sender_id' => $this->author->_id,          // コメントの投稿者id
+            'sender_name' => $this->author->name,       // コメントの投稿者名
+            'comment_type' => $request->comment_type,   // コメントのタイプ
+            'created_at' => $now                        // コメント投稿日
+        ];
+
+        /* コメントタイプ別に処理 */
+        if($comment['comment_type'] == 1)
+        {
+            /* テキスト */
+            $comment['text'] = $request->text;
+        }else if($comment['comment_type'] == 2)
+        {
+            /* スタンプ */
+            $comment['stamp_id'] = $request->stamp_id;
+        }
+
+        /* コメントを掲示板に追加 */
+        Forum::raw()->updateOne(
+            [
+                '_id' => $forum_id
+            ],
+            [
+                '$push' => [
+                    'comments' => [
+                        '$each' => [$comment],
+                        '$position' => 0
+                    ]
+                ]
+            ]
+        );
+
+        /* 返すレスポンスデータを整形 */
+        $this->response['comment'] = $comment;
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -34,7 +116,7 @@ class ForumCommentController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($forum_comment_id)
+    public function show($forum_id, $forum_comment_id)
     {
         return [ "response" => "return forum.comments.show"];
     }
@@ -46,7 +128,7 @@ class ForumCommentController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $forum_comment_id)
+    public function update($forum_id, Request $request, $forum_comment_id)
     {
         return [ "response" => "return forum.comments.update"];
     }
@@ -57,7 +139,7 @@ class ForumCommentController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($forum_comment_id)
+    public function destroy($forum_id, $forum_comment_id)
     {
         return [ "response" => "return forum.comments.delete"];
     }
