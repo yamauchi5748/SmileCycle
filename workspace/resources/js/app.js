@@ -122,6 +122,7 @@ const app = new Vue({
     el: '#app',
     data: {
         member_list: [],
+        company_list: [],
         stamp_group_list: [],
     },
     methods: {
@@ -141,6 +142,36 @@ const app = new Vue({
                 .then(res => {
                     this.member_list = res.data.members;
                 })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* 特定会員取得 */
+        getMember: function (member_id) {
+            return axios.get('/api/members/' + member_id)
+                .then(res => this.checkAuth(res))
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* 会社一覧取得 */
+        loadCompanies: function () {
+            return axios.get('/api/companies')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.company_list = res.data.companies;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* 特定会社取得 */
+        getCompany: function (company_id) {
+            return axios.get('/api/companies/' + company_id)
+                .then(res => this.checkAuth(res))
                 .catch(error => {
                     console.log(error);
                 });

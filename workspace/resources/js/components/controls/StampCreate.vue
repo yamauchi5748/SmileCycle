@@ -48,7 +48,7 @@ export default {
             post_members: []
         };
     },
-    mounted: function() {
+    created: function() {
         this.$root.loadMembers();
     },
     components: {
