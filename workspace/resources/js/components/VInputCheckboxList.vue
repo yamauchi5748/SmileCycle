@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import VInputCheckbox from "./VInputCheckbox";
+import VInputCheckbox from "./VInputCheckbox.vue";
 export default {
     data: function() {
         return {

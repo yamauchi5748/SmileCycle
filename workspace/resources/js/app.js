@@ -5,23 +5,23 @@ require('./bootstrap');
 
 Vue.use(VueRouter)
 
-import Chat from "./components/chats/Chat";
-import ChatGroup from "./components/chats/ChatGroup";
-import ChatMember from "./components/chats/ChatMember";
-import RoomDetails from "./components/chats/RoomDetails";
+import Chat from "./components/chats/Chat.vue";
+import ChatGroup from "./components/chats/ChatGroup.vue";
+import ChatMember from "./components/chats/ChatMember.vue";
+import RoomDetails from "./components/chats/RoomDetails.vue";
 
-import Controls from "./components/controls/Controls";
-import ControlsInvitation from "./components/controls/Invitation";
-import ControlsInvitationCreate from "./components/controls/InvitationCreate";
-import ControlsMember from "./components/controls/Member";
-import ControlsMemberCreate from "./components/controls/MemberCreate";
-import ControlsMemberDetails from "./components/controls/MemberDetails";
-import ControlsCompany from "./components/controls/Company";
-import ControlsCompanyCreate from "./components/controls/CompanyCreate";
-import ControlsCompanyDetails from "./components/controls/CompanyDetails"
-import ControlsStamp from "./components/controls/Stamp";
-import ControlsStampCreate from "./components/controls/StampCreate";
-import ControlsStampDetails from "./components/controls/StampDetails"
+import Controls from "./components/controls/Controls.vue";
+import ControlsInvitation from "./components/controls/Invitation.vue";
+import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
+import ControlsMember from "./components/controls/Member.vue";
+import ControlsMemberCreate from "./components/controls/MemberCreate.vue";
+import ControlsMemberDetails from "./components/controls/MemberDetails.vue";
+import ControlsCompany from "./components/controls/Company.vue";
+import ControlsCompanyCreate from "./components/controls/CompanyCreate.vue";
+import ControlsCompanyDetails from "./components/controls/CompanyDetails.vue";
+import ControlsStamp from "./components/controls/Stamp.vue";
+import ControlsStampCreate from "./components/controls/StampCreate.vue";
+import ControlsStampDetails from "./components/controls/StampDetails.vue";
 import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
@@ -127,7 +127,7 @@ const app = new Vue({
     methods: {
         /* レスポンスの認証チェック */
         checkAuth: function (res) {
-            if (!res.data.auth) {
+            if (res.data.auth) {
                 return res;
             }
             /* エラー */
