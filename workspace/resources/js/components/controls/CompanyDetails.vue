@@ -34,7 +34,7 @@ export default {
     VInput,
     SecondaryView
   },
-  mounted: function() {
+  created: function() {
     // 対象の会社情報を取得
     this.$root
       .getCompany(this.$route.params.id)

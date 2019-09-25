@@ -147,6 +147,15 @@ const app = new Vue({
                 });
         },
 
+        /* 特定会員取得 */
+        getMember: function (member_id) {
+            return axios.get('/api/companies/' + member_id)
+                .then(res => this.checkAuth(res))
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
         /* 会社一覧取得 */
         loadCompanies: function () {
             return axios.get('/api/companies')

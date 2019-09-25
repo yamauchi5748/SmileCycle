@@ -29,7 +29,7 @@ export default {
             stamp_list: [],
         };
     },
-    mounted: function() {
+    created: function() {
         /* スタンプグループ情報がなければ取得 */
         if(this.$root.stamp_group_list.length > 0) {
             this.setData();
