@@ -3,14 +3,14 @@
 <body>
   <div id="header">
   </div>
-  <dib class="members">
+  <div class="members">
     <h1 class="member_deploy_name"></h1>
       <div class="member_user_icon"></div>
         <img src="">
       <li class=member_"user_name"></li>
       <li class="member_user_post"></li>
       <l1 class="member_user_company"></l1>
-  </dib>
+  </div>
 </body>
 </template>
 
