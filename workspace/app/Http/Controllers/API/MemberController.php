@@ -22,10 +22,11 @@ class MemberController extends AuthController
                 /* 取得するデータを指定 */
                 [
                     '$project' => [
-                        '_id' => 1,                  // 会員のidを返す
+                        '_id' => 1,                 // 会員のidを返す
                         'name' => 1,                // 会員名を返す
                         'ruby' => 1,                // 会員のふりがなを返す
                         'post' => 1,                // 会員の役職を返す
+                        'department_name' => 1,     // 会員の部門名を返す
                     ]
                 ]
             ]
