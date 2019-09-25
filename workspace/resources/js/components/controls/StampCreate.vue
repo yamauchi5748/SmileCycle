@@ -10,7 +10,10 @@
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
-                <input class="input" type="checkbox" v-model="is_all" />
+                <v-input-checkbox v-model="is_all"></v-input-checkbox>
+            </div>
+            <div class="input-wrapper">
+                <v-input-checkbox-list></v-input-checkbox-list>
             </div>
             <div class="input-wrapper">
                 <span class="input-title">特定会員選択</span>
@@ -34,6 +37,8 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
+import VInputCheckbox from "../VInputCheckbox";
+import VInputCheckboxList from "../VInputCheckboxList";
 export default {
     data: function() {
         return {
@@ -48,6 +53,8 @@ export default {
     },
     components: {
         VInputImage,
+        VInputCheckbox,
+        VInputCheckboxList,
         SecondaryView
     }
 };
