@@ -10,6 +10,8 @@ import ChatGroup from "./components/chats/ChatGroup.vue";
 import ChatMember from "./components/chats/ChatMember.vue";
 import RoomDetails from "./components/chats/RoomDetails.vue";
 
+import Members from "./components/members/Menbers.vue";
+
 import Controls from "./components/controls/Controls.vue";
 import ControlsInvitation from "./components/controls/Invitation.vue";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
