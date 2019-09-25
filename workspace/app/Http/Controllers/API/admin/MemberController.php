@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API\admin;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\MemberPost;
+use App\Http\Requests\MemberPut;
+use App\Http\Requests\MemberDelete;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -10,8 +13,6 @@ use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use App\Models\Member;
 use App\Models\Company;
-use App\Http\Requests\MemberPost;
-use App\Http\Requests\MemberPut;
 
 class MemberController extends AdminAuthController
 {
@@ -151,7 +152,7 @@ class MemberController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($member_id)
+    public function destroy(MemberDelete $request, $member_id)
     {
         /* 削除する会員を取得 */
         $member = $this->getMember($member_id);
