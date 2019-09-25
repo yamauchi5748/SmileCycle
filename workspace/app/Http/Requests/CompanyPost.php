@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StampGroupDelete extends FormRequest
+class CompanyPost extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,10 @@ class StampGroupDelete extends FormRequest
     public function rules()
     {
         return [
-            'delete_stamp_groups' => ['required', 'array'],
-            'delete_stamp_groups.*' => ['uuid', 'exists:stamp_groups,_id']
+            'name' => ['required', 'string', 'max:256'],
+            'address' => ['required', 'string', 'max:128'],
+            'fax' => ['required', 'string', 'regex:/^\d{2,4}-\d{2,4}-\d{2,4}$/'],
+            'telephone_number' => ['required', 'string', 'regex:/^\d{2,4}-\d{2,4}-\d{2,4}$/'],
         ];
     }
 

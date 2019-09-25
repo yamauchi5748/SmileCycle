@@ -11,7 +11,7 @@
             class="p-stamp-tab-list"
         >
             <li v-for="(stamp_group,index) in this.$root.stamp_group_list" :key="index">
-                <router-link :to="index.toString()" append>
+                <router-link :to="stamp_group._id" append>
                     <img class="p-stamp" :src="'/storage/images/stamps/' + stamp_group.tab_image_id + '.png'" />
                 </router-link>
             </li>

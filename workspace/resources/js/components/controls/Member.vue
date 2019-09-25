@@ -1,7 +1,7 @@
 <template>
     <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center">
-            <h2 class="item-count">{{ this.$root.member_list.length }}人</h2>
+            <h2 class="item-count">{{ $root.member_list.length }}人</h2>
             <router-link
                 class="normal-button margin-left-auto"
                 :to="{name:'controls-member-create'}"
@@ -19,14 +19,14 @@
             <tbody class="table-body">
                 <router-link
                     class="table-body-item"
-                    v-for="member in $root.members"
+                    v-for="member in $root.member_list"
                     :key="member._id"
                     tag="tr"
                     :to="member._id"
                     append
                 >
                     <td>
-                        <img class="profile-img" src="/img/demo_stamp.png" />
+                        <img class="profile-img" :src="'/storage/images/profile_images/' + member._id + '.png'" />
                     </td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>

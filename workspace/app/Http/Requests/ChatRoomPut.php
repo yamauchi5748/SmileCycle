@@ -22,7 +22,7 @@ class ChatRoomPut extends FormRequest
      * ルート引数は対象にならないのでマージする
      * @return 配列
      */
-    protected function validationData()
+    public function validationData()
     {
         return array_merge($this->request->all(), [
             'chat_room_id' => $this->chat_room

@@ -5,23 +5,55 @@ require('./bootstrap');
 
 Vue.use(VueRouter)
 
-import Controls from "./components/controls/Controls.vue";
+import Chat from "./components/chats/Chat";
+import ChatGroup from "./components/chats/ChatGroup";
+import ChatMember from "./components/chats/ChatMember";
+import RoomDetails from "./components/chats/RoomDetails";
 
-import ControlsInvitation from "./components/controls/Invitation.vue";
-import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
-import ControlsMember from "./components/controls/Member.vue";
-import ControlsMemberCreate from "./components/controls/MemberCreate.vue";
-import ControlsMemberDetails from "./components/controls/MemberDetails.vue";
-import ControlsCompany from "./components/controls/Company.vue";
-import ControlsCompanyCreate from "./components/controls/CompanyCreate.vue";
-import ControlsCompanyDetails from "./components/controls/CompanyDetails.vue"
-import ControlsStamp from "./components/controls/Stamp.vue";
-import ControlsStampCreate from "./components/controls/StampCreate.vue";
-import ControlsStampDetails from "./components/controls/StampDetails.vue"
+import Controls from "./components/controls/Controls";
+import ControlsInvitation from "./components/controls/Invitation";
+import ControlsInvitationCreate from "./components/controls/InvitationCreate";
+import ControlsMember from "./components/controls/Member";
+import ControlsMemberCreate from "./components/controls/MemberCreate";
+import ControlsMemberDetails from "./components/controls/MemberDetails";
+import ControlsCompany from "./components/controls/Company";
+import ControlsCompanyCreate from "./components/controls/CompanyCreate";
+import ControlsCompanyDetails from "./components/controls/CompanyDetails"
+import ControlsStamp from "./components/controls/Stamp";
+import ControlsStampCreate from "./components/controls/StampCreate";
+import ControlsStampDetails from "./components/controls/StampDetails"
 import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
     routes: [
+        {
+            path: "/chats/",
+            component: Chat,
+            redirect: "/chats/group/",
+            children: [
+                {
+                    path: "group",
+                    name: "chat-group",
+                    components: {
+                        default: ChatGroup,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "member",
+                    name: "chat-member",
+                    components: {
+                        default: ChatMember,
+                        details: RoomDetails
+                    }
+                },
+                {
+                    path: "details",
+                    name: "room-details",
+                    component: RoomDetails
+                }
+            ]
+        },
         {
             path: "/controls",
             component: Controls,
@@ -79,7 +111,7 @@ const router = new VueRouter({
                     component: ControlsStampDetails,
                 }
             ]
-        }
+        },
     ]
 });
 
@@ -95,12 +127,11 @@ const app = new Vue({
     methods: {
         /* レスポンスの認証チェック */
         checkAuth: function (res) {
-            if (res.data.auth) {
+            if (!res.data.auth) {
                 return res;
             }
             /* エラー */
-            console.log('認証エラー');
-            return Promise.reject();
+            return Promise.reject('認証エラー');
         },
 
         /* 会員一覧取得 */
@@ -110,7 +141,9 @@ const app = new Vue({
                 .then(res => {
                     this.member_list = res.data.members;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
 
         /* スタンプグループ一覧取得 */
@@ -120,7 +153,9 @@ const app = new Vue({
                 .then(res => {
                     this.stamp_group_list = res.data.stamp_groups;
                 })
-                .catch(error => {});
+                .catch(error => {
+                    console.log(error);
+                });
         },
     }
 });

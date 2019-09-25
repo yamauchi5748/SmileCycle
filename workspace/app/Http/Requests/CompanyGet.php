@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StampGroupDelete extends FormRequest
+class CompanyGet extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,6 +19,17 @@ class StampGroupDelete extends FormRequest
     }
 
     /**
+     * ルート引数は対象にならないのでマージする
+     * @return 配列
+     */
+    public function validationData()
+    {
+        return array_merge($this->request->all(), [
+            'company_id' => $this->company
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -26,8 +37,7 @@ class StampGroupDelete extends FormRequest
     public function rules()
     {
         return [
-            'delete_stamp_groups' => ['required', 'array'],
-            'delete_stamp_groups.*' => ['uuid', 'exists:stamp_groups,_id']
+            'company_id' => ['required', 'uuid', 'exists:companies,_id']
         ];
     }
 
