@@ -22,6 +22,9 @@ import ControlsCompanyDetails from "./components/controls/CompanyDetails"
 import ControlsStamp from "./components/controls/Stamp";
 import ControlsStampCreate from "./components/controls/StampCreate";
 import ControlsStampDetails from "./components/controls/StampDetails"
+
+import Invitations from "./components/invitations/Invitations";
+
 import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
@@ -112,6 +115,15 @@ const router = new VueRouter({
                 }
             ]
         },
+		
+        {
+            path: "/invitations/",
+            component: Invitations,
+            children: [
+
+            ]
+        },
+		
     ]
 });
 
