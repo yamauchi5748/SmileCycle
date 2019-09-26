@@ -1,17 +1,30 @@
 
 <template>
 <body>
-  <div id="header">
-  </div>
   <div class="members">
     <h1 class="member_deploy_name">愛媛笑門会</h1>
-      <div class="member_user_icon">sample</div>
-      <p class="member_user_name">小川知也</p>
-      <p class="member_user_post">株式会社デイアイシステム</p>
-      <p class="member_user_company">平社員</p>
+      <div class="member_user_icon">{{icon}}</div>
+      <p class="member_user_name">{{name}}</p>
+      <p class="member_user_post">{{post}}></p>
+      <p class="member_user_company">{{company}}</p>
   </div>
 </body>
 </template>
+
+<script>
+export default{
+   data() {
+       return{
+         name: 'ここにIPが表示されます',
+         icon: 'smaple',
+         name: '小川友也',
+         post: '平社員',
+         company: '株式会社デイアイシステム'
+
+       }
+}
+}
+</script>
 <style lang="scss">
 .members {
     width: 1004px;
@@ -52,6 +65,7 @@
   .member_user_icon {
     margin-top : 60px ;
     margin-left : 11px ;
+    margin-bottom: 15px;
   }
 
   .member_user_name{
