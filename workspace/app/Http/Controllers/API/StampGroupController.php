@@ -31,7 +31,6 @@ class StampGroupController extends AuthController
                 '$project' => [
                     '_id' => 1,
                     'tab_image_id' => 1,
-                    'is_all' => 1,
                     'stamps' => 1
                 ]
             ]
