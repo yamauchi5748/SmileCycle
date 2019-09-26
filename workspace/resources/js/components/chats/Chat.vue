@@ -49,6 +49,7 @@ export default {
 </script>
 <style lang="scss">
 .chat {
+    overflow: hidden;
 }
 
 .controls-body {
