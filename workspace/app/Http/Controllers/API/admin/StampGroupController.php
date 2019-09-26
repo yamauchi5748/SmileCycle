@@ -22,16 +22,7 @@ class StampGroupController extends AdminAuthController
     public function index()
     {
         /** すべてのスタンプグループを返す **/
-        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([
-            [
-                '$project' => [
-                    '_id' => 1,
-                    'tab_image_id' => 1,
-                    'is_all' => 1,
-                    'stamps' => 1
-                ]
-            ]
-        ])->toArray();
+        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([])->toArray();
         
         return response()->json(
             $this->response,
