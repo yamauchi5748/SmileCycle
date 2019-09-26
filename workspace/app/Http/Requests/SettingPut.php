@@ -27,9 +27,9 @@ class SettingPut extends FormRequest
     public function rules()
     {
         return [
-            'mail' => ['required' ,'string', 'email', 'max:256'],
+            'mail' => ['required' ,'string', 'email'],
             'is_notification' => ['required', 'boolean'],
-            'notification_interval' => ['required', Rule::in(['0.5h', '1h', '3h', '5h'])],
+            'notification_interval' => ['required', Rule::in(['0.5h', '1h', '2h', '3h', '4h', '5h'])],
             'profile_image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif']
         ];
     }
