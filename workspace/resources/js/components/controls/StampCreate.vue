@@ -10,21 +10,13 @@
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
-                <v-input-checkbox v-model="is_all"></v-input-checkbox>
+                <label class="input-label">
+                    <v-input-checkbox v-model="is_all"></v-input-checkbox>利用者を制限する
+                </label>
             </div>
             <div class="input-wrapper">
-                <v-input-checkbox-list></v-input-checkbox-list>
-            </div>
-            <div class="input-wrapper">
-                <span class="input-title">特定会員選択</span>
-                <ul>
-                    <li v-for="member in $root.members" :key="member.id">
-                        <label>
-                            <span>{{member.name}}</span>
-                            <input type="checkbox" :value="member._id" v-model="post_members" />
-                        </label>
-                    </li>
-                </ul>
+                <span class="input-title">公開範囲</span>
+                <v-select-members v-model="members"></v-select-members>
             </div>
             <div class="buttons-wrapper">
                 <button class="flat-button">取り消し</button>
@@ -38,14 +30,14 @@
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
 import VInputCheckbox from "../VInputCheckbox";
-import VInputCheckboxList from "../VInputCheckboxList";
+import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
             tab_image: [],
             is_all: false,
             stamp_images: [],
-            post_members: []
+            members: []
         };
     },
     created: function() {
@@ -54,7 +46,7 @@ export default {
     components: {
         VInputImage,
         VInputCheckbox,
-        VInputCheckboxList,
+        VSelectMembers,
         SecondaryView
     }
 };
