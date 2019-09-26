@@ -1,26 +1,28 @@
 
 <template>
-<body>
-  <div class="members">
-    <h1 class="member_deploy_name">愛媛笑門会</h1>
-      <div class="member_user_icon">{{icon}}</div>
-      <p class="member_user_name">{{name}}</p>
-      <p class="member_user_post">{{post}}></p>
-      <p class="member_user_company">{{company}}</p>
-  </div>
-</body>
+  <body>
+    <div class="members">
+        <h1 class="member_deploy_name">愛媛笑門会</h1>
+          <tr v-for="member in members">
+            <div class="member_user_icon"><img src="@/assets/2019-01-30-11-08-21-684-heic.png"/></div>
+            <p class="member_user_name">{{member.name}}</p>
+            <p class="member_user_post">{{member.post}}</p>
+            <p class="member_user_company">{{member.company}}</p>
+          </tr>
+    </div>
+  </body>
 </template>
 
 <script>
 export default{
    data() {
        return{
-         name: 'ここにIPが表示されます',
-         icon: 'smaple',
-         name: '小川友也',
-         post: '平社員',
-         company: '株式会社デイアイシステム'
-
+         members: [
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' }
+         ]
        }
 }
 }
@@ -70,7 +72,7 @@ export default{
 
   .member_user_name{
     height: 50px;
-    margin-top : -50px ;
+    margin-top : -120px ;
     margin-left : 170px ;
     vertical-align: middle;
     font-family: Roboto;
