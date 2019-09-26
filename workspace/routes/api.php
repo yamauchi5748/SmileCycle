@@ -44,13 +44,6 @@ Route::apiResource('settings', 'API\SettingController')->only([
     "index" => "settings.index",
 ]);
 
-//admin.member.stamp_groups
-Route::apiResource('members/{member_id}/stamp_groups', 'API\admin\MemberStampGroupController')->only([
-    "index"
-])->names([
-    "index" => "member.stamp_groups.index",
-]);
-
 //admin.companies
 Route::apiResource('companies', 'API\admin\CompanyController')->only([
     "store", "update", "destroy"
