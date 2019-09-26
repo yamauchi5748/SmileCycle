@@ -180,7 +180,7 @@ class StampGroupController extends AdminAuthController
             ]
         );
 
-        /** スタンプグループの削除処理 **/
+        /** スタンプの削除処理 **/
         StampGroup::raw()->updateMany(
             // スタンプグループを指定
             [
@@ -195,6 +195,11 @@ class StampGroupController extends AdminAuthController
                 ]
             ]
         );
+
+        /* スタンプ画像削除 */
+        foreach ($request->remove_stamps as $stamp) {
+            Storage::delete('public/images/stamps/' . $stamp . '.png');
+        }
 
         /** 会員の追加処理 **/
         Member::raw()->updateMany(
