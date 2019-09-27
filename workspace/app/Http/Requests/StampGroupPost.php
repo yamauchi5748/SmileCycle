@@ -30,8 +30,8 @@ class StampGroupPost extends FormRequest
             'stamps' => ['required', 'array'],
             'stamps.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif'],
             'is_all' => ['required', 'boolean'],
-            'members' => ['array'],
-            'members.*' => ['uuid']
+            'members' => ['required_if:is_all,false,0', 'array'],
+            'members.*' => ['uuid', 'exists:members,_id']
         ];
     }
 

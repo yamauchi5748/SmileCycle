@@ -44,13 +44,6 @@ Route::apiResource('settings', 'API\SettingController')->only([
     "index" => "settings.index",
 ]);
 
-//admin.member.stamp_groups
-Route::apiResource('members/{member_id}/stamp_groups', 'API\admin\MemberStampGroupController')->only([
-    "index"
-])->names([
-    "index" => "member.stamp_groups.index",
-]);
-
 //admin.companies
 Route::apiResource('companies', 'API\admin\CompanyController')->only([
     "store", "update", "destroy"
@@ -130,6 +123,7 @@ Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
 ]);
 
 //chat_room.contents
+Route::put('chat-rooms/{chat_room_id}/contents/{content_id}', 'API\ChatRoomContentController@update')->name("chat_room.contents.update");
 Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentController')->only([
     "index", "store"
 ])->names([

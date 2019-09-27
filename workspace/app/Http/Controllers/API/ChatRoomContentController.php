@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\Http\Requests\ChatRoomContentGet;
 use App\Http\Requests\ChatRoomContentPost;
+use App\Http\Requests\ChatRoomContentPut;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
@@ -34,7 +36,7 @@ class ChatRoomContentController extends AuthController
             ],
             /* コンテンツを展開 */
             [
-                '$unwind' => '$contents' 
+                '$unwind' => '$contents'
             ],
             /* 既読数をセット */
             [
@@ -65,9 +67,9 @@ class ChatRoomContentController extends AuthController
 
         /* 返すレスポンスデータを整形 */
         $head_corsor = head($contents_corsor);
-        if($head_corsor && head($head_corsor['contents'])){
+        if ($head_corsor && head($head_corsor['contents'])) {
             $this->response['contents'] = $head_corsor['contents'];
-        }else{
+        } else {
             $this->response['result'] = false;
         }
         
@@ -194,9 +196,58 @@ class ChatRoomContentController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $chat_room_id, $content_id)
+    public function update(ChatRoomContentPut $request, $chat_room_id, $content_id)
     {
-        return [ "response" => "return chat_room.contents.update"];
+        /** 既読処理 **/
+        /* コンテンツ取得 */
+        $contents = ChatRoom::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $chat_room_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'contents' => 1
+                ]
+            ]
+        ])->toArray();
+        $contents = head($contents)['contents'];
+        
+        /* 対象のコンテンツを検索し、認証ユーザーを追加 */
+        foreach ($contents as $content) {
+            if ($content->_id == $content_id) {
+                /* 既に既読しているかチェック */
+                $contains = Arr::first($content->already_read, function ($value, $key) {
+                    return $value == $this->author->_id;
+                }, false);
+                if (!$contains) {
+                    $content->already_read[] = $this->author->_id;
+                    break;
+                }
+                $this->response['result'] = false;
+            }
+        }
+
+        /* DBを更新 */
+        ChatRoom::raw()->updateOne(
+            [
+                '_id' => $chat_room_id
+            ],
+            [
+                '$set' => [
+                    'contents' => $contents
+                ]
+            ]
+        );
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

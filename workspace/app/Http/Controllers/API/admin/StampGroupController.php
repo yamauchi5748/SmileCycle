@@ -22,16 +22,7 @@ class StampGroupController extends AdminAuthController
     public function index()
     {
         /** すべてのスタンプグループを返す **/
-        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([
-            [
-                '$project' => [
-                    '_id' => 1,
-                    'tab_image_id' => 1,
-                    'is_all' => 1,
-                    'stamps' => 1
-                ]
-            ]
-        ])->toArray();
+        $this->response['stamp_groups'] = StampGroup::raw()->aggregate([])->toArray();
         
         return response()->json(
             $this->response,
@@ -55,7 +46,7 @@ class StampGroupController extends AdminAuthController
             'tab_image_id' => '',           // タブ画像のid
             'is_all' => $request->is_all,   // スタンプグループのタイプ
             'stamps' => [],                 // スタンプのidを格納
-            'members' => $request->members, // 使用可能な会員のidを格納
+            'members' => [],                // 使用可能な会員のidを格納
         ];
 
         /** スタンプグループの作成 **/
@@ -82,18 +73,34 @@ class StampGroupController extends AdminAuthController
             $stamp_group['stamps'][] = $stamp_id;
         }
 
+        /* 全体用スタンプか個人用スタンプか */
+        if($stamp_group['is_all']){
+            //全体用スタンプグループ
+            $members = Member::raw()->aggregate([
+                [
+                    '$project' => [
+                        '_id' => 1
+                    ]
+                ]
+            ])->toArray();
+
+            foreach($members as $member) {
+                $stamp_group['members'][] = $member['_id'];
+            }
+        }else{
+            // 個人用スタンプグループ
+            $stamp_group['members'] = $request->members;
+        }
+
         /* Memberモデルにスタンプグループを追加 */
-        foreach ($stamp_group['members'] as $member) {
+        foreach ($stamp_group['members'] as $member_id) {
             Member::raw()->updateOne(
                 [
-                    '_id' => $member
+                    '_id' => $member_id
                 ],
                 [
                     '$push' => [
                         'stamp_groups' => $stamp_group['_id']
-                    ],
-                    '$currentDate' => [
-                        'lastModified' => true
                     ]
                 ]
             );
@@ -173,7 +180,7 @@ class StampGroupController extends AdminAuthController
             ]
         );
 
-        /** スタンプグループの削除処理 **/
+        /** スタンプの削除処理 **/
         StampGroup::raw()->updateMany(
             // スタンプグループを指定
             [
@@ -188,6 +195,11 @@ class StampGroupController extends AdminAuthController
                 ]
             ]
         );
+
+        /* スタンプ画像削除 */
+        foreach ($request->remove_stamps as $stamp) {
+            Storage::delete('public/images/stamps/' . $stamp . '.png');
+        }
 
         /** 会員の追加処理 **/
         Member::raw()->updateMany(
