@@ -123,6 +123,7 @@ Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
 ]);
 
 //chat_room.contents
+Route::put('chat-rooms/{chat_room_id}/contents/{content_id}', 'API\ChatRoomContentController@update')->name("chat_room.contents.update");
 Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentController')->only([
     "index", "store"
 ])->names([
