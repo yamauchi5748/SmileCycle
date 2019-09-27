@@ -9,9 +9,7 @@ import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
 import ChatMember from "./components/chats/ChatMember.vue";
 import RoomDetails from "./components/chats/RoomDetails.vue";
-
-import Members from "./components/members/Menbers.vue";
-
+import Members from "./components/members/Members.vue";
 import Controls from "./components/controls/Controls.vue";
 import ControlsInvitation from "./components/controls/Invitation.vue";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
@@ -56,6 +54,10 @@ const router = new VueRouter({
                 }
             ]
         },
+        {
+            path: "/members",
+            component: Members
+          },
         {
             path: "/controls",
             component: Controls,
