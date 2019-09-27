@@ -81,6 +81,10 @@ export default{
     margin-left : 11px ;
     margin-bottom: 15px;
   }
+  .member_user_icon img{
+     border-radius: 50px;
+    height: 130px;
+  }
 
   .member_user_name{
     height: 50px;
