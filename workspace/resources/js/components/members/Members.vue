@@ -1,15 +1,14 @@
-
 <template>
     <div class="members">
         <h1 class="member_deploy_name">愛媛笑門会</h1>
-          <tr v-for="member in members">
+          <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
-              <img src="@/assets/2019-01-30-11-08-21-684-heic.png"/>
+            　<img src=/>
             </div>
             <p class="member_user_name">{{member.name}}</p>
             <p class="member_user_post">{{member.post}}</p>
             <p class="member_user_company">{{member.company}}</p>
-          </tr>
+          </div>
     </div>
 </template>
 
@@ -18,20 +17,10 @@ export default{
    data() {
        return{
          members: [
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
-           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' }
+           { id: 1, icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { id: 2, icon: 'sample', name: '木村祐太郎', post: 'ノージョブ',  company: 'なし' },
+           { id: 3, icon: 'sample', name: '山口海都', post: '平社員',  company: '株式会社明光フォーラム' },
+           { id: 4, icon: 'sample', name: '渡邊小輝', post: '平社員',  company: '株式会社セキ' },
          ]
        }
   }
@@ -79,7 +68,7 @@ export default{
   .member_user_icon {
     margin-top : 60px ;
     margin-left : 11px ;
-    margin-bottom: 15px;
+
   }
   .member_user_icon img{
      border-radius: 50px;
@@ -88,7 +77,7 @@ export default{
 
   .member_user_name{
     height: 50px;
-    margin-top : -150px ;
+    margin-top : -140px ;
     margin-left : 170px ;
     vertical-align: middle;
     font-family: Roboto;
@@ -117,6 +106,7 @@ export default{
   .member_user_company{
     margin-top : 20px ;
     margin-left : 180px ;
+    margin-bottom: 30px;
     font-family: HiraKakuProN-W3;
     font-size: 20px;
     font-weight: normal;
