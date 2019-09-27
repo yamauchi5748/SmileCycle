@@ -1,6 +1,6 @@
 <template>
     <div class="members">
-        <h1 class="member_deploy_name">愛媛笑門会</h1>
+        <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
             　<img src=/>
