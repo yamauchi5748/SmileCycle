@@ -37,33 +37,8 @@ export default{
   }
 }
 </script>
+
 <style lang="scss">
-
-
-#header {
-  width: 1280px;
-  height: 74px;
-  top: 0;
-  left:0;
-  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.3);
-  background-color: #ff9900;
-  
-  }
-  #header > .px {
-      width: 922px;
-      height: 72px;
-
-      font-family: Roboto;
-      font-size: 22px;
-      font-weight: normal;
-      font-style: normal;
-      font-stretch: normal;
-      line-height: 1.32;
-      letter-spacing: normal;
-      text-align: center;
-      color: #ffffff;
-  }
-
 .members {
     width: 1004px;
     height: 658px;
