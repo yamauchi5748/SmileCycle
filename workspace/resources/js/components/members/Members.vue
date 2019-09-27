@@ -1,16 +1,16 @@
 
 <template>
-  <body>
     <div class="members">
         <h1 class="member_deploy_name">愛媛笑門会</h1>
           <tr v-for="member in members">
-            <div class="member_user_icon"><img src="@/assets/2019-01-30-11-08-21-684-heic.png"/></div>
+            <div class="member_user_icon">
+              <img src="@/assets/2019-01-30-11-08-21-684-heic.png"/>
+            </div>
             <p class="member_user_name">{{member.name}}</p>
             <p class="member_user_post">{{member.post}}</p>
             <p class="member_user_company">{{member.company}}</p>
           </tr>
     </div>
-  </body>
 </template>
 
 <script>
@@ -21,13 +21,49 @@ export default{
            { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
            { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
            { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
+           { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' },
            { icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム' }
          ]
        }
-}
+  }
 }
 </script>
 <style lang="scss">
+
+
+#header {
+  width: 1280px;
+  height: 74px;
+  top: 0;
+  left:0;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.3);
+  background-color: #ff9900;
+  
+  }
+  #header > .px {
+      width: 922px;
+      height: 72px;
+
+      font-family: Roboto;
+      font-size: 22px;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.32;
+      letter-spacing: normal;
+      text-align: center;
+      color: #ffffff;
+  }
+
 .members {
     width: 1004px;
     height: 658px;
@@ -35,6 +71,7 @@ export default{
     display: table;
     vertical-align:top;
     margin-left: 7em;
+    margin-bottom: 70px;
     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
   }
@@ -72,7 +109,7 @@ export default{
 
   .member_user_name{
     height: 50px;
-    margin-top : -120px ;
+    margin-top : -150px ;
     margin-left : 170px ;
     vertical-align: middle;
     font-family: Roboto;
