@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\InvitationPost;
+use App\Http\Requests\AdminInvitationPut;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\Invitation;
@@ -188,9 +189,171 @@ class InvitationController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminInvitationPut $request, $invitation_id)
     {
-        return [ "response" => "return admin.invitations.update"];
+        /* リクエストのパラメタをチェック */
+        if(!$request->add_attend_members) $request->add_attend_members = [];
+        if(!$request->delete_attend_members) $request->delete_attend_members = [];
+        if(!$request->add_images) $request->add_images = [];
+        if(!$request->delete_images) $request->delete_images = [];
+
+        /* 追加対象の会員取得 */
+        $add_members = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => [
+                        '$in' => $request->add_attend_members
+                    ]
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1,
+                ]
+            ]
+        ])->toArray();
+
+        /* 追加対象の会員取得 */
+        $delete_members = Member::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => [
+                        '$in' => $request->delete_attend_members
+                    ]
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1,
+                ]
+            ]
+        ])->toArray();
+
+        /* 画像コンテンツの処理 */
+        $new_images = [];
+        foreach ($request->add_images as $new_image) {
+            /* 画像のuuidを生成 */
+            $image_id = (string) Str::uuid();
+
+            /* 画像を保存 */
+            Storage::putFileAs('public/images/invitaions', $new_image, $image_id . '.png', 'private');
+        
+            /* モデルに画像のidを追加 */
+            $new_images[] = $image_id;
+        }
+
+        /** 会のご案内の更新処理 **/
+        Invitation::raw()->updateOne(
+            // 会のご案内を指定
+            [
+                '_id' => $invitation_id
+            ],
+            [
+                '$push' => [
+                    // 会員を追加
+                    'attend_members' => [
+                        '$each' => $add_members
+                    ],
+                    // スタンプを追加
+                    'images' => [
+                        '$each' => $new_images
+                    ]
+                ]
+            ]
+        );
+
+        Invitation::raw()->updateOne(
+            // 会のご案内を指定
+            [
+                '_id' => $invitation_id
+            ],
+            [
+                '$set' => [
+                    'title' => $request->title,             // タイトルを更新
+                    'text' => $request->text,               // テキストを更新
+                    'deadline_at' => $request->deadline_at  // 締め切り日更新
+                ]
+            ]
+        );
+
+        /** 削除更新処理 **/
+        invitation::raw()->updateMany(
+            [
+                '_id' => $invitation_id
+            ],
+            [
+                
+                '$pullAll' => [
+                    // 会員を削除
+                    'attend_members' => $delete_members,
+                    'images' => $request->delete_images
+                ]
+            ]
+        );
+
+        /* スタンプ画像削除 */
+        foreach ($request->delete_images as $image) {
+            Storage::delete('public/images/invitations/' . $image . '.png');
+        }
+
+        $inv = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id
+                ]
+            ]
+        ])->toArray();
+
+        /** 会員の追加処理 **/
+        Member::raw()->updateMany(
+            // 会員を指定
+            [
+                '_id' => [
+                    '$in' => $request->add_attend_members
+                ]
+            ],
+            [
+                '$push' => [
+                    // 会のご案内を追加
+                    'invitations' => $invitation_id,
+                ]
+            ]
+        );
+
+        /** 会員の削除処理 **/
+        Member::raw()->updateMany(
+            // 会員を指定
+            [
+                '_id' => [
+                    '$in' => $request->delete_attend_members
+                ]
+            ],
+            [
+                
+                '$pull' => [
+                    // 会のご案内を削除
+                    'invitations' => $invitation_id,
+                ]
+            ]
+        );
+
+        /* レスポンスデータを整形 */
+        $this->response['invitation'] = head(Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id
+                ]
+            ]
+        ])->toArray());
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
