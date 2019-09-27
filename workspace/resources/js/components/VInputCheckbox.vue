@@ -1,23 +1,27 @@
 <template>
     <div class="p-checkbox-wrapper">
-        <div class="p-checkbox-background" :class="{active:checked}"></div>
-        <input class="p-checkbox" type="checkbox" v-model="checked" />
+        <input class="p-checkbox" type="checkbox" v-model="check" v-on="listeners" />
+        <div class="p-checkbox-background" :class="{active:check}"></div>
     </div>
 </template>
 
 <script>
 export default {
-    props: {
-        value: Boolean
-    },
+    props: ["value"],
     computed: {
-        checked: {
+        check: {
             get() {
                 return this.value;
             },
             set(new_value) {
                 this.$emit("input", new_value);
             }
+        },
+        listeners: function() {
+            if (this.$listeners.input) {
+                delete this.$listeners.input;
+            }
+            return this.$listeners;
         }
     }
 };
@@ -35,7 +39,6 @@ export default {
     border-radius: 50%;
     appearance: none;
     outline: none;
-
     &:hover {
         background-color: $accent-transparent-color;
     }
@@ -44,12 +47,9 @@ export default {
     position: relative;
     width: 20px;
     height: 20px;
-    border: solid 2px rgba(0, 0, 0, 0.64);
+    border: solid 2px rgb(0, 0, 0, 0.64);
     box-sizing: border-box;
     pointer-events: none;
-    border-collapse: collapse;
-    z-index: 1;
-
     background-repeat: no-repeat;
     background-position: center;
     &.active {
@@ -59,9 +59,10 @@ export default {
     }
 }
 .p-checkbox-wrapper {
-    display: inline-flex;
     position: relative;
-    padding: 12px;
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
     justify-content: center;
     align-items: center;
 }

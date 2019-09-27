@@ -23,9 +23,11 @@
         "vue-template-compiler": "^2.5.21"
     },
     "dependencies": {
+        "@material/checkbox": "^3.2.0",
         "laravel-echo": "^1.5.4",
         "laravel-echo-server": "^1.5.7",
         "laravel-mix-sass-resources-loader": "^1.0.3",
+        "material-components-web": "^3.2.0",
         "sass-resources-loader": "^2.0.1",
         "socket.io-client": "^2.2.0"
     }
