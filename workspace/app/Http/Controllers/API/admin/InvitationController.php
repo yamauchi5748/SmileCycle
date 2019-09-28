@@ -72,7 +72,7 @@ class InvitationController extends AdminAuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('public/images/invitaions', $image, $image_id . '.png', 'private');
+                Storage::putFileAs('public/images/invitations', $image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $invitation['images'][] = $image_id;
@@ -247,7 +247,7 @@ class InvitationController extends AdminAuthController
             $image_id = (string) Str::uuid();
 
             /* 画像を保存 */
-            Storage::putFileAs('public/images/invitaions', $new_image, $image_id . '.png', 'private');
+            Storage::putFileAs('public/images/invitations', $new_image, $image_id . '.png', 'private');
         
             /* モデルに画像のidを追加 */
             $new_images[] = $image_id;

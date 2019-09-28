@@ -81,7 +81,7 @@ class ForumController extends Controller
             $image_id = (string) Str::uuid();
 
             /* 画像を保存 */
-            Storage::putFileAs('public/images/invitaions', $new_image, $image_id . '.png', 'private');
+            Storage::putFileAs('public/images/forums', $new_image, $image_id . '.png', 'private');
         
             /* モデルに画像のidを追加 */
             $forum['images'][] = $image_id;
