@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\InvitationPost;
+use App\Http\Requests\InvitationDelete;
 use App\Http\Requests\AdminInvitationPut;
 use Carbon\Carbon;
 use App\Models\Member;
@@ -362,8 +363,20 @@ class InvitationController extends AdminAuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(InvitationDelete $request, $invitation_id)
     {
-        return [ "response" => "return admin.invitations.delete"];
+        Invitation::raw()->deleteOne(
+            [
+                '_id' => $invitation_id
+            ]
+        );
+        $invitation = Invitation::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $invitation_id
+                ]
+            ]
+        ])->toArray();
+        return $invitation;
     }
 }
