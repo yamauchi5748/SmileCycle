@@ -66,7 +66,8 @@ $factory->define(Member::class, function () {
     Storage::putFileAs('public/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
     Storage::putFileAs('private/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
 
-    return [
+    // 会員モデル
+    $member = [
         '_id' => $_id,
         'api_token' => Str::random(60),
         'is_notification' => true,
@@ -82,4 +83,14 @@ $factory->define(Member::class, function () {
         'mail' => $faker->safeEmail,
         'password' => Hash::make(Str::random(10))
     ];
+    // 等確率で全会員またはランダムな会員を会のご案内に招待する
+    if ($faker->boolean) {
+        // ランダムに会員を追加
+        $member['secretary'] = [
+            "name" => $faker->unique()->name,
+            "mail" => $faker->safeEmail
+        ];
+    }
+
+    return $member; 
 });

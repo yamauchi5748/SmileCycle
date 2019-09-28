@@ -49,9 +49,18 @@ class MemberController extends AdminAuthController
             'department_name' => $request->department_name,     // 部門名
             'mail' => $request->mail,                           // メールアドレス
             'password' => Hash::make($request->password),       // パスワード
+            'secretary' => [],                                  // 秘書
             'stamp_groups' => [],                               // 会員が使用できるスタンプ
             'invitations' => [],                                // 会員が投稿した掲示板
         ];
+
+        /* 秘書情報があれば追加 */
+        if ($request->secretary_name && $request->secretary_mail) {
+            $member['secretary'] = [
+                'name' => $request->secretary_name,
+                'mail' => $request->secretary_mail
+            ];
+        }
 
         // 会員のプロフィール画像をストレージに保存
         Storage::copy('images/boy_3.png', 'public/images/profile_images/' . $member['_id'] . '.png');
@@ -118,6 +127,15 @@ class MemberController extends AdminAuthController
             'department_name' => $request->department_name,     // 部門名
             'mail' => $request->mail,                           // メールアドレス
         ];
+
+        /* 秘書情報があれば追加 */
+        if ($request->secretary_name && $request->secretary_mail) {
+            $member['secretary'] = [
+                'name' => $request->secretary_name,
+                'mail' => $request->secretary_mail
+            ];
+        }
+        
         if ($request->password) {
             $member['password'] = Hash::make($request->password);   // パスワード
         }
@@ -236,6 +254,10 @@ class MemberController extends AdminAuthController
                         'telephone_number' => 1,                // 会員の電話番号を返す
                         'mail' => 1,                            // 会員のメールアドレスを返す
                         'department_name' => 1,                 // 部門名を返す
+                        'secretary' => [                        // 秘書
+                            'name' => '$secretary.name',
+                            'mail' => '$secretary.mail'
+                        ],
                         'company_id' => '$company._id',         // 会社のidを返す
                         'company_name' => '$company.name',      // 会社名を返す
                     ]
