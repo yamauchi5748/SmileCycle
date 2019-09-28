@@ -98,10 +98,10 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
 
 //admin.forums
 Route::apiResource('admin-forums', 'API\admin\ForumController')->only([
-    "update", "destory",
+    "update", "destroy",
 ])->names([
     "update" => "admin.forums.update",
-    "destory" => "admin.forums.destory",
+    "destroy" => "admin.forums.destroy",
 ]);
 
 //forums

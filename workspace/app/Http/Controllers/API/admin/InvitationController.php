@@ -373,18 +373,28 @@ class InvitationController extends AdminAuthController
      */
     public function destroy(InvitationDelete $request, $invitation_id)
     {
+        /* 会のご案内削除 */
         Invitation::raw()->deleteOne(
             [
                 '_id' => $invitation_id
             ]
         );
-        $invitation = Invitation::raw()->aggregate([
+        
+        /** 会員の会のご案内情報を更新 **/
+        Member::raw()->updateMany(
+            [],
             [
-                '$match' => [
-                    '_id' => $invitation_id
+                '$pull' => [
+                    'invitations' => $invitation_id
                 ]
             ]
-        ])->toArray();
-        return $invitation;
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }

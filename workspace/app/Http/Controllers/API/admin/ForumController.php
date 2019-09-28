@@ -4,13 +4,13 @@ namespace App\Http\Controllers\API\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AdminForumPut;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use App\Models\Forum;
 
-class ForumController extends Controller
+class ForumController extends AdminAuthController
 {
     /**
      * Display a listing of the resource.
@@ -137,8 +137,20 @@ class ForumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($forum_id)
     {
-        //
+        /* 掲示板削除 */
+        Forum::raw()->deleteOne(
+            [
+                '_id' => $forum_id
+            ]
+        );
+
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
