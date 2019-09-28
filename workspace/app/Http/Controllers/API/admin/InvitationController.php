@@ -126,9 +126,9 @@ class InvitationController extends AdminAuthController
         Invitation::raw()->insertOne($invitation);
 
         /* 返すレスポンスデータを整形 */
-        if($invitation){
+        if ($invitation) {
             $this->response['invitation'] = $invitation;
-        }else{
+        } else {
             $this->response['result'] = false;
         }
 
@@ -169,9 +169,9 @@ class InvitationController extends AdminAuthController
         ])->toArray();
 
         /* 返すレスポンスデータを整形 */
-        if(head($invitation)){
+        if (head($invitation)) {
             $this->response['invitation'] = head($invitation);
-        }else{
+        } else {
             $this->response['result'] = false;
         }
 
@@ -193,10 +193,18 @@ class InvitationController extends AdminAuthController
     public function update(AdminInvitationPut $request, $invitation_id)
     {
         /* リクエストのパラメタをチェック */
-        if(!$request->add_attend_members) $request->add_attend_members = [];
-        if(!$request->delete_attend_members) $request->delete_attend_members = [];
-        if(!$request->add_images) $request->add_images = [];
-        if(!$request->delete_images) $request->delete_images = [];
+        if (!$request->add_attend_members) {
+            $request->add_attend_members = [];
+        }
+        if (!$request->delete_attend_members) {
+            $request->delete_attend_members = [];
+        }
+        if (!$request->add_images) {
+            $request->add_images = [];
+        }
+        if (!$request->delete_images) {
+            $request->delete_images = [];
+        }
 
         /* 追加対象の会員取得 */
         $add_members = Member::raw()->aggregate([

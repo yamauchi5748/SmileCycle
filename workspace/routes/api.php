@@ -96,6 +96,14 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
     "update" => "invitations.update"
 ]);
 
+//admin.forums
+Route::apiResource('admin-forums', 'API\admin\ForumController')->only([
+    "update", "destory",
+])->names([
+    "update" => "admin.forums.update",
+    "destory" => "admin.forums.destory",
+]);
+
 //forums
 Route::apiResource('forums', 'API\ForumController')->only([
     "index", "show", "store"
