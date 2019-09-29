@@ -36,12 +36,16 @@ $factory->define(ChatRoom::class, function () {
         'contents' => [],
     ];
 
+    // チャットグループのアイコン画像をストレージに保存
+    Storage::copy('images/boy_3.png', 'public/images/chats/' . $chat_group['_id'] . '.png');
+
     /** チャットコンテンツ投稿 **/
     for ($i=0; $i < $faker->numberBetween(1, 30); $i++) {
         $second = $i < 10 ? '0'.$i : $i;
         $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo');
         $now = Str::limit($now, 16, '');
         $chat_member = $faker->randomElement($chat_members);
+        
         /* チャットモデル */
         $chat = [
             '_id' => (string) Str::uuid(),

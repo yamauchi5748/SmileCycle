@@ -31,6 +31,10 @@ class DepartmentChatRoomSeeder extends Seeder
                 'members' => [],
                 'contents' => [],
             ];
+            
+            // チャットグループのアイコン画像をストレージに保存
+            Storage::copy('images/boy_3.png', 'public/images/chats/' . $chat_group['_id'] . '.png');
+
             ChatRoom::create($chat_group);
         }
     }
