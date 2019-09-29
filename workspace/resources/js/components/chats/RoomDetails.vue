@@ -6,16 +6,16 @@
         <div class="contents">
             <div class="history">
                 <ol>
-                    <li>
+                    <li v-for="content in contents">
                         <div class="content">
                             <div class="profile">
                                 <img src="" alt="profile">
                             </div>
                             <div class="signature">
-                                <span>myName</span>
-                                <span>2019/10/10 01:10</span>
+                                <span>{{ content.sender_name }}</span>
+                                <span>{{ content.created_at }}</span>
                             </div>
-                            <div class="message">aaa</div>
+                            <div class="message">{{ content.content_id  }}</div>
                         </div>
                     </li>
                 </ol>
@@ -23,7 +23,7 @@
             <div class="send-content">
                 <div class="input-box">
                     <img src="" alt="動画像">
-                    <textarea></textarea>
+                    <textarea v-on:input="test"></textarea>
                     <img src="" alt="stamp" class="stamp">
                 </div>
                 <button class="normal-button">send</button>
@@ -33,7 +33,135 @@
 </template>
 <script>
 export default {
-    props: ["showDetais"]
+    props: ["showDetais"],
+    data() {
+        return {
+            auth : true,
+            result : true,
+            is_group : true,
+            contents : [  //最大10件まで取得
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/18 10:40",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/18 10:40",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/18 10:40",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/18 10:40",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/18 10:40",
+                    "already_read": 0
+                },
+                {
+                    "_id": "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
+                    "sender_id": "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
+                    "sender_name": "bear",
+                    "content_type": "4",  //1:テキスト, 2:スタンプ, 3:画像, 4:動画
+                    "content_id": "372b0690-d917-46f7-8fce-2f87d14e4bbc",
+                    "created_at": "2019/09/20 10:50",
+                    "already_read": 0
+                },
+            ]
+        }
+    },
+    methods: {
+        test (e) {
+            console.log('hello: ' + e.target.value.length);
+            console.log(e.target.clientHeight);
+            console.log(e.target.span);
+            console.log(e.target);
+            if(e.target.value.length == 33) {
+               e.target.style.color = "red"; 
+            }
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -65,10 +193,12 @@ export default {
         height: 100%;
         flex-direction: column;
         position: relative;
+        overflow-y: hidden;
+        overflow-x: hidden;
         .history {
-            width: 100%;
+            width: calc(100% + 17px);
             height: 60%;
-            overflow: scroll;
+            overflow-y: scroll;
             ol {
                 width: 100%;
                 li {
@@ -122,8 +252,9 @@ export default {
         textarea {
             box-sizing: border-box;
             height: 100%;
+            width: calc(100% + 17px);
             flex-grow: 8;
-            font-size: 30px;;
+            font-size: 30px;
         }
         .stamp {
             flex-grow: 1;
@@ -136,3 +267,13 @@ export default {
     }
 }
 </style>
+
+
+
+
+
+
+
+
+
+
