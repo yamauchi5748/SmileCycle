@@ -30,6 +30,9 @@ export default {
         };
     },
     created: function() {
+        for (let member_id in this.value) {
+            this.attend[member_id] = true;
+        }
         this.$root.loadMembers();
     },
     watch: {
