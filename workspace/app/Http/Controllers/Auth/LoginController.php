@@ -51,4 +51,15 @@ class LoginController extends Controller
 
         return redirect()->intended('/login');
     }
+
+    /**
+     * post Logout.
+     *
+     * @return string
+     */
+    public function logout()
+    {
+        Auth::logout();
+        return 'successed logout';
+    }
 }

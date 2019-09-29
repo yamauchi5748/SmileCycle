@@ -12,9 +12,10 @@
 */
 
 
-//login
+//login,logout
 Route::get('/login', 'Auth\LoginController@index')->name("login.page");
 Route::post('/login', 'Auth\LoginController@authenticate')->name("login");
+Route::post('/logout', 'Auth\LoginController@logout')->name("logout");
 
 // stamp.image
 Route::get('/stamp-images/{image_id}', 'ImageController@stampImage')->name("stamp.image");
