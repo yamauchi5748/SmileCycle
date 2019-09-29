@@ -14,6 +14,6 @@ class ChatRoom extends Eloquent
 
     //　stamp_groupプロパティ
     protected $fillable = [
-        '_id', 'is_group', 'group_name', 'admin_member_id', 'chat', 'members'
+        '_id', 'is_group', 'is_department', 'group_name', 'admin_member_id', 'chat', 'members'
     ];
 }

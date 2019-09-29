@@ -5,6 +5,7 @@ use App\Models\Member;
 use App\Models\Company;
 use App\Models\StampGroup;
 use App\Models\Invitation;
+use App\Models\ChatRoom;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
@@ -66,7 +67,8 @@ $factory->define(Member::class, function () {
     Storage::putFileAs('public/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
     Storage::putFileAs('private/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
 
-    return [
+    // 会員モデル
+    $member = [
         '_id' => $_id,
         'api_token' => Str::random(60),
         'is_notification' => true,
@@ -82,4 +84,24 @@ $factory->define(Member::class, function () {
         'mail' => $faker->safeEmail,
         'password' => Hash::make(Str::random(10))
     ];
+
+    $chat_room = ChatRoom::where('group_name', $member['department_name'])->first();
+    $chat_room_members = $chat_room->members;
+    array_push($chat_room_members, [
+        '_id' => $member['_id'],
+        'name' => $member['name'],
+    ]);
+    $chat_room->members = $chat_room_members;
+    $chat_room->save();
+
+    // 等確率で全会員またはランダムな会員を会のご案内に招待する
+    if ($faker->boolean) {
+        // ランダムに会員を追加
+        $member['secretary'] = [
+            "name" => $faker->unique()->name,
+            "mail" => $faker->safeEmail
+        ];
+    }
+
+    return $member; 
 });

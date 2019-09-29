@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class MemberPost extends FormRequest
+class AdminForumPut extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,6 +20,17 @@ class MemberPost extends FormRequest
     }
 
     /**
+     * ルート引数は対象にならないのでマージする
+     * @return 配列
+     */
+    public function validationData()
+    {        
+        return array_merge($this->request->all(), [
+            'forum_id' => $this->admin_forum
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -27,16 +38,11 @@ class MemberPost extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:15', 'min:2', 'unique:members,name'],
-            'ruby' => ['required', 'string', 'max:30', 'min:2'],
-            'post' => ['required', 'string', 'max:50', 'min:1'],
-            'telephone_number' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
-            'company_id' => ['required', 'uuid', 'exists:companies,_id'],
-            'department_name' => ['required', Rule::in(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会'])],
-            'mail' => ['required', 'email', 'max:256'],
-            'secretary_name' => ['required_with:secretary_mail','string', 'max:15', 'min:2'],
-            'secretary_mail' => ['required_with:secretary_name', 'email'],
-            'password' => ['required', 'string', 'min:8', 'max:100', 'confirmed'],
+            'forum_id' => ['required', 'uuid', 'exists:forums,_id'],
+            'add_images' => ['array'],
+            'add_images.*' => ['image', 'mimes:jpeg,png,jpg,gif'], 
+            'delete_images' => ['array'],
+            'delete_images.*' => ['uuid', Rule::exists('forums', 'images')->where('_id', $this->admin_forum)]
         ];
     }
 

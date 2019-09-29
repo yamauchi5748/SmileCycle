@@ -79,12 +79,12 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
 ]);
 
 //admin.invitations
-Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
-    "index", "store", "show"
-])->names([
+Route::apiResource('admin-invitations', 'API\admin\InvitationController')->names([
     "index" => "admin.invitations.index",
     "store" => "admin.invitations.store",
-    "show" => "admin.invitations.show"
+    "show" => "admin.invitations.show",
+    "update" => "admin.invitations.update",
+    "destroy" => "admin.invitations.destroy",
 ]);
 
 //invitations
@@ -94,6 +94,14 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
     "index" => "invitations.index",
     "show" => "invitations.show",
     "update" => "invitations.update"
+]);
+
+//admin.forums
+Route::apiResource('admin-forums', 'API\admin\ForumController')->only([
+    "update", "destroy",
+])->names([
+    "update" => "admin.forums.update",
+    "destroy" => "admin.forums.destroy",
 ]);
 
 //forums

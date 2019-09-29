@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\ChatRoomPost;
 use App\Http\Requests\ChatRoomPut;
@@ -46,7 +47,7 @@ class ChatRoomController extends AuthController
             ],
             /* コンテンツを展開 */
             [
-                '$unwind' => '$contents' 
+                '$unwind' => '$contents'
             ],
             /* 既読数をセット */
             [
@@ -81,9 +82,9 @@ class ChatRoomController extends AuthController
         
         /* 返すレスポンスデータを整形 */
         $head_corsor = head($rooms_corsor);
-        if($head_corsor){
+        if ($head_corsor) {
             $this->response['rooms'] = $rooms_corsor;
-        }else{
+        } else {
             $this->response['result'] = false;
         }
         
@@ -108,6 +109,7 @@ class ChatRoomController extends AuthController
         $chat_group = [
             '_id' => (string) Str::uuid(),              // チャットグループのid
             'is_group' => $request->is_group,           // チャットグループの種類
+            'is_department' => false,                   // 部門チャットグループであるか
             'admin_member_id' => $this->author->_id,    // チャットグループの管理者
             'group_name' => $request->group_name,       // チャットグループのグループ名
             'members' => $request->members,             // チャットグループの会員
@@ -134,6 +136,9 @@ class ChatRoomController extends AuthController
             ]
         ])->toArray();
         $chat_group['members'] = $members;
+
+        // チャットグループのアイコン画像をストレージに保存
+        Storage::copy('images/boy_3.png', 'public/images/chats/' . $chat_group['_id'] . '.png');
 
         /* DBにモデル登録 */
         ChatRoom::raw()->insertOne($chat_group);
@@ -169,10 +174,29 @@ class ChatRoomController extends AuthController
      */
     public function update(ChatRoomPut $request, $chat_room_id)
     {
+        $rooms = ChatRoom::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $chat_room_id,
+                    'is_department' => false,
+                    'admin_member_id' => $this->author->_id
+                ]
+            ]
+        ])->toArray();
+        $room = head($rooms);
+
+        /* 不正なリクエストでルームが取得できなかった場合 */
+        if (!$room) {
+            $this->response['result'] = false;
+            return $this->response;
+        }
+
         /** グループ名を更新 **/
         ChatRoom::raw()->updateOne(
             [
-                '_id' => $chat_room_id
+                '_id' => $chat_room_id,
+                'is_department' => false,
+                'admin_member_id' => $this->author->_id
             ],
             [
                 '$set' => [
@@ -181,8 +205,13 @@ class ChatRoomController extends AuthController
             ]
         );
 
+        /* グループアイコン画像変更 */
+        if ($request->new_icon) {
+            Storage::putFileAs('public/images/chats', $request->new_icon, $room['_id'] . '.png', 'private');
+        }
+
         /* 更新したルーム情報を取得 */
-        $room_corsor = ChatRoom::raw()->aggregate([
+        $rooms = ChatRoom::raw()->aggregate([
             /* ルームを指定 */
             [
                 '$match' => [
@@ -199,10 +228,10 @@ class ChatRoomController extends AuthController
         ])->toArray();
 
         /* 返すレスポンスデータを整形 */
-        $room = head($room_corsor);
-        if($room){
+        $room = head($rooms);
+        if ($room) {
             $this->response['room'] = $room;
-        }else{
+        } else {
             $this->response['result'] = false;
         }
 
@@ -226,7 +255,7 @@ class ChatRoomController extends AuthController
         ChatRoom::raw()->deleteOne(
             [
                 '_id' => $chat_room_id,
-                /* ルームの管理者認証 */
+                'is_department' => false,
                 'admin_member_id' => $this->author->_id
             ]
         );
@@ -245,7 +274,7 @@ class ChatRoomController extends AuthController
         $room = head($room_corsor);
         if ($room) {
             $this->response['result'] = false;
-        } 
+        }
 
         return response()->json(
             $this->response,

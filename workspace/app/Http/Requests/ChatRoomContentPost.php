@@ -25,10 +25,15 @@ class ChatRoomContentPost extends FormRequest
      */
     public function validationData()
     {
+        if ($this->image) {
+            return array_merge($this->request->all(), [
+                'chat_room_id' => $this->chat_room_id,
+                'image' => $this->image,
+            ]);
+        }
+
         return array_merge($this->request->all(), [
-            'chat_room_id' => $this->chat_room_id,
-            'image' => $this->image,
-            'video' => $this->video,
+            'chat_room_id' => $this->chat_room_id
         ]);
     }
 
