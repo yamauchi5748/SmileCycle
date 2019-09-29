@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -21,24 +23,32 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
+     * get Login View.
      *
-     * @var string
+     * @return view
      */
-    protected $redirectTo = '/';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function index()
     {
-        $this->middleware('guest')->except('logout');
+        return view('auth.login');
     }
 
-    public function username()
+    /**
+     * 認証を処理する
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return Response
+     */
+    public function authenticate(Request $request)
     {
-        return 'name';
+        $credentials = $request->only('name', 'password');
+
+        // 継続的ログイン
+        if (Auth::attempt($credentials, true)) {
+            // 認証に成功した
+            return redirect()->intended('/');
+        }
+
+        return redirect()->intended('/login');
     }
 }

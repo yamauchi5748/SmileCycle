@@ -12,8 +12,9 @@
 */
 
 
-//login,logout
-Auth::routes();
+//login
+Route::get('/login', 'Auth\LoginController@index')->name("login.page");
+Route::post('/login', 'Auth\LoginController@authenticate')->name("login");
 
 // stamp.image
 Route::get('/stamp-images/{image_id}', 'ImageController@stampImage')->name("stamp.image");
@@ -29,9 +30,6 @@ Route::get('/forums/{forum_id}/images/{image_id}', 'ImageController@forumImage')
 
 // chat.image
 Route::get('/chat-rooms/{chat_room_id}/images/{image_id}', 'ImageController@chatRoomImage')->name("chat_room.image");
-
-//help
-Route::get('/help', 'HelpController@index')->name('help');
 
 //home
 Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');
