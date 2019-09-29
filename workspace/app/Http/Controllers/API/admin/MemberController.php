@@ -13,6 +13,7 @@ use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use App\Models\Member;
 use App\Models\Company;
+use App\Models\ChatRoom;
 
 class MemberController extends AdminAuthController
 {
@@ -76,6 +77,22 @@ class MemberController extends AdminAuthController
             [
                 '$push' => [
                     'members' => $member['_id']                 // 会員のidを追加
+                ]
+            ]
+        );
+
+        /** 部門チャットグループに会員を追加 **/
+        ChatRoom::raw()->updateOne(
+            [
+                'group_name' => $request->department_name,
+                'is_department' => true,
+            ],
+            [
+                '$push' => [
+                    'members' => [
+                        '_id' => $member['_id'],
+                        'name' => $member['name']
+                    ]
                 ]
             ]
         );

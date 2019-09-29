@@ -29,6 +29,7 @@ $factory->define(ChatRoom::class, function () {
     $chat_group = [
         '_id' => (string) Str::uuid(),
         'is_group' => true,
+        'is_department' => false,
         'admin_member_id' => $faker->randomElement($chat_members)['_id'],
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
         'members' => $chat_members,
@@ -38,14 +39,14 @@ $factory->define(ChatRoom::class, function () {
     /** チャットコンテンツ投稿 **/
     for ($i=0; $i < $faker->numberBetween(1, 30); $i++) {
         $second = $i < 10 ? '0'.$i : $i;
-        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo'); // 現在時刻
+        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo');
         $now = Str::limit($now, 16, '');
         $chat_member = $faker->randomElement($chat_members);
         /* チャットモデル */
         $chat = [
             '_id' => (string) Str::uuid(),
             'is_hurry' => $faker->boolean,
-            'content_type' => $faker->randomElement(["1", "2", "3", "4"]),
+            'content_type' => $faker->randomElement(["1", "2", "3"]),
             'sender_id' => $chat_member['_id'],
             'sender_name' => $chat_member['name'],
             'created_at' => $now,

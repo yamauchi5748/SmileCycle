@@ -25,6 +25,7 @@ class DepartmentChatRoomSeeder extends Seeder
             $chat_group = [
                 '_id' => (string) Str::uuid(),
                 'is_group' => true,
+                'is_department' => true,
                 'admin_member_id' => $admin['_id'],
                 'group_name' => $department_name,
                 'members' => [],

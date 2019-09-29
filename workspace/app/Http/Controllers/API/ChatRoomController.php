@@ -108,6 +108,7 @@ class ChatRoomController extends AuthController
         $chat_group = [
             '_id' => (string) Str::uuid(),              // チャットグループのid
             'is_group' => $request->is_group,           // チャットグループの種類
+            'is_department' => false,                   // 部門チャットグループであるか
             'admin_member_id' => $this->author->_id,    // チャットグループの管理者
             'group_name' => $request->group_name,       // チャットグループのグループ名
             'members' => $request->members,             // チャットグループの会員
@@ -172,7 +173,8 @@ class ChatRoomController extends AuthController
         /** グループ名を更新 **/
         ChatRoom::raw()->updateOne(
             [
-                '_id' => $chat_room_id
+                '_id' => $chat_room_id,
+                'is_department' => false
             ],
             [
                 '$set' => [
@@ -226,7 +228,7 @@ class ChatRoomController extends AuthController
         ChatRoom::raw()->deleteOne(
             [
                 '_id' => $chat_room_id,
-                /* ルームの管理者認証 */
+                'is_department' => false,
                 'admin_member_id' => $this->author->_id
             ]
         );
