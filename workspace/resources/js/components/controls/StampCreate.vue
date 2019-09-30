@@ -3,7 +3,7 @@
         <template #title>スタンプ作成</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input-image v-model="tab_image" only>タブ画像</v-input-image>
+                <v-input-image v-model="tab_image" :max="1">タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
                 <v-input-image v-model="stamp_images">スタンプ</v-input-image>
@@ -34,9 +34,13 @@ import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
-            tab_image: [],
+            tab_image: ["/img/invitation-post-image.jpg"],
             is_all: false,
-            stamp_images: [],
+            stamp_images: [
+                "/img/invitation-post-image.jpg",
+                "/img/invitation-post-image.jpg",
+                "/img/invitation-post-image.jpg"
+            ],
             members: []
         };
     },
