@@ -108,6 +108,10 @@ class MemberController extends AuthController
                         'telephone_number' => 1,                // 会員の電話番号を返す
                         'mail' => 1,                            // 会員のメールアドレスを返す
                         'department_name' => 1,                 // 部門名を返す
+                        'secretary' => [                        // 秘書
+                            'name' => '$secretary.name',
+                            'mail' => '$secretary.mail'
+                        ],
                         'company_id' => '$company._id',         // 会社のidを返す
                         'company_name' => '$company.name',      // 会社名を返す
                     ]

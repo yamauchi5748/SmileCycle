@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CompaniesSeeder::class);
         $this->call(StampGroupSeeder::class);
+        $this->call(AdminSeeder::class);
+        $this->call(DepartmentChatRoomSeeder::class);
         $this->call(MembersSeeder::class);
         $this->call(InvitationSeeder::class);
         $this->call(ForumSeeder::class);

@@ -118,7 +118,7 @@ class ChatRoomContentController extends AuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('public/images/chats', $request->image, $image_id . '.png', 'private');
+                Storage::putFileAs('private/images/chats', $request->image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $chat['content_id'] = $image_id;
@@ -129,7 +129,7 @@ class ChatRoomContentController extends AuthController
                 $video_id = (string) Str::uuid();
     
                 /* 動画を保存 */
-                Storage::putFileAs('public/videos/', $request->video, $video_id . '.' . $request->video->extension(), 'private');
+                Storage::putFileAs('private/videos/', $request->video, $video_id . '.' . $request->video->extension(), 'private');
             
                 /* モデルに動画のidを追加 */
                 $chat['content_id'] = $video_id;

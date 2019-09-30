@@ -28,7 +28,7 @@
                     <td>
                         <img
                             class="profile-img"
-                            :src="'/storage/images/profile_images/' + member._id + '.png'"
+                            :src="'/members/' + member._id + '/profile-image'"
                         />
                     </td>
                     <td>{{ member.name }}</td>
