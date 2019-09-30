@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Member;
 use App\Models\ChatRoom;
+use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
