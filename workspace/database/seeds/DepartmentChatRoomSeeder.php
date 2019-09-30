@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Member;
 use App\Models\ChatRoom;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class DepartmentChatRoomSeeder extends Seeder
 {
@@ -32,8 +33,11 @@ class DepartmentChatRoomSeeder extends Seeder
                 'contents' => [],
             ];
             
+            // 画像のパス名をランダムに取得
+            $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
+
             // チャットグループのアイコン画像をストレージに保存
-            Storage::copy('images/boy_3.png', 'public/images/chats/' . $chat_group['_id'] . '.png');
+            Storage::putFileAs('private/images/chats', new File('storage/app/images/' . $path_name . '.png'), $chat_group['_id'] . '.png', 'private');
 
             ChatRoom::create($chat_group);
         }

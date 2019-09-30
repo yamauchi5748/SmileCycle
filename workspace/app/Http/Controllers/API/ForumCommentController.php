@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ForumCommentGet;
 use App\Http\Requests\ForumCommentPost;
 use App\Http\Controllers\Auth\AuthController;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Forum;

@@ -64,7 +64,7 @@ class MemberController extends AdminAuthController
         }
 
         // 会員のプロフィール画像をストレージに保存
-        Storage::copy('images/boy_3.png', 'public/images/profile_images/' . $member['_id'] . '.png');
+        Storage::copy('images/boy_3.png', 'private/images/profile_images/' . $member['_id'] . '.png');
         
         /* 会員モデルをDBに登録 */
         Member::raw()->insertOne($member);
