@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <main class="login-container">
+    <main class="login-container-wrapper">
         <h1 class="login-title">SmileCycle</h1>
         <form class="login-container" method="post" action="{{ route('login') }}" name="Login">
             @csrf
@@ -57,21 +57,34 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 body {
+    height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+.login-container-wrapper {
+    width: 100%;
+    max-width: 600px;
+    padding: 4%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 2px 3px #aaaaaa;
+    background-color: #ffffff;
 }
 
 .login-container {
     width: 100%;
     max-width: 600px;
-    margin-top: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .login-title {
-    margin-bottom: 10%;
+    margin-bottom: 15%;
     color: #ff9900;
     font-size: 3rem;
     font-weight: 700;
@@ -88,7 +101,7 @@ body {
     margin-bottom: 15px;
     padding: 10px 0;
     border: none;
-    border-bottom: solid 2px #f2f2f2;
+    border-bottom: solid 2px gray;
     font-size: 18px;
 }
 
