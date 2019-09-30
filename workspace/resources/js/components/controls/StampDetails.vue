@@ -14,7 +14,7 @@
             <ul class="p-stamp-list">
                 <li class="p-stamp-wrapper" v-for="(stamp,index) in stamp_list" :key="index">
                     <button class="p-stamp-delete-button"></button>
-                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp + '.png'" />
+                    <img class="p-stamp" :src="'/stamp-images/' + stamp" />
                 </li>
             </ul>
         </template>
