@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -41,6 +42,34 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request)
     {
+        $data = [
+            'name' => $request->name,
+            'password' => $request->password,
+        ];
+
+        $rules = [
+            'name' => ['required', 'string', 'exists:members'],
+            'password' => ['required', 'string', 'min:1', 'max:100'],
+        ];
+
+        $messages = [
+            'name.required' => '会員名が入力されていません',
+            'name.string' => '形式が間違っています',
+            'name.exists' => '該当する会員が存在しません',
+            'password.required' => 'パスワードが入力されていません',
+            'password.string' => '形式が間違っています',
+            'password.min' => 'パスワードが短すぎます',
+            'password.min' => 'パスワードが長すぎます'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect('login')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
         $credentials = $request->only('name', 'password');
 
         // 継続的ログイン
