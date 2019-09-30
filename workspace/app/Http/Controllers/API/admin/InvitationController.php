@@ -72,7 +72,7 @@ class InvitationController extends AdminAuthController
                 $image_id = (string) Str::uuid();
     
                 /* 画像を保存 */
-                Storage::putFileAs('public/images/invitations', $image, $image_id . '.png', 'private');
+                Storage::putFileAs('private/images/invitations', $image, $image_id . '.png', 'private');
             
                 /* モデルに画像のidを追加 */
                 $invitation['images'][] = $image_id;
@@ -247,7 +247,7 @@ class InvitationController extends AdminAuthController
             $image_id = (string) Str::uuid();
 
             /* 画像を保存 */
-            Storage::putFileAs('public/images/invitations', $new_image, $image_id . '.png', 'private');
+            Storage::putFileAs('private/images/invitations', $new_image, $image_id . '.png', 'private');
         
             /* モデルに画像のidを追加 */
             $new_images[] = $image_id;
@@ -304,7 +304,7 @@ class InvitationController extends AdminAuthController
 
         /* スタンプ画像削除 */
         foreach ($request->delete_images as $image) {
-            Storage::delete('public/images/invitations/' . $image . '.png');
+            Storage::delete('private/images/invitations/' . $image . '.png');
         }
 
         $inv = Invitation::raw()->aggregate([

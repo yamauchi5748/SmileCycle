@@ -138,7 +138,7 @@ class ChatRoomController extends AuthController
         $chat_group['members'] = $members;
 
         // チャットグループのアイコン画像をストレージに保存
-        Storage::copy('images/boy_3.png', 'public/images/chats/' . $chat_group['_id'] . '.png');
+        Storage::copy('images/boy_3.png', 'private/images/chats/' . $chat_group['_id'] . '.png');
 
         /* DBにモデル登録 */
         ChatRoom::raw()->insertOne($chat_group);
@@ -207,7 +207,7 @@ class ChatRoomController extends AuthController
 
         /* グループアイコン画像変更 */
         if ($request->new_icon) {
-            Storage::putFileAs('public/images/chats', $request->new_icon, $room['_id'] . '.png', 'private');
+            Storage::putFileAs('private/images/chats', $request->new_icon, $room['_id'] . '.png', 'private');
         }
 
         /* 更新したルーム情報を取得 */

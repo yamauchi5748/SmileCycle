@@ -8,7 +8,7 @@
             <ul class="p-stamp-list">
                 <li v-for="(stamp,index) in stamp_list" :key="index">
                     <span></span>
-                    <img class="p-stamp" :src="'/storage/images/stamps/' + stamp + '.png'" />
+                    <img class="p-stamp" :src="'/stamp-images/' + stamp" />
                 </li>
             </ul>
         </template>

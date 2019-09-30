@@ -81,7 +81,7 @@ class ForumController extends AdminAuthController
             $image_id = (string) Str::uuid();
 
             /* 画像を保存 */
-            Storage::putFileAs('public/images/forums', $new_image, $image_id . '.png', 'private');
+            Storage::putFileAs('private/images/forums', $new_image, $image_id . '.png', 'private');
         
             /* モデルに画像のidを追加 */
             $forum['images'][] = $image_id;
@@ -89,7 +89,7 @@ class ForumController extends AdminAuthController
 
         /* 画像削除 */
         foreach ($request->delete_images as $image_id) {
-            Storage::delete('public/images/forums/' . $image_id . '.png');
+            Storage::delete('private/images/forums/' . $image_id . '.png');
         }
 
         /* 掲示板更新 */
