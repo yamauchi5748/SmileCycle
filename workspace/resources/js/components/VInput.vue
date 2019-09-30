@@ -65,21 +65,23 @@ export default {
     font-size: 14px;
     font-weight: bold;
 }
-.p-input {
+%input {
     display: block;
     width: 100%;
-    height: 24px;
+    height: 32px;
     border: none;
     border-bottom: solid $accent-color 2px;
+    box-sizing: border-box;
     font-size: 18px;
+    line-height: 1.8rem;
+}
+.p-input {
+    @extend %input;
 }
 .p-input-area {
-    display: block;
-    width: 100%;
-    height: 150px;
-    border: none;
-    border-bottom: solid $accent-color 2px;
-    font-size: 18px;
+    @extend %input;
+
+    min-height: 160px;
     resize: none;
 }
 .p-counter {

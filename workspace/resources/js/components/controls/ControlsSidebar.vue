@@ -9,6 +9,12 @@
                 tag="li"
             >会のご案内</router-link>
             <router-link
+                :to="{name:'controls-forum'}"
+                class="p-sidebar-item p-tab-link"
+                active-class="active"
+                tag="li"
+            >みんなの掲示板</router-link>
+            <router-link
                 :to="{name:'controls-member'}"
                 class="p-sidebar-item p-tab-link"
                 active-class="active"
