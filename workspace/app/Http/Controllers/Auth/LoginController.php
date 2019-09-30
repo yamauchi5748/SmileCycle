@@ -41,6 +41,11 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'exists:members'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
         $credentials = $request->only('name', 'password');
 
         // 継続的ログイン
