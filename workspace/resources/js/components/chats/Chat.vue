@@ -15,12 +15,21 @@
                     <div class="room">
                         <router-view v-bind:roomName="roomName" v-on:setName="setName"></router-view>
                     </div>
-                   <button class="add-button"><img src="/img/add-button.png" alt="button"></button>
+                   <button class="add-button" v-on:click="createGroup"><img src="/img/add-button.png" alt="button"></button>
                 </div>
             </div>
             <router-view name="details" v-bind:showDetails="showDetails" v-if="showDetails === true">
                 <h1>{{ roomName }}</h1>
             </router-view>
+            <div class="create-group-modal">
+                <div>
+                    <span>グループ作成</span>
+                    <span>×</span>
+                </div>
+                <input type="text" placeholder="グループ名を入力してください。">
+                <button class="normal-button">作成</button>
+                <button class="flat-button">キャンセル</button>
+            </div>
         </div>
     </div>
 </template>
@@ -43,17 +52,22 @@ export default {
         setName(name) {
             this.roomName = name;
             this.showDetails = true;
+        },
+        createGroup() {
+            alert("help");
         }
     },
 };
 </script>
 <style lang="scss">
 .chat {
+    overflow: hidden;
 }
 
 .controls-body {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
+    position: relative;
 }
 
 .room-list {
@@ -134,4 +148,24 @@ export default {
     }
 }
 
+.create-group-modal {
+   display: flex;
+   width: 455px;
+   height: 249px;
+   flex-direction: column;
+   border: 1px solid #707070;
+   position: absolute;
+   top: 30%;
+   left: 29%;
+   
+   div {
+      font-size: 16px;
+   }
+   input {
+      height: 20px;
+      border: none;
+      border-bottom: 1px solid #707070;
+   }
+
+}
 </style>
