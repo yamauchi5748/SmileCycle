@@ -80,6 +80,12 @@ class ChatRoomController extends AuthController
                         '$push' => '$contents'
                     ]
                 ]
+            ],
+            /* コンテンツの投稿日時順にソート */
+            [
+                '$sort' => [
+                    'contents.0.created_at' => -1
+                ]
             ]
         ])->toArray();
         
