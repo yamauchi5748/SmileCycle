@@ -85,6 +85,7 @@ export default {
     align-items: center;
     a {
       margin-right: 1rem;
+      text-decoration: none;
       color: $base-color;
     }
     &:after {

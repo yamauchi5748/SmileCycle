@@ -1,29 +1,26 @@
 <template>
-    <fieldset>
+    <fieldset class="p-input-image">
         <legend class="p-title" v-if="$slots.default">
             <slot></slot>
         </legend>
-        <div class="p-image-list-outer">
-            <button class="slide-left-button"></button>
-            <div class="p-image-list-wrapper">
-                <div class="p-image-list-inner">
-                    <ul class="p-image-list" @dragover="handleDragOver" @drop="handleDrop">
-                        <li
-                            class="p-image-wrapper"
-                            v-for="(dataURL, index) in dataURL_list"
-                            :key="index"
-                        >
-                            <button class="p-delete-button"></button>
-                            <span class="p-image" :style="{'background-image':'url('+dataURL+')'}"></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <button class="slide-right-button"></button>
+        <div class="p-image-list-outer" :class="{'one-image':is_one_image}">
+            <button class="slide-left-button" @click="scrollLeft"></button>
+            <ul ref="list" class="p-image-list" @dragover="handleDragOver" @drop="handleDrop">
+                <li class="p-image-wrapper" v-for="(dataURL, index) in dataURL_list" :key="index">
+                    <button class="p-delete-button" @click="deleteImage(index)"></button>
+                    <span class="p-image" :style="{'background-image':'url('+dataURL+')'}"></span>
+                </li>
+            </ul>
+            <button class="slide-right-button" @click="scrollRight"></button>
         </div>
         <label class="p-add-image-label">
             <span class="p-add-image">画像を追加する</span>
-            <input class="p-add-image-input" type="file" accept="image/png, image/jpeg" />
+            <input
+                class="p-add-image-input"
+                @input="handleFileInput"
+                type="file"
+                accept="image/png, image/jpeg"
+            />
         </label>
     </fieldset>
 </template>
@@ -32,58 +29,77 @@
 export default {
     props: {
         value: { type: Array, required: true },
-        only: { type: Boolean, default: false }
+        max: { type: Number, default: 10 }
     },
     data: function() {
         return {
-            dataURL_list: [
-                "/img/profile_image.jpg",
-                "/img/invitation-post-image.jpg",
-                "/img/profile_image.jpg",
-                "/img/profile_image.jpg",
-                "/img/invitation-post-image.jpg",
-                "/img/profile_image.jpg",
-                "/img/invitation-post-image.jpg"
-            ]
+            dataURL_list: this.value
         };
     },
+    computed: {
+        is_one_image: function() {
+            return this.dataURL_list.length <= 1;
+        }
+    },
     methods: {
+        scrollLeft() {
+            this.$refs.list.scrollLeft = 0;
+        },
+        scrollRight() {
+            this.$refs.list.scrollLeft = this.$refs.list.scrollWidth;
+        },
+        deleteImage(index) {
+            this.dataURL_list.splice(index, 1);
+        },
         handleDragOver(event) {
             event.dataTransfer.dropEffect = "copy";
             event.stopPropagation();
             event.preventDefault();
         },
         handleDrop(event) {
-            let new_files = event.dataTransfer.files;
-
             event.stopPropagation();
             event.preventDefault();
-            if (this.only) {
-                let reader = new FileReader();
-                reader.readAsDataURL(new_files[0]);
-                reader.onload = () => {
-                    this.dataURL_list.splice(0, 1, reader.result);
-                };
-                this.$emit("input", [new_files[0]]);
-            } else {
-                for (let file of new_files) {
+            this.handleFileInput(event);
+        },
+        handleFileInput(event) {
+            let new_files = event.target.files;
+            for (let file of new_files) {
+                if (this.dataURL_list.length < this.max) {
                     let reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = () => {
                         this.dataURL_list.push(reader.result);
                     };
                 }
-                this.$emit("input", [...new_files, ...this.value]);
             }
+            this.value.concat(new_files);
+            this.$emit("input", this.value);
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
+.p-input-image {
+    display: flex;
+    flex-direction: column;
+}
+.p-title {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: bold;
+}
 .p-image-list-outer {
     position: relative;
-    display: inline-block;
+    display: block;
+    width: 420px;
+    padding: 12px 12px 0;
+    border: solid 1px $gray;
+    border-radius: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(248, 248, 248, 1);
     %slide-button {
         position: absolute;
         top: 0;
@@ -95,7 +111,7 @@ export default {
         border-radius: 50%;
         background-color: $base-color;
         background-position: center;
-        box-shadow:0 0 5px rgba(28, 28, 29, 0.45);
+        box-shadow: 0 0 5px rgba(28, 28, 29, 0.45);
         cursor: pointer;
     }
     .slide-left-button {
@@ -108,30 +124,32 @@ export default {
         right: -12px;
         background-image: url(/img/arrow_forward.svg);
     }
-}
-.p-image-list-wrapper {
-    display: inline-block;
-    border: solid 1px $gray;
-    border-radius: 8px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: rgba(248, 248, 248, 1);
-    //スクロールバーなしでスクロールするための
-    height: 86px;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-.p-image-list-inner {
-    display: block;
-    width: 470px;
-    //スクロールバーなしでスクロールするための
-    height: calc(100%+17px);
-    padding-bottom: -17px;
-    overflow-x: scroll;
+    //画像が一枚の場合
+    &.one-image {
+        height: 124px;
+        width: 124px;
+        padding-bottom: 12px;
+        .slide-right-button {
+            display: none;
+        }
+        .slide-left-button {
+            display: none;
+        }
+        .p-image-list {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            .p-image-wrapper {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
 }
 .p-image-list {
-    display: inline-flex;
-    padding: 12px;
+    display: flex;
+    width: 100%;
+    overflow-x: scroll;
     .p-image-wrapper {
         flex-grow: 0;
         flex-shrink: 0;
@@ -181,11 +199,5 @@ export default {
     .p-add-image-input {
         display: none;
     }
-}
-.p-title {
-    display: inline-flex;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: bold;
 }
 </style>

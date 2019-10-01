@@ -34,6 +34,7 @@
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>
                     <td>{{ member.post }}</td>
+
                 </router-link>
             </tbody>
         </table>
