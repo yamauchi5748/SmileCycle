@@ -85,9 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .p-room-container {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .p-profile {
@@ -105,18 +104,16 @@ export default {
 
 .p-room-box {
   margin: 0 0 5%;
-}
-
-.p-room-name {
-  font-size: 21px;
-  font-weight: 500;
-  color: #222222;
-}
-
-.p-room-count {
-  font-size: 21px;
-  font-weight: 500;
-  color: #222222;
+  .p-room-name {
+    font-size: 21px;
+    font-weight: 500;
+    color: #222222;
+  }
+  .p-room-count {
+    font-size: 21px;
+    font-weight: 500;
+    color: #222222;
+  }
 }
 
 .p-room-first-content {
@@ -133,11 +130,10 @@ export default {
   height: 30px;
   background-color: lawngreen;
   border-radius: 50%;
-}
-
-.p-unread-text {
-  position: relative;
-  top: 24%;
-  left: 34%;
+  .p-unread-text {
+    position: relative;
+    top: 24%;
+    left: 34%;
+  }
 }
 </style>
