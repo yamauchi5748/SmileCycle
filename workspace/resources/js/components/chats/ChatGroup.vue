@@ -85,6 +85,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.p-room-container {
+    cursor: pointer;
+}
+
 .p-profile {
   max-width: 20%;
   border-radius: 50%;
