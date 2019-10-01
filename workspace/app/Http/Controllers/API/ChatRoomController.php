@@ -63,7 +63,7 @@ class ChatRoomController extends AuthController
                             'then' => [
                                 '$size' => '$contents.already_read'
                             ],
-                            'else' => 0                          
+                            'else' => -1                          
                         ]
                     ]
                 ]
