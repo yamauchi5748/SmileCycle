@@ -61,7 +61,6 @@ export default {
     methods: {
         //index番目の画像が大きく表示される
         previewImage: function(index) {
-            console.log(this.slider_point);
             this.slider_point = index;
         },
         goTo() {
