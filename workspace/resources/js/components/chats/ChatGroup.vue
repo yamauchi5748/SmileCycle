@@ -13,7 +13,10 @@
             <span class="room-name">{{ room.name }}</span>
             <span class="room-count">({{ room.members.length }})</span>
           </div>
-          <p class="room-first-content" v-if="room.contents.length > 0">{{ room.contents[0].content }}</p>
+          <p
+            class="room-first-content"
+            v-if="room.contents.length > 0"
+          >{{ room.contents[0].content }}</p>
         </div>
         <div class="unread-box" v-show="unread(room) > 0">
           <span class="unread-text">{{ unread(room) }}</span>
