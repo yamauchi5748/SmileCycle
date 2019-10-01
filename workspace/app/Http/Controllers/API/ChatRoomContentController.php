@@ -13,6 +13,7 @@ use App\Http\Requests\ChatRoomContentPut;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
+use App\jobs\ProcessPodcast;
 
 class ChatRoomContentController extends AuthController
 {
@@ -169,6 +170,13 @@ class ChatRoomContentController extends AuthController
                 ]
             ]
         );
+
+        /* 急ぎチャットならばメール通知ジョブをバックグラウンドで実行 */
+        /* メール通知を飛ばす */
+        $job = (new ProcessPodcast)->delay(3);
+
+        // jobs テーブルに登録
+        dispatch($job);
 
         /* 返すレスポンスデータを整形 */
         $this->response['content'] = $chat;
