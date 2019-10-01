@@ -1,6 +1,6 @@
 <template>
     <section class="view controls-primary-view">
-        <div class="layout-flex --align-items-center">
+        <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">{{ $root.member_list.length }}人</h2>
             <router-link
                 class="normal-button margin-left-auto"
@@ -26,7 +26,10 @@
                     append
                 >
                     <td>
-                        <img class="profile-img" :src="'/storage/images/profile_images/' + member._id + '.png'" />
+                        <img
+                            class="profile-img"
+                            :src="'/members/' + member._id + '/profile-image'"
+                        />
                     </td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>
@@ -38,9 +41,9 @@
 </template>
 <script>
 export default {
-    mounted: function() {
+    created: function() {
         this.$root.loadMembers();
-    }
+    },
 };
 </script>
 <style lang="scss" scoped>

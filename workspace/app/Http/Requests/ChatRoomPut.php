@@ -22,8 +22,15 @@ class ChatRoomPut extends FormRequest
      * ルート引数は対象にならないのでマージする
      * @return 配列
      */
-    protected function validationData()
+    public function validationData()
     {
+        if ($this->new_icon) {
+            return array_merge($this->request->all(), [
+                'chat_room_id' => $this->chat_room,
+                'new_icon' => $this->new_icon,
+            ]);
+        }
+
         return array_merge($this->request->all(), [
             'chat_room_id' => $this->chat_room
         ]);
@@ -38,7 +45,8 @@ class ChatRoomPut extends FormRequest
     {
         return [
             'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
-            'new_group_name' => ['required', 'string', 'max:16']
+            'new_group_name' => ['required', 'string', 'max:16'],
+            'new_icon' => ['image', 'mimes:jpeg,png,jpg,gif']
         ];
     }
 

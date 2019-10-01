@@ -24,7 +24,7 @@ class ChatRoomMemberPost extends FormRequest
      * ルート引数は対象にならないのでマージする
      * @return 配列
      */
-    protected function validationData()
+    public function validationData()
     {
         $request = request();
         $this->room = ChatRoom::where('_id', $request->chat_room_id)->first();

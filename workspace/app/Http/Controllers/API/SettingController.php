@@ -20,7 +20,7 @@ class SettingController extends AuthController
     {
         /** 認証会員の情報を返す **/
         /* 認証会員の属している会社を取得 */
-        $cursol = Company::raw()->aggregate([
+        $companies = Company::raw()->aggregate([
             [
                 '$unwind' => '$members'
             ],
@@ -30,8 +30,14 @@ class SettingController extends AuthController
                 ]
             ]
         ])->toArray();
-        $company = head($cursol);
+        $company = head($companies);
 
+        /* 返すレスポンスデータを整形 */
+        if (!$company) {
+            $this->response['result'] = false;
+            return $this->response;
+        }
+        
         /*レスポンスデータを整形 */
         $this->response['member'] = [
             '_id' => $this->author->_id,
@@ -92,18 +98,15 @@ class SettingController extends AuthController
             ],
             [
                 '$set' => [
-                    'mail' => $request->mail,                           // メールアドレス
-                    'is_notification' => $request->is_notification,     // 通知可否
+                    'mail' => $request->mail,                                       // メールアドレス
+                    'is_notification' => $request->is_notification,                 // 通知可否
                     'notification_interval' => $request->notification_interval      // 通知間隔
-                ],
-                '$currentDate' => [
-                    'lastModified' => true
                 ]
             ]
         );
 
         // 会員のプロフィール画像を更新
-        Storage::putFileAs('public/images/profile_images', $request->profile_image, $this->author->_id . '.png', 'private');
+        Storage::putFileAs('private/images/profile_images', $request->profile_image, $this->author->_id . '.png', 'private');
 
         $member = Member::raw()->aggregate([
             /* 会員を指定 */
@@ -150,7 +153,7 @@ class SettingController extends AuthController
             ]
         ])->toArray();
 
-        /* 会員が更新できたかチェック */
+        /* 会員が取得できたかチェック */
         if ($member) {
             $this->response['member'] = $member;
         } else {

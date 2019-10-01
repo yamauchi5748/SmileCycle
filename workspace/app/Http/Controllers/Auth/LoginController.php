@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -21,24 +24,71 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
+     * get Login View.
      *
-     * @var string
+     * @return view
      */
-    protected $redirectTo = '/';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function index()
     {
-        $this->middleware('guest')->except('logout');
+        return view('auth.login');
     }
 
-    public function username()
+    /**
+     * 認証を処理する
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return Response
+     */
+    public function authenticate(Request $request)
     {
-        return 'name';
+        $data = [
+            'name' => $request->name,
+            'password' => $request->password,
+        ];
+
+        $rules = [
+            'name' => ['required', 'string', 'exists:members'],
+            'password' => ['required', 'string', 'min:1', 'max:100'],
+        ];
+
+        $messages = [
+            'name.required' => '会員名が入力されていません',
+            'name.string' => '形式が間違っています',
+            'name.exists' => '該当する会員が存在しません',
+            'password.required' => 'パスワードが入力されていません',
+            'password.string' => '形式が間違っています',
+            'password.min' => 'パスワードが短すぎます',
+            'password.min' => 'パスワードが長すぎます'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect('login')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $credentials = $request->only('name', 'password');
+
+        // 継続的ログイン
+        if (Auth::attempt($credentials, true)) {
+            // 認証に成功した
+            return redirect()->intended('/');
+        }
+
+        return redirect()->intended('/login');
+    }
+
+    /**
+     * post Logout.
+     *
+     * @return string
+     */
+    public function logout()
+    {
+        Auth::logout();
+        return 'successed logout';
     }
 }

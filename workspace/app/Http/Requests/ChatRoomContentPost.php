@@ -23,12 +23,17 @@ class ChatRoomContentPost extends FormRequest
      * ルート引数は対象にならないのでマージする
      * @return 配列
      */
-    protected function validationData()
+    public function validationData()
     {
+        if ($this->image) {
+            return array_merge($this->request->all(), [
+                'chat_room_id' => $this->chat_room_id,
+                'image' => $this->image,
+            ]);
+        }
+
         return array_merge($this->request->all(), [
-            'chat_room_id' => $this->chat_room_id,
-            'image' => $this->image,
-            'video' => $this->video,
+            'chat_room_id' => $this->chat_room_id
         ]);
     }
 

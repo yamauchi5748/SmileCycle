@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class MemberPost extends FormRequest
 {
@@ -26,15 +27,16 @@ class MemberPost extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:64', 'unique:members'],
-            'ruby' => ['required', 'string', 'max:128'],
-            'post' => ['required', 'string', 'max:32'],
+            'name' => ['required', 'string', 'max:15', 'min:2', 'unique:members,name'],
+            'ruby' => ['required', 'string', 'max:30', 'min:2'],
+            'post' => ['required', 'string', 'max:50', 'min:1'],
             'telephone_number' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
             'company_id' => ['required', 'uuid', 'exists:companies,_id'],
-            'department_name' => ['required', 'string'],
-            'mail' => ['required', 'string', 'email', 'max:256'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif']
+            'department_name' => ['required', Rule::in(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会'])],
+            'mail' => ['required', 'email', 'max:256'],
+            'secretary_name' => ['required_with:secretary_mail','string', 'max:15', 'min:2'],
+            'secretary_mail' => ['required_with:secretary_name', 'email'],
+            'password' => ['required', 'string', 'min:8', 'max:100', 'confirmed'],
         ];
     }
 

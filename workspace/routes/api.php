@@ -44,13 +44,6 @@ Route::apiResource('settings', 'API\SettingController')->only([
     "index" => "settings.index",
 ]);
 
-//admin.member.stamp_groups
-Route::apiResource('members/{member_id}/stamp_groups', 'API\admin\MemberStampGroupController')->only([
-    "index"
-])->names([
-    "index" => "member.stamp_groups.index",
-]);
-
 //admin.companies
 Route::apiResource('companies', 'API\admin\CompanyController')->only([
     "store", "update", "destroy"
@@ -86,12 +79,12 @@ Route::apiResource('stamp-groups', 'API\StampGroupController')->only([
 ]);
 
 //admin.invitations
-Route::apiResource('admin-invitations', 'API\admin\InvitationController')->only([
-    "index", "store", "show"
-])->names([
+Route::apiResource('admin-invitations', 'API\admin\InvitationController')->names([
     "index" => "admin.invitations.index",
     "store" => "admin.invitations.store",
-    "show" => "admin.invitations.show"
+    "show" => "admin.invitations.show",
+    "update" => "admin.invitations.update",
+    "destroy" => "admin.invitations.destroy",
 ]);
 
 //invitations
@@ -101,6 +94,14 @@ Route::apiResource('invitations', 'API\InvitationController')->only([
     "index" => "invitations.index",
     "show" => "invitations.show",
     "update" => "invitations.update"
+]);
+
+//admin.forums
+Route::apiResource('admin-forums', 'API\admin\ForumController')->only([
+    "update", "destroy",
+])->names([
+    "update" => "admin.forums.update",
+    "destroy" => "admin.forums.destroy",
 ]);
 
 //forums
@@ -130,6 +131,7 @@ Route::apiResource('chat-rooms', 'API\ChatRoomController')->names([
 ]);
 
 //chat_room.contents
+Route::put('chat-rooms/{chat_room_id}/contents/{content_id}', 'API\ChatRoomContentController@update')->name("chat_room.contents.update");
 Route::apiResource('chat-rooms/{chat_room_id}/contents', 'API\ChatRoomContentController')->only([
     "index", "store"
 ])->names([
