@@ -13,10 +13,10 @@
             <span class="p-room-name">{{ room.name }}</span>
             <span class="p-room-count">({{ room.members.length }})</span>
           </div>
-          <p class="p-room-first-content">{{ room.contents[0].content }}</p>
+          <p class="p-room-first-content" v-if="room.contents.length > 0">{{ room.contents[0].content }}</p>
         </div>
-        <div class="p-unread-box" v-show="room.unread > 0">
-          <span class="p-unread-text">{{ room.unread }}</span>
+        <div class="p-unread-box" v-show="unread(room) > 0">
+          <span class="p-unread-text">{{ unread(room) }}</span>
         </div>
       </li>
     </ol>
@@ -31,47 +31,47 @@ export default {
         {
           _id: 1,
           name: "test1",
-          members: ["", ""],
-          contents: [
-            {
-              content:
-                "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext"
-            }
-          ],
-          unread: 0
+          members: [{ _id: "1", name: "you1" }, { _id: "0", name: "me" }],
+          contents: []
         },
         {
           _id: 2,
           name: "test2",
-          members: ["", ""],
+          members: [{ _id: "0", name: "me" }, { _id: "2", name: "you2" }],
           contents: [
             {
-              content: "画像を送信しました"
+              content: "画像を送信しました",
+              unread: true
             }
-          ],
-          unread: 2
+          ]
         },
         {
           _id: 3,
           name: "test3",
-          members: ["", ""],
+          members: [{ _id: "3", name: "you3" }, { _id: "0", name: "me" }],
           contents: [
             {
-              content: "text"
+              content: "text",
+              unread: false
             }
-          ],
-          unread: 3
+          ]
         },
         {
           _id: 4,
           name: "test4",
-          members: ["", ""],
+          members: [{ _id: "0", name: "me" }, { _id: "4", name: "you4" }],
           contents: [
             {
-              content: "text"
+              content:
+                "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext",
+              unread: true
+            },
+            {
+              content:
+                "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext",
+              unread: true
             }
-          ],
-          unread: 4
+          ]
         }
       ]
     };
@@ -79,6 +79,12 @@ export default {
   methods: {
     getName(room) {
       this.$emit("setName", room.name);
+    },
+    unread: function(room) {
+      const unread_contents = room.contents.filter(content => {
+        return content.unread;
+      });
+      return unread_contents.length;
     }
   }
 };
