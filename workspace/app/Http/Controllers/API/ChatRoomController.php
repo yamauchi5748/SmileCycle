@@ -49,7 +49,7 @@ class ChatRoomController extends AuthController
             [
                 '$unwind' => '$contents'
             ],
-            /* 既読数をセット */
+            /* 既読数,未読数をセット */
             [
                 '$set' => [
                     'contents.unread' => [

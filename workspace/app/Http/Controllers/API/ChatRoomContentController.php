@@ -41,6 +41,9 @@ class ChatRoomContentController extends AuthController
             /* 既読数をセット */
             [
                 '$set' => [
+                    'contents.unread' => [
+                        '$in' => [ $this->author->_id, '$contents.already_read']
+                    ],
                     'contents.already_read' => [
                         '$size' => '$contents.already_read'
                     ]
