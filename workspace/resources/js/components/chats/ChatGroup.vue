@@ -2,21 +2,21 @@
   <div>
     <ol>
       <li
-        class="p-room-container"
+        class="room-container"
         v-on:click="getName(room)"
         v-for="(room) in room_list"
         :key="room._id"
       >
-        <img class="p-profile" src="/img/profile_image.jpg" />
-        <div class="p-room-box-wrapper">
-          <div class="p-room-box">
-            <span class="p-room-name">{{ room.name }}</span>
-            <span class="p-room-count">({{ room.members.length }})</span>
+        <img class="profile" src="/img/profile_image.jpg" />
+        <div class="room-box-wrapper">
+          <div class="room-box">
+            <span class="room-name">{{ room.name }}</span>
+            <span class="room-count">({{ room.members.length }})</span>
           </div>
-          <p class="p-room-first-content" v-if="room.contents.length > 0">{{ room.contents[0].content }}</p>
+          <p class="room-first-content" v-if="room.contents.length > 0">{{ room.contents[0].content }}</p>
         </div>
-        <div class="p-unread-box" v-show="unread(room) > 0">
-          <span class="p-unread-text">{{ unread(room) }}</span>
+        <div class="unread-box" v-show="unread(room) > 0">
+          <span class="unread-text">{{ unread(room) }}</span>
         </div>
       </li>
     </ol>
@@ -91,16 +91,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.p-room-container {
+.room-container {
   cursor: pointer;
 }
 
-.p-profile {
+.profile {
   max-width: 20%;
   border-radius: 50%;
 }
 
-.p-room-box-wrapper {
+.room-box-wrapper {
   max-width: 50%;
   margin: 0 0 0 5%;
   display: flex;
@@ -108,21 +108,21 @@ export default {
   justify-content: center;
 }
 
-.p-room-box {
+.room-box {
   margin: 0 0 5%;
-  .p-room-name {
+  .room-name {
     font-size: 21px;
     font-weight: 500;
     color: #222222;
   }
-  .p-room-count {
+  .room-count {
     font-size: 21px;
     font-weight: 500;
     color: #222222;
   }
 }
 
-.p-room-first-content {
+.room-first-content {
   font-size: 16px;
   font-weight: 500;
   opacity: 0.5;
@@ -131,12 +131,12 @@ export default {
   white-space: nowrap;
 }
 
-.p-unread-box {
+.unread-box {
   width: 30px;
   height: 30px;
   background-color: lawngreen;
   border-radius: 50%;
-  .p-unread-text {
+  .unread-text {
     position: relative;
     top: 24%;
     left: 34%;
