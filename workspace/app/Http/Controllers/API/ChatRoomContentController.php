@@ -181,11 +181,47 @@ class ChatRoomContentController extends AuthController
 
         /* 急ぎチャットならばメール通知ジョブをバックグラウンドで実行 */
         if ($chat['is_hurry']) {
-            /* メール通知を飛ばす */
-            $job = (new ProcessPodcast($chat_room_id, $chat))->delay(3);
+            
+            /* ルーム情報を取得 */
+            $room = head(ChatRoom::raw()->aggregate([
+                [
+                    '$match' => [
+                        '_id' => $chat_room_id
+                    ]
+                ],
+                [
+                    '$project' => [
+                        '_id' => 0,
+                        'group_name' => 1,
+                        'members' => 1,
+                    ]
+                ]
+            ])->toArray());
 
-            // jobs テーブルに登録
-            dispatch($job);
+            $to_members = $room['members'];
+        
+            /* ルーム会員に送信するメール情報をセット */
+            foreach ($to_members as $to_member) {
+                $to_member = head(Member::raw()->aggregate([
+                    [
+                        '$match' => [
+                            '_id' => $to_member->_id
+                        ]
+                    ],
+                    [
+                        '$project' => [
+                            'name' => 1,
+                            'mail' => 1
+                        ]
+                    ]
+                ])->toArray());
+
+                /* メール通知を飛ばす */
+                $job = (new ProcessPodcast($room, $chat, $to_member))->delay(3);
+
+                // jobs テーブルに登録
+                dispatch($job);
+            }
         }
 
         /* 返すレスポンスデータを整形 */
