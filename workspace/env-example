@@ -29,7 +29,6 @@ MAIL_PASSWORD=password
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=smilecyclesample@gmail.com
 MAIL_FROM_NAME=SmileCycle
-MAIL_TO_NAME=smilecyclesample@gmail.com
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=

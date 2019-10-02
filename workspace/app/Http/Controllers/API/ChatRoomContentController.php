@@ -53,7 +53,7 @@ class ChatRoomContentController extends AuthController
                             'then' => [
                                 '$size' => '$contents.already_read'
                             ],
-                            'else' => -1                       
+                            'else' => -1
                         ]
                     ]
                 ]
@@ -180,11 +180,13 @@ class ChatRoomContentController extends AuthController
         );
 
         /* 急ぎチャットならばメール通知ジョブをバックグラウンドで実行 */
-        /* メール通知を飛ばす */
-        $job = (new ProcessPodcast)->delay(3);
+        if ($chat['is_hurry']) {
+            /* メール通知を飛ばす */
+            $job = (new ProcessPodcast($chat_room_id, $chat))->delay(3);
 
-        // jobs テーブルに登録
-        dispatch($job);
+            // jobs テーブルに登録
+            dispatch($job);
+        }
 
         /* 返すレスポンスデータを整形 */
         $this->response['content'] = $chat;
