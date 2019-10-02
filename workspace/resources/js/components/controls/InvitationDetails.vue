@@ -9,7 +9,7 @@
                 <v-input v-model="text" counter :max="500" multiline>本文</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input-image v-model="images">画像</v-input-image>
+                <v-input-multiple-images v-model="images">画像</v-input-multiple-images>
             </div>
             <div class="input-wrapper">
                 <div class="input-title">招待者</div>
@@ -26,13 +26,13 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInput from "../VInput.vue";
-import VInputImage from "../VInputImage.vue";
+import VInputMultipleImages from "../VInputMultipleImages.vue";
 import VSelectMembers from "../VSelectMembers.vue";
 export default {
     components: {
         SecondaryView,
         VInput,
-        VInputImage,
+        VInputMultipleImages,
         VSelectMembers
     },
     data: function() {

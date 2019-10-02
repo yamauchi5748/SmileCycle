@@ -2,21 +2,16 @@
     <secondary-view>
         <template #title>スタンプ詳細</template>
         <template #body>
-            <div class="p-header-wrapper">
-                <img
-                    class="p-tab-stamp"
-                    :src="'/storage/images/stamps/' + stamp_group.tab_image_id + '.png'"
-                    alt="タブ画像"
-                />
-                <button class="normal-button">追加する</button>
+            <div class="input-wrapper">
+                <v-input-image class="p-stamp-upload" v-model="stamp_tab_image">タブ画像</v-input-image>
             </div>
-            <v-input-image class="p-stamp-upload"></v-input-image>
-            <ul class="p-stamp-list">
-                <li class="p-stamp-wrapper" v-for="(stamp,index) in stamp_list" :key="index">
-                    <button class="p-stamp-delete-button"></button>
-                    <img class="p-stamp" :src="'/stamp-images/' + stamp" />
-                </li>
-            </ul>
+            <div class="input-wrapper">
+                <v-input-multiple-images v-model="stamp_image_list">スタンプ</v-input-multiple-images>
+            </div>
+            <div class="buttons-wrapper --space-between">
+                <button class="flat-button">削除する</button>
+                <button class="normal-button">保存する</button>
+            </div>
         </template>
     </secondary-view>
 </template>
@@ -24,15 +19,19 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
+import VInputMultipleImages from "../VInputMultipleImages";
 export default {
     components: {
         VInputImage,
+        VInputMultipleImages,
         SecondaryView
     },
     data: function() {
         return {
             stamp_group: {},
-            stamp_list: []
+            stamp_list: [],
+            stamp_tab_image: null,
+            stamp_image_list: []
         };
     },
     created: function() {
@@ -57,6 +56,13 @@ export default {
                 return stamp_group._id == this.$route.params.id;
             });
             this.stamp_list = this.stamp_group.stamps;
+            this.stamp_group.stamps.forEach(stamp => {
+                this.stamp_image_list.push("/stamp-images/" + stamp);
+            });
+            this.stamp_tab_image =
+                "/storage/images/stamps/" +
+                this.stamp_group.tab_image_id +
+                ".png";
         }
     }
 };

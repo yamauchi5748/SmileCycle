@@ -3,10 +3,10 @@
         <template #title>スタンプ作成</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input-image v-model="tab_image" :max="1">タブ画像</v-input-image>
+                <v-input-image v-model="tab_image">タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
-                <v-input-image v-model="stamp_images">スタンプ</v-input-image>
+                <v-input-multiple-images v-model="stamp_images">スタンプ</v-input-multiple-images>
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
@@ -29,12 +29,13 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
+import VInputMultipleImages from "../VInputMultipleImages.vue";
 import VInputCheckbox from "../VInputCheckbox";
 import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
-            tab_image: ["/img/invitation-post-image.jpg"],
+            tab_image: "/img/invitation-post-image.jpg",
             is_all: false,
             stamp_images: [
                 "/img/invitation-post-image.jpg",
@@ -49,6 +50,7 @@ export default {
     },
     components: {
         VInputImage,
+        VInputMultipleImages,
         VInputCheckbox,
         VSelectMembers,
         SecondaryView
