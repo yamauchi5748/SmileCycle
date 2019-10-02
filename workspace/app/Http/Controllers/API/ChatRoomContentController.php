@@ -217,7 +217,7 @@ class ChatRoomContentController extends AuthController
                 ])->toArray());
 
                 /* メール通知を飛ばす */
-                $job = (new ProcessPodcast($room, $chat, $to_member))->delay(3);
+                $job = (new ProcessPodcast($room, $chat, $to_member));
 
                 // jobs テーブルに登録
                 dispatch($job);

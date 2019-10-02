@@ -14,7 +14,6 @@ use App\Models\ChatRoom;
 class ProcessPodcast implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     /** @var string view name */
     protected $view;
     /** @var array ビューに割り当てるデータ */
@@ -28,13 +27,12 @@ class ProcessPodcast implements ShouldQueue
             'from'    => env('MAIL_FROM_ADDRESS'),
             'f_name'  => env('MAIL_FROM_NAME'),
             'to'      => $to_member['mail'],
-            'to_name' => $to_member['mail'],
+            'to_name' => $to_member['name'],
             'subject' => 'テストメールです'
         ];
 
         /**
          * ここに配信用メールアカウントを切り替える処理を追加
-         *
          **/
 
         /* メール本文を表示するbladeを設定 */
@@ -51,19 +49,14 @@ class ProcessPodcast implements ShouldQueue
             'sender_name' => $chat['sender_name']
         ];
     }
- 
-    /**
-     * @param Mailer $mailer
-     */
+
     public function handle(Mailer $mailer)
     {
-        /* 設定された会員分メール送信ジョブを実行 */
-        foreach ($this->mails as $mail) {
-            $mailer->send($this->view, $this->data, function ($message) use ($mail) {
-                $message->subject($mail['subject'])
-                        ->from($mail['from'], $mail['f_name'])
-                        ->to($mail['to'], $mail['to_name']);
-            });
-        }
+        $mail = $this->mail;
+        $mailer->send($this->view, $this->data, function ($message) use ($mail) {
+            $message->subject($mail['subject'])
+                    ->from($mail['from'], $mail['f_name'])
+                    ->to($mail['to'], $mail['to_name']);
+        });
     }
 }
