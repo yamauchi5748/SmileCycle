@@ -20,11 +20,6 @@ class HomeController extends AuthController
     public function __construct()
     {
         $this->middleware('auth');
-
-        /* メール通知を飛ばす */
-        $job = (new ProcessPodcast)->delay(3);
-        // jobs テーブルに登録
-        dispatch($job);
     }
 
     /**

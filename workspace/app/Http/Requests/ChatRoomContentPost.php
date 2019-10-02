@@ -44,7 +44,6 @@ class ChatRoomContentPost extends FormRequest
      */
     public function rules()
     {
-        \Log::debug(request());
         return [
             'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
             'is_hurry' => ['required', 'boolean'],
