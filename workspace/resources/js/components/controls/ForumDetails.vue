@@ -3,7 +3,7 @@
         <template #title>みんなの掲示板詳細</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input v-model="title" counter :max="25">タイトル</v-input>
+                <v-input v-model="title" counter :max="20">タイトル</v-input>
             </div>
             <div class="input-wrapper">
                 <v-input v-model="text" counter :max="500" multiline>本文</v-input>

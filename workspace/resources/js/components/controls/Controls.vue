@@ -14,10 +14,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-controls {
+    height: 100%;
     display: grid;
     grid-template-columns: 180px 1fr;
+    grid-template-rows: 1fr;
 }
+
 .p-content {
+    overflow-y: scroll;
     border-left: solid 1px rgba(0, 0, 0, 0.2);
     border-right: solid 1px rgba(0, 0, 0, 0.2);
 }
