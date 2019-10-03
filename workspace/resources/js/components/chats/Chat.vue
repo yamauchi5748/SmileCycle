@@ -25,7 +25,7 @@
                 <div>
                     <div class="modal-header">
                         <span class="title">グループ作成</span>
-                        <span class="close" v-on:click="hiddenCreateGroupModal">×</span>
+                        <button class="close" v-on:click="hiddenCreateGroupModal">×</button>
                     </div>
                     <div class="input-group-name">
                         <input type="text" placeholder="グループ名を入力してください。">
@@ -185,14 +185,13 @@ export default {
         font-weight: bold;
         border-bottom: 1px solid #707070;
         
-        span {
-        }
-
         .title {
             flex: 8;
+            line-height: 40px;
         }
         .close {
             flex: 1;
+            font-weight: bold;
         }
 
 
@@ -217,6 +216,5 @@ export default {
       .flat-button {
       }
    }
-
 }
 </style>
