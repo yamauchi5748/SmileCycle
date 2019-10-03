@@ -21,15 +21,6 @@
             <router-view name="details" v-bind:showDetails="showDetails" v-if="showDetails === true">
                 <h1>{{ roomName }}</h1>
             </router-view>
-            <div class="create-group-modal">
-                <div>
-                    <span>グループ作成</span>
-                    <span>×</span>
-                </div>
-                <input type="text" placeholder="グループ名を入力してください。">
-                <button class="normal-button">作成</button>
-                <button class="flat-button">キャンセル</button>
-            </div>
         </div>
     </div>
 </template>

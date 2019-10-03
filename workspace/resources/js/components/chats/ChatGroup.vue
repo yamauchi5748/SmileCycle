@@ -1,29 +1,24 @@
 <template>
-  <div>
-    <ol>
-      <li
-        class="room-container"
-        v-on:click="getName(room)"
-        v-for="(room) in room_list"
-        :key="room._id"
-      >
-        <img class="profile" src="/img/profile_image.jpg" />
-        <div class="room-box-wrapper">
-          <div class="room-box">
-            <span class="room-name">{{ room.name }}</span>
-            <span class="room-count">({{ room.members.length }})</span>
-          </div>
-          <p
-            class="room-first-content"
-            v-if="room.contents.length > 0"
-          >{{ room.contents[0].content }}</p>
+  <ul>
+    <li
+      class="room-container"
+      v-on:click="getName(room)"
+      v-for="(room) in room_list"
+      :key="room._id"
+    >
+      <img class="profile" src="/img/profile_image.jpg" />
+      <div class="room-box-wrapper">
+        <div class="room-box">
+          <span class="room-name">{{ room.name }}</span>
+          <span class="room-count">({{ room.members.length }})</span>
         </div>
-        <div class="unread-box" v-show="unread(room) > 0">
-          <span class="unread-text">{{ unread(room) }}</span>
-        </div>
-      </li>
-    </ol>
-  </div>
+        <p class="room-first-content" v-if="room.contents.length > 0">{{ room.contents[0].content }}</p>
+      </div>
+      <div class="unread-box" v-show="unread(room) > 0">
+        <span class="unread-text">{{ unread(room) }}</span>
+      </div>
+    </li>
+  </ul>
 </template>
 <script>
 export default {
@@ -95,6 +90,8 @@ export default {
 
 <style lang="scss" scoped>
 .room-container {
+  display: flex;
+  margin-bottom: 6%;
   cursor: pointer;
 }
 
@@ -137,7 +134,8 @@ export default {
 .unread-box {
   width: 30px;
   height: 30px;
-  background-color: lawngreen;
+  background-color: $accent-color;
+  color: white;
   border-radius: 50%;
   .unread-text {
     position: relative;
