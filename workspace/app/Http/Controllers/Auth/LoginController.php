@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -88,6 +89,12 @@ class LoginController extends Controller
      */
     public function logout()
     {
+        $member = Auth::user();
+
+        // api_tokenの更新
+        $member->api_token = Str::random(60);
+        $member->save();
+
         Auth::logout();
         return 'successed logout';
     }
