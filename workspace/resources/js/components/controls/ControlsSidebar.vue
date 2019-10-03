@@ -42,12 +42,10 @@ export default {};
 
 <style lang="scss" scoped>
 @media screen and (max-width: $inner-width) {
-    .p-sidebar-header {
-        display: block;
-    }
 }
-.p-sidebar-header {
-    display: none;
+.p-sidebar {
+    height: 100%;
+    border-right: solid 1px $gray;
 }
 .p-sidebar-content {
     width: 100%;

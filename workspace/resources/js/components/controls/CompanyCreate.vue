@@ -6,7 +6,7 @@
                     <v-input v-model="name" counter :max="140">会社名</v-input>
                 </div>
                 <div class="input-wrapper">
-                    <v-input v-model="address">住所</v-input>
+                    <v-input v-model="address" counter :max="128">住所</v-input>
                 </div>
                 <div class="input-wrapper">
                     <v-input v-model="phone_number">電話番号</v-input>
