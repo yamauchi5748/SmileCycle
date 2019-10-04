@@ -1,19 +1,24 @@
 <template>
     <ul class="p-list">
-        <template v-for="(members,name) in departments">
-            <li class="p-header-item" :key="name">
-                <div class="p-item-cell">
-                    <v-input-checkbox @change="checkAll(name)" v-model="attendDepartments[name]"></v-input-checkbox>
-                </div>
-                <div class="p-item-cell">{{name}}</div>
-            </li>
-            <li class="p-body-item" v-for="member in members" :key="member._id">
-                <div class="p-item-cell">
-                    <v-input-checkbox v-model="attend[member._id]"></v-input-checkbox>
-                </div>
-                <div class="p-item-cell">{{member.name}}</div>
-            </li>
-        </template>
+        <li class="p-department-list" v-for="(members,name) in departments" :key="name">
+            <ul class="p-department-wrapper">
+                <li class="p-header-item" :key="name">
+                    <div class="p-item-cell">
+                        <v-input-checkbox
+                            @change="checkAll(name)"
+                            v-model="attendDepartments[name]"
+                        ></v-input-checkbox>
+                    </div>
+                    <div class="p-item-cell">{{name}}</div>
+                </li>
+                <li class="p-body-item" v-for="member in members" :key="member._id">
+                    <div class="p-item-cell">
+                        <v-input-checkbox v-model="attend[member._id]"></v-input-checkbox>
+                    </div>
+                    <div class="p-item-cell">{{member.name}}</div>
+                </li>
+            </ul>
+        </li>
     </ul>
 </template>
 
@@ -86,18 +91,24 @@ export default {
 .p-list {
     position: relative;
     width: 100%;
+    height: 700px;
+    overflow-y: scroll;
     border-collapse: collapse;
     border: solid 1px $gray;
+    border-radius: 8px;
     %list-item {
         display: flex;
         height: 64px;
-        border-collapse: collapse;
+        border-bottom: solid 1px $gray;
+        background-color: $base-color;
         justify-content: flex-start;
         align-items: center;
     }
     .p-header-item {
         @extend %list-item;
-        border-bottom: solid 1px $gray;
+        position: sticky;
+        top: 0;
+        z-index: 2;
         div {
             font-size: 18px;
             font-weight: 700;
@@ -110,12 +121,15 @@ export default {
             background-color: $gray;
         }
     }
-    .p-body-item + .p-body-item {
-        border-top: solid 1px $gray;
-    }
+
     .p-item-cell {
         display: inline-block;
         margin-left: 24px;
+    }
+    .p-department-list:last-child {
+        %list-item:last-child {
+            border-bottom: unset;
+        }
     }
 }
 </style>
