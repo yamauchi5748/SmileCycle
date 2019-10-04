@@ -43,7 +43,6 @@ export default {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
-    overflow: hidden;
 }
 .p-header{
     height:60px;
