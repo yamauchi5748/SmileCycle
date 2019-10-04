@@ -100,7 +100,7 @@ export default {
         display: flex;
         height: 64px;
         border-bottom: solid 1px $gray;
-        //background-color: $base-color;
+        background-color: $base-color;
         justify-content: flex-start;
         align-items: center;
     }
