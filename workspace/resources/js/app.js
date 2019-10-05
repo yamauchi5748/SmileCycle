@@ -60,7 +60,7 @@ const router = new VueRouter({
         {
             path: "/members",
             component: Members
-          },
+        },
         {
             path: "/controls",
             component: Controls,
@@ -168,7 +168,10 @@ const app = new Vue({
                     console.log(error);
                 });
         },
-
+        createMember: function (member_property) {
+            return axios.post('/api/members', member_property)
+                .then(res => this.checkAuth(res))
+        },
         /* 特定会員取得 */
         getMember: function (member_id) {
             return axios.get('/api/members/' + member_id)
@@ -184,6 +187,7 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     this.company_list = res.data.companies;
+                    return res;
                 })
                 .catch(error => {
                     console.log(error);
