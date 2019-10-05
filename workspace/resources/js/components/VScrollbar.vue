@@ -1,9 +1,13 @@
 <template>
   <div class="c-scrollbar_hider_wrapper" ref="scrollbar_hider_wrapper">
-    <div class="c-scrollbar_hider" ref="scrollbar_hider" @scroll="loadScrollValue">
+    <div
+      class="c-scrollbar_hider"
+      ref="scrollbar_hider"
+      @scroll="loadScrollValue($refs.scrollbar_hider.scrollTop)"
+    >
       <slot></slot>
     </div>
-    <div class="c-scrollbar_track">
+    <div class="c-scrollbar_track" v-show="is_scroll">
       <div
         class="c-scrollbar_bar"
         ref="scrollbar_bar"
@@ -22,21 +26,26 @@ export default {
   props: ["boxHeight"],
   data() {
     return {
+      is_scroll: false,
       box_height: this.boxHeight,
       scroll_box_height: 0,
       scrollbar_height: 100,
-      scrollbar_value: "translateY(0px)"
+      scrollbar_value: "translateY(0px)",
+      drag_screen: 0
     };
   },
+
   mounted: function() {
     // ウィンドウ幅の変更を検知するイベントを追加
     window.addEventListener("resize", this.handleResize);
     this.loadScrollBarHeight();
   },
+
   beforeDestroy: function() {
     // コンポーネント消滅時にイベントを削除
     window.removeEventListener("resize", this.handleResize);
   },
+
   methods: {
     handleResize: function() {
       // ウィンドウ幅が変わったタイミングで発火
@@ -45,12 +54,20 @@ export default {
 
     loadScrollBarHeight: function() {
       this.scroll_box_height = this.$refs.scrollbar_hider_wrapper.clientHeight;
+      this.is_scroll = this.box_height - this.scroll_box_height > 0;
+
+      // スクロールバーの大きさ
+      const percentage = this.scroll_box_height / this.box_height;
+      this.scrollbar_height =
+        this.scroll_box_height * percentage > 56
+          ? this.scroll_box_height * percentage
+          : 56;
     },
 
-    loadScrollValue: function() {
+    loadScrollValue: function(scroll_value) {
+      // スクロールする割合
       const percentage =
-        this.$refs.scrollbar_hider.scrollTop /
-        (this.box_height - this.scroll_box_height);
+        scroll_value / (this.box_height - this.scroll_box_height);
 
       const top_height =
         (this.scroll_box_height - this.scrollbar_height - 20) * percentage;
@@ -58,6 +75,7 @@ export default {
       this.scrollbar_value = "translateY(" + top_height + "px)";
     }
   },
+
   watch: {
     boxHeight: function(val, oldVal) {
       this.box_height = val;
@@ -84,6 +102,7 @@ export default {
   bottom: 0;
   height: 100%;
   transform: translateZ(0);
+  scroll-behavior: smooth;
 }
 
 .c-sidebar {
@@ -100,11 +119,11 @@ export default {
 }
 
 .c-scrollbar_track {
+  width: 8px;
   position: absolute;
   right: 4px;
   top: 4px;
   bottom: 4px;
-  width: 8px;
   &:before {
     content: "";
     position: absolute;
@@ -117,18 +136,17 @@ export default {
 }
 
 .c-scrollbar_bar {
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   border-radius: 4px;
   background: $accent-color;
   opacity: 0.5;
   cursor: default;
   outline: none;
-  z-index: 1;
   will-change: transform;
-  height: 370.671px;
+  height: 100px;
   transform: translateY(10px);
 }
 </style>

@@ -7,10 +7,10 @@
           :to="{name:'chat-room',params:{id: room._id}}"
         >
           <figure>
-            <img class="margin-right-smallest p-room-profile" src="/img/profile_image.jpg" />
+            <img class="p-room-profile" src="/img/profile_image.jpg" />
           </figure>
           <div
-            class="layout-flex --flex-direction-column --justify-content-center margin-left-smallest p-room-primary-box-wrapper"
+            class="layout-flex --flex-direction-column --justify-content-center p-room-primary-box-wrapper"
           >
             <div class="margin-bottom-smaller p-room-primary-box">
               <span>{{ room.name }}</span>

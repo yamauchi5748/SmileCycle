@@ -6,6 +6,7 @@ require('./bootstrap');
 Vue.use(VueRouter)
 import NewChat from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
+import CreateChatRoom from "./components/chat/CreateRoomModal.vue";
 
 import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
@@ -39,7 +40,12 @@ const router = new VueRouter({
                     path: ":id",
                     name: "chat-room",
                     component: ChatRoom
-                }
+                },
+                {
+                    path: "room/create",
+                    name: "chat-room-create",
+                    component: CreateChatRoom
+                },
             ]
         },
         {
@@ -73,7 +79,7 @@ const router = new VueRouter({
         {
             path: "/members",
             component: Members
-          },
+        },
         {
             path: "/controls",
             component: Controls,

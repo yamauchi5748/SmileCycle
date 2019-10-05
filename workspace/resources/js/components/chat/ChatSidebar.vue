@@ -12,14 +12,12 @@
         @click="loadRoomType('member')"
       >会員</span>
     </nav>
-    <div class="layout-flex --align-items-center p-search-box">
-      <figure class="margin-left-small">
-        <img src="/img/search-icon.png" alt="検索アイコン" />
-      </figure>
-      <input type="text" placeholder="グループ名検索" />
-    </div>
+    <input class="p-search-box" type="text" placeholder="グループ名検索" />
+    <figure class="p-search-icon">
+      <img src="/img/search-icon.png" alt="検索アイコン" />
+    </figure>
     <room-list />
-    <button class="c-add-button p-add-button"></button>
+    <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
   </section>
 </template>
 <script>
@@ -63,56 +61,31 @@ export default {
 }
 
 .p-search-box {
-  margin: 18px 9px;
   height: 51px;
+  margin: 18px 9px;
+  padding-left: 29px;
+  font-size: 18px;
   background-color: $base-color;
+  color: #707070;
   border: 1px solid #707070;
   border-radius: 7px;
   box-shadow: 0 7px 17px -12px #202020;
-
-  input {
-    width: 90%;
-    font-size: 18px;
-    color: #707070;
-    border: none;
-    border-radius: inherit;
-    outline: none;
+  outline: none;
+  &:focus {
+    border-color: $accent-color;
+    box-shadow: 0 0 4px 4px #43b37e;
   }
+}
+
+.p-search-icon {
+  position: absolute;
+  top: 155px;
+  left: 18px;
 }
 
 .p-add-button {
+  position: absolute;
   bottom: 23px;
   left: 198px;
-}
-
-.c-add-button {
-  width: 52px;
-  height: 52px;
-  background-color: $accent-color;
-  color: white;
-  border-radius: 50%;
-  position: absolute;
-  box-shadow: 0 12px 23px -9px $black;
-  &:before {
-    content: "";
-    width: 14px;
-    border-bottom: solid;
-    color: $base-color;
-    position: absolute;
-    top: 24px;
-    left: 19px;
-  }
-  &:after {
-    content: "";
-    height: 14px;
-    border-left: solid;
-    color: $base-color;
-    position: absolute;
-    top: 18px;
-    left: 25px;
-  }
-  &:hover {
-    cursor: pointer;
-  }
 }
 </style>
