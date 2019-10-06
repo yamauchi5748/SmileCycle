@@ -1,5 +1,7 @@
 <template>
     <div class="members">
+       <MembersSerch class="serch"
+      ></MembersSerch>
         <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
@@ -13,7 +15,13 @@
 </template>
 
 <script>
+import MembersSerch from "./MembersSerche"
+
 export default{
+  name: "app",
+  components: {
+      MembersSerch
+  },
    data() {
        return{
          members: [
