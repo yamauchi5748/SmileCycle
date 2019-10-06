@@ -14,6 +14,6 @@ class Company extends Eloquent
 
     //　companyプロパティ
     protected $fillable = [
-        '_id', 'name', 'address', 'fax', 'telephone_number', 'members'
+        '_id', 'name', 'address', 'telephone_number', 'members'
     ];
 }
