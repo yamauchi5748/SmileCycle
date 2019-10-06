@@ -3,7 +3,7 @@
     <ul class="p-room-list" ref="room_list">
       <li class="margin-bottom-normal" v-for="(room, index) in room_list" :key="index">
         <router-link
-          class="layout-flex --justify-content-space-evenly"
+          class="layout-flex --justify-content-space-around"
           :to="{name:'chat-room',params:{id: room._id}}"
         >
           <figure>
@@ -235,7 +235,7 @@ a:-webkit-any-link {
 }
 
 .p-room-list {
-  width: 314px;
+  width: 304px;
   padding-bottom: 58px;
 }
 
@@ -255,6 +255,9 @@ a:-webkit-any-link {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  span {
+    font-weight: bold;
+  }
 }
 
 .p-room-first-content {

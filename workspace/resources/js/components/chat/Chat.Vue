@@ -14,6 +14,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-chats {
-    height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

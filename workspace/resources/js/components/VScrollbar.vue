@@ -94,6 +94,7 @@ export default {
 
 .c-scrollbar_hider {
   overflow-y: scroll;
+  overflow-x: hidden;
   outline: none;
   position: absolute;
   top: 0;
@@ -148,5 +149,6 @@ export default {
   will-change: transform;
   height: 100px;
   transform: translateY(10px);
+  z-index: 1;
 }
 </style>
