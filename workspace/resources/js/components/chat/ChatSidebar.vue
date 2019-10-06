@@ -12,11 +12,11 @@
         @click="loadRoomType('member')"
       >会員</span>
     </nav>
-    <input class="p-search-box" type="text" placeholder="グループ名検索" />
+    <input class="p-search-box" type="text" placeholder="グループ名検索" v-model="search_text" />
     <figure class="p-search-icon">
       <img src="/img/search-icon.png" alt="検索アイコン" />
     </figure>
-    <room-list />
+    <room-list :room-list="room_list" />
     <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
   </section>
 </template>
@@ -28,19 +28,47 @@ export default {
   },
   data() {
     return {
+      room_list: this.$root.chat_room_list,
+      search_text: "",
       room_type: "group"
     };
   },
+
+  mounted: function() {
+    this.$root
+      .loadChatRooms()
+      .then(res => {
+        this.room_list = this.$root.chat_room_list;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
   methods: {
     loadRoomType: function(type) {
       this.room_type = type;
+    }
+  },
+
+  watch: {
+    search_text: function(val, oldVal) {
+      this.room_list = this.$root.chat_room_list.filter(room => {
+        return room.group_name.indexOf(this.search_text) != -1;
+      });
+    },
+
+    room_type: function(val, oldVal) {
+      this.room_list = this.$root.chat_room_list.filter(room => {
+        return val == "group" ? room.is_group : !room.is_group;
+      });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .p-sidebar {
-  width: 314px;
+  width: 324px;
   background-color: rgba($sub-color, 0.45);
   display: flex;
   flex-direction: column;

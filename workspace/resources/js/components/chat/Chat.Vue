@@ -16,5 +16,6 @@ export default {
 .p-chats {
   height: 100%;
   overflow: hidden;
+  line-height: 1.4rem;
 }
 </style>
