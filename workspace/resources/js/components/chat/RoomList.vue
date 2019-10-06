@@ -76,7 +76,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 // リセット
-a:-webkit-any-link {
+a {
   color: #606060;
   text-decoration: none;
 }
