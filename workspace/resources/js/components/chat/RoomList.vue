@@ -4,7 +4,7 @@
       <li class="margin-bottom-normal" v-for="(room, index) in room_list" :key="index">
         <router-link class="layout-flex" :to="{name:'chat-room',params:{id: room._id}}">
           <figure class="p-room-profile-box">
-            <img class="p-room-profile" src="/img/profile_image.jpg" />
+            <img class="p-room-profile" :src="'/chat-rooms/' + room._id + '/profile-image'" />
           </figure>
           <div
             class="layout-flex --flex-direction-column --justify-content-center p-room-primary-box-wrapper"
