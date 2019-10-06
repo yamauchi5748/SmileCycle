@@ -86,6 +86,7 @@ export default {
     font-size: 14px;
   }
   span {
+    margin-bottom: 4px;
     font-size: 18px;
     font-weight: bold;
   }
