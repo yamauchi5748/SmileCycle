@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-flex p-chats">
+  <div class="p-chats">
     <chat-sidebar></chat-sidebar>
     <router-view></router-view>
   </div>
@@ -15,6 +15,8 @@ export default {
 <style lang="scss" scoped>
 .p-chats {
   height: 100%;
+  display: grid;
+  grid-auto-flow: column;
   overflow: hidden;
   line-height: 1.4rem;
 }
