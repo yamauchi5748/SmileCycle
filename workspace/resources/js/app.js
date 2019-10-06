@@ -249,6 +249,7 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     console.log(res.data);
+                    this.chat_room_list.splice(0, 0, res.data.chat_room);
                 })
                 .catch(error => {
                     console.log(error);

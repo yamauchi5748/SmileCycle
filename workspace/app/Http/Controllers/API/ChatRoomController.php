@@ -42,6 +42,19 @@ class ChatRoomController extends AuthController
                     'members' => 1,
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]
+                    ],
+                    'contents' => [
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$contents', []]
+                            ],
+                            'then' => [
+                                [
+                                    'already_read' => []
+                                ]
+                            ],
+                            'else' => '$contents'
+                        ]
                     ]
                 ]
             ],
@@ -63,7 +76,7 @@ class ChatRoomController extends AuthController
                             'then' => [
                                 '$size' => '$contents.already_read'
                             ],
-                            'else' => -1                          
+                            'else' => -1
                         ]
                     ]
                 ]

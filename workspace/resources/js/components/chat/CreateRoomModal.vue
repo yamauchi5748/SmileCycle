@@ -6,11 +6,12 @@
       <h2 class="p-modal-title">チャットグループを作成する</h2>
       <div class="layout-flex --flex-direction-column p-group-box">
         <span>グループ名</span>
-        <span class="alert">ルーム名が入力されていません</span>
+        <span class="alert" v-show="name_alert">ルーム名が入力されていません</span>
         <input class="p-name-input" type="text" placeholder="グループ名" v-model="group_name" />
       </div>
       <div class="p-group-box">
         <span>参加する会員</span>
+        <span class="alert" v-show="members_alert">参加する会員が選択されていません</span>
         <v-scrollbar class="p-list-box" :box-height="box_height">
           <v-select-members v-model="members" ref="list_box"></v-select-members>
         </v-scrollbar>
@@ -37,7 +38,9 @@ export default {
       intervalId: undefined,
       box_height: 0,
       group_name: "",
-      members: []
+      members: [],
+      name_alert: false,
+      members_alert: false
     };
   },
 
@@ -57,12 +60,17 @@ export default {
     },
 
     roomCreate: function() {
+      this.name_alert = this.group_name.length < 1; // グループ名が入力されていなければアラート
+      this.members_alert = this.members.length < 1; // 参加する会員が選択されていなければアラート
+      if (this.name_alert || this.members_alert) return;
+
       const data = {
         is_group: true,
         group_name: this.group_name,
         members: this.members
       };
-      console.log(data);
+      this.$root.createChatRoom(data);
+      this.$router.back();
     }
   }
 };
@@ -89,6 +97,10 @@ export default {
 
 .p-group-box {
   width: 100%;
+  .alert {
+    color: #ac1f1f;
+    font-size: 14px;
+  }
   span {
     margin-bottom: 8px;
     font-size: 18px;
@@ -125,10 +137,5 @@ export default {
   position: absolute;
   top: 20px;
   right: 20px;
-}
-
-.alert {
-  color: #ac1f1f;
-  font-size: 10px;
 }
 </style>
