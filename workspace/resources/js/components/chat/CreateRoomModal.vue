@@ -1,7 +1,7 @@
 <template>
   <section class="layout-flex --flex-direction-column --align-items-center p-modal">
     <div
-      class="layout-flex --flex-direction-column --justify-content-space-around --align-self-center p-modal-content"
+      class="margin-top-big layout-flex --flex-direction-column --justify-content-space-around --align-self-center p-modal-content"
     >
       <h2 class="p-modal-title">チャットグループを作成する</h2>
       <div class="layout-flex --flex-direction-column p-group-box">
@@ -9,12 +9,10 @@
         <span class="alert" v-show="name_alert">ルーム名が入力されていません</span>
         <input class="p-name-input" type="text" placeholder="グループ名" v-model="group_name" />
       </div>
-      <div class="p-group-box">
+      <div class="layout-flex --flex-direction-column p-group-box">
         <span>参加する会員</span>
         <span class="alert" v-show="members_alert">参加する会員が選択されていません</span>
-        <v-scrollbar class="p-list-box" :box-height="box_height">
-          <v-select-members v-model="members" ref="list_box"></v-select-members>
-        </v-scrollbar>
+        <v-select-members class="p-list-box" v-model="members" ref="list_box"></v-select-members>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
         <router-link class="normal-button p-cancel-btn" :to="'/chat-rooms'">キャンセル</router-link>
@@ -44,21 +42,7 @@ export default {
     };
   },
 
-  mounted: function() {
-    // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 10);
-  },
-
-  beforeDestroy() {
-    // ポーリングによるイベントをリセット
-    clearInterval(this.intervalId);
-  },
-
   methods: {
-    resizeEvent: function() {
-      this.box_height = this.$refs.list_box.$el.clientHeight;
-    },
-
     roomCreate: function() {
       this.name_alert = this.group_name.length < 1; // グループ名が入力されていなければアラート
       this.members_alert = this.members.length < 1; // 参加する会員が選択されていなければアラート
@@ -102,7 +86,6 @@ export default {
     font-size: 14px;
   }
   span {
-    margin-bottom: 8px;
     font-size: 18px;
     font-weight: bold;
   }
@@ -110,7 +93,6 @@ export default {
 
 .p-list-box {
   height: 392px;
-  margin-top: 8px;
 }
 
 .p-name-input {

@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 require('./bootstrap');
 
 Vue.use(VueRouter)
-import NewChat from "./components/chat/Chat.vue";
+import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
 import CreateChatRoom from "./components/chat/CreateRoomModal.vue";
 
@@ -34,7 +34,7 @@ const router = new VueRouter({
     routes: [
         {
             path: "/chat-rooms",
-            component: NewChat,
+            component: ChatRooms,
             children: [
                 {
                     path: ":id",

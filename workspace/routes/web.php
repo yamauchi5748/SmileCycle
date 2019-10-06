@@ -30,7 +30,7 @@ Route::get('/invitations/{invitation_id}/images/{image_id}', 'ImageController@in
 Route::get('/forums/{forum_id}/images/{image_id}', 'ImageController@forumImage')->name("forum.image");
 
 // chat.image
-Route::get('/chat-rooms/{chat_room_id}/profile-image', 'ImageController@chatRoomProfileImage')->name("chat_room.image");
+Route::get('/chat-rooms/{chat_room_id}/profile-image', 'ImageController@chatRoomProfileImage')->name("chat_room.profile_image");
 Route::get('/chat-rooms/{chat_room_id}/images/{image_id}', 'ImageController@chatRoomImage')->name("chat_room.image");
 
 //home
