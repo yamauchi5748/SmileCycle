@@ -242,6 +242,18 @@ const app = new Vue({
                     console.log(error);
                 });
         },
+
+        /* チャットグループ作成 */
+        createChatRoom: function (data) {
+            return axios.post('/api/chat-rooms', data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
     }
 });
 

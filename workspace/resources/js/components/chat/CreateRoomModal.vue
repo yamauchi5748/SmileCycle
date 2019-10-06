@@ -6,7 +6,8 @@
       <h2 class="p-modal-title">チャットグループを作成する</h2>
       <div class="layout-flex --flex-direction-column p-group-box">
         <span>グループ名</span>
-        <input class="p-name-input" type="text" placeholder="グループ名" />
+        <span class="alert">ルーム名が入力されていません</span>
+        <input class="p-name-input" type="text" placeholder="グループ名" v-model="group_name" />
       </div>
       <div class="p-group-box">
         <span>参加する会員</span>
@@ -16,7 +17,7 @@
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
         <router-link class="normal-button p-cancel-btn" :to="'/chat-rooms'">キャンセル</router-link>
-        <button class="normal-button">作成</button>
+        <button class="normal-button" @click="roomCreate">作成</button>
       </div>
       <router-link class="c-esc-button p-esc-btn" :to="'/chat-rooms'" />
     </div>
@@ -35,6 +36,7 @@ export default {
     return {
       intervalId: undefined,
       box_height: 0,
+      group_name: "",
       members: []
     };
   },
@@ -52,6 +54,15 @@ export default {
   methods: {
     resizeEvent: function() {
       this.box_height = this.$refs.list_box.$el.clientHeight;
+    },
+
+    roomCreate: function() {
+      const data = {
+        is_group: true,
+        group_name: this.group_name,
+        members: this.members
+      };
+      console.log(data);
     }
   }
 };
@@ -114,5 +125,10 @@ export default {
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+.alert {
+  color: #ac1f1f;
+  font-size: 10px;
 }
 </style>
