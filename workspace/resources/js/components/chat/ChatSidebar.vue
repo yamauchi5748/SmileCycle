@@ -68,7 +68,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-sidebar {
-  width: 324px;
   background-color: rgba($sub-color, 0.45);
   display: flex;
   flex-direction: column;
@@ -94,7 +93,7 @@ export default {
   padding-left: 29px;
   font-size: 18px;
   background-color: $base-color;
-  color: #707070;
+  color: $black;
   border: 1px solid #707070;
   border-radius: 7px;
   box-shadow: 0 7px 17px -12px #202020;

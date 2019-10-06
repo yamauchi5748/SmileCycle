@@ -16,8 +16,7 @@ export default {
 .p-chats {
   height: 100%;
   display: grid;
-  grid-auto-flow: column;
-  overflow: hidden;
+  grid-template-columns: 324px 1fr;
   line-height: 1.4rem;
 }
 </style>

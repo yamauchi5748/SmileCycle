@@ -178,15 +178,15 @@ export default {
   flex-grow: 1;
   flex-direction: column;
   background-color: $base-color;
-  height: 800px;
+  height: 100%;
   div {
     margin: 0px;
     margin-top: 20px;
   }
 
   .name {
-    border-bottom: 1px solid #707070;
-    height: 48px;
+    border-bottom: .1px solid #707070;
+    height: 43px;
     padding: 0 16px;
     justify-content: flex-start;
     align-items: center;
@@ -199,7 +199,7 @@ export default {
   .contents {
     margin: 0 auto;
     width: 93%;
-    height: 100%;
+    height: 727px;
     flex-direction: column;
     position: relative;
     overflow-y: hidden;
