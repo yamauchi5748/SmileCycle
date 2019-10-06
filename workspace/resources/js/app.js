@@ -4,6 +4,9 @@ import VueRouter from 'vue-router'
 require('./bootstrap');
 
 Vue.use(VueRouter)
+import NewChat from "./components/chat/Chat.vue";
+import ChatRoom from "./components/chat/ChatRoom.vue";
+import CreateChatRoom from "./components/chat/CreateRoomModal.vue";
 
 import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
@@ -29,6 +32,22 @@ import Axios from 'axios';
 const router = new VueRouter({
     mode: "history",
     routes: [
+        {
+            path: "/chat-rooms",
+            component: NewChat,
+            children: [
+                {
+                    path: ":id",
+                    name: "chat-room",
+                    component: ChatRoom
+                },
+                {
+                    path: "room/create",
+                    name: "chat-room-create",
+                    component: CreateChatRoom
+                },
+            ]
+        },
         {
             path: "/chats/",
             component: Chat,

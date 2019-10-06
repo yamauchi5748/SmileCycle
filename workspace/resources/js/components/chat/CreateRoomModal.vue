@@ -1,0 +1,118 @@
+<template>
+  <section class="layout-flex --flex-direction-column --align-items-center p-modal">
+    <div
+      class="layout-flex --flex-direction-column --justify-content-space-around --align-self-center p-modal-content"
+    >
+      <h2 class="p-modal-title">チャットグループを作成する</h2>
+      <div class="layout-flex --flex-direction-column p-group-box">
+        <span>グループ名</span>
+        <input class="p-name-input" type="text" placeholder="グループ名" />
+      </div>
+      <div class="p-group-box">
+        <span>参加する会員</span>
+        <v-scrollbar class="p-list-box" :box-height="box_height">
+          <v-select-members v-model="members" ref="list_box"></v-select-members>
+        </v-scrollbar>
+      </div>
+      <div class="layout-flex --justify-content-space-around p-group-box">
+        <router-link class="normal-button p-cancel-btn" :to="'/chat-rooms'">キャンセル</router-link>
+        <button class="normal-button">作成</button>
+      </div>
+      <router-link class="c-esc-button p-esc-btn" :to="'/chat-rooms'" />
+    </div>
+  </section>
+</template>
+<script>
+import VSelectMembers from "../VSelectMembers";
+import VScrollbar from "../VScrollbar";
+export default {
+  components: {
+    VSelectMembers,
+    VScrollbar
+  },
+
+  data: function() {
+    return {
+      intervalId: undefined,
+      box_height: 0,
+      members: []
+    };
+  },
+
+  mounted: function() {
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, 10);
+  },
+
+  beforeDestroy() {
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
+  },
+
+  methods: {
+    resizeEvent: function() {
+      this.box_height = this.$refs.list_box.$el.clientHeight;
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.p-modal {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: $base-color;
+  z-index: 2;
+}
+
+.p-modal-content {
+  width: 700px;
+  min-height: 700px;
+  position: relative;
+}
+
+.p-modal-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.p-group-box {
+  width: 100%;
+  span {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+.p-list-box {
+  height: 392px;
+  margin-top: 8px;
+}
+
+.p-name-input {
+  height: 51px;
+  padding-left: 29px;
+  font-size: 18px;
+  background-color: $base-color;
+  color: $black;
+  border: 1px solid #707070;
+  border-radius: 7px;
+  box-shadow: 0 7px 17px -12px #202020;
+  outline: none;
+  &:focus {
+    border-color: $accent-color;
+    box-shadow: 0 0 4px 4px #43b37e;
+  }
+}
+
+.p-cancel-btn {
+  background-color: darkgray;
+}
+
+.p-esc-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+</style>
