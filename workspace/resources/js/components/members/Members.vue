@@ -1,7 +1,7 @@
 <template>
     <div class="members">
       <MembersSerch class="serch"></MembersSerch>
-      <MembersTabMeny class="tab"></MembersTabMeny>
+     <MembersTabMeny class="tab"></MembersTabMeny>
         <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
@@ -16,13 +16,13 @@
 
 <script>
 import MembersSerch from "./MembersSerche"
-import MembersTabMenuc from"./MembersTabMenu"
+import MembersTabMenu from"./MembersTabMenu"
 
 export default{
   name: "app",
   components: {
       MembersSerch,
-      MembersTabMenuc
+      MembersTabMenu 
   },
    data() {
        return{
@@ -33,7 +33,21 @@ export default{
            { id: 4, icon: 'sample', name: '渡邊小輝', post: '平社員',  company: '株式会社セキ' },
          ]
        }
-  }
+  } 
+/*
+検索の処理（予定）
+  computed: {
+    filteredUsers: function() {
+      for(var i in this.users) {
+        var user = this.users[i];
+      if(user.name.indexOf(this.keyword) !== -1) {
+        this.users.push(user);
+      }else{
+         this.users.push(user);
+      }
+      }
+    return this.users;
+    */
 }
 </script>
 
@@ -128,8 +142,13 @@ export default{
     color: rgba(149, 149, 149, 0.87);
   }
    .serch{
-     margin-top : 120px ;
-    margin-left : 250px ;
+    margin-top : -0px ;
+    margin-left : 600px ;
+    margin-bottom: 30px;
+  }
+   .tab{
+    margin-top : -60px ;
+    margin-left : 0px ;
     margin-bottom: 30px;
   }
 </style>
