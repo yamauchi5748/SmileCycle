@@ -125,4 +125,9 @@ export default{
     text-align: left;
     color: rgba(149, 149, 149, 0.87);
   }
+   .serch{
+     margin-top : 120px ;
+    margin-left : 250px ;
+    margin-bottom: 30px;
+  }
 </style>
