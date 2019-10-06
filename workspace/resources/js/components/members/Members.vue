@@ -2,6 +2,8 @@
     <div class="members">
        <MembersSerch class="serch"
       ></MembersSerch>
+      <MembersTabMeny class="tab"
+      ></MembersTabMeny>
         <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
@@ -16,11 +18,13 @@
 
 <script>
 import MembersSerch from "./MembersSerche"
+import MembersTabMenuc from"./MembersTabMenu"
 
 export default{
   name: "app",
   components: {
-      MembersSerch
+      MembersSerch,
+      MembersTabMenuc
   },
    data() {
        return{
