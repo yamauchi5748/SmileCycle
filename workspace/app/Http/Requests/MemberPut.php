@@ -50,7 +50,7 @@ class MemberPut extends FormRequest
             'mail' => ['required', 'email', 'max:256'],
             'secretary_name' => ['required_with:secretary_mail','string', 'max:15', 'min:2'],
             'secretary_mail' => ['required_with:secretary_name', 'email'],
-            'password' => ['required' ,'string', 'min:8', 'confirmed']
+            'password' => ['string', 'min:8', 'confirmed']
         ];
     }
 
