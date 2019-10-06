@@ -79,7 +79,7 @@ export default {
 .p-modal {
   width: 100%;
   height: 100%;
-  position: fixed;
+  position: absolute;
   background-color: $base-color;
   z-index: 2;
 }
