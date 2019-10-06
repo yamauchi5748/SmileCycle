@@ -42,7 +42,7 @@ class ImageController extends Controller
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        if(head($has_member_corsor)){
+        if (head($has_member_corsor)) {
             $image = storage_path('app/private/images/profile_images/' . $member_id . '.png');
 
             return response()->file($image);
@@ -72,7 +72,7 @@ class ImageController extends Controller
         ])->toArray();
 
         /* 認可できればスタンプを返す */
-        if(head($has_stamp_corsor)){
+        if (head($has_stamp_corsor)) {
             $image = storage_path('app/private/images/stamps/' . $image_id . '.png');
 
             return response()->file($image);
@@ -102,7 +102,7 @@ class ImageController extends Controller
         ])->toArray();
 
         /* 認可できれば画像を返す */
-        if(head($has_image_corsor)){
+        if (head($has_image_corsor)) {
             $image = storage_path('app/private/images/forums/' . $image_id . '.png');
 
             return response()->file($image);
@@ -136,16 +136,26 @@ class ImageController extends Controller
         ])->toArray();
         
         /* 管理者もしくは、認可できれば画像を返す */
-        if(head($has_image_corsor)){
+        if (head($has_image_corsor)) {
             $image = storage_path('app/private/images/invitations/' . $image_id . '.png');
 
             return response()->file($image);
         }
     }
 
-     /**
-     * 特定のチャットルームに投稿された画像
-     * 認可された画像を返す
+    /**
+    * 特定のチャットルームのプロフィール画像
+    **/
+    public function chatRoomProfileImage($chat_room_id)
+    {
+        $image = storage_path('app/private/images/chats/' . $chat_room_id . '.png');
+
+        return response()->file($image);
+    }
+
+    /**
+    * 特定のチャットルームに投稿された画像
+    * 認可された画像を返す
     **/
     public function chatRoomImage($chat_room_id, $image_id)
     {
@@ -168,7 +178,7 @@ class ImageController extends Controller
         ])->toArray();
         
         /* 認可できれば画像を返す */
-        if(head($has_image_corsor)){
+        if (head($has_image_corsor)) {
             $image = storage_path('app/private/images/chats/' . $image_id . '.png');
 
             return response()->file($image);
