@@ -33,7 +33,6 @@ export default {
 
   data: function() {
     return {
-      intervalId: undefined,
       box_height: 0,
       group_name: "",
       members: [],
