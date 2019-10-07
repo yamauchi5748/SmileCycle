@@ -41,6 +41,10 @@ export default {
     components: {
         TheGlobalHeader
     }
+  },
+  components: {
+    TheGlobalHeader
+  }
 };
 </script>
 

@@ -28,7 +28,6 @@ class CompanyPut extends FormRequest
         return [
             'name' => ['required', 'string', 'max:256'],
             'address' => ['required', 'string', 'max:128'],
-            'fax' => ['required', 'string', 'regex:/^\d{2,4}-\d{2,4}-\d{2,4}$/'],
             'telephone_number' => ['required', 'string', 'regex:/^\d{2,4}-\d{2,4}-\d{2,4}$/'],
         ];
     }

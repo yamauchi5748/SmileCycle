@@ -11,7 +11,6 @@ $factory->define(Company::class, function () {
         '_id' => (string) Str::uuid(),
         'name' => $faker->company,
         'address' => $faker->address,
-        'fax' => 'xxx-xxxx-xxxx',
         'telephone_number' => $faker->phoneNumber,
         'members' => []
     ];

@@ -21,14 +21,20 @@
             <router-view name="details" v-bind:showDetails="showDetails" v-if="showDetails === true">
                 <h1>{{ roomName }}</h1>
             </router-view>
-            <div class="create-group-modal">
+            <div class="create-group-modal" v-if="showCreateGroupModal">
                 <div>
-                    <span>グループ作成</span>
-                    <span>×</span>
+                    <div class="modal-header">
+                        <span class="title">グループ作成</span>
+                        <button class="close" v-on:click="hiddenCreateGroupModal">×</button>
+                    </div>
+                    <div class="input-group-name">
+                        <input type="text" placeholder="グループ名を入力してください。">
+                    </div>
                 </div>
-                <input type="text" placeholder="グループ名を入力してください。">
-                <button class="normal-button">作成</button>
-                <button class="flat-button">キャンセル</button>
+                <div class="modal-button">
+                    <button class="normal-button">作成</button>
+                    <button class="flat-button" v-on:click="hiddenCreateGroupModal">キャンセル</button>
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +45,8 @@ export default {
         return {
             type:  "group",
             roomName: "",
-            showDetails: false
+            showDetails: false,
+            showCreateGroupModal: false
         };
     },
     methods: {
@@ -54,7 +61,10 @@ export default {
             this.showDetails = true;
         },
         createGroup() {
-            alert("help");
+            this.showCreateGroupModal = true;
+        },
+        hiddenCreateGroupModal () {
+            this.showCreateGroupModal = false;
         }
     },
 };
@@ -157,15 +167,54 @@ export default {
    position: absolute;
    top: 30%;
    left: 29%;
-   
+   background-color: $base-color;
+   border-radius: 22px;
+   justify-content: space-around;
+    
    div {
-      font-size: 16px;
-   }
-   input {
-      height: 20px;
-      border: none;
-      border-bottom: 1px solid #707070;
+      flex-direction: column;
+      height: 45%;
+      margin: 10px;
    }
 
+    .modal-header {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: row;
+        font-size: 16px;
+        font-weight: bold;
+        border-bottom: 1px solid #707070;
+        
+        .title {
+            flex: 8;
+            line-height: 40px;
+        }
+        .close {
+            flex: 1;
+            font-weight: bold;
+        }
+
+
+    }
+    .input-group-name {
+        margin-top: 20px;
+        input {
+            height: 20px;
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #707070;
+       }
+   }
+   .modal-button {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 10px;
+      align-items: flex-end;
+      .normal-button {
+      }
+      .flat-button {
+      }
+   }
 }
 </style>

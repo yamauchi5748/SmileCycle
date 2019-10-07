@@ -29,7 +29,7 @@ class ChatRoomController extends AuthController
                 '$match' => [
                     'members._id' => [
                         '$in' => [$this->author->_id, '$members._id']
-                    ]
+                    ],
                 ]
             ],
             // コンテンツを最大10件取得
@@ -37,11 +37,25 @@ class ChatRoomController extends AuthController
                 '$project' => [
                     '_id' => 1,
                     'is_group' => 1,
+                    'is_department' => 1,
                     'admin_member_id' => 1,
                     'group_name' => 1,
                     'members' => 1,
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]
+                    ],
+                    'contents' => [
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$contents', []]
+                            ],
+                            'then' => [
+                                [
+                                    'already_read' => []
+                                ]
+                            ],
+                            'else' => '$contents'
+                        ]
                     ]
                 ]
             ],
@@ -63,9 +77,9 @@ class ChatRoomController extends AuthController
                             'then' => [
                                 '$size' => '$contents.already_read'
                             ],
-                            'else' => -1                          
+                            'else' => -1
                         ]
-                    ]
+                    ],
                 ]
             ],
             /* ルームをまとめる */
@@ -74,6 +88,9 @@ class ChatRoomController extends AuthController
                     '_id' => '$_id',
                     'is_group' => [
                         '$first' => '$is_group'
+                    ],
+                    'is_department' => [
+                        '$first' => '$is_department'
                     ],
                     'admin_member_id' => [
                         '$first' => '$admin_member_id'
@@ -92,6 +109,7 @@ class ChatRoomController extends AuthController
             /* コンテンツの投稿日時順にソート */
             [
                 '$sort' => [
+                    'is_department' => -1,
                     'contents.0.created_at' => -1
                 ]
             ]
@@ -126,7 +144,7 @@ class ChatRoomController extends AuthController
         $chat_group = [
             '_id' => (string) Str::uuid(),              // チャットグループのid
             'is_group' => $request->is_group,           // チャットグループの種類
-            'is_department' => false,                   // 部門チャットグループであるか
+            'is_department' => 0,                       // 部門チャットグループであるか
             'admin_member_id' => $this->author->_id,    // チャットグループの管理者
             'group_name' => $request->group_name,       // チャットグループのグループ名
             'members' => $request->members,             // チャットグループの会員
@@ -195,7 +213,7 @@ class ChatRoomController extends AuthController
             [
                 '$match' => [
                     '_id' => $chat_room_id,
-                    'is_department' => false,
+                    'is_department' => 0,
                     'admin_member_id' => $this->author->_id
                 ]
             ]
@@ -212,7 +230,7 @@ class ChatRoomController extends AuthController
         ChatRoom::raw()->updateOne(
             [
                 '_id' => $chat_room_id,
-                'is_department' => false,
+                'is_department' => 0,
                 'admin_member_id' => $this->author->_id
             ],
             [
@@ -272,7 +290,7 @@ class ChatRoomController extends AuthController
         ChatRoom::raw()->deleteOne(
             [
                 '_id' => $chat_room_id,
-                'is_department' => false,
+                'is_department' => 0,
                 'admin_member_id' => $this->author->_id
             ]
         );

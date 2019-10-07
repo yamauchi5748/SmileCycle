@@ -29,7 +29,7 @@ $factory->define(ChatRoom::class, function () {
     $chat_group = [
         '_id' => (string) Str::uuid(),
         'is_group' => true,
-        'is_department' => false,
+        'is_department' => 0,
         'admin_member_id' => $faker->randomElement($chat_members)['_id'],
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
         'members' => $chat_members,
