@@ -4,7 +4,12 @@
         <main class="p-content">
             <router-view></router-view>
             <!-- テストログイン要素 -->
-            <input type="button" value="logout" @click="logout" style="position: absolute; top: 2%; left: 50%;">
+            <input
+                type="button"
+                value="logout"
+                @click="logout"
+                style="position: absolute; top: 2%; left: 50%;"
+            />
         </main>
     </div>
 </template>
@@ -21,15 +26,16 @@ export default {
     },
     /* テスト用ログインメソッド */
     methods: {
-        logout: function () {
-            axios.post('/logout')
-            .then(res => {
-                console.log(res.data);
-                location.href = '/';
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        logout: function() {
+            axios
+                .post("/logout")
+                .then(res => {
+                    console.log(res.data);
+                    location.href = "/";
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     },
     components: {
@@ -39,12 +45,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.p-page{
+.p-page {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
 }
-.p-header{
-    height:60px;
+.p-header {
+    height: 60px;
 }
 </style>
