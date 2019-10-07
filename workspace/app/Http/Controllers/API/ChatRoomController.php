@@ -80,7 +80,7 @@ class ChatRoomController extends AuthController
                             ],
                             'then' => [
                                 [
-                                    'already_read' => []
+                                    'is_none' => true
                                 ]
                             ],
                             'else' => '$contents'
@@ -96,8 +96,16 @@ class ChatRoomController extends AuthController
             [
                 '$set' => [
                     'contents.unread' => [
-                        '$not' => [
-                            '$in' => [ $this->author->_id, '$contents.already_read']
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$contents.is_none', true]
+                            ],
+                            'then' => false,
+                            'else' => [
+                                '$not' => [
+                                    '$in' => [ $this->author->_id, '$contents.already_read']
+                                ]
+                            ]
                         ]
                     ],
                     'contents.already_read' => [

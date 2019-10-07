@@ -18,19 +18,34 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <room-list :room-list="room_list" />
+    <v-scrollbar :box-height="box_height">
+      <ul class="p-room-list" ref="list_box">
+        <li
+          class="margin-bottom-normal"
+          v-for="(room, index) in room_list"
+          :key="index"
+          @click="entryRoom(room)"
+        >
+          <room-item :room-item="room" />
+        </li>
+      </ul>
+    </v-scrollbar>
     <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
   </section>
 </template>
 <script>
-import RoomList from "./RoomList";
+import VScrollbar from "../VScrollbar";
+import RoomItem from "./RoomItem";
 export default {
   components: {
-    RoomList
+    VScrollbar,
+    RoomItem
   },
   data() {
     return {
-      room_list: this.$root.chat_room_list,
+      intervalId: undefined,
+      box_height: 0,
+      room_list: this.rooms,
       search_text: "",
       room_type: "",
       placeholder: ""
@@ -47,9 +62,29 @@ export default {
       .catch(error => {
         console.log(error);
       });
+
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, 50);
+  },
+
+  beforeDestroy() {
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
+  },
+
+  computed: {
+    rooms: function() {
+      return this.$root.chat_room_list.filter(room => {
+        return room.group_name.indexOf(this.search_text) != -1;
+      });
+    }
   },
 
   methods: {
+    resizeEvent: function() {
+      this.box_height = this.$refs.list_box.clientHeight;
+    },
+
     loadRoomType: function(type) {
       this.room_type = type;
       if (this.room_type === "group") {
@@ -57,13 +92,27 @@ export default {
       } else {
         this.placeholder = "会員名検索";
       }
+    },
+
+    // ルームへ入室
+    entryRoom: function(room) {
+      // 既読処理
+      let unread_contents_id = [];
+      for (const index in room.contents) {
+        if (room.contents[index].unread) {
+          room.contents[index].unread = false;
+          unread_contents_id.push(room.contents[index]._id);
+        }
+      }
+      if (unread_contents_id.length < 1) return;
+      this.$root.alreadyRead(room._id, unread_contents_id);
     }
   },
 
   watch: {
     search_text: function(val, oldVal) {
       this.room_list = this.$root.chat_room_list.filter(room => {
-        return room.group_name.indexOf(this.search_text) != -1;
+        return room.group_name.indexOf(val) != -1;
       });
     },
 
@@ -121,6 +170,11 @@ export default {
   position: absolute;
   top: 18px;
   left: 8px;
+}
+
+.p-room-list {
+  width: 304px;
+  padding-bottom: 58px;
 }
 
 .p-add-button {

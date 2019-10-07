@@ -275,16 +275,16 @@ class ChatRoomContentController extends AuthController
         ])->toArray();
         $unread_contents = head($contents)['contents'];
         
-        /* 対象のコンテンツを検索し、認証ユーザーを追加 */
+        /* 対象のコンテンツを探索し、認証ユーザーを追加 */
         foreach ($unread_contents as $content) {
             /* 既に既読しているかチェック */
             $contains = Arr::first($content->already_read, function ($value, $key) {
                 return $value == $this->author->_id;
             }, false);
-            if (!$contains) {
-                $content->already_read[] = $this->author->_id;
-            } else {
+            if ($contains) {
                 $this->response['result'] = false;
+            } else {
+                $content->already_read[] = $this->author->_id;
             }
         }
 
