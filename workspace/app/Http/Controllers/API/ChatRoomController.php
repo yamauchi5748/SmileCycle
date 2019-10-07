@@ -96,7 +96,13 @@ class ChatRoomController extends AuthController
             [
                 '$set' => [
                     'contents.unread' => [
-                        '$in' => [ $this->author->_id, '$contents.already_read']
+                        '$cond' => [
+                            'if' => [
+                                '$in' => [ $this->author->_id, '$contents.already_read']
+                            ],
+                            'then' => 0,
+                            'else' => 1
+                        ]
                     ],
                     'contents.already_read' => [
                         '$cond' => [
@@ -132,6 +138,9 @@ class ChatRoomController extends AuthController
                     ],
                     'contents' => [
                         '$push' => '$contents'
+                    ],
+                    'unread' => [
+                        '$sum' => '$contents.unread'
                     ]
                 ]
             ],

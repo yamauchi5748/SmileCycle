@@ -11,7 +11,7 @@
           >
             <div class="p-room-primary-box">
               <span>{{ room.group_name }}</span>
-              <span>({{ room.members.length }})</span>
+              <span v-show="room.is_group">({{ room.members.length }})</span>
             </div>
             <p class="p-room-first-content" v-if="room.contents.length > 0">
               <span v-if="room.contents[0].content_type == '1'">{{ room.contents[0].message }}</span>
@@ -19,8 +19,8 @@
               <span v-if="room.contents[0].content_type == '3'">画像を送信しました</span>
             </p>
           </div>
-          <div class="--align-self-center p-unread-box" v-show="unreadCount(room)">
-            <span>{{ unread_count }}</span>
+          <div class="--align-self-center p-unread-box" v-show="unreadCount(index)">
+            <span>{{ room.unread }}</span>
           </div>
         </router-link>
       </li>
@@ -39,7 +39,6 @@ export default {
       intervalId: undefined,
       room_list: this.roomList,
       box_height: 0,
-      unread_count: 0
     };
   },
 
@@ -58,12 +57,14 @@ export default {
       this.box_height = this.$refs.list_box.clientHeight;
     },
 
-    unreadCount: function(room) {
-      const unread_contents = room.contents.filter(content => {
-        return content.unread;
-      });
-      this.unread_count = unread_contents.length;
-      return this.unread_count;
+    unreadCount: function(index) {
+      this.room_list[index].unread = this.room_list[index].contents.filter(
+        content => {
+          return content.unread;
+        }
+      ).length;
+
+      return this.room_list[index].unread;
     }
   },
 

@@ -12,10 +12,12 @@
         @click="loadRoomType('member')"
       >会員</span>
     </nav>
-    <input class="p-search-box" type="text" placeholder="グループ名検索" v-model="search_text" />
-    <figure class="p-search-icon">
-      <img src="/img/search-icon.png" alt="検索アイコン" />
-    </figure>
+    <div class="p-search-box-wrapper">
+      <input class="p-search-box" type="text" :placeholder="placeholder" v-model="search_text" />
+      <figure class="p-search-icon">
+        <img src="/img/search-icon.png" alt="検索アイコン" />
+      </figure>
+    </div>
     <room-list :room-list="room_list" />
     <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
   </section>
@@ -30,7 +32,8 @@ export default {
     return {
       room_list: this.$root.chat_room_list,
       search_text: "",
-      room_type: ""
+      room_type: "",
+      placeholder: ""
     };
   },
 
@@ -49,6 +52,11 @@ export default {
   methods: {
     loadRoomType: function(type) {
       this.room_type = type;
+      if (this.room_type === "group") {
+        this.placeholder = "グループ名検索";
+      } else {
+        this.placeholder = "会員名検索";
+      }
     }
   },
 
@@ -88,6 +96,10 @@ export default {
   }
 }
 
+.p-search-box-wrapper {
+  position: relative;
+}
+
 .p-search-box {
   height: 51px;
   margin: 18px 9px;
@@ -107,7 +119,7 @@ export default {
 
 .p-search-icon {
   position: absolute;
-  top: 155px;
+  top: 35px;
   left: 18px;
 }
 

@@ -2,14 +2,14 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: $accent-color;
   color: white;
-  box-shadow: 0 12px 23px -9px $black;
   position: relative;
 }
 
 .c-add-button {
   @extend %c-circle-button;
+  background-color: $accent-color;
+  box-shadow: 0 12px 23px -9px $black;
   &:before {
     content: "";
     width: 14px;
@@ -40,7 +40,7 @@
     content: "";
     width: 14px;
     border-bottom: solid;
-    color: $base-color;
+    color: $black;
     position: absolute;
     transform: rotateZ(45deg);
     top: 24px;
@@ -50,7 +50,7 @@
     content: "";
     height: 14px;
     border-left: solid;
-    color: $base-color;
+    color: $black;
     position: absolute;
     transform: rotateZ(45deg);
     top: 18px;
@@ -58,6 +58,6 @@
   }
   &:hover {
     cursor: pointer;
-    background-color: #43b37e;
+    background-color: $accent-color;
   }
 }
