@@ -39,7 +39,23 @@ class ChatRoomController extends AuthController
                     'is_group' => 1,
                     'is_department' => 1,
                     'admin_member_id' => 1,
-                    'group_name' => 1,
+                    'group_name' => [
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$is_group', true]
+                            ],
+                            'then' => '$group_name',
+                            'else' => [
+                                '$cond' => [
+                                    'if' => [
+                                        '$eq' => ['$members.0._id', $this->author->_id]
+                                    ],
+                                    'then' => '$members',
+                                    'else' => '$members'
+                                ]
+                            ]
+                        ]
+                    ],
                     'members' => 1,
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]

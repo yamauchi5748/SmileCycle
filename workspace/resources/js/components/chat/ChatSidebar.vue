@@ -30,7 +30,7 @@ export default {
     return {
       room_list: this.$root.chat_room_list,
       search_text: "",
-      room_type: "group"
+      room_type: ""
     };
   },
 
@@ -38,7 +38,8 @@ export default {
     this.$root
       .loadChatRooms()
       .then(res => {
-        this.room_list = this.$root.chat_room_list;
+        // 初期設定はグループルーム
+        this.loadRoomType("group");
       })
       .catch(error => {
         console.log(error);
