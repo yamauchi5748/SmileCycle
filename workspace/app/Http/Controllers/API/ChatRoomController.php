@@ -96,12 +96,8 @@ class ChatRoomController extends AuthController
             [
                 '$set' => [
                     'contents.unread' => [
-                        '$cond' => [
-                            'if' => [
-                                '$in' => [ $this->author->_id, '$contents.already_read']
-                            ],
-                            'then' => 0,
-                            'else' => 1
+                        '$not' => [
+                            '$in' => [ $this->author->_id, '$contents.already_read']
                         ]
                     ],
                     'contents.already_read' => [

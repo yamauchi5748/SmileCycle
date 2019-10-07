@@ -1,8 +1,11 @@
 <template>
   <v-scrollbar :box-height="box_height">
     <ul class="p-room-list" ref="list_box">
-      <li class="margin-bottom-normal" v-for="(room, index) in room_list" :key="index">
-        <router-link class="layout-flex" :to="{name:'chat-room',params:{id: room._id}}">
+      <li class="margin-bottom-normal" v-for="(room, index) in room_list" :key="index" @click="entryRoom(room)">
+        <router-link
+          class="layout-flex"
+          :to="{name:'chat-room',params:{id: room._id}}"
+        >
           <figure class="p-room-profile-box">
             <img class="p-room-profile" :src="'/chat-rooms/' + room._id + '/profile-image'" />
           </figure>
@@ -38,7 +41,7 @@ export default {
     return {
       intervalId: undefined,
       room_list: this.roomList,
-      box_height: 0,
+      box_height: 0
     };
   },
 
@@ -65,6 +68,16 @@ export default {
       ).length;
 
       return this.room_list[index].unread;
+    },
+
+    entryRoom: function(room) {
+      let unread_contents_id = [];
+      for (const index in room.contents) {
+        if (room.contents[index].unread) {
+          unread_contents_id.push(room.contents[index]._id);
+        }
+      }
+      this.$root.alreadyRead(room._id, unread_contents_id);
     }
   },
 

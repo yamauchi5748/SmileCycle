@@ -259,6 +259,20 @@ const app = new Vue({
                     console.log(error);
                 });
         },
+
+        /* 既読処理 */
+        alreadyRead: function (chat_room_id, contents_id) {
+            return axios.put('/api/chat-rooms/' + chat_room_id + '/contents', {
+                    unread_contents: contents_id
+                })
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
     }
 });
 

@@ -97,12 +97,12 @@ export default {
 }
 
 .p-search-box-wrapper {
+  margin: 18px auto;
   position: relative;
 }
 
 .p-search-box {
   height: 51px;
-  margin: 18px 9px;
   padding-left: 29px;
   font-size: 18px;
   background-color: $base-color;
@@ -119,8 +119,8 @@ export default {
 
 .p-search-icon {
   position: absolute;
-  top: 35px;
-  left: 18px;
+  top: 18px;
+  left: 8px;
 }
 
 .p-add-button {
