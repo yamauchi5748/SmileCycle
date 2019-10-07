@@ -32,13 +32,24 @@ class ChatRoomController extends AuthController
                     ],
                 ]
             ],
-            // コンテンツを最大10件取得
+            // 個チャ用に一人目の会員と二人目の会員を保持
+            [
+                '$set' => [
+                    'first_member' => [
+                        '$arrayElemAt' => ['$members', 0]
+                    ],
+                    'last_member' => [
+                        '$arrayElemAt' => ['$members', 1]
+                    ],
+                ]
+            ],
             [
                 '$project' => [
                     '_id' => 1,
                     'is_group' => 1,
                     'is_department' => 1,
                     'admin_member_id' => 1,
+                    // 個チャならば相手の名前をグループ名にセット
                     'group_name' => [
                         '$cond' => [
                             'if' => [
@@ -48,18 +59,20 @@ class ChatRoomController extends AuthController
                             'else' => [
                                 '$cond' => [
                                     'if' => [
-                                        '$eq' => ['$members.0._id', $this->author->_id]
+                                        '$eq' => ['$first_member._id', $this->author->_id]
                                     ],
-                                    'then' => '$members',
-                                    'else' => '$members'
+                                    'then' => '$last_member.name',
+                                    'else' => '$first_member.name'
                                 ]
                             ]
                         ]
                     ],
                     'members' => 1,
+                    // コンテンツを最大10件取得
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]
                     ],
+                    // コンテンツが空でないかの処理
                     'contents' => [
                         '$cond' => [
                             'if' => [
