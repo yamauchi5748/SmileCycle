@@ -282,6 +282,31 @@ const app = new Vue({
             return axios.delete('/api/stamp-groups/' + stamp_group_id)
                 .then(res => this.checkAuth(res))
         },
+
+        /* チャットグループ一覧取得 */
+        loadChatRooms: function () {
+            return axios.get('/api/chat-rooms')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.chat_room_list = res.data.rooms;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ作成 */
+        createChatRoom: function (data) {
+            return axios.post('/api/chat-rooms', data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.chat_room_list.splice(0, 0, res.data.chat_room);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
     }
 });
 
