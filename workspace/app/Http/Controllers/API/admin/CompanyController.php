@@ -37,7 +37,6 @@ class CompanyController extends AdminAuthController
             '_id' => (string) Str::uuid(),
             'name' => $request->name,
             'address' => $request->address,
-            'fax' => $request->fax,
             'telephone_number' => $request->telephone_number,
             'members' => []
         ];
@@ -79,7 +78,6 @@ class CompanyController extends AdminAuthController
             /* 各データを設定 */
             'name' => $request->name,
             'address' => $request->address,
-            'fax' => $request->fax,
             'telephone_number' => $request->telephone_number
         ];
 
@@ -94,7 +92,6 @@ class CompanyController extends AdminAuthController
                     /* 各データを設定 */
                     'name' => $request->name,
                     'address' => $request->address,
-                    'fax' => $request->fax,
                     'telephone_number' => $request->telephone_number
                 ]
             ]
