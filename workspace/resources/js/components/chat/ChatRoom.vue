@@ -9,7 +9,7 @@
           <li v-for="(content, index) in contents" :key="index">
             <div class="content">
               <div class="profile">
-                <img src alt="profile" />
+                <img src="/img/profile_image.jpg" alt="profile" />
               </div>
               <div class="signature">
                 <span>{{ content.sender_name }}</span>
@@ -23,8 +23,8 @@
       <div class="send-content">
         <div class="input-box">
           <img src alt />
-          <textarea v-on:input="test"></textarea>
-          <img src alt="stamp" class="stamp" />
+          <textarea v-on:input="test2"></textarea>
+          <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
         </div>
         <button class="normal-button">send</button>
       </div>
@@ -169,7 +169,21 @@ export default {
       if (e.target.value.length == 33) {
         e.target.style.color = "red";
       }
-    }
+    },
+    test2() {
+        console.log("-----------------");
+        console.log(this.$route.params);
+        /*
+        this.$root
+          .loadChatContents(this.$route.params.id)
+          .then(res => {
+              console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+          */
+    },
   }
 };
 </script>
@@ -228,23 +242,37 @@ export default {
     grid-row: 1/1;
     margin: 0px;
     padding: 0px;
-    background-color: red;
+
+    img {
+    width: 100%;
+    heighht: 100%;
+    border-radius: 50%;
+    }
   }
   .signature {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 1/1;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: center;
+    margin: 0px 20px;
+    
+    span {
+        margin: 0px 10px;
+    }
   }
   .message {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 2/2;
+    font-size: 16px;
+    margin: 0px 20px;
   }
 }
 .send-content {
-  background-color: blue;
   position: absolute;
   top: 64%;
   height: 64px;
@@ -266,8 +294,8 @@ export default {
     }
     .stamp {
       flex-grow: 1;
+      height: 100%;
     }
-    background-color: red;
   }
   .normal-button {
     flex-grow: 1;
