@@ -15,10 +15,10 @@
         <v-select-members class="p-list-box" v-model="members" ref="list_box"></v-select-members>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
-        <router-link class="normal-button p-cancel-btn" :to="'/chat-rooms'">キャンセル</router-link>
+        <span class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</span>
         <button class="normal-button" @click="roomCreate">作成</button>
       </div>
-      <router-link class="c-esc-button p-esc-btn" :to="'/chat-rooms'" />
+      <span class="c-esc-button p-esc-btn" @click="setBtnActive"></span>
     </div>
   </section>
 </template>
@@ -42,6 +42,14 @@ export default {
   },
 
   methods: {
+    setBtnActive: function() {
+      this.$parent.setBtnActive();
+    },
+
+    setRoomList: function(room_list) {
+      this.$parent.setRoomList(room_list);
+    },
+
     roomCreate: function() {
       this.name_alert = this.group_name.length < 1; // グループ名が入力されていなければアラート
       this.members_alert = this.members.length < 1; // 参加する会員が選択されていなければアラート
@@ -52,8 +60,17 @@ export default {
         group_name: this.group_name,
         members: this.members
       };
-      this.$root.createChatRoom(data);
-      this.$router.back();
+
+      // チャットルーム作成
+      this.$root
+        .createChatRoom(data)
+        .then(room_list => {
+          this.setRoomList(room_list);
+          this.setBtnActive();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

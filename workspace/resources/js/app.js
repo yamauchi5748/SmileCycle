@@ -40,12 +40,7 @@ const router = new VueRouter({
                     path: ":id",
                     name: "chat-room",
                     component: ChatRoom
-                },
-                {
-                    path: "room/create",
-                    name: "chat-room-create",
-                    component: CreateChatRoom
-                },
+                }
             ]
         },
         {
@@ -254,6 +249,7 @@ const app = new Vue({
                 .then(res => {
                     console.log(res.data);
                     this.chat_room_list.splice(0, 0, res.data.chat_room);
+                    return this.chat_room_list;
                 })
                 .catch(error => {
                     console.log(error);

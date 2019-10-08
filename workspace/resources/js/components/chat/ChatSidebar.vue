@@ -30,25 +30,29 @@
         </li>
       </ul>
     </v-scrollbar>
-    <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
+    <span class="c-add-button p-add-button" @click="setBtnActive"></span>
+    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
   </section>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
 import RoomItem from "./RoomItem";
+import CreateRoomModal from "./CreateRoomModal";
 export default {
   components: {
     VScrollbar,
-    RoomItem
+    RoomItem,
+    CreateRoomModal
   },
   data() {
     return {
       intervalId: undefined,
       box_height: 0,
-      room_list: this.rooms,
+      room_list: [],
       search_text: "",
       room_type: "",
-      placeholder: ""
+      placeholder: "",
+      btn_active: false
     };
   },
 
@@ -72,17 +76,16 @@ export default {
     clearInterval(this.intervalId);
   },
 
-  computed: {
-    rooms: function() {
-      return this.$root.chat_room_list.filter(room => {
-        return room.group_name.indexOf(this.search_text) != -1;
-      });
-    }
-  },
-
   methods: {
     resizeEvent: function() {
       this.box_height = this.$refs.list_box.clientHeight;
+    },
+
+    setRoomList: function(room_list) {
+      this.room_list = room_list;
+    },
+    setBtnActive: function() {
+      this.btn_active = !this.btn_active;
     },
 
     loadRoomType: function(type) {
@@ -111,15 +114,19 @@ export default {
 
   watch: {
     search_text: function(val, oldVal) {
-      this.room_list = this.$root.chat_room_list.filter(room => {
+      const room_list = this.$root.chat_room_list.filter(room => {
         return room.group_name.indexOf(val) != -1;
       });
+
+      this.setRoomList(room_list);
     },
 
     room_type: function(val, oldVal) {
-      this.room_list = this.$root.chat_room_list.filter(room => {
+      const room_list = this.$root.chat_room_list.filter(room => {
         return val == "group" ? room.is_group : !room.is_group;
       });
+
+      this.setRoomList(room_list);
     }
   }
 };
@@ -181,5 +188,14 @@ export default {
   position: absolute;
   bottom: 23px;
   left: 198px;
+}
+
+.p-modal-wrapper {
+  height: 0;
+  display: none;
+  &.active {
+    height: 100%;
+    display: flex;
+  }
 }
 </style>
