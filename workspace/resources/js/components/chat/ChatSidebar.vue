@@ -31,7 +31,7 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
-    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
+    <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
   </section>
 </template>
 <script>
@@ -191,11 +191,10 @@ export default {
 }
 
 .p-modal-wrapper {
-  height: 0;
-  display: none;
+  transform: scale(0);
+  transition: 0.5s;
   &.active {
-    height: 100%;
-    display: flex;
+    transform: scale(1);
   }
 }
 </style>
