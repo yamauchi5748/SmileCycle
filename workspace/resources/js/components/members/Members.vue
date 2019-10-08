@@ -1,11 +1,11 @@
 <template>
     <div class="members">
       <MembersSerch class="serch"></MembersSerch>
-     <MembersTabMeny class="tab"></MembersTabMeny>
+      <MembersTabMeny class="tab"></MembersTabMeny>
         <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
-            　<img src=https://www.homepage-tukurikata.com/image/lion.jpg>
+            　<img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
             </div>
             <p class="member_user_name">{{member.name}}</p>
             <p class="member_user_post">{{member.post}}</p>
@@ -56,7 +56,7 @@ export default{
 .members {
     width: 1004px;
     height: 658px;
-    margin-top : 70px ;
+    margin-top : 90px ;
     display: table;
     vertical-align:top;
     margin-left: 7em;
@@ -146,6 +146,11 @@ export default{
   .tab{
      margin-top : 0px ;
     margin-left : 180px ;
+    margin-bottom: 30px;
+  }
+   .serch{
+    top: -70px;
+    margin-left : 736px ;
     margin-bottom: 30px;
   }
 </style>
