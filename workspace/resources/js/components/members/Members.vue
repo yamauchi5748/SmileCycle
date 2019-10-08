@@ -5,7 +5,7 @@
         <h2 class="member_deploy_name">愛媛笑門会</h2>
           <div v-for="member in members" :key="member.id">
             <div class="member_user_icon">
-            　<img src=/>
+            　<img src=https://www.homepage-tukurikata.com/image/lion.jpg>
             </div>
             <p class="member_user_name">{{member.name}}</p>
             <p class="member_user_post">{{member.post}}</p>
@@ -33,9 +33,10 @@ export default{
            { id: 4, icon: 'sample', name: '渡邊小輝', post: '平社員',  company: '株式会社セキ' },
          ]
        }
-  } 
+  }
 /*
-検索の処理（予定）
+検索の処理（予定）opels
+
   computed: {
     filteredUsers: function() {
       for(var i in this.users) {
@@ -91,17 +92,18 @@ export default{
   }
   .member_user_icon {
     margin-top : 60px ;
-    margin-left : 11px ;
+    margin-left : 30px ;
 
   }
   .member_user_icon img{
-     border-radius: 50px;
-    height: 130px;
+      border-radius: 50px;
+      height: 100px;
+      width:  100px;
   }
 
   .member_user_name{
     height: 50px;
-    margin-top : -140px ;
+    margin-top : -100px ;
     margin-left : 170px ;
     vertical-align: middle;
     font-family: Roboto;
@@ -141,14 +143,9 @@ export default{
     text-align: left;
     color: rgba(149, 149, 149, 0.87);
   }
-   .serch{
-    margin-top : -0px ;
-    margin-left : 600px ;
-    margin-bottom: 30px;
-  }
-   .tab{
-    margin-top : -60px ;
-    margin-left : 0px ;
+  .tab{
+     margin-top : 0px ;
+    margin-left : 180px ;
     margin-bottom: 30px;
   }
 </style>
