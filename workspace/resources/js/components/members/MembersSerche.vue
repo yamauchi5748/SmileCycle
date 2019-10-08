@@ -26,8 +26,11 @@ export default {
 .search_text {
     width: 402px;
     height: 48px;
+    position:relative;
+    background-color:#fff;
+    border:1px solid #aaa;
     text-align: center;
-    font-size: 22px;
+    font-size: 19px;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24);
 }
-</style>
+</style>    
