@@ -18,5 +18,6 @@ export default {
   display: grid;
   grid-template-columns: 324px 1fr;
   line-height: 1.4rem;
+  position: relative;
 }
 </style>

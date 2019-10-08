@@ -40,12 +40,7 @@ const router = new VueRouter({
                     path: ":id",
                     name: "chat-room",
                     component: ChatRoom
-                },
-                {
-                    path: "room/create",
-                    name: "chat-room-create",
-                    component: CreateChatRoom
-                },
+                }
             ]
         },
         {
@@ -301,12 +296,23 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     this.chat_room_list.splice(0, 0, res.data.chat_room);
+                    return this.chat_room_list;
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
 
+        /* 既読処理 */
+        alreadyRead: function (chat_room_id, contents_id) {
+            return axios.put('/api/chat-rooms/' + chat_room_id + '/contents', {
+                unread_contents: contents_id
+            })
+                .then(res => this.checkAuth(res))
+                .catch(error => {
+                    console.log(error);
+                });
+        },
     }
 });
 

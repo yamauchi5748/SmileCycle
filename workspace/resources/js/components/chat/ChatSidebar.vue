@@ -12,25 +12,47 @@
         @click="loadRoomType('member')"
       >会員</span>
     </nav>
-    <input class="p-search-box" type="text" placeholder="グループ名検索" v-model="search_text" />
-    <figure class="p-search-icon">
-      <img src="/img/search-icon.png" alt="検索アイコン" />
-    </figure>
-    <room-list :room-list="room_list" />
-    <router-link class="c-add-button p-add-button" :to="{name:'chat-room-create'}" />
+    <div class="p-search-box-wrapper">
+      <input class="p-search-box" type="text" :placeholder="placeholder" v-model="search_text" />
+      <figure class="p-search-icon">
+        <img src="/img/search-icon.png" alt="検索アイコン" />
+      </figure>
+    </div>
+    <v-scrollbar :box-height="box_height">
+      <ul class="p-room-list" ref="list_box">
+        <li
+          class="margin-bottom-normal"
+          v-for="(room, index) in room_list"
+          :key="index"
+          @click="entryRoom(room)"
+        >
+          <room-item :room-item="room" />
+        </li>
+      </ul>
+    </v-scrollbar>
+    <span class="c-add-button p-add-button" @click="setBtnActive"></span>
+    <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
   </section>
 </template>
 <script>
-import RoomList from "./RoomList";
+import VScrollbar from "../VScrollbar";
+import RoomItem from "./RoomItem";
+import CreateRoomModal from "./CreateRoomModal";
 export default {
   components: {
-    RoomList
+    VScrollbar,
+    RoomItem,
+    CreateRoomModal
   },
   data() {
     return {
-      room_list: this.$root.chat_room_list,
+      intervalId: undefined,
+      box_height: 0,
+      room_list: [],
       search_text: "",
-      room_type: "group"
+      room_type: "",
+      placeholder: "",
+      btn_active: false
     };
   },
 
@@ -38,30 +60,73 @@ export default {
     this.$root
       .loadChatRooms()
       .then(res => {
-        this.room_list = this.$root.chat_room_list;
+        // 初期設定はグループルーム
+        this.loadRoomType("group");
       })
       .catch(error => {
         console.log(error);
       });
+
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, 50);
+  },
+
+  beforeDestroy() {
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
   },
 
   methods: {
+    resizeEvent: function() {
+      this.box_height = this.$refs.list_box.clientHeight;
+    },
+
+    setRoomList: function(room_list) {
+      this.room_list = room_list;
+    },
+    setBtnActive: function() {
+      this.btn_active = !this.btn_active;
+    },
+
     loadRoomType: function(type) {
       this.room_type = type;
+      if (this.room_type === "group") {
+        this.placeholder = "グループ名検索";
+      } else {
+        this.placeholder = "会員名検索";
+      }
+    },
+
+    // ルームへ入室
+    entryRoom: function(room) {
+      // 既読処理
+      let unread_contents_id = [];
+      for (const index in room.contents) {
+        if (room.contents[index].unread) {
+          room.contents[index].unread = false;
+          unread_contents_id.push(room.contents[index]._id);
+        }
+      }
+      if (unread_contents_id.length < 1) return;
+      this.$root.alreadyRead(room._id, unread_contents_id);
     }
   },
 
   watch: {
     search_text: function(val, oldVal) {
-      this.room_list = this.$root.chat_room_list.filter(room => {
-        return room.group_name.indexOf(this.search_text) != -1;
+      const room_list = this.$root.chat_room_list.filter(room => {
+        return room.group_name.indexOf(val) != -1;
       });
+
+      this.setRoomList(room_list);
     },
 
     room_type: function(val, oldVal) {
-      this.room_list = this.$root.chat_room_list.filter(room => {
+      const room_list = this.$root.chat_room_list.filter(room => {
         return val == "group" ? room.is_group : !room.is_group;
       });
+
+      this.setRoomList(room_list);
     }
   }
 };
@@ -87,9 +152,13 @@ export default {
   }
 }
 
+.p-search-box-wrapper {
+  margin: 18px auto;
+  position: relative;
+}
+
 .p-search-box {
   height: 51px;
-  margin: 18px 9px;
   padding-left: 29px;
   font-size: 18px;
   background-color: $base-color;
@@ -106,13 +175,26 @@ export default {
 
 .p-search-icon {
   position: absolute;
-  top: 155px;
-  left: 18px;
+  top: 18px;
+  left: 8px;
+}
+
+.p-room-list {
+  width: 304px;
+  padding-bottom: 58px;
 }
 
 .p-add-button {
   position: absolute;
   bottom: 23px;
   left: 198px;
+}
+
+.p-modal-wrapper {
+  transform: scale(0);
+  transition: 0.5s;
+  &.active {
+    transform: scale(1);
+  }
 }
 </style>
