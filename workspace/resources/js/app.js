@@ -183,10 +183,6 @@ const app = new Vue({
                     console.log(error);
                 });
         },
-        createMember: function (member_property) {
-            return axios.post('/api/members', member_property)
-                .then(res => this.checkAuth(res))
-        },
         /* 特定会員取得 */
         getMember: function (member_id) {
             return axios.get('/api/members/' + member_id)
@@ -194,6 +190,23 @@ const app = new Vue({
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        /* 会員の作成 */
+        createMember: function (member_property) {
+            return axios.post('/api/members', member_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* 会員の情報の編集 */
+        editMember: function (member_property) {
+            return axios.put('/api/members/' + member_property._id, member_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* 会員削除 */
+        deleteMember: function (member_id) {
+            return axios.delete('/api/members/' + member_id)
+                .then(res => this.checkAuth(res))
         },
 
         /* 会社一覧取得 */
@@ -218,6 +231,24 @@ const app = new Vue({
                 });
         },
 
+        /* 会社の作成 */
+        createCompany: function (company_property) {
+            return axios.post('/api/companies', company_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* 会社の情報の編集 */
+        editCompany: function (company_property) {
+            return axios.put('/api/companies/' + company_property._id, company_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* 会社削除 */
+        deleteCompany: function (company_id) {
+            return axios.delete('/api/companies/' + company_id)
+                .then(res => this.checkAuth(res))
+        },
+
         /* スタンプグループ一覧取得 */
         loadAdminStampGroups: function () {
             return axios.get('/api/admin-stamp-groups')
@@ -228,6 +259,23 @@ const app = new Vue({
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        /* スタンプグループの作成 */
+        createStampGroup: function (stamp_group_property) {
+            return axios.post('/api/stamp-groups', stamp_group_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* スタンプグループの編集 */
+        editStampGroup: function (stamp_group_property) {
+            return axios.put('/api/stamp-groups/' + stamp_group_property._id, company_property)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* スタンプグループ削除 */
+        deleteStampGroup: function (stamp_group_id) {
+            return axios.delete('/api/stamp-groups/' + stamp_group_id)
+                .then(res => this.checkAuth(res))
         },
 
         /* チャットグループ一覧取得 */
@@ -247,7 +295,6 @@ const app = new Vue({
             return axios.post('/api/chat-rooms', data)
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    console.log(res.data);
                     this.chat_room_list.splice(0, 0, res.data.chat_room);
                     return this.chat_room_list;
                 })
