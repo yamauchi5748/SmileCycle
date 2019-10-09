@@ -2,6 +2,7 @@
   <div class="details">
     <div class="name">
       <span v-if="room">{{ room.group_name }}</span>
+      <button><img src="/img/settings-icon.png" alt /></button>
     </div>
     <div class="contents">
       <div class="history">
@@ -205,10 +206,11 @@ export default {
   }
 
   .name {
+    display: flex;
+    justify-content: space-between;
     border-bottom: .1px solid #707070;
     height: 43px;
     padding: 0 16px;
-    justify-content: flex-start;
     align-items: center;
     text-decoration: none;
     font-size: 16px;
@@ -217,8 +219,7 @@ export default {
   }
 
   .contents {
-    margin: 0 16px;
-    width: 100%;
+    margin: 0 0 0 16px;
     height: 727px;
     flex-direction: column;
     position: relative;
@@ -226,7 +227,7 @@ export default {
     overflow-x: hidden;
     .history {
       width: calc(100% + 17px);
-      height: 60%;
+      height: 500px;
       overflow-y: scroll;
       ol {
         width: 100%;
