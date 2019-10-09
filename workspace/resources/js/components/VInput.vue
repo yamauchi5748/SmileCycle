@@ -45,6 +45,9 @@ export default {
             }
         },
         counterText() {
+            if (!this.inputElement) {
+                return 0 + "/" + this.max;
+            }
             let text = this.inputElement.length;
             if (this.max) {
                 text += "/" + this.max;
