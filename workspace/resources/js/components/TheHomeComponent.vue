@@ -46,6 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .p-page {
+    height: 100vh;
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
