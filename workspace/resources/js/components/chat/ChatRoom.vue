@@ -22,9 +22,9 @@
       </div>
       <div class="send-content">
         <div class="input-box">
-          <img src alt />
-          <textarea v-on:input="test2"></textarea>
-          <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
+          <button><img class="upload-image" src alt /></button>
+          <p class="upload-message" contentEditable="true"></p>
+          <button><img src="/img/stamp-icon.png" alt="stamp" class="stamp" /></button>
         </div>
         <button class="normal-button">send</button>
       </div>
@@ -161,18 +161,24 @@ export default {
   },
 
   methods: {
+  /*
     test(e) {
       console.log("hello: " + e.target.value.length);
       console.log(e.target.clientHeight);
       console.log(e.target.span);
       console.log(e.target);
+//      e.execCommand('bold');
       if (e.target.value.length == 33) {
         e.target.style.color = "red";
       }
     },
-    test2() {
+    */
+    test2(e) {
         console.log("-----------------");
-        console.log(this.$route.params);
+        // document.execCommand(bold);
+        console.log(e);
+        console.log(e.target);
+        // console.log(this.$route.params);
         /*
         this.$root
           .loadChatContents(this.$route.params.id)
@@ -211,8 +217,8 @@ export default {
   }
 
   .contents {
-    margin: 0 auto;
-    width: 93%;
+    margin: 0 16px;
+    width: 100%;
     height: 727px;
     flex-direction: column;
     position: relative;
@@ -274,32 +280,36 @@ export default {
 }
 .send-content {
   position: absolute;
-  top: 64%;
-  height: 64px;
   width: 100%;
   display: flex;
   .input-box {
     display: flex;
-    flex-grow: 9;
+    flex-grow: 1;
     margin: 0px;
+    border: 1px solid #707070;
+    border-radius: 4px;
+    outline: none;
     img {
-      flex-grow: 1;
     }
-    textarea {
+    .upload-message {
       box-sizing: border-box;
-      height: 100%;
-      width: calc(100% + 17px);
-      flex-grow: 8;
-      font-size: 30px;
-    }
-    .stamp {
+      width: 400px;
       flex-grow: 1;
-      height: 100%;
+      font-size: 30px;
+      outline: none;
+      padding: 10px;
+      line-height: 1;
     }
+    button{
+      align-self: flex-end;
+      .stamp {
+          height: 100%;
+
+        }
+      }
   }
   .normal-button {
-    flex-grow: 1;
-    height: 100%;
+      align-self: flex-end;
   }
 }
 </style>
