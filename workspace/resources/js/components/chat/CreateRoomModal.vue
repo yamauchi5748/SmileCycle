@@ -15,7 +15,7 @@
         <v-select-members class="p-list-box" v-model="members" ref="list_box"></v-select-members>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
-        <span class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</span>
+        <button class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</button>
         <button class="normal-button" @click="roomCreate">作成</button>
       </div>
       <span class="c-esc-button p-esc-btn" @click="setBtnActive"></span>
@@ -24,16 +24,13 @@
 </template>
 <script>
 import VSelectMembers from "../VSelectMembers";
-import VScrollbar from "../VScrollbar";
 export default {
   components: {
-    VSelectMembers,
-    VScrollbar
+    VSelectMembers
   },
 
   data: function() {
     return {
-      box_height: 0,
       group_name: "",
       members: [],
       name_alert: false,

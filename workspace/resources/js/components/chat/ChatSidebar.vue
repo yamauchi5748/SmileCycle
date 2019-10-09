@@ -31,18 +31,27 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
+    <span class="c-add-button p-edit-button" @click="setEditBtnActive" v-if="room_id"></span>
     <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
+    <edit-room-modal
+      class="p-modal-wrapper modal-content"
+      :class="{active:edit_btn_active}"
+      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      v-if="edit_btn_active"
+    />
   </section>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
 import RoomItem from "./RoomItem";
 import CreateRoomModal from "./CreateRoomModal";
+import EditRoomModal from "./EditRoomModal";
 export default {
   components: {
     VScrollbar,
     RoomItem,
-    CreateRoomModal
+    CreateRoomModal,
+    EditRoomModal
   },
   data() {
     return {
@@ -52,7 +61,9 @@ export default {
       search_text: "",
       room_type: "",
       placeholder: "",
-      btn_active: false
+      btn_active: false,
+      edit_btn_active: false, //テスト用
+      room_id: this.$route.params.id //テスト用
     };
   },
 
@@ -87,6 +98,10 @@ export default {
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
+    // テスト用
+    setEditBtnActive: function() {
+      this.edit_btn_active = !this.edit_btn_active;
+    },
 
     loadRoomType: function(type) {
       this.room_type = type;
@@ -99,6 +114,8 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
+      this.room_id = room._id;
+      console.log(this.room_id);
       // 既読処理
       let unread_contents_id = [];
       for (const index in room.contents) {
@@ -188,6 +205,13 @@ export default {
   position: absolute;
   bottom: 23px;
   left: 198px;
+}
+
+.p-edit-button {
+  position: absolute;
+  background-color: brown;
+  bottom: 23px;
+  left: 98px;
 }
 
 .p-modal-wrapper {
