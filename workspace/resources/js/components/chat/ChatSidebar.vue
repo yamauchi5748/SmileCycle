@@ -31,27 +31,40 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
+    <!-- テスト用ボタン -->
     <span class="c-add-button p-edit-button" @click="setEditBtnActive" v-if="room_id"></span>
+    <span class="c-add-button p-edit-member-button" @click="setMemberBtnActive" v-if="room_id"></span>
+    <!-- テスト用ボタン ここまで -->
     <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
+    <!-- テスト用コンポーネント -->
     <edit-room-modal
       class="p-modal-wrapper modal-content"
       :class="{active:edit_btn_active}"
       :room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="edit_btn_active"
     />
+    <edit-member-modal
+      class="p-modal-wrapper modal-content"
+      :class="{active:member_btn_active}"
+      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      v-if="member_btn_active"
+    />
+    <!-- テスト用コンポーネント ここまで -->
   </section>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
 import RoomItem from "./RoomItem";
 import CreateRoomModal from "./CreateRoomModal";
-import EditRoomModal from "./EditRoomModal";
+import EditRoomModal from "./EditRoomModal"; //テスト用
+import EditMemberModal from "./EditMemberModal"; //テスト用
 export default {
   components: {
     VScrollbar,
     RoomItem,
     CreateRoomModal,
-    EditRoomModal
+    EditRoomModal, //テスト用
+    EditMemberModal //テスト用
   },
   data() {
     return {
@@ -63,6 +76,7 @@ export default {
       placeholder: "",
       btn_active: false,
       edit_btn_active: false, //テスト用
+      member_btn_active: false, //テスト用
       room_id: this.$route.params.id //テスト用
     };
   },
@@ -101,6 +115,10 @@ export default {
     // テスト用
     setEditBtnActive: function() {
       this.edit_btn_active = !this.edit_btn_active;
+    },
+    // テスト用
+    setMemberBtnActive: function() {
+      this.member_btn_active = !this.member_btn_active;
     },
 
     loadRoomType: function(type) {
@@ -207,11 +225,20 @@ export default {
   left: 198px;
 }
 
+/* テスト用scss */
 .p-edit-button {
   position: absolute;
   background-color: brown;
   bottom: 23px;
   left: 98px;
+}
+
+/* テスト用scss */
+.p-edit-member-button {
+  position: absolute;
+  background-color: purple;
+  bottom: 23px;
+  left: 0px;
 }
 
 .p-modal-wrapper {
