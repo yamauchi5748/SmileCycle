@@ -222,7 +222,7 @@ export default {
 .p-add-button {
   position: absolute;
   bottom: 23px;
-  left: 198px;
+  left: 248px;
 }
 
 /* テスト用scss */
