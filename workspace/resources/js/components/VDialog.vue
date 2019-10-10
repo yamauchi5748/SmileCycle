@@ -35,7 +35,8 @@ export default {
   @include window();
   position: fixed;
   .p-overlay {
-    @include window();
+    @include window($height: 100vh);
+    top: -60px;
     position: fixed;
     background-color: rgba($color: #000000, $alpha: 0.5);
     z-index: 2;
@@ -57,7 +58,7 @@ export default {
       font-size: 21px;
     }
     .p-dialog-btn-box {
-        padding-top: 10px;
+      padding-top: 10px;
     }
   }
 }
