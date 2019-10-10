@@ -13,6 +13,8 @@ import ChatGroup from "./components/chats/ChatGroup.vue";
 import ChatMember from "./components/chats/ChatMember.vue";
 import RoomDetails from "./components/chats/RoomDetails.vue";
 import Members from "./components/members/Members.vue";
+import Invitations from "./components/invitations/Invitations.vue";
+import InvitationDetails from "./components/invitations/InvitationDetails.vue";
 import Controls from "./components/controls/Controls.vue";
 import ControlsInvitation from "./components/controls/Invitation.vue";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
@@ -74,6 +76,17 @@ const router = new VueRouter({
         {
             path: "/members",
             component: Members
+        },
+		{
+            path: "/invitations",
+            component: Invitations,
+            children: [
+				{
+					path: ":id",
+					name: "invitation-details",
+					component: InvitationDetails,
+				}
+            ]
         },
         {
             path: "/controls",
