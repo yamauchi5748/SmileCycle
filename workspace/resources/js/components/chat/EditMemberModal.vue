@@ -7,42 +7,60 @@
         <h2 class="p-modal-title">会員を編集する</h2>
         <span class="c-esc-button p-esc-btn" @click="setBtnActive"></span>
       </div>
-      <figure class="layout-flex --justify-content-center p-room-icon-box-wrapper">
-        <label class="p-room-icon-box" for="file-input">
-          <img
-            class="p-room-icon"
-            :src="'/chat-rooms/' + room._id + '/profile-image'"
-            ref="img_preview"
-          />
-          <img class="p-camera-icon" src="/img/camera.png" />
-          <input id="file-input" type="file" ref="img_input" @change="preview" />
-        </label>
-      </figure>
-      <div class="layout-flex --flex-direction-column --justify-content-center p-group-box">
-        <span>グループ名</span>
-        <span class="alert" v-show="name_alert">ルーム名が入力されていません</span>
-        <input class="p-name-input" type="text" placeholder="グループ名" v-model="room.group_name" />
+      <div class="layout-flex --flex-direction-column p-group-box">
+        <input
+          class="margin-bottom-small p-search-box"
+          type="text"
+          placeholder="会員検索"
+          v-model="search_text"
+        />
+        <edit-member-list
+          class="p-list-box"
+          v-model="members"
+          :search_text="search_text"
+          ref="list_box"
+        ></edit-member-list>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
-        <button class="normal-button p-delete-btn" :to="'/chat-rooms'" @click="setBtnActive">削除</button>
-        <button class="normal-button" @click="editChatRoom">保存</button>
+        <button class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</button>
+        <button class="normal-button" @click="edit">保存</button>
       </div>
     </div>
+    <v-dialog v-model="dialog_active" v-show="dialog_active">
+      <div class="p-dialog-msg-box">
+        <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
+        <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
+      </div>
+    </v-dialog>
   </section>
 </template>
 <script>
 import EditMemberList from "./EditMemberList";
+import VDialog from "../VDialog";
 export default {
   components: {
-    EditMemberList
+    EditMemberList,
+    VDialog
   },
-  props: ["Room"],
+  props: {
+    Room: Object
+  },
 
   data: function() {
     return {
-      name_alert: false,
-      room: this.Room
+      room: this.Room,
+      members: {},
+      search_text: "",
+      dialog_msg: {},
+      dialog_active: false
     };
+  },
+
+  created: function() {
+    for (const index in this.room.members) {
+      const member_id = this.room.members[index]._id;
+      this.$set(this.members, member_id, true);
+    }
   },
 
   methods: {
@@ -50,27 +68,17 @@ export default {
       this.$parent.setMemberBtnActive();
     },
 
-    preview: function() {
-      let img_preview_el = this.$refs.img_preview;
-      const file = this.$refs.img_input.files[0];
-      const reader = new FileReader();
-
-      // 画像ファイル以外の場合は何もしない
-      if (file.type.indexOf("image") < 0) {
-        return false;
+    edit: function() {
+      let msg = "";
+      for (const index in this.room.members) {
+        const member = this.room.members[index];
+        if (!this.members[member._id]) {
+          msg += "・" + member.name + "\n";
+        }
       }
-
-      // ファイル読み込みが完了した際のイベント登録
-      reader.onload = function(e) {
-        // .prevewの領域の中にロードした画像を表示するimageタグを追加
-        img_preview_el.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    },
-
-    editChatRoom: function() {
-      this.name_alert = this.room.group_name.length < 1; // グループ名が入力されていなければアラート
-      if (this.name_alert) return;
+      this.dialog_msg.title = "以下の会員を退出させますか？";
+      this.dialog_msg.body = msg;
+      this.dialog_active = true;
     }
   }
 };
@@ -81,12 +89,12 @@ export default {
   height: 100%;
   position: absolute;
   background-color: $base-color;
-  z-index: 2;
+  z-index: 1;
 }
 
 .p-modal-content {
   width: 700px;
-  min-height: 400px;
+  min-height: 600px;
   position: relative;
 }
 
@@ -108,34 +116,9 @@ export default {
   }
 }
 
-.p-room-icon-box-wrapper {
-  .p-room-icon-box {
-    position: relative;
-    .p-camera-icon {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      bottom: 1px;
-      right: 1px;
-      border-radius: 50%;
-      border: solid 1px darkcyan;
-    }
-    .p-room-icon {
-      width: 98px;
-      height: 98px;
-      border-radius: 50%;
-    }
-  }
-  #file-input {
-    display: none;
-  }
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.p-name-input {
-  height: 51px;
+.p-search-box {
+  width: 259px;
+  height: 41px;
   padding-left: 29px;
   font-size: 18px;
   background-color: $base-color;
@@ -150,12 +133,26 @@ export default {
   }
 }
 
-.p-edit-member-button {
-  width: 150px;
+.p-list-box {
+  height: 259px;
 }
 
-.p-delete-btn {
-  background-color: brown;
+.p-dialog-msg-box {
+  display: grid;
+  grid-template-rows: 40px 1fr;
+  justify-content: center;
+  font-weight: bold;
+  .p-dialog-msg-title {
+    font-size: 18px;
+  }
+
+  .p-dialog-msg-body {
+    white-space: pre-wrap;
+  }
+}
+
+.p-cancel-btn {
+  background-color: darkgray;
 }
 
 .p-esc-btn {

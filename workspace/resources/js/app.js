@@ -6,7 +6,6 @@ require('./bootstrap');
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
-import CreateChatRoom from "./components/chat/CreateRoomModal.vue";
 
 import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
@@ -170,6 +169,7 @@ const app = new Vue({
     router,
     el: '#app',
     data: {
+        author: {},
         member_list: [],
         company_list: [],
         stamp_group_list: [],

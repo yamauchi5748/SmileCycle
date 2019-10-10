@@ -18,10 +18,10 @@
 import TheGlobalHeader from "./TheGlobalHeader";
 export default {
     props: {
-        member: String,
-        api_token: String
+        author: Object
     },
     mounted() {
+        this.$root.author = this.author;
         console.log("Component mounted.");
     },
     /* テスト用ログインメソッド */
