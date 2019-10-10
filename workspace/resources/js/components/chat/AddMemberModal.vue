@@ -4,7 +4,7 @@
       class="margin-top-big layout-flex --flex-direction-column --justify-content-space-around --align-self-center p-modal-content"
     >
       <div class="layout-flex --align-items-center p-group-box">
-        <h2 class="p-modal-title">会員を編集する</h2>
+        <h2 class="p-modal-title">会員を追加する</h2>
         <span class="c-esc-button p-esc-btn" @click="setBtnActive"></span>
       </div>
       <div class="layout-flex --flex-direction-column p-group-box">
@@ -14,16 +14,16 @@
           placeholder="会員検索"
           v-model="search_text"
         />
-        <edit-member-list
+        <add-member-list
           class="p-list-box"
           v-model="members"
           :search_text="search_text"
           ref="list_box"
-        ></edit-member-list>
+        ></add-member-list>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
         <button class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</button>
-        <button class="normal-button" @click="edit">保存</button>
+        <button class="normal-button" @click="add">保存</button>
       </div>
     </div>
     <v-dialog v-model="dialog_active" v-show="dialog_active">
@@ -35,11 +35,11 @@
   </section>
 </template>
 <script>
-import EditMemberList from "./EditMemberList";
+import AddMemberList from "./AddMemberList";
 import VDialog from "../VDialog";
 export default {
   components: {
-    EditMemberList,
+    AddMemberList,
     VDialog
   },
   props: {
@@ -57,26 +57,30 @@ export default {
   },
 
   created: function() {
-    for (const index in this.room.members) {
-      const member_id = this.room.members[index]._id;
-      this.$set(this.members, member_id, true);
-    }
+    this.$root.member_list.filter(member => {
+      for (const index in this.room.members) {
+        if (this.room.members[index]._id == member._id) {
+          return false;
+        }
+      }
+      this.$set(this.members, member._id, false);
+    });
   },
 
   methods: {
     setBtnActive: function() {
-      this.$parent.setMemberBtnActive();
+      this.$parent.setMemberAddBtnActive();
     },
 
-    edit: function() {
+    add: function() {
       let msg = "";
       for (const index in this.room.members) {
         const member = this.room.members[index];
-        if (!this.members[member._id]) {
+        if (this.members[member._id]) {
           msg += "・" + member.name + "\n";
         }
       }
-      this.dialog_msg.title = "以下の会員を退出させますか？";
+      this.dialog_msg.title = "以下の会員をルームに追加します";
       this.dialog_msg.body = msg;
       this.dialog_active = true;
     }
