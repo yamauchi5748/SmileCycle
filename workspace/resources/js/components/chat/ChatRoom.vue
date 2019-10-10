@@ -2,6 +2,7 @@
   <div class="details">
     <div class="name">
       <span v-if="room">{{ room.group_name }}</span>
+      <button><img src="/img/settings-icon.png" alt /></button>
     </div>
     <div class="contents">
       <div class="history">
@@ -9,7 +10,7 @@
           <li v-for="(content, index) in contents" :key="index">
             <div class="content">
               <div class="profile">
-                <img src alt="profile" />
+                <img src="/img/profile_image.jpg" alt="profile" />
               </div>
               <div class="signature">
                 <span>{{ content.sender_name }}</span>
@@ -22,9 +23,9 @@
       </div>
       <div class="send-content">
         <div class="input-box">
-          <img src alt />
-          <textarea v-on:input="test"></textarea>
-          <img src alt="stamp" class="stamp" />
+          <button><img class="upload-image" src alt /></button>
+          <p class="upload-message" contentEditable="true"></p>
+          <button><img src="/img/stamp-icon.png" alt="stamp" class="stamp" /></button>
         </div>
         <button class="normal-button">send</button>
       </div>
@@ -161,15 +162,35 @@ export default {
   },
 
   methods: {
+  /*
     test(e) {
       console.log("hello: " + e.target.value.length);
       console.log(e.target.clientHeight);
       console.log(e.target.span);
       console.log(e.target);
+//      e.execCommand('bold');
       if (e.target.value.length == 33) {
         e.target.style.color = "red";
       }
-    }
+    },
+    */
+    test2(e) {
+        console.log("-----------------");
+        // document.execCommand(bold);
+        console.log(e);
+        console.log(e.target);
+        // console.log(this.$route.params);
+        /*
+        this.$root
+          .loadChatContents(this.$route.params.id)
+          .then(res => {
+              console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+          */
+    },
   }
 };
 </script>
@@ -185,10 +206,11 @@ export default {
   }
 
   .name {
+    display: flex;
+    justify-content: space-between;
     border-bottom: .1px solid #707070;
     height: 43px;
     padding: 0 16px;
-    justify-content: flex-start;
     align-items: center;
     text-decoration: none;
     font-size: 16px;
@@ -197,8 +219,7 @@ export default {
   }
 
   .contents {
-    margin: 0 auto;
-    width: 93%;
+    margin: 0 0 0 16px;
     height: 727px;
     flex-direction: column;
     position: relative;
@@ -206,7 +227,7 @@ export default {
     overflow-x: hidden;
     .history {
       width: calc(100% + 17px);
-      height: 60%;
+      height: 500px;
       overflow-y: scroll;
       ol {
         width: 100%;
@@ -228,50 +249,68 @@ export default {
     grid-row: 1/1;
     margin: 0px;
     padding: 0px;
-    background-color: red;
+
+    img {
+    width: 100%;
+    heighht: 100%;
+    border-radius: 50%;
+    }
   }
   .signature {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 1/1;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: center;
+    margin: 0px 20px;
+    
+    span {
+        margin: 0px 10px;
+    }
   }
   .message {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 2/2;
+    font-size: 16px;
+    margin: 0px 20px;
   }
 }
 .send-content {
-  background-color: blue;
   position: absolute;
-  top: 64%;
-  height: 64px;
   width: 100%;
   display: flex;
   .input-box {
     display: flex;
-    flex-grow: 9;
+    flex-grow: 1;
     margin: 0px;
+    border: 1px solid #707070;
+    border-radius: 4px;
+    outline: none;
     img {
-      flex-grow: 1;
     }
-    textarea {
+    .upload-message {
       box-sizing: border-box;
-      height: 100%;
-      width: calc(100% + 17px);
-      flex-grow: 8;
-      font-size: 30px;
-    }
-    .stamp {
+      width: 400px;
       flex-grow: 1;
+      font-size: 30px;
+      outline: none;
+      padding: 10px;
+      line-height: 1;
     }
-    background-color: red;
+    button{
+      align-self: flex-end;
+      .stamp {
+          height: 100%;
+
+        }
+      }
   }
   .normal-button {
-    flex-grow: 1;
-    height: 100%;
+      align-self: flex-end;
   }
 }
 </style>
