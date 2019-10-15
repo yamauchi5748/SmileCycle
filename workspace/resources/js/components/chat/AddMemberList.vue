@@ -40,7 +40,6 @@ export default {
   watch: {
     add_members: {
       handler: function() {
-        console.log("aa");
         this.$emit("input", this.add_members);
       }
     }

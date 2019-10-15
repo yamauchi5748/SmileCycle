@@ -21,7 +21,7 @@
         <button class="normal-button" @click="add">保存</button>
       </div>
     </div>
-    <v-dialog v-model="dialog_active" v-show="dialog_active">
+    <v-dialog v-model="dialog_confirm" v-on:active="setDialogActive" v-show="dialog_active">
       <div class="p-dialog-msg-box">
         <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
         <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
@@ -44,9 +44,11 @@ export default {
   data: function() {
     return {
       room: this.Room,
+      add_members: [],
       members: {},
       search_text: "",
       dialog_msg: {},
+      dialog_confirm: false,
       dialog_active: false
     };
   },
@@ -67,17 +69,39 @@ export default {
       this.$parent.setMemberAddBtnActive();
     },
 
+    setDialogActive: function(is_active) {
+      this.dialog_active = is_active;
+    },
+
     add: function() {
       let msg = "";
       for (const index in this.$root.member_list) {
         const member = this.$root.member_list[index];
         if (this.members[member._id]) {
           msg += "・" + member.name + "\n";
+          this.add_members.push(member._id);
         }
       }
       this.dialog_msg.title = "以下の会員をルームに追加します";
       this.dialog_msg.body = msg;
       this.dialog_active = true;
+    }
+  },
+
+  watch: {
+    dialog_confirm: function(is_active) {
+      // 確認OK
+      if (is_active) {
+        const data = {
+          add_members: this.add_members
+        };
+        this.$root.addChatRoomMember(this.room._id, data).then(res => {
+          this.room.members = res.members;
+          this.dialog_confirm = false;
+          this.add_members = [];
+        });
+        this.setBtnActive();
+      }
     }
   }
 };
