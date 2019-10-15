@@ -1,12 +1,12 @@
 <template>
   <div class="layout-flex --justify-content-space-around --align-items-center p-dialog-box">
-    <div class="p-overlay" @click="close"></div>
+    <div class="p-overlay" @click="cancel"></div>
     <div class="p-dialog">
       <span class="p-dialog-title">確認画面</span>
       <slot></slot>
       <div class="layout-flex --justify-content-space-around p-dialog-btn-box">
-        <button class="normal-button p-cancel-btn" @click="close">キャンセル</button>
-        <button class="normal-button" @click="close">OK</button>
+        <button class="normal-button p-cancel-btn" @click="cancel">キャンセル</button>
+        <button class="normal-button" @click="agree">OK</button>
       </div>
     </div>
   </div>
@@ -19,11 +19,22 @@ export default {
     VScrollbar
   },
   props: {
-    value: Boolean
+    value: Boolean,
+    active: Event
   },
   methods: {
     close: function() {
+      this.$emit("active", false);
+    },
+
+    cancel: function() {
       this.$emit("input", false);
+      this.close();
+    },
+
+    agree: function() {
+      this.$emit("input", true);
+      this.close();
     }
   }
 };

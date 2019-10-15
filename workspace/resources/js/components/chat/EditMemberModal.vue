@@ -26,7 +26,7 @@
         <button class="normal-button" @click="edit">保存</button>
       </div>
     </div>
-    <v-dialog v-model="dialog_active" v-show="dialog_active">
+    <v-dialog v-model="dialog_confirm" v-on:active="setDialogActive" v-show="dialog_active">
       <div class="p-dialog-msg-box">
         <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
         <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
@@ -50,8 +50,10 @@ export default {
     return {
       room: this.Room,
       members: {},
+      delete_members: [],
       search_text: "",
       dialog_msg: {},
+      dialog_confirm: false,
       dialog_active: false
     };
   },
@@ -68,17 +70,39 @@ export default {
       this.$parent.setMemberBtnActive();
     },
 
+    setDialogActive: function(is_active) {
+      this.dialog_active = is_active;
+    },
+
     edit: function() {
       let msg = "";
       for (const index in this.room.members) {
         const member = this.room.members[index];
         if (!this.members[member._id]) {
           msg += "・" + member.name + "\n";
+          this.delete_members.push(member._id);
         }
       }
       this.dialog_msg.title = "以下の会員を退出させますか？";
       this.dialog_msg.body = msg;
-      this.dialog_active = true;
+      this.setDialogActive(true);
+    }
+  },
+
+  watch: {
+    dialog_confirm: function(is_active) {
+      // 確認OK
+      if (is_active) {
+        const data = {
+          delete_members: this.delete_members
+        };
+        this.$root.deleteChatRoomMember(this.room._id, data).then(res => {
+          this.room.members = res.members;
+          this.dialog_confirm = false;
+          this.delete_members = [];
+        });
+        this.setBtnActive();
+      }
     }
   }
 };
