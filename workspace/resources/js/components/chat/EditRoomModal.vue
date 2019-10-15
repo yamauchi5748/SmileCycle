@@ -71,6 +71,23 @@ export default {
     editChatRoom: function() {
       this.name_alert = this.room.group_name.length < 1; // グループ名が入力されていなければアラート
       if (this.name_alert) return;
+
+      const file = this.$refs.img_input.files[0];
+      const data = new FormData();
+      data.append("new_group_name", this.room.group_name);
+
+      if (file && file.type.match("image")) {
+        console.log(file);
+        data.append("new_icon", file);
+      }
+
+      console.log(this.room._id, data);
+      var config = {
+        headers: {
+          "content-type": "multipart/form-data"
+        }
+      };
+      this.$root.editChatRoom(this.room._id, data, config);
     }
   }
 };

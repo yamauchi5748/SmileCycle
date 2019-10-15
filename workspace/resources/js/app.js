@@ -76,15 +76,15 @@ const router = new VueRouter({
             path: "/members",
             component: Members
         },
-		{
+        {
             path: "/invitations",
             component: Invitations,
             children: [
-				{
-					path: ":id",
-					name: "invitation-details",
-					component: InvitationDetails,
-				}
+                {
+                    path: ":id",
+                    name: "invitation-details",
+                    component: InvitationDetails,
+                }
             ]
         },
         {
@@ -310,6 +310,18 @@ const app = new Vue({
                 .then(res => {
                     this.chat_room_list.splice(0, 0, res.data.chat_room);
                     return this.chat_room_list;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ編集 */
+        editChatRoom: function (room_id, data, config) {
+            return axios.put('/api/chat-rooms/' + room_id, data, config)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res.data);
                 })
                 .catch(error => {
                     console.log(error);

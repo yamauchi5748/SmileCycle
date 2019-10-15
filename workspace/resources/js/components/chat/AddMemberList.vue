@@ -86,7 +86,7 @@ export default {
 .p-list {
   position: relative;
   width: 100%;
-  height: 700px;
+  height: 324px;
   overflow-y: scroll;
   border-collapse: collapse;
   border: solid 1px $gray;

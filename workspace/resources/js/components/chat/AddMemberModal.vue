@@ -14,12 +14,7 @@
           placeholder="会員検索"
           v-model="search_text"
         />
-        <add-member-list
-          class="p-list-box"
-          v-model="members"
-          :search_text="search_text"
-          ref="list_box"
-        ></add-member-list>
+        <add-member-list v-model="members" :search_text="search_text"></add-member-list>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
         <button class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</button>
@@ -74,8 +69,8 @@ export default {
 
     add: function() {
       let msg = "";
-      for (const index in this.room.members) {
-        const member = this.room.members[index];
+      for (const index in this.$root.member_list) {
+        const member = this.$root.member_list[index];
         if (this.members[member._id]) {
           msg += "・" + member.name + "\n";
         }
@@ -135,10 +130,6 @@ export default {
     border-color: $accent-color;
     box-shadow: 0 0 4px 4px #43b37e;
   }
-}
-
-.p-list-box {
-  height: 259px;
 }
 
 .p-dialog-msg-box {
