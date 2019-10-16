@@ -106,7 +106,7 @@ export default {
 }
 
 .p-list-box {
-  height: 392px;
+  height: 389px;
 }
 
 .p-name-input {

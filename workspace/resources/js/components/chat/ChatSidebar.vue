@@ -103,7 +103,7 @@ export default {
       });
 
     // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 50);
+    this.intervalId = setInterval(this.resizeEvent, 500);
   },
 
   beforeDestroy() {
