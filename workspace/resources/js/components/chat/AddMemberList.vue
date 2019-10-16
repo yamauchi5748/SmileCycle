@@ -10,7 +10,7 @@
         </li>
         <li class="p-body-item" v-for="member in members" :key="member._id">
           <div class="p-item-cell">
-            <v-input-checkbox v-model="attend[member._id]"></v-input-checkbox>
+            <v-input-checkbox v-model="add_members[member._id]"></v-input-checkbox>
           </div>
           <div class="p-item-cell">{{member.name}}</div>
         </li>
@@ -23,37 +23,36 @@
 import VInputCheckbox from "../VInputCheckbox.vue";
 export default {
   props: {
-    value: Array
+    value: Object,
+    search_text: String
   },
   data: function() {
     return {
-      room_members: {},
       attendDepartments: {},
-      attend: {}
+      add_members: {}
     };
   },
   created: function() {
-    for (let index in this.value) {
-      this.$set(this.room_members, this.value[index], true);
-      this.$set(this.attend, this.value[index], true);
+    for (let member_id in this.value) {
+      this.$set(this.add_members, member_id, false);
     }
-    this.$root.loadMembers();
   },
   watch: {
-    attend: {
+    add_members: {
       handler: function() {
-        let attend_members = [];
-        for (let id in this.attend) {
-          if (this.attend[id]) {
-            attend_members.push(id);
-          }
-        }
-        this.$emit("input", attend_members);
-      },
-      deep: true
+        this.$emit("input", this.add_members);
+      }
     }
   },
   computed: {
+    member_list: function() {
+      return this.$root.member_list.filter(member => {
+        for (const member_id in this.add_members) {
+          if (member._id != member_id) continue;
+          return member.name.indexOf(this.search_text) != -1;
+        }
+      });
+    },
     departments: function() {
       let departments = {};
       let members = this.member_list;
@@ -65,11 +64,6 @@ export default {
         departments[member.department_name].push(member);
       }
       return departments;
-    },
-    member_list: function() {
-      return this.$root.member_list.filter(member => {
-        return this.room_members[member._id];
-      });
     }
   },
   methods: {
@@ -77,7 +71,7 @@ export default {
       let members = this.departments[name];
       for (let index in members) {
         let member = members[index];
-        this.$set(this.attend, member._id, this.attendDepartments[name]);
+        this.$set(this.add_members, member._id, this.attendDepartments[name]);
       }
     }
   },
@@ -91,7 +85,7 @@ export default {
 .p-list {
   position: relative;
   width: 100%;
-  height: 700px;
+  height: 324px;
   overflow-y: scroll;
   border-collapse: collapse;
   border: solid 1px $gray;

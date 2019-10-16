@@ -1,6 +1,6 @@
 <template>
   <section class="p-sidebar">
-    <nav class="layout-flex --justify-content-space-around p-chats-navigation">
+    <nav class="layout-flex p-chats-navigation">
       <span
         class="p-chats-nav-container"
         :class="{active:(room_type == 'group')}"
@@ -18,7 +18,7 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <v-scrollbar :box-height="box_height">
+    <v-scrollbar class="margin-left-smallest" :box-height="box_height">
       <ul class="p-room-list" ref="list_box">
         <li
           class="margin-bottom-normal"
@@ -34,6 +34,7 @@
     <!-- テスト用ボタン -->
     <span class="c-add-button p-edit-button" @click="setEditBtnActive" v-if="room_id"></span>
     <span class="c-add-button p-edit-member-button" @click="setMemberBtnActive" v-if="room_id"></span>
+    <span class="c-add-button p-add-member-button" @click="setMemberAddBtnActive" v-if="room_id"></span>
     <!-- テスト用ボタン ここまで -->
     <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
     <!-- テスト用コンポーネント -->
@@ -49,6 +50,12 @@
       :room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_btn_active"
     />
+    <add-member-modal
+      class="p-modal-wrapper modal-content"
+      :class="{active:member_add_btn_active}"
+      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      v-if="member_add_btn_active"
+    />
     <!-- テスト用コンポーネント ここまで -->
   </section>
 </template>
@@ -58,13 +65,15 @@ import RoomItem from "./RoomItem";
 import CreateRoomModal from "./CreateRoomModal";
 import EditRoomModal from "./EditRoomModal"; //テスト用
 import EditMemberModal from "./EditMemberModal"; //テスト用
+import AddMemberModal from "./AddMemberModal"; //テスト用
 export default {
   components: {
     VScrollbar,
     RoomItem,
     CreateRoomModal,
     EditRoomModal, //テスト用
-    EditMemberModal //テスト用
+    EditMemberModal, //テスト用
+    AddMemberModal //テスト用
   },
   data() {
     return {
@@ -77,6 +86,7 @@ export default {
       btn_active: false,
       edit_btn_active: false, //テスト用
       member_btn_active: false, //テスト用
+      member_add_btn_active: false, //テスト用
       room_id: this.$route.params.id //テスト用
     };
   },
@@ -119,6 +129,10 @@ export default {
     // テスト用
     setMemberBtnActive: function() {
       this.member_btn_active = !this.member_btn_active;
+    },
+    // テスト用
+    setMemberAddBtnActive: function() {
+      this.member_add_btn_active = !this.member_add_btn_active;
     },
 
     loadRoomType: function(type) {
@@ -178,7 +192,9 @@ export default {
   cursor: pointer;
 
   .p-chats-nav-container {
-    padding: 32px 45px 9px;
+    width: 50%;
+    text-align: center;
+    padding: 32px 0 9px;
     font-size: 22px;
     color: #707070;
     &.active {
@@ -188,7 +204,7 @@ export default {
 }
 
 .p-search-box-wrapper {
-  margin: 18px auto;
+  margin: 18px 0 18px 5px;
   position: relative;
 }
 
@@ -226,11 +242,18 @@ export default {
 }
 
 /* テスト用scss */
+.p-add-member-button {
+  position: absolute;
+  background-color: pink;
+  bottom: 23px;
+  left: 148px;
+}
+/* テスト用scss */
 .p-edit-button {
   position: absolute;
   background-color: brown;
   bottom: 23px;
-  left: 98px;
+  left: 78px;
 }
 
 /* テスト用scss */

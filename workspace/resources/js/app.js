@@ -76,7 +76,7 @@ const router = new VueRouter({
             path: "/members",
             component: Members
         },
-		{
+        {
             path: "/invitations",
             component: Invitations,	
 		},
@@ -314,12 +314,60 @@ const app = new Vue({
                 });
         },
 
+        /* チャットグループ編集 */
+        editChatRoom: function (room_id, data, config) {
+            return axios.put('/api/chat-rooms/' + room_id, data, config)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
         /* 既読処理 */
         alreadyRead: function (chat_room_id, contents_id) {
             return axios.put('/api/chat-rooms/' + chat_room_id + '/contents', {
                 unread_contents: contents_id
             })
                 .then(res => this.checkAuth(res))
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ会員追加 */
+        addChatRoomMember: function (room_id, data) {
+            return axios.post('/api/chat-rooms/' + room_id + '/members', data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == res.data.room._id) {
+                            this.chat_room_list.splice(index, 1, res.data.room);
+                        }
+                    }
+                    return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ会員削除 */
+        deleteChatRoomMember: function (room_id, data) {
+            return axios.delete('/api/chat-rooms/' + room_id + '/members', { data: data })
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == res.data.room._id) {
+                            this.chat_room_list.splice(index, 1, res.data.room);
+                        }
+                    }
+                    return res.data.room;
+                })
                 .catch(error => {
                     console.log(error);
                 });
