@@ -287,30 +287,12 @@ class ChatRoomController extends AuthController
             Storage::putFileAs('private/images/chats', $request->new_icon, $room['_id'] . '.png', 'private');
         }
 
-        /* 更新したルーム情報を取得 */
-        $rooms = ChatRoom::raw()->aggregate([
-            /* ルームを指定 */
-            [
-                '$match' => [
-                    '_id' => $chat_room_id
-                ]
-            ],
-            [
-                '$project' => [
-                    '_id' => 1,
-                    'group_name' => 1,
-
-                ]
-            ]
-        ])->toArray();
-
+        $room =
         /* 返すレスポンスデータを整形 */
-        $room = head($rooms);
-        if ($room) {
-            $this->response['room'] = $room;
-        } else {
-            $this->response['result'] = false;
-        }
+        $this->response['room'] = [
+            '_id' => $chat_room_id,
+            'group_name' => $request->new_group_name
+        ];
 
         return response()->json(
             $this->response,

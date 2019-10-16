@@ -21,33 +21,51 @@
       <div class="layout-flex --flex-direction-column --justify-content-center p-group-box">
         <span>グループ名</span>
         <span class="alert" v-show="name_alert">ルーム名が入力されていません</span>
-        <input class="p-name-input" type="text" placeholder="グループ名" v-model="room.group_name" />
+        <input class="p-name-input" type="text" placeholder="グループ名" v-model="new_group_name" />
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
         <button class="normal-button p-delete-btn" :to="'/chat-rooms'" @click="setBtnActive">削除</button>
-        <button class="normal-button" @click="editChatRoom">保存</button>
+        <button class="normal-button" @click="edit">保存</button>
       </div>
     </div>
+    <v-dialog v-model="dialog_confirm" v-on:active="setDialogActive" v-show="dialog_active">
+      <div class="p-dialog-msg-box">
+        <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
+        <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
+      </div>
+    </v-dialog>
   </section>
 </template>
 <script>
 import EditMemberList from "./EditMemberList";
+import VDialog from "../VDialog";
 export default {
   components: {
-    EditMemberList
+    EditMemberList,
+    VDialog
   },
-  props: ["Room"],
+  props: {
+    Room: Object
+  },
 
   data: function() {
     return {
       name_alert: false,
-      room: this.Room
+      room: this.Room,
+      new_group_name: this.Room.group_name,
+      dialog_msg: {},
+      dialog_confirm: false,
+      dialog_active: false
     };
   },
 
   methods: {
     setBtnActive: function() {
       this.$parent.setEditBtnActive();
+    },
+
+    setDialogActive: function(is_active) {
+      this.dialog_active = is_active;
     },
 
     preview: function() {
@@ -68,26 +86,22 @@ export default {
       reader.readAsDataURL(file);
     },
 
-    editChatRoom: function() {
-      this.name_alert = this.room.group_name.length < 1; // グループ名が入力されていなければアラート
+    edit: function() {
+      this.name_alert = this.new_group_name.length < 1; // グループ名が入力されていなければアラート
       if (this.name_alert) return;
 
       const file = this.$refs.img_input.files[0];
       const data = new FormData();
-      data.append("new_group_name", this.room.group_name);
+      data.append("new_group_name", this.new_group_name);
 
       if (file && file.type.match("image")) {
-        console.log(file);
         data.append("new_icon", file);
       }
-
-      console.log(this.room._id, data);
-      var config = {
-        headers: {
-          "content-type": "multipart/form-data"
-        }
-      };
-      this.$root.editChatRoom(this.room._id, data, config);
+      this.$root.editChatRoom(this.room._id, data).then(res => {
+        this.room.group_name = ""; // RoomItemのwatchで検知するため
+        this.room.group_name = res.group_name;
+        this.setBtnActive();
+      });
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <router-link class="layout-flex" :to="{name:'chat-room',params:{id: room._id}}">
     <figure class="p-room-profile-box">
-      <img class="p-room-profile" :src="'/chat-rooms/' + room._id + '/profile-image'" />
+      <img class="p-room-profile" :src="img_src" />
     </figure>
     <div
       class="layout-flex --flex-direction-column --justify-content-center p-room-primary-box-wrapper"
@@ -23,10 +23,12 @@
 </template>
 <script>
 export default {
-  props: ["roomItem"],
+  props: {
+    room: Object
+  },
   data() {
     return {
-      room: this.roomItem
+      img_src: "/chat-rooms/" + this.room._id + "/profile-image"
     };
   },
 
@@ -38,9 +40,19 @@ export default {
     }
   },
 
+  methods: {
+    loadImage: function() {
+      this.img_src =
+        "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
+    }
+  },
+
   watch: {
-    roomItem: function(val, old) {
-      this.room = val;
+    room: {
+      handler: function(val, oldVal) {
+        this.loadImage();
+      },
+      deep: true
     }
   }
 };

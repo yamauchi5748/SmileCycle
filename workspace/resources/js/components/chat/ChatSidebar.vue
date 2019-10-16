@@ -26,7 +26,7 @@
           :key="index"
           @click="entryRoom(room)"
         >
-          <room-item :room-item="room" />
+          <room-item :room="room" />
         </li>
       </ul>
     </v-scrollbar>
@@ -41,19 +41,19 @@
     <edit-room-modal
       class="p-modal-wrapper modal-content"
       :class="{active:edit_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="edit_btn_active"
     />
     <edit-member-modal
       class="p-modal-wrapper modal-content"
       :class="{active:member_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_btn_active"
     />
     <add-member-modal
       class="p-modal-wrapper modal-content"
       :class="{active:member_add_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_add_btn_active"
     />
     <!-- テスト用コンポーネント ここまで -->
@@ -117,6 +117,7 @@ export default {
     },
 
     setRoomList: function(room_list) {
+      console.log(room_list[0].group_name);
       this.room_list = room_list;
     },
     setBtnActive: function() {
@@ -172,6 +173,7 @@ export default {
 
     room_type: function(val, oldVal) {
       const room_list = this.$root.chat_room_list.filter(room => {
+        console.log(val, val == "group" ? room.is_group : !room.is_group);
         return val == "group" ? room.is_group : !room.is_group;
       });
 
@@ -210,7 +212,7 @@ export default {
 
 .p-search-box {
   height: 51px;
-  padding-left: 29px;
+  padding: 0 29px;
   font-size: 18px;
   background-color: $base-color;
   color: $black;
