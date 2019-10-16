@@ -14,6 +14,9 @@ import RoomDetails from "./components/chats/RoomDetails.vue";
 import Members from "./components/members/Members.vue";
 import Invitations from "./components/invitations/Invitations.vue";
 import InvitationDetails from "./components/invitations/InvitationDetails.vue";
+import Forum from "./components/forum/Forum.vue";
+import ForumDetails from "./components/forum/ForumDetails.vue";
+import ForumCreate from "./components/forum/ForumCreate.vue";
 import Controls from "./components/controls/Controls.vue";
 import ControlsInvitation from "./components/controls/Invitation.vue";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
@@ -84,6 +87,20 @@ const router = new VueRouter({
 			path: "/invitations/:id",
 			name: "invitation-details",
 			component: InvitationDetails,
+        },
+		{
+            path: "/forum",
+            component: Forum,
+		},
+		{
+			path: "/forum/:id",
+			name: "forum-details",
+			component: ForumDetails,
+		},
+		{
+			path: "/forum/create",
+			name: "forum-create",
+			component: ForumCreate,
         },
         {
             path: "/controls",
