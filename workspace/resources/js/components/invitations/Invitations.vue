@@ -2,7 +2,6 @@
     <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center margin-bottom-big">
         </div>
-		<router-view class="p-content"></router-view>
         <v-article
             class="p-post"
             v-for="(invitation,index) in invitations"

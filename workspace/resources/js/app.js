@@ -78,14 +78,12 @@ const router = new VueRouter({
         },
         {
             path: "/invitations",
-            component: Invitations,
-            children: [
-                {
-                    path: ":id",
-                    name: "invitation-details",
-                    component: InvitationDetails,
-                }
-            ]
+            component: Invitations,	
+		},
+		{
+			path: "/invitations/:id",
+			name: "invitation-details",
+			component: InvitationDetails,
         },
         {
             path: "/controls",

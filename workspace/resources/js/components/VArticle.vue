@@ -38,14 +38,18 @@
 export default {
     props: {
         post: Object,
-        to: [String, Object]
+        to: [String, Object],
+		readmore: {
+			default: false,
+			type: [Boolean]
+		}
     },
     data: function() {
         return {
             image_width: 600,
             slider_point: 0,
-            isTextOver: false,
-            isReadMore: false
+            isTextOver: this.readmore,
+            isReadMore: this.readmore
         };
     },
     mounted: function() {
