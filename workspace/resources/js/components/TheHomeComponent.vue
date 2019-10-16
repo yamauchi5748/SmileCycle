@@ -50,6 +50,10 @@ export default {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
+    height: 100vh;
+}
+.p-content {
+    height: 100%;
 }
 .p-header {
     height: 60px;

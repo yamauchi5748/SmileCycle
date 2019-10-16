@@ -5,26 +5,24 @@
       <button><img src="/img/settings-icon.png" alt /></button>
     </div>
     <div class="contents">
-      <div class="history">
-        <ol>
-          <li v-for="(content, index) in contents" :key="index">
-            <div class="content">
-              <div class="profile">
-                <img src="/img/profile_image.jpg" alt="profile" />
-              </div>
-              <div class="signature">
-                <span>{{ content.sender_name }}</span>
-                <span>{{ content.created_at }}</span>
-              </div>
-              <div class="message">{{ content.content_id }}</div>
-            </div>
-          </li>
-        </ol>
-      </div>
+    <ol class="history">
+      <li v-for="(content, index) in contents" :key="index">
+        <div class="content">
+          <div class="profile">
+            <img src="/img/profile_image.jpg" alt="profile" />
+          </div>
+          <div class="signature">
+            <span>{{ content.sender_name }}</span>
+            <span>{{ content.created_at }}</span>
+          </div>
+          <div class="message">{{ content.content_id }}</div>
+        </div>
+      </li>
+    </ol>
       <div class="send-content">
         <div class="input-box">
           <button><img class="upload-image" src alt /></button>
-          <p class="upload-message" contentEditable="true"></p>
+          <p class="upload-message" contentEditable="true" ></p>
           <button><img src="/img/stamp-icon.png" alt="stamp" class="stamp" /></button>
         </div>
         <button class="normal-button">send</button>
@@ -162,44 +160,16 @@ export default {
   },
 
   methods: {
-  /*
-    test(e) {
-      console.log("hello: " + e.target.value.length);
-      console.log(e.target.clientHeight);
-      console.log(e.target.span);
-      console.log(e.target);
-//      e.execCommand('bold');
-      if (e.target.value.length == 33) {
-        e.target.style.color = "red";
-      }
-    },
-    */
-    test2(e) {
-        console.log("-----------------");
-        // document.execCommand(bold);
-        console.log(e);
-        console.log(e.target);
-        // console.log(this.$route.params);
-        /*
-        this.$root
-          .loadChatContents(this.$route.params.id)
-          .then(res => {
-              console.log(res);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-          */
-    },
   }
 };
 </script>
 <style lang="scss" scoped>
 .details {
-  flex-grow: 1;
-  flex-direction: column;
   background-color: $base-color;
   height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-rows: 58px 1fr;
   div {
     margin: 0px;
     margin-top: 20px;
@@ -220,22 +190,19 @@ export default {
 
   .contents {
     margin: 0 0 0 16px;
-    height: 727px;
+    height: 100%;
     flex-direction: column;
     position: relative;
     overflow-y: hidden;
     overflow-x: hidden;
     .history {
-      width: calc(100% + 17px);
-      height: 500px;
-      overflow-y: scroll;
-      ol {
-        width: 100%;
-        li {
+       width: calc(100% + 17px);
+       height: 100%;
+       overflow-y: scroll;
+       li {
           width: 100%;
-        }
+       }
       }
-    }
   }
 }
 .content {
@@ -244,6 +211,7 @@ export default {
   grid-template-rows: auto auto;
   width: 100%;
   background-color: #f2f2f2;
+  position: relative;
   .profile {
     grid-column: 1/1;
     grid-row: 1/1;
@@ -281,28 +249,33 @@ export default {
 }
 .send-content {
   position: absolute;
+  bottom: 10px;
   width: 100%;
   display: flex;
+  background-color: $base-color;
+  max-height: 500px;
   .input-box {
     display: flex;
+    position: relative;
     flex-grow: 1;
-    margin: 0px;
+    margin: 0 6px 0 0;
     border: 1px solid #707070;
     border-radius: 4px;
     outline: none;
-    img {
-    }
+    overflow-y: scroll;
     .upload-message {
       box-sizing: border-box;
       width: 400px;
       flex-grow: 1;
       font-size: 30px;
       outline: none;
-      padding: 10px;
+      padding: 10px 40px 10px 10px;
       line-height: 1;
     }
     button{
-      align-self: flex-end;
+      position: absolute;
+      bottom: 0;
+      right: 0;
       .stamp {
           height: 100%;
 
