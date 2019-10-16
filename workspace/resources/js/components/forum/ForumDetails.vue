@@ -2,10 +2,10 @@
     <section class="view controls-primary-view">
         <v-article
             class="p-post"
-            v-for="(invitation,index) in forums"
+            v-for="(forum,index) in forums"
             :key="index"
-            :post="invitation"
-            :to="{name:'invitation-details', params:{id:invitation._id}}"
+            :post="forum"
+            :to="{name:'forum-details', params:{id:forum._id}}"
 			:readmore="true"
         ></v-article>
 		<div class="comment">
