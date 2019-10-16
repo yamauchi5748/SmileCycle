@@ -1,25 +1,40 @@
 <template>
   <div class="layout-flex --justify-content-space-around --align-items-center p-dialog-box">
-    <div class="p-overlay" @click="close"></div>
+    <div class="p-overlay" @click="cancel"></div>
     <div class="p-dialog">
       <span class="p-dialog-title">確認画面</span>
-      <slot class="p-slot"></slot>
+      <slot></slot>
       <div class="layout-flex --justify-content-space-around p-dialog-btn-box">
-        <button class="normal-button p-cancel-btn" @click="close">キャンセル</button>
-        <button class="normal-button" @click="close">OK</button>
+        <button class="normal-button p-cancel-btn" @click="cancel">キャンセル</button>
+        <button class="normal-button" @click="agree">OK</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import VScrollbar from "./VScrollbar";
 export default {
+  components: {
+    VScrollbar
+  },
   props: {
-    value: Boolean
+    value: Boolean,
+    active: Event
   },
   methods: {
     close: function() {
+      this.$emit("active", false);
+    },
+
+    cancel: function() {
       this.$emit("input", false);
+      this.close();
+    },
+
+    agree: function() {
+      this.$emit("input", true);
+      this.close();
     }
   }
 };
@@ -29,17 +44,17 @@ export default {
 @mixin window($width: 100%, $height: 100%) {
   width: $width;
   height: $height;
+  z-index: 3;
 }
 
 .p-dialog-box {
   @include window();
   position: fixed;
   .p-overlay {
-    @include window($height: 100vh);
+    @include window($height: 850px);
     top: -60px;
     position: fixed;
     background-color: rgba($color: #000000, $alpha: 0.5);
-    z-index: 2;
   }
 
   .p-dialog {
