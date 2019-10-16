@@ -24,14 +24,13 @@
         <input class="p-name-input" type="text" placeholder="グループ名" v-model="new_group_name" />
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
-        <button class="normal-button p-delete-btn" :to="'/chat-rooms'" @click="setBtnActive">削除</button>
+        <button class="normal-button p-delete-btn" :to="'/chat-rooms'" @click="del">削除</button>
         <button class="normal-button" @click="edit">保存</button>
       </div>
     </div>
-    <v-dialog v-model="dialog_confirm" v-on:active="setDialogActive" v-show="dialog_active">
+    <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
       <div class="p-dialog-msg-box">
         <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
-        <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
       </div>
     </v-dialog>
   </section>
@@ -54,7 +53,6 @@ export default {
       room: this.Room,
       new_group_name: this.Room.group_name,
       dialog_msg: {},
-      dialog_confirm: false,
       dialog_active: false
     };
   },
@@ -66,6 +64,19 @@ export default {
 
     setDialogActive: function(is_active) {
       this.dialog_active = is_active;
+    },
+
+    dialogAgree: function() {
+      this.setDialogActive(false);
+
+      this.$root.deleteChatRoom(this.room._id).then(res => {
+        this.setBtnActive();
+        this.$router.push({ path: "/chat-rooms" });
+      });
+    },
+
+    dialogCancel: function() {
+      this.setDialogActive(false);
     },
 
     preview: function() {
@@ -102,6 +113,11 @@ export default {
         this.room.group_name = res.group_name;
         this.setBtnActive();
       });
+    },
+
+    del: function() {
+      this.dialog_msg.title = "ルームを削除してもよろしいですか？";
+      this.setDialogActive(true);
     }
   }
 };
@@ -178,6 +194,18 @@ export default {
   &:focus {
     border-color: $accent-color;
     box-shadow: 0 0 4px 4px #43b37e;
+  }
+}
+
+.p-dialog-msg-box {
+  padding-right: 10px;
+  display: grid;
+  grid-template-rows: 40px 1fr;
+  justify-content: center;
+  font-weight: bold;
+  overflow-y: auto;
+  .p-dialog-msg-title {
+    font-size: 18px;
   }
 }
 

@@ -327,6 +327,19 @@ const app = new Vue({
                 });
         },
 
+        /* チャットグループ削除 */
+        deleteChatRoom: function (room_id) {
+            return axios.delete('/api/chat-rooms/' + room_id)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    const index = this.chat_room_list.findIndex(room => room._id === room_id);
+                    this.chat_room_list.splice(index, 1);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
         /* チャットグループ会員追加 */
         addChatRoomMember: function (room_id, data) {
             return axios.post('/api/chat-rooms/' + room_id + '/members', data)

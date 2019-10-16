@@ -79,7 +79,6 @@ export default {
     return {
       intervalId: undefined,
       box_height: 0,
-      room_list: [],
       search_text: "",
       room_type: "",
       placeholder: "",
@@ -111,15 +110,22 @@ export default {
     clearInterval(this.intervalId);
   },
 
+  computed: {
+    room_list: function() {
+      return this.$root.chat_room_list.filter(room => {
+        return (
+          room.group_name.indexOf(this.search_text) != -1 &&
+          (this.room_type == "group" ? room.is_group : !room.is_group)
+        );
+      });
+    }
+  },
+
   methods: {
     resizeEvent: function() {
       this.box_height = this.$refs.list_box.clientHeight;
     },
 
-    setRoomList: function(room_list) {
-      console.log(room_list[0].group_name);
-      this.room_list = room_list;
-    },
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
@@ -137,6 +143,7 @@ export default {
     },
 
     loadRoomType: function(type) {
+      console.log(type);
       this.room_type = type;
       if (this.room_type === "group") {
         this.placeholder = "グループ名検索";
@@ -159,25 +166,6 @@ export default {
       }
       if (unread_contents_id.length < 1) return;
       this.$root.alreadyRead(room._id, unread_contents_id);
-    }
-  },
-
-  watch: {
-    search_text: function(val, oldVal) {
-      const room_list = this.$root.chat_room_list.filter(room => {
-        return room.group_name.indexOf(val) != -1;
-      });
-
-      this.setRoomList(room_list);
-    },
-
-    room_type: function(val, oldVal) {
-      const room_list = this.$root.chat_room_list.filter(room => {
-        console.log(val, val == "group" ? room.is_group : !room.is_group);
-        return val == "group" ? room.is_group : !room.is_group;
-      });
-
-      this.setRoomList(room_list);
     }
   }
 };
