@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ChatRoom;
+
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -11,10 +13,17 @@
 |
 */
 
-Broadcast::channel('user.{user_id}.room.{room_id}', function ($user, $user_id, $room_id) {
-    if ($user->canJoinRoom($room_id)) {
-        return ['id' => $user->id, 'name' => $user->name];
-    }
+Broadcast::channel('room.{room_id}', function ($user, $room_id) {
+    $rooms = ChatRoom::raw()->aggregate([
+        [
+            '$match' => [
+                '_id' => $room_id
+            ]
+        ]
+    ])->toArray();
+    $room = head($rooms);
+
+    return $room;
 });
 Broadcast::channel('user.{user_id}', function ($user, $user_id) {
     if ($user_id == Auth::id()) {

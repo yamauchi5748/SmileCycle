@@ -179,7 +179,19 @@ const app = new Vue({
             // チャット取得イベント
             .listen('ChatRecieved', (e) => {
                 console.log(e);
-            })
+            });
+
+        this.$root.loadChatRooms().then(res => {
+            for (const index in this.chat_room_list) {
+                const room_id = this.chat_room_list[index]._id;
+
+                // チャットルームのチャンネルに接続
+                Echo.join('room.' + room_id)
+                    .here((users) => {
+                        console.log("参加しました");
+                    });
+            }
+        });
     },
     methods: {
         /* レスポンスの認証チェック */

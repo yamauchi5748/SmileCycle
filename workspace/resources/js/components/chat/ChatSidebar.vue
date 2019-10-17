@@ -58,7 +58,6 @@ export default {
   mounted: function() {
     // 初期設定はグループルーム
     this.loadRoomType("group");
-    this.$root.loadChatRooms();
 
     // ポーリングでリストボックスの高さをリサイズイベントで取得
     this.intervalId = setInterval(this.resizeEvent, 500);
