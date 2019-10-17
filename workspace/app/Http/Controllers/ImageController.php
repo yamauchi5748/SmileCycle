@@ -16,17 +16,6 @@ use App\Models\ChatRoom;
 class ImageController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->author = Auth::user();
-    }
-
-    /**
      * 特定の会員のプロフィール画像
      * 認可された画像を返す
     **/
@@ -129,7 +118,7 @@ class ImageController extends Controller
                         '$in' => [ $image_id, '$images' ]
                     ],
                     'member' => [
-                        '$in' => [ $this->author->_id, '$attend_members._id' ]
+                        '$in' => [ Auth::id(), '$attend_members._id' ]
                     ]
                 ]
             ]
@@ -165,7 +154,7 @@ class ImageController extends Controller
             [
                 '$match' => [
                     '_id' => $chat_room_id,
-                    'members._id' => $this->author->_id
+                    'members._id' => Auth::id()
                 ]
             ],
             [

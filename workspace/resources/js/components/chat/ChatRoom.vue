@@ -1,8 +1,11 @@
 <template>
-  <div class="details">
+  <div class="details" v-if="room">
     <div class="name">
-      <span v-if="room">{{ room.group_name }}</span>
-      <button @click="setBtnActive">
+      <span>{{ room.group_name }}</span>
+      <button
+        v-if="!room.is_department && room.admin_member_id == $root.author._id"
+        @click="setMenuActive"
+      >
         <img src="/img/settings-icon.png" alt />
       </button>
     </div>
@@ -10,15 +13,29 @@
       <v-scrollbar class="margin-left-smallest" :box-height="box_height">
         <ol class="history" ref="list_box">
           <li v-for="(content, index) in contents" :key="index">
-            <div class="content">
+            <div class="content" v-if="!content.is_none">
               <div class="profile">
-                <img src="/img/profile_image.jpg" alt="profile" />
+                <img :src="'/members/' + content.sender_id + '/profile-image'" alt="profile" />
               </div>
               <div class="signature">
                 <span>{{ content.sender_name }}</span>
                 <span>{{ content.created_at }}</span>
               </div>
-              <div class="message">{{ content.content_id }}</div>
+              <div class="message">
+                <span v-if="content.content_type == '1'">{{ content.message }}</span>
+                <img
+                  class="p-content-image"
+                  :src="'/stamp-images/' + content.stamp_id"
+                  alt="スタンプ"
+                  v-if="content.content_type == '2'"
+                />
+                <img
+                  class="p-content-image"
+                  :src="'/chat-rooms/' + room._id + '/images/' + content.content_id"
+                  alt="画像"
+                  v-if="content.content_type == '3'"
+                />
+              </div>
             </div>
           </li>
         </ol>
@@ -39,7 +56,7 @@
     <edit-modal
       class="p-animation"
       :class="{active:edit_active}"
-      v-on:close="setBtnActive"
+      v-on:close="setMenuActive"
       v-on:openModal="openModal"
     />
     <edit-room-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_room_active" />
@@ -68,121 +85,7 @@ export default {
       edit_active: false,
       edit_room_active: false,
       add_member_active: false,
-      edit_member_active: false,
-      auth: true,
-      result: true,
-      is_group: true,
-      contents: [
-        //$B:GBg(B10$B7o$^$G<hF@(B
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        }
-      ]
+      edit_member_active: false
     };
   },
 
@@ -201,20 +104,25 @@ export default {
       return this.$root.chat_room_list.filter(room => {
         return room._id === this.$route.params.id;
       })[0];
+    },
+
+    contents: function() {
+      return this.room.contents.reverse();
     }
   },
 
   methods: {
     resizeEvent: function() {
+      if (!this.$refs.list_box) return;
       this.box_height = this.$refs.list_box.clientHeight + 23;
     },
 
-    setBtnActive: function() {
+    setMenuActive: function() {
       this.edit_active = !this.edit_active;
     },
 
     openModal: function(target_id) {
-      this.setBtnActive();
+      this.setMenuActive();
       switch (target_id) {
         case "1":
           this.edit_room_active = true;
@@ -231,7 +139,6 @@ export default {
     },
 
     closeModal: function() {
-      console.log("close");
       this.edit_room_active = false;
       this.add_member_active = false;
       this.edit_member_active = false;
@@ -325,6 +232,10 @@ export default {
     grid-row: 2/2;
     font-size: 16px;
     margin: 0px 20px;
+    .p-content-image {
+      width: 140px;
+      height: 140px;
+    }
   }
 }
 .send-content {
