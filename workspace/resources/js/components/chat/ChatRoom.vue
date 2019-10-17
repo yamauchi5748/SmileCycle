@@ -2,7 +2,7 @@
   <div class="details">
     <div class="name">
       <span v-if="room">{{ room.group_name }}</span>
-      <button>
+      <button @click="setBtnActive">
         <img src="/img/settings-icon.png" alt />
       </button>
     </div>
@@ -36,18 +36,39 @@
         <button class="normal-button">send</button>
       </div>
     </div>
+    <edit-modal
+      class="p-animation"
+      :class="{active:edit_active}"
+      v-on:close="setBtnActive"
+      v-on:openModal="openModal"
+    />
+    <edit-room-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_room_active" />
+    <add-member-modal :Room="room" v-on:closeModal="closeModal" v-if="add_member_active" />
+    <edit-member-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_member_active" />
   </div>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
+import EditModal from "./EditModal";
+import EditRoomModal from "./EditRoomModal";
+import EditMemberModal from "./EditMemberModal";
+import AddMemberModal from "./AddMemberModal";
 export default {
   components: {
-    VScrollbar
+    VScrollbar,
+    EditModal,
+    EditRoomModal,
+    EditMemberModal,
+    AddMemberModal
   },
   data() {
     return {
       intervalId: undefined,
       box_height: 0,
+      edit_active: false,
+      edit_room_active: false,
+      add_member_active: false,
+      edit_member_active: false,
       auth: true,
       result: true,
       is_group: true,
@@ -186,6 +207,34 @@ export default {
   methods: {
     resizeEvent: function() {
       this.box_height = this.$refs.list_box.clientHeight + 23;
+    },
+
+    setBtnActive: function() {
+      this.edit_active = !this.edit_active;
+    },
+
+    openModal: function(target_id) {
+      this.setBtnActive();
+      switch (target_id) {
+        case "1":
+          this.edit_room_active = true;
+          break;
+
+        case "2":
+          this.add_member_active = true;
+          break;
+
+        case "3":
+          this.edit_member_active = true;
+          break;
+      }
+    },
+
+    closeModal: function() {
+      console.log("close");
+      this.edit_room_active = false;
+      this.add_member_active = false;
+      this.edit_member_active = false;
     }
   }
 };
@@ -194,7 +243,6 @@ export default {
 .details {
   background-color: $base-color;
   height: 100%;
-  position: relative;
   display: grid;
   grid-template-rows: 63px 1fr;
   div {
@@ -314,6 +362,16 @@ export default {
   }
   .normal-button {
     align-self: flex-end;
+  }
+}
+
+.p-animation {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.1s;
+  &.active {
+    visibility: unset;
+    opacity: 1;
   }
 }
 </style>

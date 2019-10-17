@@ -45,8 +45,8 @@ export default {
   @include window();
   position: fixed;
   .p-overlay {
-    @include window($height: 850px);
-    top: -60px;
+    @include window();
+    top: 0;
     position: fixed;
     background-color: rgba($color: #000000, $alpha: 0.5);
   }

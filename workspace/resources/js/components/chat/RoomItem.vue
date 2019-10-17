@@ -1,7 +1,7 @@
 <template>
   <router-link class="layout-flex" :to="{name:'chat-room',params:{id: room._id}}">
     <figure class="p-room-profile-box">
-      <img class="p-room-profile" :src="img_src" />
+      <img class="p-room-profile" :src="img_url" />
     </figure>
     <div
       class="layout-flex --flex-direction-column --justify-content-center p-room-primary-box-wrapper"
@@ -27,13 +27,16 @@ export default {
     room: Object
   },
   data: function() {
-    return {};
+    return {
+      img_url: ""
+    };
+  },
+
+  mounted: function() {
+    this.img_url = "/chat-rooms/" + this.room._id + "/profile-image";
   },
 
   computed: {
-    img_src: function() {
-      return "/chat-rooms/" + this.room._id + "/profile-image";
-    },
     unreadCount: function() {
       return this.room.contents.filter(content => {
         return content.unread;
@@ -41,19 +44,12 @@ export default {
     }
   },
 
-  methods: {
-    loadImage: function() {
-      this.img_src =
-        "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
-    }
-  },
-
   watch: {
     room: {
       handler: function(val, oldVal) {
+        this.img_url = "/chat-rooms/" + this.room._id + "/profile-image";
         if (val._id === oldVal._id) {
-          console.log(val.group_name, oldVal.group_name);
-          this.loadImage();
+          this.img_url = "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
         }
       },
       deep: true

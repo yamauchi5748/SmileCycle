@@ -344,12 +344,6 @@ const app = new Vue({
             return axios.post('/api/chat-rooms/' + room_id + '/members', data)
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    for (const index in this.chat_room_list) {
-                        const room = this.chat_room_list[index];
-                        if (room._id == res.data.room._id) {
-                            this.chat_room_list.splice(index, 1, res.data.room);
-                        }
-                    }
                     return res.data.room;
                 })
                 .catch(error => {
@@ -362,12 +356,6 @@ const app = new Vue({
             return axios.delete('/api/chat-rooms/' + room_id + '/members', { data: data })
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    for (const index in this.chat_room_list) {
-                        const room = this.chat_room_list[index];
-                        if (room._id == res.data.room._id) {
-                            this.chat_room_list.splice(index, 1, res.data.room);
-                        }
-                    }
                     return res.data.room;
                 })
                 .catch(error => {

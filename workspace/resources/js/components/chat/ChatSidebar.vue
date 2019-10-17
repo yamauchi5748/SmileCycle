@@ -31,49 +31,18 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
-    <!-- テスト用ボタン -->
-    <span class="c-add-button p-edit-button" @click="setEditBtnActive" v-if="room_id"></span>
-    <span class="c-add-button p-edit-member-button" @click="setMemberBtnActive" v-if="room_id"></span>
-    <span class="c-add-button p-add-member-button" @click="setMemberAddBtnActive" v-if="room_id"></span>
-    <!-- テスト用ボタン ここまで -->
     <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
-    <!-- テスト用コンポーネント -->
-    <edit-room-modal
-      class="p-modal-wrapper"
-      :class="{active:edit_btn_active}"
-      :Room="room_list.filter(room => { return room._id == room_id})[0]"
-      v-if="edit_btn_active"
-    />
-    <edit-member-modal
-      class="p-modal-wrapper"
-      :class="{active:member_btn_active}"
-      :Room="room_list.filter(room => { return room._id == room_id})[0]"
-      v-if="member_btn_active"
-    />
-    <add-member-modal
-      class="p-modal-wrapper"
-      :class="{active:member_add_btn_active}"
-      :Room="room_list.filter(room => { return room._id == room_id})[0]"
-      v-if="member_add_btn_active"
-    />
-    <!-- テスト用コンポーネント ここまで -->
   </section>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
 import RoomItem from "./RoomItem";
 import CreateRoomModal from "./CreateRoomModal";
-import EditRoomModal from "./EditRoomModal"; //テスト用
-import EditMemberModal from "./EditMemberModal"; //テスト用
-import AddMemberModal from "./AddMemberModal"; //テスト用
 export default {
   components: {
     VScrollbar,
     RoomItem,
-    CreateRoomModal,
-    EditRoomModal, //テスト用
-    EditMemberModal, //テスト用
-    AddMemberModal //テスト用
+    CreateRoomModal
   },
   data() {
     return {
@@ -82,11 +51,7 @@ export default {
       search_text: "",
       room_type: "",
       placeholder: "",
-      btn_active: false,
-      edit_btn_active: false, //テスト用
-      member_btn_active: false, //テスト用
-      member_add_btn_active: false, //テスト用
-      room_id: this.$route.params.id //テスト用
+      btn_active: false
     };
   },
 
@@ -123,21 +88,8 @@ export default {
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
-    // テスト用
-    setEditBtnActive: function() {
-      this.edit_btn_active = !this.edit_btn_active;
-    },
-    // テスト用
-    setMemberBtnActive: function() {
-      this.member_btn_active = !this.member_btn_active;
-    },
-    // テスト用
-    setMemberAddBtnActive: function() {
-      this.member_add_btn_active = !this.member_add_btn_active;
-    },
 
     loadRoomType: function(type) {
-      console.log(type);
       this.room_type = type;
       if (this.room_type === "group") {
         this.placeholder = "グループ名検索";
@@ -225,34 +177,13 @@ export default {
   left: 248px;
 }
 
-/* テスト用scss */
-.p-add-member-button {
-  position: absolute;
-  background-color: pink;
-  bottom: 23px;
-  left: 148px;
-}
-/* テスト用scss */
-.p-edit-button {
-  position: absolute;
-  background-color: brown;
-  bottom: 23px;
-  left: 78px;
-}
-
-/* テスト用scss */
-.p-edit-member-button {
-  position: absolute;
-  background-color: purple;
-  bottom: 23px;
-  left: 0px;
-}
-
 .p-modal-wrapper {
-  transform: scale(0);
-  transition: 0.5s;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.1s;
   &.active {
-    transform: scale(1);
+    visibility: unset;
+    opacity: 1;
   }
 }
 </style>
