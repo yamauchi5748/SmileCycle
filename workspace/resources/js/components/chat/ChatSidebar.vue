@@ -26,7 +26,7 @@
           :key="index"
           @click="entryRoom(room)"
         >
-          <room-item :room-item="room" />
+          <room-item :room="room" />
         </li>
       </ul>
     </v-scrollbar>
@@ -36,24 +36,24 @@
     <span class="c-add-button p-edit-member-button" @click="setMemberBtnActive" v-if="room_id"></span>
     <span class="c-add-button p-add-member-button" @click="setMemberAddBtnActive" v-if="room_id"></span>
     <!-- テスト用ボタン ここまで -->
-    <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
+    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
     <!-- テスト用コンポーネント -->
     <edit-room-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:edit_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="edit_btn_active"
     />
     <edit-member-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:member_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_btn_active"
     />
     <add-member-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:member_add_btn_active}"
-      :room="room_list.filter(room => { return room._id == room_id})[0]"
+      :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_add_btn_active"
     />
     <!-- テスト用コンポーネント ここまで -->
@@ -79,7 +79,6 @@ export default {
     return {
       intervalId: undefined,
       box_height: 0,
-      room_list: [],
       search_text: "",
       room_type: "",
       placeholder: "",
@@ -92,18 +91,12 @@ export default {
   },
 
   mounted: function() {
-    this.$root
-      .loadChatRooms()
-      .then(res => {
-        // 初期設定はグループルーム
-        this.loadRoomType("group");
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // 初期設定はグループルーム
+    this.loadRoomType("group");
+    this.$root.loadChatRooms();
 
     // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 50);
+    this.intervalId = setInterval(this.resizeEvent, 500);
   },
 
   beforeDestroy() {
@@ -111,14 +104,22 @@ export default {
     clearInterval(this.intervalId);
   },
 
+  computed: {
+    room_list: function() {
+      return this.$root.chat_room_list.filter(room => {
+        return (
+          room.group_name.indexOf(this.search_text) != -1 &&
+          (this.room_type == "group" ? room.is_group : !room.is_group)
+        );
+      });
+    }
+  },
+
   methods: {
     resizeEvent: function() {
       this.box_height = this.$refs.list_box.clientHeight;
     },
 
-    setRoomList: function(room_list) {
-      this.room_list = room_list;
-    },
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
@@ -136,6 +137,7 @@ export default {
     },
 
     loadRoomType: function(type) {
+      console.log(type);
       this.room_type = type;
       if (this.room_type === "group") {
         this.placeholder = "グループ名検索";
@@ -158,24 +160,6 @@ export default {
       }
       if (unread_contents_id.length < 1) return;
       this.$root.alreadyRead(room._id, unread_contents_id);
-    }
-  },
-
-  watch: {
-    search_text: function(val, oldVal) {
-      const room_list = this.$root.chat_room_list.filter(room => {
-        return room.group_name.indexOf(val) != -1;
-      });
-
-      this.setRoomList(room_list);
-    },
-
-    room_type: function(val, oldVal) {
-      const room_list = this.$root.chat_room_list.filter(room => {
-        return val == "group" ? room.is_group : !room.is_group;
-      });
-
-      this.setRoomList(room_list);
     }
   }
 };
@@ -210,7 +194,7 @@ export default {
 
 .p-search-box {
   height: 51px;
-  padding-left: 29px;
+  padding: 0 29px;
   font-size: 18px;
   background-color: $base-color;
   color: $black;

@@ -59,15 +59,9 @@ export default {
       };
 
       // チャットルーム作成
-      this.$root
-        .createChatRoom(data)
-        .then(room_list => {
-          this.setRoomList(room_list);
-          this.setBtnActive();
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      this.$root.createChatRoom(data).then(room_list => {
+        this.setBtnActive();
+      });
     }
   }
 };
@@ -106,7 +100,7 @@ export default {
 }
 
 .p-list-box {
-  height: 392px;
+  height: 389px;
 }
 
 .p-name-input {

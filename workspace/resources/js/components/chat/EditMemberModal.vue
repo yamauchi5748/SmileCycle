@@ -26,7 +26,7 @@
         <button class="normal-button" @click="edit">保存</button>
       </div>
     </div>
-    <v-dialog v-model="dialog_confirm" v-on:active="setDialogActive" v-show="dialog_active">
+    <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
       <div class="p-dialog-msg-box">
         <span class="p-dialog-msg-title">{{ dialog_msg.title }}</span>
         <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
@@ -53,7 +53,6 @@ export default {
       delete_members: [],
       search_text: "",
       dialog_msg: {},
-      dialog_confirm: false,
       dialog_active: false
     };
   },
@@ -74,6 +73,26 @@ export default {
       this.dialog_active = is_active;
     },
 
+    dialogAgree: function() {
+      console.log("ok");
+      this.setDialogActive(false);
+
+      const data = {
+        delete_members: this.delete_members
+      };
+      this.$root.deleteChatRoomMember(this.room._id, data).then(res => {
+        this.room.members = res.members;
+        this.dialog_confirm = false;
+        this.delete_members = [];
+        this.setBtnActive();
+      });
+    },
+
+    dialogCancel: function() {
+      console.log("no");
+      this.setDialogActive(false);
+    },
+
     edit: function() {
       let msg = "";
       for (const index in this.room.members) {
@@ -86,23 +105,6 @@ export default {
       this.dialog_msg.title = "以下の会員を退出させますか？";
       this.dialog_msg.body = msg;
       this.setDialogActive(true);
-    }
-  },
-
-  watch: {
-    dialog_confirm: function(is_active) {
-      // 確認OK
-      if (is_active) {
-        const data = {
-          delete_members: this.delete_members
-        };
-        this.$root.deleteChatRoomMember(this.room._id, data).then(res => {
-          this.room.members = res.members;
-          this.dialog_confirm = false;
-          this.delete_members = [];
-        });
-        this.setBtnActive();
-      }
     }
   }
 };
