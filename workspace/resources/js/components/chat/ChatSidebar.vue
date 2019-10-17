@@ -100,8 +100,7 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
-      this.room_id = room._id;
-      console.log(this.room_id);
+
       // 既読処理
       let unread_contents_id = [];
       for (const index in room.contents) {

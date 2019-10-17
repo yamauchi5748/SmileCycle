@@ -173,6 +173,14 @@ const app = new Vue({
         stamp_group_list: [],
         chat_room_list: [],
     },
+    mounted: function () {
+        // プライベートチャンネル接続
+        Echo.private('user.' + this.author._id)
+            // チャット取得イベント
+            .listen('ChatRecieved', (e) => {
+                console.log(e);
+            })
+    },
     methods: {
         /* レスポンスの認証チェック */
         checkAuth: function (res) {
