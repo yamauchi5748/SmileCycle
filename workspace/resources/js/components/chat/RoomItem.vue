@@ -26,13 +26,14 @@ export default {
   props: {
     room: Object
   },
-  data() {
-    return {
-      img_src: "/chat-rooms/" + this.room._id + "/profile-image"
-    };
+  data: function() {
+    return {};
   },
 
   computed: {
+    img_src: function() {
+      return "/chat-rooms/" + this.room._id + "/profile-image";
+    },
     unreadCount: function() {
       return this.room.contents.filter(content => {
         return content.unread;
@@ -50,7 +51,10 @@ export default {
   watch: {
     room: {
       handler: function(val, oldVal) {
-        this.loadImage();
+        if (val._id === oldVal._id) {
+          console.log(val.group_name, oldVal.group_name);
+          this.loadImage();
+        }
       },
       deep: true
     }
@@ -69,7 +73,8 @@ a {
 }
 
 .p-room-profile {
-  max-width: 47px;
+  height: 47px;
+  width: 47px;
   border-radius: 50%;
 }
 

@@ -36,22 +36,22 @@
     <span class="c-add-button p-edit-member-button" @click="setMemberBtnActive" v-if="room_id"></span>
     <span class="c-add-button p-add-member-button" @click="setMemberAddBtnActive" v-if="room_id"></span>
     <!-- テスト用ボタン ここまで -->
-    <create-room-modal class="p-modal-wrapper modal-content" :class="{active:btn_active}" />
+    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
     <!-- テスト用コンポーネント -->
     <edit-room-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:edit_btn_active}"
       :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="edit_btn_active"
     />
     <edit-member-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:member_btn_active}"
       :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_btn_active"
     />
     <add-member-modal
-      class="p-modal-wrapper modal-content"
+      class="p-modal-wrapper"
       :class="{active:member_add_btn_active}"
       :Room="room_list.filter(room => { return room._id == room_id})[0]"
       v-if="member_add_btn_active"
@@ -91,15 +91,9 @@ export default {
   },
 
   mounted: function() {
-    this.$root
-      .loadChatRooms()
-      .then(res => {
-        // 初期設定はグループルーム
-        this.loadRoomType("group");
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // 初期設定はグループルーム
+    this.loadRoomType("group");
+    this.$root.loadChatRooms();
 
     // ポーリングでリストボックスの高さをリサイズイベントで取得
     this.intervalId = setInterval(this.resizeEvent, 500);
