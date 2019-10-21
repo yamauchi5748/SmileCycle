@@ -9,7 +9,8 @@
         </div>
         <v-article
             class="p-post"
-            v-for="(invitation,index) in invitations"
+            v-for="(invitation,index) in this.$root.admin_invitation_list
+            "
             :key="index"
             :post="invitation"
             :to="{name:'controls-invitation-details',params:{id:invitation.id}}"
@@ -20,35 +21,10 @@
 import VArticle from "../VArticle.vue";
 export default {
     data() {
-        return {
-            invitations: [
-                {
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                },
-                {
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                }
-            ]
-        };
+        return {};
     },
     created: function() {
-        this.$root.loadMembers();
+        this.$root.loadAdminInvitations();
     },
     components: {
         VArticle

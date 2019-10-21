@@ -2,15 +2,26 @@
     <secondary-view>
         <template #title>スタンプ詳細</template>
         <template #body>
+            {{property}}
             <div class="input-wrapper">
-                <v-input-image class="p-stamp-upload" v-model="stamp_tab_image">タブ画像</v-input-image>
+                <v-input-image class="p-stamp-upload" v-model="property.tab_image_id">タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
-                <v-input-multiple-images v-model="stamp_image_list">スタンプ</v-input-multiple-images>
+                <v-input-multiple-images v-model="property.stamps">スタンプ</v-input-multiple-images>
+            </div>
+            <div class="input-wrapper">
+                <span class="input-title">公開範囲</span>
+                <label class="input-label">
+                    <v-input-checkbox v-model="property.is_all"></v-input-checkbox>全ての会員が利用する
+                </label>
+            </div>
+            <div class="input-wrapper">
+                <span class="input-title">公開範囲</span>
+                <v-select-members v-model="property.members"></v-select-members>
             </div>
             <div class="buttons-wrapper --space-between">
-                <button class="flat-button">削除する</button>
-                <button class="normal-button">保存する</button>
+                <button class="flat-button" @click="handleDeleteButtonClick">削除する</button>
+                <button class="normal-button" @click="handleSubmitButtonClick">保存する</button>
             </div>
         </template>
     </secondary-view>
@@ -20,18 +31,17 @@
 import SecondaryView from "./SecondaryView.vue";
 import VInputImage from "../VInputImage";
 import VInputMultipleImages from "../VInputMultipleImages";
+import VInputCheckbox from "../VInputCheckbox";
+import VSelectMembers from "../VSelectMembers";
 export default {
-    components: {
-        VInputImage,
-        VInputMultipleImages,
-        SecondaryView
-    },
     data: function() {
         return {
-            stamp_group: {},
-            stamp_list: [],
-            stamp_tab_image: null,
-            stamp_image_list: []
+            property: {
+                tab_image: null,
+                stamps: [],
+                is_all: true,
+                members: []
+            }
         };
     },
     created: function() {
@@ -46,24 +56,32 @@ export default {
         }
     },
     methods: {
-        // 1つ前のページに戻る
-        goBack: function() {
-            this.$router.back();
+        handleSubmitButtonClick: function() {
+            this.$root.editStampGroup(this.property);
+        },
+        handleDeleteButtonClick: function() {
+            this.$root
+                .deleteStampGroup(this.property._id)
+                .then(function(res) {
+                    console.log("スタンプ削除しました");
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
         },
         // データをセット
         setData: function() {
-            this.stamp_group = this.$root.stamp_group_list.find(stamp_group => {
+            this.property = this.$root.stamp_group_list.find(stamp_group => {
                 return stamp_group._id == this.$route.params.id;
             });
-            this.stamp_list = this.stamp_group.stamps;
-            this.stamp_group.stamps.forEach(stamp => {
-                this.stamp_image_list.push("/stamp-images/" + stamp);
-            });
-            this.stamp_tab_image =
-                "/storage/images/stamps/" +
-                this.stamp_group.tab_image_id +
-                ".png";
         }
+    },
+    components: {
+        VInputImage,
+        VInputMultipleImages,
+        VSelectMembers,
+        VInputCheckbox,
+        SecondaryView
     }
 };
 </script>
