@@ -41,6 +41,14 @@ export default {
             attend_members: []
         };
     },
+    created:{
+
+    },
+    methods: {
+        handleSubmitButtonClick: function() {
+            this.$root.createStampGroup(this.property);
+        }
+    },
     components: {
         VInput,
         VInputMultipleImages,

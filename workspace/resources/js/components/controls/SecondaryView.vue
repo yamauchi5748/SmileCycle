@@ -20,7 +20,12 @@ export default {
     methods: {
         //1つ前のページに戻る
         goBack: function() {
-            this.$router.back();
+            this.$router.push({
+                path: this.$route.path
+                    .split("/")
+                    .slice(0, -1)
+                    .join("/")
+            });
         }
     }
 };

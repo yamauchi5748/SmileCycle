@@ -35,7 +35,7 @@
                     type="password"
                     counter
                     :max="100"
-                >パスワード再入力</v-input>
+                >パスワードかくにん</v-input>
             </div>
             <div class="buttons-wrapper --space-between">
                 <button class="flat-button" @click="handleDeleteButtonClick">削除する</button>

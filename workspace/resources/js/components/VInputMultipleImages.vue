@@ -28,18 +28,23 @@
 <script>
 export default {
     props: {
-        value: { type: Array, required: true },
+        value: {
+            type: Array,
+            required: true,
+            default: function() {
+                return [];
+            }
+        },
         max: { type: Number, default: 10 }
     },
     data: function() {
         return {
-            dataURL_list: this.value.slice(),//表示用
+            dataURL_list: this.value.slice(), //表示用
             image_source: this.value.slice() //modelへのbind用
         };
     },
-    watch:{
-        value:function(){
-            this.dataURL_list = this.value.slice();
+    watch: {
+        value: function() {
             this.image_source = this.value.slice();
         }
     },
@@ -69,14 +74,15 @@ export default {
             this.loadImagesFromFiles(event.target.files);
         },
         loadImagesFromFiles(files) {
+            let self = this;
             for (let file of files) {
                 if (this.dataURL_list.length < this.max) {
                     let reader = new FileReader();
                     reader.readAsDataURL(file);
-                    reader.onload = () => {
-                        this.dataURL_list.push(reader.result);
-                        this.image_source.push(file);
-                        this.$emit("input", this.image_source);
+                    reader.onload = function() {
+                        self.dataURL_list.push(reader.result);
+                        self.image_source.push(file);
+                        self.$emit("input", self.image_source);
                     };
                 }
             }

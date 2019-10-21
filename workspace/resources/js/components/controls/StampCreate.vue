@@ -3,24 +3,24 @@
         <template #title>スタンプ作成</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input-image v-model="tab_image">タブ画像</v-input-image>
+                <v-input-image v-model="property.tab_image">タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
-                <v-input-multiple-images v-model="stamp_images">スタンプ</v-input-multiple-images>
+                <v-input-multiple-images v-model="property.stamps">スタンプ</v-input-multiple-images>
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
                 <label class="input-label">
-                    <v-input-checkbox v-model="is_all"></v-input-checkbox>利用者を制限する
+                    <v-input-checkbox v-model="property.is_all"></v-input-checkbox>全ての会員が利用する
                 </label>
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
-                <v-select-members v-model="members"></v-select-members>
+                <v-select-members v-model="property.members"></v-select-members>
             </div>
             <div class="buttons-wrapper">
                 <button class="flat-button">取り消し</button>
-                <button class="normal-button">登録する</button>
+                <button class="normal-button" @click="handleSubmitButtonClick">登録する</button>
             </div>
         </template>
     </secondary-view>
@@ -35,18 +35,21 @@ import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
-            tab_image: "/img/invitation-post-image.jpg",
-            is_all: false,
-            stamp_images: [
-                "/img/invitation-post-image.jpg",
-                "/img/invitation-post-image.jpg",
-                "/img/invitation-post-image.jpg"
-            ],
-            members: []
+            property: {
+                tab_image: null,
+                stamps: [],
+                is_all: true,
+                members: []
+            }
         };
     },
     created: function() {
         this.$root.loadMembers();
+    },
+    methods: {
+        handleSubmitButtonClick: function() {
+            this.$root.createStampGroup(this.property);
+        }
     },
     components: {
         VInputImage,

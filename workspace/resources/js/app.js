@@ -82,6 +82,7 @@ const router = new VueRouter({
         },
         {
             path: "/controls",
+            name: "controls",
             component: Controls,
             children: [
                 {
@@ -165,6 +166,7 @@ const app = new Vue({
         member_list: [],
         company_list: [],
         stamp_group_list: [],
+        admin_invitation_list: [],
         chat_room_list: [],
     },
     methods: {
@@ -212,6 +214,19 @@ const app = new Vue({
         deleteMember: function (member_id) {
             return axios.delete('/api/members/' + member_id)
                 .then(res => this.checkAuth(res))
+        },
+
+        /* 会のご案内取得 */
+        loadAdminInvitations: function () {
+            return axios.get('/api/admin-invitations')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.admin_invitation_list = res.data.invitations;
+                    return res;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
 
         /* 会社一覧取得 */
@@ -267,19 +282,34 @@ const app = new Vue({
         },
         /* スタンプグループの作成 */
         createStampGroup: function (stamp_group_property) {
-            return axios.post('/api/stamp-groups', stamp_group_property)
+            const form_data = convertObjectToFormData(stamp_group_property);
+            return axios.post('/api/stamp-groups', form_data, {
+                headers: {
+                    "content-type": "multipart/form-data"
+                }
+            })
                 .then(res => this.checkAuth(res))
         },
 
         /* スタンプグループの編集 */
         editStampGroup: function (stamp_group_property) {
-            return axios.put('/api/stamp-groups/' + stamp_group_property._id, company_property)
+            const form_data = convertObjectToFormData(stamp_group_property)
+            return axios.put('/api/stamp-groups/' + stamp_group_property._id, form_data, {
+                headers: {
+                    "content-type": "multipart/form-data"
+                }
+            })
                 .then(res => this.checkAuth(res))
         },
 
         /* スタンプグループ削除 */
         deleteStampGroup: function (stamp_group_id) {
-            return axios.delete('/api/stamp-groups/' + stamp_group_id)
+            console.log({ delete_stamp_groups: [stamp_group_id] });
+            return axios.delete('/api/stamp-groups/', convertObjectToFormData({ delete_stamp_groups: [stamp_group_id] }), {
+                headers: {
+                    "content-type": "multipart/form-data"
+                }
+            })
                 .then(res => this.checkAuth(res))
         },
 
@@ -309,5 +339,25 @@ const app = new Vue({
 
     }
 });
+function convertObjectToFormData(object) {
+    const form_data = new FormData();
+    for (let key in object) {
+        const value = object[key];
 
+        if (Array.isArray(value)) {
+            value.forEach((v, i) => {
+                form_data.append(key + '[]', v);
+            });
+        } else if (typeof value === "boolean") {
+            if (value) {
+                form_data.append(key, 1);
+            } else {
+                form_data.append(key, 0);
+            }
+        } else {
+            form_data.append(key, value);
+        }
+    }
+    return form_data;
+}
 window.app = app;

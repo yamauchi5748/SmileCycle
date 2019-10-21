@@ -28,7 +28,7 @@ export default {
             property: {
                 name: "ちぇけちぇけ",
                 address: "fjfeaej",
-                telephone_number: "faklesf"
+                telephone_number: "090-0000-0000"
             }
         };
     },
