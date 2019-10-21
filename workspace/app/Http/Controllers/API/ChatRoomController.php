@@ -32,18 +32,47 @@ class ChatRoomController extends AuthController
                     ],
                 ]
             ],
-            // コンテンツを最大10件取得
+            // 個チャ用に一人目の会員と二人目の会員を保持
+            [
+                '$set' => [
+                    'first_member' => [
+                        '$arrayElemAt' => ['$members', 0]
+                    ],
+                    'last_member' => [
+                        '$arrayElemAt' => ['$members', 1]
+                    ],
+                ]
+            ],
             [
                 '$project' => [
                     '_id' => 1,
                     'is_group' => 1,
                     'is_department' => 1,
                     'admin_member_id' => 1,
-                    'group_name' => 1,
+                    // 個チャならば相手の名前をグループ名にセット
+                    'group_name' => [
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$is_group', true]
+                            ],
+                            'then' => '$group_name',
+                            'else' => [
+                                '$cond' => [
+                                    'if' => [
+                                        '$eq' => ['$first_member._id', $this->author->_id]
+                                    ],
+                                    'then' => '$last_member.name',
+                                    'else' => '$first_member.name'
+                                ]
+                            ]
+                        ]
+                    ],
                     'members' => 1,
+                    // コンテンツを最大10件取得
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]
                     ],
+                    // コンテンツが空でないかの処理
                     'contents' => [
                         '$cond' => [
                             'if' => [
@@ -51,7 +80,7 @@ class ChatRoomController extends AuthController
                             ],
                             'then' => [
                                 [
-                                    'already_read' => []
+                                    'is_none' => true
                                 ]
                             ],
                             'else' => '$contents'
@@ -67,7 +96,17 @@ class ChatRoomController extends AuthController
             [
                 '$set' => [
                     'contents.unread' => [
-                        '$in' => [ $this->author->_id, '$contents.already_read']
+                        '$cond' => [
+                            'if' => [
+                                '$eq' => ['$contents.is_none', true]
+                            ],
+                            'then' => false,
+                            'else' => [
+                                '$not' => [
+                                    '$in' => [ $this->author->_id, '$contents.already_read']
+                                ]
+                            ]
+                        ]
                     ],
                     'contents.already_read' => [
                         '$cond' => [
@@ -103,6 +142,9 @@ class ChatRoomController extends AuthController
                     ],
                     'contents' => [
                         '$push' => '$contents'
+                    ],
+                    'unread' => [
+                        '$sum' => '$contents.unread'
                     ]
                 ]
             ],
@@ -245,30 +287,12 @@ class ChatRoomController extends AuthController
             Storage::putFileAs('private/images/chats', $request->new_icon, $room['_id'] . '.png', 'private');
         }
 
-        /* 更新したルーム情報を取得 */
-        $rooms = ChatRoom::raw()->aggregate([
-            /* ルームを指定 */
-            [
-                '$match' => [
-                    '_id' => $chat_room_id
-                ]
-            ],
-            [
-                '$project' => [
-                    '_id' => 1,
-                    'group_name' => 1,
-
-                ]
-            ]
-        ])->toArray();
-
+        $room =
         /* 返すレスポンスデータを整形 */
-        $room = head($rooms);
-        if ($room) {
-            $this->response['room'] = $room;
-        } else {
-            $this->response['result'] = false;
-        }
+        $this->response['room'] = [
+            '_id' => $chat_room_id,
+            'group_name' => $request->new_group_name
+        ];
 
         return response()->json(
             $this->response,

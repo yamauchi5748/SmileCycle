@@ -15,7 +15,7 @@
                 <v-input v-model="property.mail">メールアドレス</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input v-model="property.company_id" counter :max="140">会社名</v-input>
+                <v-select v-model="property.company_id">会社名</v-select>
             </div>
             <div class="input-wrapper">
                 <v-input v-model="property.post" counter :max="50">役職</v-input>
@@ -51,6 +51,7 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInput from "../VInput";
+import VSelect from "../VSelect";
 export default {
     data: function() {
         return {
@@ -77,6 +78,7 @@ export default {
         }
     },
     components: {
+        VSelect,
         VInput,
         SecondaryView
     }

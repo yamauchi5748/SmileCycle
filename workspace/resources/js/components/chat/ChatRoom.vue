@@ -2,14 +2,17 @@
   <div class="details">
     <div class="name">
       <span v-if="room">{{ room.group_name }}</span>
+      <button>
+        <img src="/img/settings-icon.png" alt />
+      </button>
     </div>
     <div class="contents">
-      <div class="history">
-        <ol>
+      <v-scrollbar class="margin-left-smallest" :box-height="box_height">
+        <ol class="history" ref="list_box">
           <li v-for="(content, index) in contents" :key="index">
             <div class="content">
               <div class="profile">
-                <img src alt="profile" />
+                <img src="/img/profile_image.jpg" alt="profile" />
               </div>
               <div class="signature">
                 <span>{{ content.sender_name }}</span>
@@ -19,12 +22,16 @@
             </div>
           </li>
         </ol>
-      </div>
+      </v-scrollbar>
       <div class="send-content">
         <div class="input-box">
-          <img src alt />
-          <textarea v-on:input="test"></textarea>
-          <img src alt="stamp" class="stamp" />
+          <button>
+            <img class="upload-image" src alt />
+          </button>
+          <p class="upload-message" contenteditable="true"></p>
+          <button>
+            <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
+          </button>
         </div>
         <button class="normal-button">send</button>
       </div>
@@ -32,9 +39,15 @@
   </div>
 </template>
 <script>
+import VScrollbar from "../VScrollbar";
 export default {
+  components: {
+    VScrollbar
+  },
   data() {
     return {
+      intervalId: undefined,
+      box_height: 0,
       auth: true,
       result: true,
       is_group: true,
@@ -152,6 +165,16 @@ export default {
     };
   },
 
+  created: function() {
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, 500);
+  },
+
+  beforeDestroy() {
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
+  },
+
   computed: {
     room: function() {
       return this.$root.chat_room_list.filter(room => {
@@ -161,34 +184,30 @@ export default {
   },
 
   methods: {
-    test(e) {
-      console.log("hello: " + e.target.value.length);
-      console.log(e.target.clientHeight);
-      console.log(e.target.span);
-      console.log(e.target);
-      if (e.target.value.length == 33) {
-        e.target.style.color = "red";
-      }
+    resizeEvent: function() {
+      this.box_height = this.$refs.list_box.clientHeight + 23;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .details {
-  flex-grow: 1;
-  flex-direction: column;
   background-color: $base-color;
   height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-rows: 63px 1fr;
   div {
     margin: 0px;
     margin-top: 20px;
   }
 
   .name {
-    border-bottom: .1px solid #707070;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 0.1px solid #707070;
     height: 43px;
     padding: 0 16px;
-    justify-content: flex-start;
     align-items: center;
     text-decoration: none;
     font-size: 16px;
@@ -197,19 +216,20 @@ export default {
   }
 
   .contents {
-    margin: 0 auto;
-    width: 93%;
-    height: 727px;
+    margin: 0 0 0 16px;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
     flex-direction: column;
     position: relative;
     overflow-y: hidden;
     overflow-x: hidden;
-    .history {
-      width: calc(100% + 17px);
-      height: 60%;
-      overflow-y: scroll;
-      ol {
-        width: 100%;
+    .contents-inner {
+      height: 100%;
+      .history {
+        width: calc(100% + 17px);
+        height: 0;
+        overflow-y: scroll;
         li {
           width: 100%;
         }
@@ -223,55 +243,77 @@ export default {
   grid-template-rows: auto auto;
   width: 100%;
   background-color: #f2f2f2;
+  position: relative;
   .profile {
     grid-column: 1/1;
     grid-row: 1/1;
     margin: 0px;
     padding: 0px;
-    background-color: red;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
   }
   .signature {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 1/1;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: center;
+    margin: 0px 20px;
+
+    span {
+      margin: 0px 10px;
+    }
   }
   .message {
     padding: 0px;
     margin: 0px;
     grid-column: 2/2;
     grid-row: 2/2;
+    font-size: 16px;
+    margin: 0px 20px;
   }
 }
 .send-content {
-  background-color: blue;
-  position: absolute;
-  top: 64%;
-  height: 64px;
+  padding: 23px 0;
   width: 100%;
   display: flex;
+  background-color: $base-color;
+  max-height: 500px;
   .input-box {
     display: flex;
-    flex-grow: 9;
-    margin: 0px;
-    img {
-      flex-grow: 1;
-    }
-    textarea {
+    position: relative;
+    flex-grow: 1;
+    margin: 0 6px 0 0;
+    border: 1px solid #707070;
+    border-radius: 4px;
+    outline: none;
+    overflow-y: scroll;
+    .upload-message {
       box-sizing: border-box;
-      height: 100%;
-      width: calc(100% + 17px);
-      flex-grow: 8;
-      font-size: 30px;
-    }
-    .stamp {
+      width: 400px;
       flex-grow: 1;
+      font-size: 30px;
+      outline: none;
+      padding: 10px 40px 10px 10px;
+      line-height: 1;
     }
-    background-color: red;
+    button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      .stamp {
+        height: 100%;
+      }
+    }
   }
   .normal-button {
-    flex-grow: 1;
-    height: 100%;
+    align-self: flex-end;
   }
 }
 </style>

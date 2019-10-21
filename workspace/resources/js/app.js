@@ -6,13 +6,17 @@ require('./bootstrap');
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
-import CreateChatRoom from "./components/chat/CreateRoomModal.vue";
 
 import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
 import ChatMember from "./components/chats/ChatMember.vue";
 import RoomDetails from "./components/chats/RoomDetails.vue";
 import Members from "./components/members/Members.vue";
+import Invitations from "./components/invitations/Invitations.vue";
+import InvitationDetails from "./components/invitations/InvitationDetails.vue";
+import Forum from "./components/forum/Forum.vue";
+import ForumDetails from "./components/forum/ForumDetails.vue";
+import ForumCreate from "./components/forum/ForumCreate.vue";
 import Controls from "./components/controls/Controls.vue";
 import ControlsInvitation from "./components/controls/Invitation.vue";
 import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
@@ -40,12 +44,7 @@ const router = new VueRouter({
                     path: ":id",
                     name: "chat-room",
                     component: ChatRoom
-                },
-                {
-                    path: "room/create",
-                    name: "chat-room-create",
-                    component: CreateChatRoom
-                },
+                }
             ]
         },
         {
@@ -79,6 +78,29 @@ const router = new VueRouter({
         {
             path: "/members",
             component: Members
+        },
+        {
+            path: "/invitations",
+            component: Invitations,
+        },
+        {
+            path: "/invitations/:id",
+            name: "invitation-details",
+            component: InvitationDetails,
+        },
+		{
+            path: "/forum",
+            component: Forum,
+		},
+		{
+			path: "/forum/:id",
+			name: "forum-details",
+			component: ForumDetails,
+		},
+		{
+			path: "/forum/create",
+			name: "forum-create",
+			component: ForumCreate,
         },
         {
             path: "/controls",
@@ -163,6 +185,7 @@ const app = new Vue({
     router,
     el: '#app',
     data: {
+        author: {},
         member_list: [],
         company_list: [],
         stamp_group_list: [],
@@ -337,6 +360,78 @@ const app = new Vue({
                 });
         },
 
+        /* チャットグループ編集 */
+        editChatRoom: function (room_id, data) {
+            data.append("_method", "PUT");
+            return axios.post('/api/chat-rooms/' + room_id, data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ削除 */
+        deleteChatRoom: function (room_id) {
+            return axios.delete('/api/chat-rooms/' + room_id)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    const index = this.chat_room_list.findIndex(room => room._id === room_id);
+                    this.chat_room_list.splice(index, 1);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ会員追加 */
+        addChatRoomMember: function (room_id, data) {
+            return axios.post('/api/chat-rooms/' + room_id + '/members', data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == res.data.room._id) {
+                            this.chat_room_list.splice(index, 1, res.data.room);
+                        }
+                    }
+                    return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ会員削除 */
+        deleteChatRoomMember: function (room_id, data) {
+            return axios.delete('/api/chat-rooms/' + room_id + '/members', { data: data })
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == res.data.room._id) {
+                            this.chat_room_list.splice(index, 1, res.data.room);
+                        }
+                    }
+                    return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* 既読処理 */
+        alreadyRead: function (chat_room_id, contents_id) {
+            return axios.put('/api/chat-rooms/' + chat_room_id + '/contents', {
+                unread_contents: contents_id
+            })
+                .then(res => this.checkAuth(res))
+                .catch(error => {
+                    console.log(error);
+                });
+        },
     }
 });
 function convertObjectToFormData(object) {

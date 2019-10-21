@@ -15,25 +15,22 @@
         <v-select-members class="p-list-box" v-model="members" ref="list_box"></v-select-members>
       </div>
       <div class="layout-flex --justify-content-space-around p-group-box">
-        <router-link class="normal-button p-cancel-btn" :to="'/chat-rooms'">キャンセル</router-link>
+        <button class="normal-button p-cancel-btn" :to="'/chat-rooms'" @click="setBtnActive">キャンセル</button>
         <button class="normal-button" @click="roomCreate">作成</button>
       </div>
-      <router-link class="c-esc-button p-esc-btn" :to="'/chat-rooms'" />
+      <span class="c-esc-button p-esc-btn" @click="setBtnActive"></span>
     </div>
   </section>
 </template>
 <script>
 import VSelectMembers from "../VSelectMembers";
-import VScrollbar from "../VScrollbar";
 export default {
   components: {
-    VSelectMembers,
-    VScrollbar
+    VSelectMembers
   },
 
   data: function() {
     return {
-      box_height: 0,
       group_name: "",
       members: [],
       name_alert: false,
@@ -42,6 +39,14 @@ export default {
   },
 
   methods: {
+    setBtnActive: function() {
+      this.$parent.setBtnActive();
+    },
+
+    setRoomList: function(room_list) {
+      this.$parent.setRoomList(room_list);
+    },
+
     roomCreate: function() {
       this.name_alert = this.group_name.length < 1; // グループ名が入力されていなければアラート
       this.members_alert = this.members.length < 1; // 参加する会員が選択されていなければアラート
@@ -52,8 +57,11 @@ export default {
         group_name: this.group_name,
         members: this.members
       };
-      this.$root.createChatRoom(data);
-      this.$router.back();
+
+      // チャットルーム作成
+      this.$root.createChatRoom(data).then(room_list => {
+        this.setBtnActive();
+      });
     }
   }
 };
@@ -92,7 +100,7 @@ export default {
 }
 
 .p-list-box {
-  height: 392px;
+  height: 389px;
 }
 
 .p-name-input {

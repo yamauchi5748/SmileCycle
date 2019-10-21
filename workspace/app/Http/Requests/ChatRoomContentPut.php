@@ -27,7 +27,6 @@ class ChatRoomContentPut extends FormRequest
     {
         return array_merge($this->request->all(), [
             'chat_room_id' => $this->chat_room_id,
-            'content_id' => $this->content_id
         ]);
     }
 
@@ -40,7 +39,8 @@ class ChatRoomContentPut extends FormRequest
     {
         return [
             'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
-            'content_id' => ['required', 'uuid', Rule::exists('chat_rooms', 'contents._id')->where('_id', $this->chat_room_id)]
+            'unread_contents' => ['required', 'array'],
+            'unread_contents.*' => ['uuid', Rule::exists('chat_rooms', 'contents._id')->where('_id', $this->chat_room_id)],
         ];
     }
 

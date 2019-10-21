@@ -18,10 +18,10 @@
 import TheGlobalHeader from "./TheGlobalHeader";
 export default {
     props: {
-        member: String,
-        api_token: String
+        author: Object
     },
     mounted() {
+        this.$root.author = this.author;
         console.log("Component mounted.");
     },
     /* テスト用ログインメソッド */
@@ -46,9 +46,13 @@ export default {
 
 <style lang="scss" scoped>
 .p-page {
+    height: 100vh;
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
+}
+.p-content {
+    height: 100%;
 }
 .p-header {
     height: 60px;
