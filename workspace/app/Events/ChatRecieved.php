@@ -12,14 +12,17 @@ class ChatRecieved implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    protected $chat_room_id;
+    protected $chat;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($chat_room_id, $chat)
     {
-
+        $this->chat_room_id = $chat_room_id;
+        $this->chat = $chat;
     }
 
     /**
@@ -29,11 +32,11 @@ class ChatRecieved implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('room.'.'963acb8c-13c7-40c6-8b27-74f472f73222');
+        return new PresenceChannel('room.' . $this->chat_room_id);
     }
 
     public function broadcastWith()
     {
-        return ['message' => 'msg'];
+        return ['content' => $chat];
     }
 }

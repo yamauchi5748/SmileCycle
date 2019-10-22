@@ -13,6 +13,7 @@ use App\Http\Requests\ChatRoomContentPut;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
+use App\Events\ChatRecieved;
 use App\jobs\ProcessPodcast;
 
 class ChatRoomContentController extends AuthController
@@ -226,6 +227,10 @@ class ChatRoomContentController extends AuthController
 
         /* 返すレスポンスデータを整形 */
         $this->response['content'] = $chat;
+
+        /* チャット内にブロードキャスト */
+        \Log::debug('yy');
+        broadcast(new ChatRecieved($chat_room_id, $chat));
         
         return response()->json(
             $this->response,

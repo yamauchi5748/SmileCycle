@@ -12,7 +12,6 @@ use App\Http\Requests\ChatRoomDelete;
 use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
-use App\Events\ChatRecieved;
 
 class ChatRoomController extends AuthController
 {
@@ -182,8 +181,6 @@ class ChatRoomController extends AuthController
      */
     public function store(ChatRoomPost $request)
     {
-        \Log::debug('yy');
-        broadcast(new ChatRecieved());
         /** チャットグループ作成 **/
         // モデル作成
         $chat_group = [
