@@ -72,7 +72,9 @@ class ChatRoomContentController extends AuthController
             [
                 '$project' => [
                     'contents' => [
-                        '$slice' => [ '$contents', (int) $request->content_count, 10]
+                        '$reverseArray' => [
+                            '$slice' => [ '$contents', (int) $request->content_count, 10]
+                        ]
                     ]
                 ]
             ]

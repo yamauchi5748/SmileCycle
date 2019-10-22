@@ -10,7 +10,12 @@
       </button>
     </div>
     <div class="contents">
-      <v-scrollbar class="margin-left-smallest" v-on:scroll="scroll" ref="scroll">
+      <v-scrollbar
+        class="margin-left-smallest"
+        v-on:scroll="scroll"
+        v-on:resize="scrollResize"
+        ref="scroll"
+      >
         <ol class="history">
           <li v-for="(content, index) in contents" :key="index">
             <div class="content" v-if="!content.is_none">
@@ -80,7 +85,7 @@ export default {
   },
   data() {
     return {
-      intervalId: undefined,
+      async_flg: true,
       edit_active: false,
       edit_room_active: false,
       add_member_active: false,
@@ -103,7 +108,20 @@ export default {
 
   methods: {
     scroll: function(scroll_percentage) {
-      console.log(scroll_percentage);
+      if (scroll_percentage < 10 && this.async_flg && this.room) {
+        this.async_flg = !this.async_flg;
+        this.$root
+          .loadChatRoomContents(this.room._id, this.room.contents.length)
+          .then(() => {
+            this.async_flg = !this.async_flg;
+          });
+      }
+    },
+
+    scrollResize: function(val, oldVal) {
+      if (oldVal <= 0) {
+        this.$refs.scroll.scrollBottom();
+      }
     },
 
     setMenuActive: function() {
@@ -120,7 +138,12 @@ export default {
 
       this.$root.chatSubmit(this.room._id, data).then(res => {
         this.room.contents.push(res.content);
-        window.setTimeout(this.$refs.scroll.scrollBottom, this.$root.polling_time + 1);   //ポーリングとの高さの整合性を保つ
+
+        //ポーリングによる実行タイミングの整合性を保つ
+        window.setTimeout(
+          this.$refs.scroll.scrollBottom,
+          this.$root.polling_time + 1
+        );
       });
     },
 
@@ -145,6 +168,15 @@ export default {
       this.edit_room_active = false;
       this.add_member_active = false;
       this.edit_member_active = false;
+    }
+  },
+
+  watch: {
+    room: function(val, oldVal) {
+      this.$nextTick(function() {
+        // ビュー全体がレンダリングされた後にのみ実行されるコード
+        this.$refs.scroll.scrollBottom();
+      });
     }
   }
 };

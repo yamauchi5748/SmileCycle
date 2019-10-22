@@ -26,7 +26,8 @@
 export default {
   name: "VScrollbar",
   props: {
-    scroll: Event
+    scroll: Event,
+    resize: Event
   },
   data() {
     return {
@@ -35,8 +36,7 @@ export default {
       box_height: 0,
       scroll_box_height: 0,
       scrollbar_height: 100,
-      scrollbar_value: "translateY(0px)",
-      drag_screen: 0
+      scrollbar_value: "translateY(0px)"
     };
   },
 
@@ -94,15 +94,21 @@ export default {
     },
 
     scrollBottom: function() {
-      const scroll_value = this.box_height - this.scroll_box_height;
-      this.$refs.scrollbar_hider.scrollTop = scroll_value;
-      this.loadScrollValue(scroll_value);
+      this.$refs.scrollbar_hider.scrollTop =
+        this.box_height - this.scroll_box_height;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   },
 
   watch: {
     box_height: function(val, oldVal) {
+      /* リサイズイベントを発行 */
+      this.$emit("resize", val, oldVal);
       this.loadScrollBarHeight();
+
+      if (oldVal <= 0 || val < oldVal) return;
+      this.$refs.scrollbar_hider.scrollTop += val - oldVal;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   }
 };
@@ -126,7 +132,7 @@ export default {
   bottom: 0;
   height: 100%;
   transform: translateZ(0);
-  scroll-behavior: smooth;
+  //scroll-behavior: smooth;
 }
 
 .c-sidebar {

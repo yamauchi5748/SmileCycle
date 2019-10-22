@@ -340,6 +340,25 @@ const app = new Vue({
                 });
         },
 
+        /* チャットグループコンテンツ一覧取得 */
+        loadChatRoomContents: function (chat_room_id, content_count) {
+            return axios.get('/api/chat-rooms/' + chat_room_id + '/contents?content_count=' + content_count)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    if (!res.data.result) return;
+
+                    console.log('チャット取得', res.data.contents);
+                    this.chat_room_list.filter(room => {
+                        if (room._id == chat_room_id) {
+                            room.contents = [...res.data.contents, ...room.contents];
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
         /* チャットグループ作成 */
         createChatRoom: function (data) {
             return axios.post('/api/chat-rooms', data)

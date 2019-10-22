@@ -19,7 +19,7 @@
       </figure>
     </div>
     <v-scrollbar class="margin-left-smallest">
-      <ul class="p-room-list" ref="list_box">
+      <ul class="p-room-list">
         <li
           class="margin-bottom-normal"
           v-for="(room, index) in room_list"

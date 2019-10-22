@@ -102,7 +102,14 @@ class ChatRoomController extends AuthController
                     'contents.unread' => [
                         '$cond' => [
                             'if' => [
-                                '$eq' => ['$contents.is_none', true]
+                                '$or' => [
+                                    [
+                                        '$eq' => ['$contents.is_none', true]
+                                    ],
+                                    [
+                                        '$eq' => ['$contents.sender_id', $this->author->_id]
+                                    ]
+                                ]
                             ],
                             'then' => false,
                             'else' => [
