@@ -38,7 +38,8 @@ export default {
     VDialog
   },
   props: {
-    Room: Object
+    Room: Object,
+    closeModal: Event
   },
 
   data: function() {
@@ -66,7 +67,7 @@ export default {
 
   methods: {
     setBtnActive: function() {
-      this.$parent.setMemberAddBtnActive();
+      this.$emit("closeModal");
     },
 
     setDialogActive: function(is_active) {

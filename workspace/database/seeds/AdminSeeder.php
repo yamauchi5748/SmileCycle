@@ -19,6 +19,7 @@ class AdminSeeder extends Seeder
         $faker = Faker\Factory::create('ja_JP');
 
         $_id = (string) Str::uuid();
+        $_id2 = (string) Str::uuid();
 
         /*会社データと紐づけ */
         $company_id = $faker->randomElement(Company::select()->get())->_id;
@@ -26,6 +27,7 @@ class AdminSeeder extends Seeder
 
         $members = $company->members;
         array_push($members, $_id);
+        array_push($members, $_id2);
         $company->members = $members;
         $company->save();
 
@@ -37,6 +39,7 @@ class AdminSeeder extends Seeder
         foreach ($stamp_groups_obj as $stamp_group) {
             $stamp_group_members = $stamp_group->members;
             array_push($stamp_group_members, $_id);
+            array_push($stamp_group_members, $_id2);
             $stamp_group->members = $stamp_group_members;
             $stamp_group->save();
         }
@@ -51,6 +54,7 @@ class AdminSeeder extends Seeder
 
         // 管理者のプロフィール画像をストレージに保存
         Storage::putFileAs('private/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id . '.png', 'private');
+        Storage::putFileAs('private/images/profile_images/', new File('storage/app/images/' . $path_name . '.png'), $_id2 . '.png', 'private');
 
         Member::create([
             '_id' => $_id,
@@ -66,6 +70,22 @@ class AdminSeeder extends Seeder
             'stamp_groups' => $stamp_groups_id,
             'mail' => $faker->safeEmail,
             'password' => Hash::make('admin')
+        ]);
+
+        Member::create([
+            '_id' => $_id2,
+            'api_token' => Str::random(60),
+            'is_notification' => true,
+            'notification_interval' => '0.5h',
+            'is_admin' => true,
+            'name' => 'admin2',
+            'ruby' => 'あどみん2',
+            'post' => '管理者',
+            'telephone_number' => $faker->phoneNumber,
+            'department_name' => $faker->randomElement(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会']),
+            'stamp_groups' => $stamp_groups_id,
+            'mail' => $faker->safeEmail,
+            'password' => Hash::make('admin2')
         ]);
     }
 }

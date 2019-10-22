@@ -11,7 +11,7 @@
         <label class="p-room-icon-box" for="file-input">
           <img
             class="p-room-icon"
-            :src="'/chat-rooms/' + room._id + '/profile-image'"
+            :src="'/chat-rooms/' + room._id + '/profile-image?' + Math.random()"
             ref="img_preview"
           />
           <img class="p-camera-icon" src="/img/camera.png" />
@@ -44,7 +44,8 @@ export default {
     VDialog
   },
   props: {
-    Room: Object
+    Room: Object,
+    closeModal: Event
   },
 
   data: function() {
@@ -59,7 +60,7 @@ export default {
 
   methods: {
     setBtnActive: function() {
-      this.$parent.setEditBtnActive();
+      this.$emit("closeModal");
     },
 
     setDialogActive: function(is_active) {

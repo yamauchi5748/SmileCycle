@@ -1,24 +1,46 @@
 <template>
-  <div class="details">
+  <div class="details" v-if="room">
     <div class="name">
-      <span v-if="room">{{ room.group_name }}</span>
-      <button>
+      <span>{{ room.group_name }}</span>
+      <button
+        v-if="!room.is_department && room.admin_member_id == $root.author._id"
+        @click="setMenuActive"
+      >
         <img src="/img/settings-icon.png" alt />
       </button>
     </div>
     <div class="contents">
-      <v-scrollbar class="margin-left-smallest" :box-height="box_height">
-        <ol class="history" ref="list_box">
+      <v-scrollbar
+        class="margin-left-smallest"
+        v-on:scroll="scroll"
+        v-on:resize="scrollResize"
+        ref="scroll"
+      >
+        <ol class="history">
           <li v-for="(content, index) in contents" :key="index">
-            <div class="content">
+            <div class="content" v-if="!content.is_none">
               <div class="profile">
-                <img src="/img/profile_image.jpg" alt="profile" />
+                <img :src="'/members/' + content.sender_id + '/profile-image'" alt="profile" />
               </div>
               <div class="signature">
                 <span>{{ content.sender_name }}</span>
                 <span>{{ content.created_at }}</span>
               </div>
-              <div class="message">{{ content.content_id }}</div>
+              <div class="message">
+                <span v-if="content.content_type == '1'">{{ content.message }}</span>
+                <img
+                  class="p-content-image"
+                  :src="'/stamp-images/' + content.stamp_id"
+                  alt="スタンプ"
+                  v-if="content.content_type == '2'"
+                />
+                <img
+                  class="p-content-image"
+                  :src="'/chat-rooms/' + room._id + '/images/' + content.content_id"
+                  alt="画像"
+                  v-if="content.content_type == '3'"
+                />
+              </div>
             </div>
           </li>
         </ol>
@@ -28,151 +50,48 @@
           <button>
             <img class="upload-image" src alt />
           </button>
-          <p class="upload-message" contenteditable="true"></p>
+          <p class="upload-message" contenteditable="true" ref="message"></p>
           <button>
             <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
           </button>
         </div>
-        <button class="normal-button">send</button>
+        <button class="normal-button" @click="submit">send</button>
       </div>
     </div>
+    <edit-modal
+      class="p-animation"
+      :class="{active:edit_active}"
+      v-on:close="setMenuActive"
+      v-on:openModal="openModal"
+    />
+    <edit-room-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_room_active" />
+    <add-member-modal :Room="room" v-on:closeModal="closeModal" v-if="add_member_active" />
+    <edit-member-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_member_active" />
   </div>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
+import EditModal from "./EditModal";
+import EditRoomModal from "./EditRoomModal";
+import EditMemberModal from "./EditMemberModal";
+import AddMemberModal from "./AddMemberModal";
 export default {
   components: {
-    VScrollbar
+    VScrollbar,
+    EditModal,
+    EditRoomModal,
+    EditMemberModal,
+    AddMemberModal
   },
   data() {
     return {
-      intervalId: undefined,
-      box_height: 0,
-      auth: true,
-      result: true,
-      is_group: true,
-      contents: [
-        //$B:GBg(B10$B7o$^$G<hF@(B
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/18 10:40",
-          already_read: 0
-        },
-        {
-          _id: "68b02ded-fb25-4154-abdc-1f78a3b0ce49",
-          sender_id: "ae96095c-dc5b-4fa3-83b6-4ccec79a7f94",
-          sender_name: "bear",
-          content_type: "4", //1:$B%F%-%9%H(B, 2:$B%9%?%s%W(B, 3:$B2hA|(B, 4:$BF02h(B
-          content_id: "372b0690-d917-46f7-8fce-2f87d14e4bbc",
-          created_at: "2019/09/20 10:50",
-          already_read: 0
-        }
-      ]
+      async_flg: true,
+      edit_active: false,
+      edit_room_active: false,
+      add_member_active: false,
+      edit_member_active: false,
+      is_hurry: false
     };
-  },
-
-  created: function() {
-    // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 500);
-  },
-
-  beforeDestroy() {
-    // ポーリングによるイベントをリセット
-    clearInterval(this.intervalId);
   },
 
   computed: {
@@ -180,12 +99,84 @@ export default {
       return this.$root.chat_room_list.filter(room => {
         return room._id === this.$route.params.id;
       })[0];
+    },
+
+    contents: function() {
+      return this.room.contents;
     }
   },
 
   methods: {
-    resizeEvent: function() {
-      this.box_height = this.$refs.list_box.clientHeight + 23;
+    scroll: function(scroll_percentage) {
+      if (scroll_percentage < 10 && this.async_flg && this.room) {
+        this.async_flg = !this.async_flg;
+        this.$root
+          .loadChatRoomContents(this.room._id, this.room.contents.length)
+          .then(() => {
+            this.async_flg = !this.async_flg;
+          });
+      }
+    },
+
+    scrollResize: function(val, oldVal) {
+      if (oldVal <= 0) {
+        this.$refs.scroll.scrollBottom();
+      }
+    },
+
+    setMenuActive: function() {
+      this.edit_active = !this.edit_active;
+    },
+
+    submit: function() {
+      console.log(this.$refs.message.innerText);
+      const data = {
+        is_hurry: this.is_hurry,
+        content_type: 1,
+        message: this.$refs.message.innerText
+      };
+
+      this.$root.chatSubmit(this.room._id, data).then(res => {
+        this.room.contents.push(res.content);
+
+        //ポーリングによる実行タイミングの整合性を保つ
+        window.setTimeout(
+          this.$refs.scroll.scrollBottom,
+          this.$root.polling_time + 1
+        );
+      });
+    },
+
+    openModal: function(target_id) {
+      this.setMenuActive();
+      switch (target_id) {
+        case "1":
+          this.edit_room_active = true;
+          break;
+
+        case "2":
+          this.add_member_active = true;
+          break;
+
+        case "3":
+          this.edit_member_active = true;
+          break;
+      }
+    },
+
+    closeModal: function() {
+      this.edit_room_active = false;
+      this.add_member_active = false;
+      this.edit_member_active = false;
+    }
+  },
+
+  watch: {
+    room: function(val, oldVal) {
+      this.$nextTick(function() {
+        // ビュー全体がレンダリングされた後にのみ実行されるコード
+        this.$refs.scroll.scrollBottom();
+      });
     }
   }
 };
@@ -194,7 +185,6 @@ export default {
 .details {
   background-color: $base-color;
   height: 100%;
-  position: relative;
   display: grid;
   grid-template-rows: 63px 1fr;
   div {
@@ -277,6 +267,10 @@ export default {
     grid-row: 2/2;
     font-size: 16px;
     margin: 0px 20px;
+    .p-content-image {
+      width: 140px;
+      height: 140px;
+    }
   }
 }
 .send-content {
@@ -314,6 +308,16 @@ export default {
   }
   .normal-button {
     align-self: flex-end;
+  }
+}
+
+.p-animation {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.1s;
+  &.active {
+    visibility: unset;
+    opacity: 1;
   }
 }
 </style>

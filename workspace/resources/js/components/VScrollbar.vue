@@ -5,7 +5,9 @@
       ref="scrollbar_hider"
       @scroll="loadScrollValue($refs.scrollbar_hider.scrollTop)"
     >
-      <slot></slot>
+      <div ref="list_box">
+        <slot></slot>
+      </div>
     </div>
     <div class="c-scrollbar_track" v-show="is_scroll">
       <div
@@ -23,33 +25,46 @@
 <script>
 export default {
   name: "VScrollbar",
-  props: ["boxHeight"],
+  props: {
+    scroll: Event,
+    resize: Event
+  },
   data() {
     return {
+      intervalId: undefined,
       is_scroll: false,
-      box_height: this.boxHeight,
+      box_height: 0,
       scroll_box_height: 0,
       scrollbar_height: 100,
-      scrollbar_value: "translateY(0px)",
-      drag_screen: 0
+      scrollbar_value: "translateY(0px)"
     };
   },
 
   mounted: function() {
     // ウィンドウ幅の変更を検知するイベントを追加
     window.addEventListener("resize", this.handleResize);
-    this.loadScrollBarHeight();
+
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, this.$root.polling_time);
   },
 
   beforeDestroy: function() {
     // コンポーネント消滅時にイベントを削除
     window.removeEventListener("resize", this.handleResize);
+
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
   },
 
   methods: {
     handleResize: function() {
       // ウィンドウ幅が変わったタイミングで発火
       this.loadScrollBarHeight();
+    },
+
+    resizeEvent: function() {
+      if (!this.$refs.list_box) return;
+      this.box_height = this.$refs.list_box.clientHeight + 23;
     },
 
     loadScrollBarHeight: function() {
@@ -73,13 +88,27 @@ export default {
         (this.scroll_box_height - this.scrollbar_height - 20) * percentage;
 
       this.scrollbar_value = "translateY(" + top_height + "px)";
+
+      /* スクロールイベントを発行 */
+      this.$emit("scroll", percentage * 100);
+    },
+
+    scrollBottom: function() {
+      this.$refs.scrollbar_hider.scrollTop =
+        this.box_height - this.scroll_box_height;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   },
 
   watch: {
-    boxHeight: function(val, oldVal) {
-      this.box_height = val;
+    box_height: function(val, oldVal) {
+      /* リサイズイベントを発行 */
+      this.$emit("resize", val, oldVal);
       this.loadScrollBarHeight();
+
+      if (oldVal <= 0 || val < oldVal) return;
+      this.$refs.scrollbar_hider.scrollTop += val - oldVal;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   }
 };
@@ -103,7 +132,7 @@ export default {
   bottom: 0;
   height: 100%;
   transform: translateZ(0);
-  scroll-behavior: smooth;
+  //scroll-behavior: smooth;
 }
 
 .c-sidebar {

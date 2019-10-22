@@ -71,8 +71,12 @@ class ChatRoomController extends AuthController
                     // コンテンツを最大10件取得
                     'contents' => [
                         '$slice' => [ '$contents', 0, 10]
-                    ],
-                    // コンテンツが空でないかの処理
+                    ]
+                ]
+            ],
+            // コンテンツが空でないかの処理
+            [
+                '$set' => [
                     'contents' => [
                         '$cond' => [
                             'if' => [
@@ -98,7 +102,14 @@ class ChatRoomController extends AuthController
                     'contents.unread' => [
                         '$cond' => [
                             'if' => [
-                                '$eq' => ['$contents.is_none', true]
+                                '$or' => [
+                                    [
+                                        '$eq' => ['$contents.is_none', true]
+                                    ],
+                                    [
+                                        '$eq' => ['$contents.sender_id', $this->author->_id]
+                                    ]
+                                ]
                             ],
                             'then' => false,
                             'else' => [
@@ -144,7 +155,13 @@ class ChatRoomController extends AuthController
                         '$push' => '$contents'
                     ],
                     'unread' => [
-                        '$sum' => '$contents.unread'
+                        '$sum' => [
+                            '$cond' => [
+                                'if' => '$contents.unread',
+                                'then' => 1,
+                                'else' => 0
+                            ]
+                        ]
                     ]
                 ]
             ],
@@ -153,6 +170,14 @@ class ChatRoomController extends AuthController
                 '$sort' => [
                     'is_department' => -1,
                     'contents.0.created_at' => -1
+                ]
+            ],
+            /* コンテンツの中身をリバースする */
+            [
+                '$set' => [
+                    'contents' => [
+                        '$reverseArray' => '$contents'
+                    ]
                 ]
             ]
         ])->toArray();
