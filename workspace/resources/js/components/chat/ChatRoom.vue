@@ -10,8 +10,8 @@
       </button>
     </div>
     <div class="contents">
-      <v-scrollbar class="margin-left-smallest" :box-height="box_height">
-        <ol class="history" ref="list_box">
+      <v-scrollbar class="margin-left-smallest" v-on:scroll="scroll" ref="scroll">
+        <ol class="history">
           <li v-for="(content, index) in contents" :key="index">
             <div class="content" v-if="!content.is_none">
               <div class="profile">
@@ -81,23 +81,12 @@ export default {
   data() {
     return {
       intervalId: undefined,
-      box_height: 0,
       edit_active: false,
       edit_room_active: false,
       add_member_active: false,
       edit_member_active: false,
       is_hurry: false
     };
-  },
-
-  created: function() {
-    // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 500);
-  },
-
-  beforeDestroy() {
-    // ポーリングによるイベントをリセット
-    clearInterval(this.intervalId);
   },
 
   computed: {
@@ -113,9 +102,8 @@ export default {
   },
 
   methods: {
-    resizeEvent: function() {
-      if (!this.$refs.list_box) return;
-      this.box_height = this.$refs.list_box.clientHeight + 23;
+    scroll: function(scroll_percentage) {
+      console.log(scroll_percentage);
     },
 
     setMenuActive: function() {
@@ -132,6 +120,7 @@ export default {
 
       this.$root.chatSubmit(this.room._id, data).then(res => {
         this.room.contents.push(res.content);
+        window.setTimeout(this.$refs.scroll.scrollBottom, this.$root.polling_time + 1);   //ポーリングとの高さの整合性を保つ
       });
     },
 

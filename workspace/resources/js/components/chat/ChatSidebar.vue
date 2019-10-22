@@ -18,7 +18,7 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <v-scrollbar class="margin-left-smallest" :box-height="box_height">
+    <v-scrollbar class="margin-left-smallest">
       <ul class="p-room-list" ref="list_box">
         <li
           class="margin-bottom-normal"
@@ -46,7 +46,6 @@ export default {
   },
   data() {
     return {
-      intervalId: undefined,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -58,14 +57,6 @@ export default {
   mounted: function() {
     // 初期設定はグループルーム
     this.loadRoomType("group");
-
-    // ポーリングでリストボックスの高さをリサイズイベントで取得
-    this.intervalId = setInterval(this.resizeEvent, 500);
-  },
-
-  beforeDestroy() {
-    // ポーリングによるイベントをリセット
-    clearInterval(this.intervalId);
   },
 
   computed: {
@@ -80,10 +71,6 @@ export default {
   },
 
   methods: {
-    resizeEvent: function() {
-      this.box_height = this.$refs.list_box.clientHeight;
-    },
-
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },

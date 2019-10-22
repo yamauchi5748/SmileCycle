@@ -5,7 +5,9 @@
       ref="scrollbar_hider"
       @scroll="loadScrollValue($refs.scrollbar_hider.scrollTop)"
     >
-      <slot></slot>
+      <div ref="list_box">
+        <slot></slot>
+      </div>
     </div>
     <div class="c-scrollbar_track" v-show="is_scroll">
       <div
@@ -23,11 +25,14 @@
 <script>
 export default {
   name: "VScrollbar",
-  props: ["boxHeight"],
+  props: {
+    scroll: Event
+  },
   data() {
     return {
+      intervalId: undefined,
       is_scroll: false,
-      box_height: this.boxHeight,
+      box_height: 0,
       scroll_box_height: 0,
       scrollbar_height: 100,
       scrollbar_value: "translateY(0px)",
@@ -38,18 +43,28 @@ export default {
   mounted: function() {
     // ウィンドウ幅の変更を検知するイベントを追加
     window.addEventListener("resize", this.handleResize);
-    this.loadScrollBarHeight();
+
+    // ポーリングでリストボックスの高さをリサイズイベントで取得
+    this.intervalId = setInterval(this.resizeEvent, this.$root.polling_time);
   },
 
   beforeDestroy: function() {
     // コンポーネント消滅時にイベントを削除
     window.removeEventListener("resize", this.handleResize);
+
+    // ポーリングによるイベントをリセット
+    clearInterval(this.intervalId);
   },
 
   methods: {
     handleResize: function() {
       // ウィンドウ幅が変わったタイミングで発火
       this.loadScrollBarHeight();
+    },
+
+    resizeEvent: function() {
+      if (!this.$refs.list_box) return;
+      this.box_height = this.$refs.list_box.clientHeight + 23;
     },
 
     loadScrollBarHeight: function() {
@@ -73,12 +88,20 @@ export default {
         (this.scroll_box_height - this.scrollbar_height - 20) * percentage;
 
       this.scrollbar_value = "translateY(" + top_height + "px)";
+
+      /* スクロールイベントを発行 */
+      this.$emit("scroll", percentage * 100);
+    },
+
+    scrollBottom: function() {
+      const scroll_value = this.box_height - this.scroll_box_height;
+      this.$refs.scrollbar_hider.scrollTop = scroll_value;
+      this.loadScrollValue(scroll_value);
     }
   },
 
   watch: {
-    boxHeight: function(val, oldVal) {
-      this.box_height = val;
+    box_height: function(val, oldVal) {
       this.loadScrollBarHeight();
     }
   }
