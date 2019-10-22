@@ -45,12 +45,12 @@
           <button>
             <img class="upload-image" src alt />
           </button>
-          <p class="upload-message" contenteditable="true"></p>
+          <p class="upload-message" contenteditable="true" ref="message"></p>
           <button>
             <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
           </button>
         </div>
-        <button class="normal-button">send</button>
+        <button class="normal-button" @click="submit">send</button>
       </div>
     </div>
     <edit-modal
@@ -85,7 +85,8 @@ export default {
       edit_active: false,
       edit_room_active: false,
       add_member_active: false,
-      edit_member_active: false
+      edit_member_active: false,
+      is_hurry: false
     };
   },
 
@@ -107,7 +108,7 @@ export default {
     },
 
     contents: function() {
-      return this.room.contents.reverse();
+      return this.room.contents;
     }
   },
 
@@ -119,6 +120,19 @@ export default {
 
     setMenuActive: function() {
       this.edit_active = !this.edit_active;
+    },
+
+    submit: function() {
+      console.log(this.$refs.message.innerText);
+      const data = {
+        is_hurry: this.is_hurry,
+        content_type: 1,
+        message: this.$refs.message.innerText
+      };
+
+      this.$root.chatSubmit(this.room._id, data).then(res => {
+        this.room.contents.push(res.content);
+      });
     },
 
     openModal: function(target_id) {

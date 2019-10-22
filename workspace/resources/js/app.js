@@ -173,13 +173,9 @@ const app = new Vue({
         stamp_group_list: [],
         chat_room_list: [],
     },
-    mounted: function () {
+    created: function () {
         // プライベートチャンネル接続
         Echo.private('user.' + this.author._id)
-            // チャット取得イベント
-            .listen('ChatRecieved', (e) => {
-                console.log(e);
-            });
 
         this.$root.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
@@ -189,7 +185,11 @@ const app = new Vue({
                 Echo.join('room.' + room_id)
                     .here((users) => {
                         console.log("参加しました");
-                    });
+                    })
+                    .listen('ChatRecieved', (e) => {
+                        console.log('uu');
+                        console.log(e);
+                    });;
             }
         });
     },
@@ -377,6 +377,19 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャット送信 */
+        chatSubmit: function (chat_room_id, data) {
+            return axios.post('/api/chat-rooms/' + chat_room_id + '/contents', data)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res);
+                    return res.data;
                 })
                 .catch(error => {
                     console.log(error);
