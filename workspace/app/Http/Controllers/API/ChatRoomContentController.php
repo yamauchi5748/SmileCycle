@@ -229,8 +229,7 @@ class ChatRoomContentController extends AuthController
         $this->response['content'] = $chat;
 
         /* チャット内にブロードキャスト */
-        \Log::debug('yy');
-        broadcast(new ChatRecieved($chat_room_id, $chat));
+        broadcast(new ChatRecieved($chat_room_id, $chat))->toOthers();
         
         return response()->json(
             $this->response,

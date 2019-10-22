@@ -11,9 +11,11 @@
         <span v-show="room.is_group">({{ room.members.length }})</span>
       </div>
       <p class="p-room-first-content" v-if="room.contents.length > 0">
-        <span v-if="room.contents[0].content_type == '1'">{{ room.contents[0].message }}</span>
-        <span v-if="room.contents[0].content_type == '2'">スタンプを送信しました</span>
-        <span v-if="room.contents[0].content_type == '3'">画像を送信しました</span>
+        <span
+          v-if="room.contents[room.contents.length - 1].content_type == '1'"
+        >{{ room.contents[room.contents.length - 1].message }}</span>
+        <span v-if="room.contents[room.contents.length - 1].content_type == '2'">スタンプを送信しました</span>
+        <span v-if="room.contents[room.contents.length - 1].content_type == '3'">画像を送信しました</span>
       </p>
     </div>
     <div class="--align-self-center p-unread-box" v-show="unreadCount">
@@ -38,9 +40,7 @@ export default {
 
   computed: {
     unreadCount: function() {
-      return this.room.contents.filter(content => {
-        return content.unread;
-      }).length;
+      return this.room.unread;
     }
   },
 
@@ -49,7 +49,8 @@ export default {
       handler: function(val, oldVal) {
         this.img_url = "/chat-rooms/" + this.room._id + "/profile-image";
         if (val._id === oldVal._id) {
-          this.img_url = "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
+          this.img_url =
+            "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
         }
       },
       deep: true

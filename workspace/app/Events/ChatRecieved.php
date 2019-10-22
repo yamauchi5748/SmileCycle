@@ -37,6 +37,9 @@ class ChatRecieved implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return ['content' => $chat];
+        return [
+            'room_id' => $this->chat_room_id,
+            'content' => $this->chat
+        ];
     }
 }

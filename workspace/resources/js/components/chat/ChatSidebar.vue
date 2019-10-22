@@ -102,6 +102,7 @@ export default {
 
       // 既読処理
       let unread_contents_id = [];
+      room.unread = 0;
       for (const index in room.contents) {
         if (room.contents[index].unread) {
           room.contents[index].unread = false;

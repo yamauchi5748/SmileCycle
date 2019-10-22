@@ -25,10 +25,6 @@ class PersonalChatRoomSeeder extends Seeder
 
         for ($i=0; $i < $member_count-1; $i++) {
             for ($j=$i+1; $j < $member_count; $j++) {
-                \Log::debug('i');
-                \Log::debug($i);
-                \Log::debug('j');
-                \Log::debug($j);
                 /** チャットグループ作成 **/
                 // モデル作成
                 $chat_group = [

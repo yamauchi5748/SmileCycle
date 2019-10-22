@@ -174,22 +174,12 @@ const app = new Vue({
         chat_room_list: [],
     },
     created: function () {
-        // プライベートチャンネル接続
-        Echo.private('user.' + this.author._id)
+        Echo.private('user.' + this.author._id); // プライベートチャンネル接続
 
         this.$root.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
-                const room_id = this.chat_room_list[index]._id;
-
-                // チャットルームのチャンネルに接続
-                Echo.join('room.' + room_id)
-                    .here((users) => {
-                        console.log("参加しました");
-                    })
-                    .listen('ChatRecieved', (e) => {
-                        console.log('uu');
-                        console.log(e);
-                    });;
+                const channel = 'room.' + this.chat_room_list[index]._id;
+                this.connect(channel);  // チャットルームのチャンネルに接続
             }
         });
     },
@@ -201,6 +191,34 @@ const app = new Vue({
             }
             /* エラー */
             return Promise.reject('認証エラー');
+        },
+
+        /* チャンネル接続 */
+        connect: function (channel) {
+            Echo.join(channel)
+                .here((users) => {
+                    console.log("参加しました");
+                })
+                .listen('ChatRecieved', (data) => {
+                    console.log('チャット受信', data);
+
+                    // 受信チャットの処理
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == data.room_id) {
+                            // 受信時にルームへ入室している場合
+                            if (this.$route.params.id == room._id) {
+                                this.alreadyRead(room._id, [data.content._id]);
+                            } else {
+                                room.unread++;
+                            }
+
+                            room.contents.push(data.content);
+                            break;
+                        };
+                    }
+                    console.log(this.$route.params.id);
+                });
         },
 
         /* 会員一覧取得 */
