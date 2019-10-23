@@ -75,7 +75,6 @@ export default {
     },
 
     dialogAgree: function() {
-      console.log("ok");
       this.setDialogActive(false);
 
       const data = {
@@ -90,7 +89,6 @@ export default {
     },
 
     dialogCancel: function() {
-      console.log("no");
       this.setDialogActive(false);
     },
 
@@ -117,6 +115,7 @@ export default {
   position: absolute;
   background-color: $base-color;
   z-index: 1;
+  overflow: auto;
 }
 
 .p-modal-content {

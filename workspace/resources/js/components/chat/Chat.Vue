@@ -19,5 +19,6 @@ export default {
   grid-template-columns: 324px 1fr;
   line-height: 1.4rem;
   position: relative;
+  overflow: hidden;
 }
 </style>

@@ -117,6 +117,7 @@ export default {
   position: absolute;
   background-color: $base-color;
   z-index: 1;
+  overflow: auto;
 }
 
 .p-modal-content {

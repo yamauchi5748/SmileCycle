@@ -6,6 +6,50 @@
   position: relative;
 }
 
+@mixin c-more-tag($width: 0, $height: 0, $before_top: 0, $after_top: 0, $before_left: 0, $after_left: 0) {
+  position: relative;
+  &:before {
+    content: "";
+    width: $width;
+    border-bottom: solid;
+    color: $base-color;
+    position: absolute;
+    top: $before_top;
+    left: $before_left;
+  }
+  &:after {
+    content: "";
+    height: $height;
+    border-left: solid;
+    color: $base-color;
+    position: absolute;
+    top: $after_top;
+    left: $after_left;
+  }
+}
+
+.c-more-tag {
+  @include c-more-tag(
+    $width: 8px,
+    $height: 8px,
+    $before_top: 0,
+    $after_top: -3px,
+    $before_left: -3px,
+    $after_left: 0
+  );
+}
+
+.c-more-tag--sidebar {
+  @include c-more-tag(
+    $width: 8px,
+    $height: 8px,
+    $before_top: 2.3px,
+    $after_top: -1px,
+    $before_left: 17px,
+    $after_left: 19.7px
+  );
+}
+
 .c-add-button {
   @extend %c-circle-button;
   background-color: $accent-color;
@@ -60,4 +104,14 @@
     cursor: pointer;
     background-color: $base-sub-color;
   }
+}
+
+.c-unread-box {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 31px;
+  background-color: $accent-color;
+  color: white;
+  border-radius: 50%;
 }
