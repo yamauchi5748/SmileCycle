@@ -114,12 +114,10 @@ export default {
                 .map(function(member) {
                     return member._id;
                 });
-            console.log(this.property);
             this.$root
                 .editAdminInvitation(this.property)
                 .then(function(response) {
-                    console.log(response);
-                    //self.$router.push({ name: "controls-invitation" });
+                    self.$router.push({ name: "controls-invitation" });
                 })
                 .catch(function(error) {
                     console.error(error);
