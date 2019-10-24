@@ -2,12 +2,11 @@
     <secondary-view>
         <template #title>スタンプ詳細</template>
         <template #body>
-            {{property}}
             <div class="input-wrapper">
-                <v-input-image class="p-stamp-upload" v-model="property.tab_image_id">タブ画像</v-input-image>
+                <v-input-image class="p-stamp-upload" v-model="property.tab_image_id" :prefix="'/stamp-images/'">タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
-                <v-input-multiple-images v-model="property.stamps">スタンプ</v-input-multiple-images>
+                <v-input-multiple-images v-model="edit_stamps" :prefix="'/stamp-images/'">スタンプ</v-input-multiple-images>
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
@@ -17,7 +16,7 @@
             </div>
             <div class="input-wrapper">
                 <span class="input-title">公開範囲</span>
-                <v-select-members v-model="property.members"></v-select-members>
+                <v-select-members v-model="edit_members"></v-select-members>
             </div>
             <div class="buttons-wrapper --space-between">
                 <button class="flat-button" @click="handleDeleteButtonClick">削除する</button>
@@ -36,11 +35,15 @@ import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
+            edit_stamps: [],
+            edit_members: [],
             property: {
                 tab_image: null,
                 stamps: [],
                 is_all: true,
-                members: []
+                members: [],
+                add_members: [],
+                remove_members: []
             }
         };
     },
@@ -57,13 +60,56 @@ export default {
     },
     methods: {
         handleSubmitButtonClick: function() {
-            this.$root.editStampGroup(this.property);
+            const self = this;
+            this.property.add_stamps = this.edit_stamps.filter(function(stamp) {
+                return typeof stamp == "object";
+            });
+            this.property.remove_stamps = this.property.stamps.filter(function(
+                edit_stamp
+            ) {
+                return (
+                    -1 ==
+                    self.edit_stamps.findIndex(function(stamp) {
+                        return edit_stamp == stamp;
+                    })
+                );
+            });
+            this.property.add_members = this.edit_members.filter(function(
+                edit_member
+            ) {
+                return (
+                    -1 ==
+                    self.property.members.findIndex(function(member) {
+                        return edit_member == member;
+                    })
+                );
+            });
+            this.property.remove_members = this.property.members.filter(
+                function(member) {
+                    return (
+                        -1 ==
+                        self.edit_members.findIndex(function(edit_member) {
+                            return member == edit_member;
+                        })
+                    );
+                }
+            );
+
+            this.$root
+                .editStampGroup(this.property)
+                .then(function(response) {
+                    self.$router.push({ name: "controls-stamp" });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
         },
         handleDeleteButtonClick: function() {
+            const self = this;
             this.$root
                 .deleteStampGroup(this.property._id)
-                .then(function(res) {
-                    console.log("スタンプ削除しました");
+                .then(function(response) {
+                    self.$router.push({ name: "controls-stamp" });
                 })
                 .catch(function(error) {
                     console.error(error);
@@ -71,9 +117,15 @@ export default {
         },
         // データをセット
         setData: function() {
-            this.property = this.$root.stamp_group_list.find(stamp_group => {
-                return stamp_group._id == this.$route.params.id;
-            });
+            this.property = Object.assign(
+                {},
+                this.property,
+                this.$root.stamp_group_list.find(stamp_group => {
+                    return stamp_group._id == this.$route.params.id;
+                })
+            );
+            this.edit_members = this.property.members.slice();
+            this.edit_stamps = this.property.stamps.slice();
         }
     },
     components: {

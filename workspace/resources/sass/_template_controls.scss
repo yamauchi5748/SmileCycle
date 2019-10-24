@@ -52,11 +52,4 @@
 }
 .buttons-wrapper {
     display: flex;
-    justify-content: flex-end;
-    &.--space-between {
-        justify-content: space-between
-    }
-    :last-child {
-        margin-left: 16px;
-    }
 }

@@ -3,21 +3,27 @@
         <template #title>会のご案内詳細</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input v-model="title" counter :max="25">タイトル</v-input>
+                <v-input v-model="property.title" counter :max="25">タイトル</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input v-model="text" counter :max="500" multiline>本文</v-input>
+                <v-input v-model="property.text" counter :max="500" multiline>本文</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input-multiple-images v-model="images">画像</v-input-multiple-images>
+                <v-input-multiple-images
+                    v-model="edit_images"
+                    :prefix="'/invitations/'+property._id+'/images/'"
+                >画像</v-input-multiple-images>
+            </div>
+            <div class="input-wrapper">
+                <v-input-date v-model="property.deadline_at">締め切り時刻</v-input-date>
             </div>
             <div class="input-wrapper">
                 <div class="input-title">招待者</div>
-                <v-select-members v-model="attend_members"></v-select-members>
+                <v-select-members v-model="edit_attend_members"></v-select-members>
             </div>
-            <div class="buttons-wrapper --space-between">
-                <button class="flat-button">削除する</button>
-                <button class="normal-button">保存する</button>
+            <div class="buttons-wrapper">
+                <button class="flat-button" @click="handleDeleteButtonClick">削除する</button>
+                <button class="normal-button margin-left-auto" @click="handleSubmitButtonClick">保存する</button>
             </div>
         </template>
     </secondary-view>
@@ -26,40 +32,117 @@
 <script>
 import SecondaryView from "./SecondaryView.vue";
 import VInput from "../VInput.vue";
+import VInputDate from "../VInputDate.vue";
 import VInputMultipleImages from "../VInputMultipleImages.vue";
 import VSelectMembers from "../VSelectMembers.vue";
 export default {
-    components: {
-        SecondaryView,
-        VInput,
-        VInputMultipleImages,
-        VSelectMembers
+    created: function() {
+        const self = this;
+        this.$root
+            .getAdminInvitation(this.$route.params.id)
+            .then(function(response) {
+                self.property = Object.assign(
+                    {},
+                    self.property,
+                    response.data.invitation
+                );
+                self.property.deadline_at =
+                    self.property.deadline_at &&
+                    self.property.deadline_at.slice(0, 10);
+                self.edit_images = self.property.images;
+                self.edit_attend_members = self.property.attend_members.map(
+                    function(member) {
+                        return member._id;
+                    }
+                );
+            });
     },
     data: function() {
         return {
-            title: "第59回会のお知らせ",
-            text:
-                "本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、",
-            images: [
-                "invitations.l66ec26-3768-48aa-9ca9-a7d604815507.l66ec26-3768-48aa-9ca9-a7d604815233.png",
-                "invitations.l66ec26-3768-48aa-9ca9-a7d604815507.324ec26-3768-48aa-9ca9-a7d604815233.png"
-            ],
-            attend_members: [
-                {
-                    _id: "j89ec26-3768-48dc-9ca9-a7d604815507",
-                    name: "花子",
-                    ruby: "はなこ",
-                    status: 1 //1:出席、2:欠席、3:未選択
-                },
-                {
-                    _id: "j89ec26-3768-48dc-9ca9-a7d604815507",
-                    name: "松島",
-                    ruby: "まつしま",
-                    status: 3 //1:出席、2:欠席、3:未選択
-                }
-            ],
-            deadline_at: "2019-09-09"
+            edit_images: [],
+            edit_attend_members: [],
+            property: {
+                title: "",
+                text: "",
+                images: [],
+                deadline_at: "",
+                attend_members: []
+            }
         };
+    },
+    methods: {
+        handleSubmitButtonClick: function() {
+            const self = this;
+            this.property.add_images = this.edit_images.filter(function(
+                edit_image
+            ) {
+                return typeof edit_image == "object";
+            });
+            this.property.delete_images = this.property.images.filter(function(
+                edit_image
+            ) {
+                return (
+                    -1 ==
+                    self.edit_images.findIndex(function(image) {
+                        return edit_image == image;
+                    })
+                );
+            });
+            this.property.add_attend_members = this.edit_attend_members.filter(
+                function(edit_attend_member) {
+                    return (
+                        -1 ==
+                        self.property.attend_members.findIndex(function(
+                            attend_member
+                        ) {
+                            return edit_attend_member == attend_member._id;
+                        })
+                    );
+                }
+            );
+            this.property.delete_attend_members = this.property.attend_members
+                .filter(function(attend_member) {
+                    return (
+                        -1 ==
+                        self.edit_attend_members.findIndex(function(
+                            edit_attend_member
+                        ) {
+                            return attend_member._id == edit_attend_member;
+                        })
+                    );
+                })
+                .map(function(member) {
+                    return member._id;
+                });
+            console.log(this.property);
+            this.$root
+                .editAdminInvitation(this.property)
+                .then(function(response) {
+                    console.log(response);
+                    //self.$router.push({ name: "controls-invitation" });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+        },
+        handleDeleteButtonClick: function() {
+            const self = this;
+            this.$root
+                .deleteAdminInvitation(this.property._id)
+                .then(function(response) {
+                    self.$router.push({ name: "controls-invitation" });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+        }
+    },
+    components: {
+        SecondaryView,
+        VInput,
+        VInputDate,
+        VInputMultipleImages,
+        VSelectMembers
     }
 };
 </script>

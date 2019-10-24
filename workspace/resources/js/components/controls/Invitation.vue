@@ -9,11 +9,10 @@
         </div>
         <v-article
             class="p-post"
-            v-for="(invitation,index) in this.$root.admin_invitation_list
-            "
+            v-for="(invitation,index) in this.$root.admin_invitation_list"
             :key="index"
             :post="invitation"
-            :to="{name:'controls-invitation-details',params:{id:invitation.id}}"
+            :to="{name:'controls-invitation-details',params:{id:invitation._id}}"
         ></v-article>
     </section>
 </template>

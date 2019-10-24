@@ -13,14 +13,14 @@
         <ul v-if="existImages" class="p-post-images" ref="images">
             <li
                 class="p-post-image-wrapper"
-                v-for="(image,index) in post.images"
+                v-for="(image_id,index) in post.images"
                 :class="{active: slider_point == index}"
                 @click="previewImage(index)"
                 :key="index"
             >
-                <figure class="p-post-image-inner">
-                    <img class="p-post-image" :src="image" />
-                </figure>
+                <span class="p-post-image" :style="{'background-image':'url('+adjustURL(image_id)+')'}">
+
+                </span>
             </li>
         </ul>
         <div class="p-text-wrapper">
@@ -39,10 +39,10 @@ export default {
     props: {
         post: Object,
         to: [String, Object],
-		readmore: {
-			default: false,
-			type: [Boolean]
-		}
+        readmore: {
+            default: false,
+            type: [Boolean]
+        }
     },
     data: function() {
         return {
@@ -81,6 +81,13 @@ export default {
         updateTextOver: function() {
             this.isTextOver =
                 this.$refs.text.scrollHeight > this.$refs.text.clientHeight;
+        },
+        //URLを切り替える
+        adjustURL(image_id) {
+            if (this.post.sender_id) {
+                return "/forums/" + this.post._id + "/images/" + image_id;
+            }
+            return "/invitations/" + this.post._id + "/images/" + image_id;
         }
     }
 };
@@ -156,19 +163,14 @@ $border-value: solid 1px $gray;
             z-index: -1;
         }
     }
-    .p-post-image-inner {
-        display: flex;
+    .p-post-image {
+        display: block;
         width: 100%;
         height: 100%;
-        justify-content: center;
-        align-content: center;
-        flex-shrink: 0;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
         background-color: $gray;
-        .p-post-image {
-            display: block;
-            max-width: 100%;
-            max-height: 100%;
-        }
     }
 }
 .p-text-wrapper {

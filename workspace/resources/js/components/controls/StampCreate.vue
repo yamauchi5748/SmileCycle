@@ -48,7 +48,15 @@ export default {
     },
     methods: {
         handleSubmitButtonClick: function() {
-            this.$root.createStampGroup(this.property);
+            const self = this;
+            this.$root
+                .createStampGroup(this.property)
+                .then(function(response) {
+                    self.$router.push({ name: "controls-stamp" });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
         }
     },
     components: {

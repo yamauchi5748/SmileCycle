@@ -3,12 +3,24 @@
         <span class="p-title" v-if="$slots.default">
             <slot></slot>
         </span>
-        <input type="date" />
+        <input type="date" v-model="date" />
     </label>
 </template>
 
 <script>
-export default {};
+export default {
+    props: ["value"],
+    computed: {
+        date: {
+            get() {
+                return this.value;
+            },
+            set(new_value) {
+                this.$emit("input", new_value);
+            }
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>

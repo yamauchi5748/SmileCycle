@@ -88,19 +88,19 @@ const router = new VueRouter({
             name: "invitation-details",
             component: InvitationDetails,
         },
-		{
+        {
             path: "/forum",
             component: Forum,
-		},
-		{
-			path: "/forum/:id",
-			name: "forum-details",
-			component: ForumDetails,
-		},
-		{
-			path: "/forum/create",
-			name: "forum-create",
-			component: ForumCreate,
+        },
+        {
+            path: "/forum/:id",
+            name: "forum-details",
+            component: ForumDetails,
+        },
+        {
+            path: "/forum/create",
+            name: "forum-create",
+            component: ForumCreate,
         },
         {
             path: "/controls",
@@ -190,6 +190,7 @@ const app = new Vue({
         member_list: [],
         company_list: [],
         stamp_group_list: [],
+        forum_list: [],
         admin_invitation_list: [],
         chat_room_list: [],
     },
@@ -262,8 +263,9 @@ const app = new Vue({
         },
         /* 会員の作成 */
         createMember: function (member_property) {
-            return axios.post('/api/members', member_property)
-                .then(res => this.checkAuth(res))
+            return axios.post('/api/members', member_property).then(result => {
+                return result;
+            })
         },
 
         /* 会員の情報の編集 */
@@ -289,6 +291,63 @@ const app = new Vue({
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        /* 特定会のご案内取得 */
+        getAdminInvitation: function (invitation_id) {
+            return axios.get('/api/admin-invitations/' + invitation_id)
+                .then(res => this.checkAuth(res))
+        },
+        /* 会のご案内の作成 */
+        createAdminInvitation: function (invitation_property) {
+            const form_data = convertObjectToFormData(invitation_property);
+            return axios.post('/api/admin-invitations', form_data).then(result => {
+                return result;
+            })
+        },
+
+        /* 会のご案内の編集 */
+        editAdminInvitation: function (invitation_property) {
+            invitation_property._method = "put";
+            const form_data = convertObjectToFormData(invitation_property)
+            return axios.put('/api/admin-invitations/' + invitation_property._id, form_data)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* 会のご案内削除 */
+        deleteAdminInvitation: function (invitation_id) {
+            return axios.delete('/api/admin-invitations/' + invitation_id)
+                .then(res => this.checkAuth(res))
+        },
+        /* みんなの掲示板取得 */
+        loadForums: function () {
+            return axios.get('/api/forums')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    this.forum_list = res.data.forums;
+                    return res;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        /* 特定みんなの掲示板取得 */
+        getForum: function (forum_id) {
+            return axios.get('/api/forums/' + forum_id)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* みんなの掲示板の編集 */
+        editForum: function (forum_property) {
+            forum_property._method = "put";
+            const form_data = convertObjectToFormData(forum_property);
+            return axios.put('/api/admin-forums/' + forum_property._id, form_data)
+                .then(res => this.checkAuth(res))
+        },
+
+        /* みんなの掲示板削除 */
+        deleteForum: function (forum_id) {
+            return axios.delete('/api/admin-forums/' + forum_id)
+                .then(res => this.checkAuth(res))
         },
 
         /* 会社一覧取得 */
@@ -355,8 +414,9 @@ const app = new Vue({
 
         /* スタンプグループの編集 */
         editStampGroup: function (stamp_group_property) {
+            stamp_group_property._method = "put";
             const form_data = convertObjectToFormData(stamp_group_property)
-            return axios.put('/api/stamp-groups/' + stamp_group_property._id, form_data, {
+            return axios.post('/api/stamp-groups/' + stamp_group_property._id, form_data, {
                 headers: {
                     "content-type": "multipart/form-data"
                 }
@@ -366,8 +426,8 @@ const app = new Vue({
 
         /* スタンプグループ削除 */
         deleteStampGroup: function (stamp_group_id) {
-            console.log({ delete_stamp_groups: [stamp_group_id] });
-            return axios.delete('/api/stamp-groups/', convertObjectToFormData({ delete_stamp_groups: [stamp_group_id] }), {
+            const form_data = convertObjectToFormData({ delete_stamp_groups: [stamp_group_id], _method: "delete" });
+            return axios.post('/api/stamp-groups/', form_data, {
                 headers: {
                     "content-type": "multipart/form-data"
                 }

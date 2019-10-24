@@ -23,7 +23,8 @@
 <script>
 export default {
     props: {
-        value: { type: [String, File] }
+        value: { type: [String, File] },
+        prefix: { type: String }
     },
     data: function() {
         return {
@@ -33,9 +34,7 @@ export default {
     watch: {
         value: function(new_value) {
             if (typeof new_value == "string") {
-                this.dataURL = new_value;
-            } else {
-                console.log("想定している型と違います",typeof new_value);
+                this.dataURL = this.prefix + new_value;
             }
         }
     },

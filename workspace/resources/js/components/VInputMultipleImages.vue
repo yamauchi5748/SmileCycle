@@ -6,9 +6,9 @@
         <div class="p-image-list-outer">
             <button class="slide-left-button" @click="scrollLeft"></button>
             <ul ref="list" class="p-image-list" @dragover="handleDragOver" @drop="handleDrop">
-                <li class="p-image-wrapper" v-for="(dataURL, index) in dataURL_list" :key="index">
+                <li class="p-image-wrapper" v-for="(image, index) in images" :key="index">
                     <button class="p-delete-button" @click="deleteImage(index)"></button>
-                    <span class="p-image" :style="{'background-image':'url('+dataURL+')'}"></span>
+                    <span class="p-image" :style="{'background-image':'url('+image.url+')'}"></span>
                 </li>
             </ul>
             <button class="slide-right-button" @click="scrollRight"></button>
@@ -30,59 +30,72 @@ export default {
     props: {
         value: {
             type: Array,
-            required: true,
             default: function() {
                 return [];
             }
+        },
+        prefix:{
+            type:String
         },
         max: { type: Number, default: 10 }
     },
     data: function() {
         return {
-            dataURL_list: this.value.slice(), //表示用
-            image_source: this.value.slice() //modelへのbind用
+            images: []
         };
     },
     watch: {
         value: function() {
-            this.image_source = this.value.slice();
+            if (this.images.length != 0) return;
+            for (let index in this.value) {
+                const src = this.value[index];
+                this.images.push({ src: src, url: this.prefix + src });
+            }
         }
     },
     methods: {
-        scrollLeft() {
+        scrollLeft: function() {
             this.$refs.list.scrollLeft = 0;
         },
-        scrollRight() {
+        scrollRight: function() {
             this.$refs.list.scrollLeft = this.$refs.list.scrollWidth;
         },
-        deleteImage(index) {
-            this.dataURL_list.splice(index, 1);
-            this.image_source.splice(index, 1);
-            this.$emit("input", this.image_source);
+        deleteImage: function(index) {
+            this.images.splice(index, 1);
+            this.$emit(
+                "input",
+                this.images.map(function(image) {
+                    return image.src;
+                })
+            );
         },
-        handleDragOver(event) {
+        handleDragOver: function(event) {
             event.dataTransfer.dropEffect = "copy";
             event.stopPropagation();
             event.preventDefault();
         },
-        handleDrop(event) {
+        handleDrop: function(event) {
             event.stopPropagation();
             event.preventDefault();
             this.loadImagesFromFiles(event.dataTransfer.files);
         },
-        handleFileInput(event) {
+        handleFileInput: function(event) {
             this.loadImagesFromFiles(event.target.files);
         },
-        loadImagesFromFiles(files) {
-            let self = this;
+        loadImagesFromFiles: function(files) {
+            const self = this;
             for (let file of files) {
-                if (this.dataURL_list.length < this.max) {
+                if (this.images.length < this.max) {
                     let reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = function() {
-                        self.dataURL_list.push(reader.result);
-                        self.image_source.push(file);
-                        self.$emit("input", self.image_source);
+                        self.images.push({ src: file, url: reader.result });
+                        self.$emit(
+                            "input",
+                            self.images.map(function(image) {
+                                return image.src;
+                            })
+                        );
                     };
                 }
             }
