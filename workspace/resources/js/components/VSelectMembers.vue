@@ -41,6 +41,12 @@ export default {
         this.$root.loadMembers();
     },
     watch: {
+        value: function(new_value) {
+            for (let index in new_value) {
+                const userid = new_value[index];
+                this.$set(this.attend, userid, true);
+            }
+        },
         attend: {
             handler: function() {
                 let attend_members = [];

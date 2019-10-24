@@ -3,24 +3,23 @@
         <template #title>会のご案内投稿</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input v-model="title" counter :max="20">タイトル</v-input>
+                <v-input v-model="property.title" counter :max="20">タイトル</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input v-model="text" counter :max="500" multiline>本文</v-input>
+                <v-input v-model="property.text" counter :max="500" multiline>本文</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input-multiple-images v-model="images">画像</v-input-multiple-images>
+                <v-input-multiple-images v-model="property.images">画像</v-input-multiple-images>
             </div>
             <div class="input-wrapper">
-                <v-input-date>締め切り時刻</v-input-date>
+                <v-input-date v-model="property.deadline_at">締め切り時刻</v-input-date>
             </div>
             <div class="input-wrapper">
                 <div class="input-title">招待者</div>
-                <v-select-members v-model="attend_members"></v-select-members>
+                <v-select-members v-model="property.attend_members"></v-select-members>
             </div>
             <div class="buttons-wrapper">
-                <button class="flat-button">取り消し</button>
-                <button class="normal-button">登録する</button>
+                <button class="normal-button margin-left-auto" @click="handleSubmitButtonClick">登録する</button>
             </div>
         </template>
     </secondary-view>
@@ -35,18 +34,26 @@ import VInputDate from "../VInputDate";
 export default {
     data: function() {
         return {
-            title: "",
-            text: "",
-            images: [],
-            attend_members: []
+            property: {
+                title: "",
+                text: "",
+                images: [],
+                attend_members: [],
+                deadline_at:""
+            }
         };
-    },
-    created:{
-
     },
     methods: {
         handleSubmitButtonClick: function() {
-            this.$root.createStampGroup(this.property);
+            const self = this;
+            this.$root
+                .createAdminInvitation(this.property)
+                .then(function(response) {
+                    self.$router.push({ name: "controls-invitation" });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
         }
     },
     components: {

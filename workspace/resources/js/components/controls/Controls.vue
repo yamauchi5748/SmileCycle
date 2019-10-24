@@ -21,7 +21,6 @@ export default {
 }
 
 .p-content {
-    overflow-y: scroll;
     border-left: solid 1px rgba(0, 0, 0, 0.2);
     border-right: solid 1px rgba(0, 0, 0, 0.2);
 }

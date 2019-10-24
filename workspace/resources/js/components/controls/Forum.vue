@@ -1,11 +1,11 @@
 <template>
     <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center margin-bottom-big">
-            <h2 class="item-count">30記事</h2>
+            <h2 class="item-count">{{$root.forum_list.length}}記事</h2>
         </div>
         <v-article
             class="p-post"
-            v-for="(forum,index) in forums"
+            v-for="(forum,index) in $root.forum_list"
             :key="index"
             :post="forum"
             :to="{name:'controls-forum-details', params:{id:forum._id}}"
@@ -15,63 +15,8 @@
 <script>
 import VArticle from "../VArticle.vue";
 export default {
-    data() {
-        return {
-            forums: [
-                {
-                    _id: "l66ec26-3768-48aa-9ca9-a7d604815507",
-                    title: "旅行",
-                    sender_id: "l66ec26-3768-48aa-9ca9-a7d604815507",
-                    sender_name: "松下",
-                    text:
-                        "とだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、",
-                    images: [
-                        "/img/check.svg",
-                        "/img/stamp.svg",
-                        "/img/profile_image.jpg",
-                        "/img/invitation-post-image.jpg"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                },
-                {
-                    _id: "l66ec26-3768-48aa-9ca9-a7d604815507",
-                    title: "旅行",
-                    sender_id: "l66ec26-3768-48aa-9ca9-a7d604815507",
-                    sender_name: "松下",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、",
-                    images: [],
-                    created_at: "2019-06-01 16:27:03"
-                },
-                {
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                },
-                {
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                }
-            ]
-        };
-    },
     created: function() {
-        this.$root.loadMembers();
+        this.$root.loadForums()
     },
     components: {
         VArticle

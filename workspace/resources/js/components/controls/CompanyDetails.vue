@@ -3,13 +3,13 @@
         <template #title>会社詳細</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input v-model="property.name" counter :max="140">会社名</v-input>
+                <v-input v-model="property.name" :error="errors.name" counter :max="140">会社名</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input v-model="property.address">住所</v-input>
+                <v-input v-model="property.address" :error="errors.address">住所</v-input>
             </div>
             <div class="input-wrapper">
-                <v-input v-model="property.telephone_number">電話番号</v-input>
+                <v-input v-model="property.telephone_number" :error="errors.telephone_number">電話番号</v-input>
             </div>
             <div class="buttons-wrapper --space-between">
                 <button class="flat-button" @click="handleDeleteButtonClick">削除する</button>
@@ -25,6 +25,7 @@ import VInput from "../VInput";
 export default {
     data: function() {
         return {
+            errors: {},
             property: {}
         };
     },
@@ -34,39 +35,35 @@ export default {
     },
     created: function() {
         // 対象の会社情報を取得
-        this.$root
-            .getCompany(this.$route.params.id)
-            .then(res => {
-                this.setData(res.data.company);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        const self = this;
+        this.$root.getCompany(this.$route.params.id).then(function(response) {
+            self.property = response.data.company;
+        });
     },
     methods: {
+        //会社編集
         handlePostButtonClick: function() {
+            const self = this;
             this.$root
                 .editCompany(this.property)
-                .then(function(res) {
-                    console.log("会社編集成功しました");
+                .then(function(response) {
+                    self.$router.push({ name: "controls-company" });
                 })
                 .catch(function(error) {
-                    console.error(error);
+                    self.errors = error.response.data.errors;
                 });
         },
+        //会社削除
         handleDeleteButtonClick: function() {
+            const self = this;
             this.$root
                 .deleteCompany(this.property._id)
-                .then(function(res) {
-                    console.log("会社削除しました");
+                .then(function(response) {
+                    self.$router.push({ name: "controls-company" });
                 })
                 .catch(function(error) {
                     console.error(error);
                 });
-        },
-        // データをセット
-        setData: function(company) {
-            this.property = company;
         }
     }
 };
