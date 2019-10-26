@@ -204,21 +204,26 @@ const app = new Vue({
                     console.log('チャット受信', data);
 
                     // 受信チャットの処理
+                    let last_departnebt_index = 0;
                     for (const index in this.chat_room_list) {
                         const room = this.chat_room_list[index];
+                        if (room.is_department) last_departnebt_index++;
                         if (room._id == data.room_id) {
                             // 受信時にルームへ入室している場合
                             if (this.$route.params.id == room._id) {
                                 this.alreadyRead(room._id, [data.content._id]);
                             } else {
-                                room.unread++;
+                                // 送信者が認証ユーザでなければ未読数を加算
+                                if (data.content.sender_id != this.author._id) room.unread++;
                             }
-
                             room.contents.push(data.content);
+
+                            /* ルームをソート */
+                            this.chat_room_list.splice(index, 1);
+                            this.chat_room_list.splice(last_departnebt_index, 0, room);
                             break;
                         };
                     }
-                    console.log(this.$route.params.id);
                 });
         },
 

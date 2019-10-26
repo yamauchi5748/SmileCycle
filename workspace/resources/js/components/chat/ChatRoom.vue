@@ -132,10 +132,7 @@ export default {
     scrollResize: function(val, oldVal) {
       /* 現在のスクロール画面を保持する */
       if (oldVal > 0 && val > oldVal) {
-        console.log("遠田よ", val, oldVal);
-        const diff = val - oldVal;
-        console.log("resize", diff);
-        this.$refs.scroll.scrollKeep("bottom", diff);
+        this.$refs.scroll.scrollKeep("bottom", val - oldVal);
       }
     },
 
@@ -150,9 +147,21 @@ export default {
         content_type: 1,
         message: this.$refs.message.innerText
       };
+      this.$refs.message.innerText = "";
 
       this.$root.chatSubmit(this.room._id, data).then(res => {
         this.room.contents.push(res.content);
+
+        /* ルームをソート */
+        let last_departnebt_index = 0;
+        for (const index in this.$root.chat_room_list) {
+          const room = this.$root.chat_room_list[index];
+          if (room.is_department) last_departnebt_index++;
+          if (room._id == this.room._id) {
+            this.$root.chat_room_list.splice(index, 1);
+            this.$root.chat_room_list.splice(last_departnebt_index, 0, room);
+          }
+        }
 
         //ポーリングによる実行タイミングの整合性を保つ
         window.setTimeout(
