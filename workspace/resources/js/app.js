@@ -167,7 +167,7 @@ const app = new Vue({
     router,
     el: '#app',
     data: {
-        polling_time: 500,
+        polling_time: 5,
         author: {},
         member_list: [],
         company_list: [],

@@ -24,7 +24,7 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <v-scrollbar class="margin-left-smallest">
+    <v-scrollbar class="margin-left-smallest" v-on:resize="scrollResize" ref="scroll">
       <ul class="p-room-list">
         <li
           class="margin-bottom-normal"
@@ -115,11 +115,16 @@ export default {
   },
 
   methods: {
+    scrollResize: function(val, oldVal) {
+      this.$refs.scroll.scrollTop;
+    },
+
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
 
     loadRoomType: function(type) {
+      this.$refs.scroll.scrollTop();
       this.room_type = type;
       if (this.room_type === "group") {
         this.placeholder = "グループ名検索";

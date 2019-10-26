@@ -26,14 +26,26 @@
 export default {
   name: "VScrollbar",
   props: {
+    /**
+     *  *スクロールイベント*
+     * @param scroll_percentage //スクロールボックスに対するスクロール値の100分率
+     *
+     **/
     scroll: Event,
+
+    /**
+     *  *リストボックスの高さのリサイズイベント*
+     * @param val     //変更後のスクロールボックスの高さ
+     * @param oldVal  //変更前のスクロールボックスの高さ
+     *
+     **/
     resize: Event
   },
   data() {
     return {
       intervalId: undefined,
       is_scroll: false,
-      box_height: 0,
+      list_box_height: 0,
       scroll_box_height: 0,
       scrollbar_height: 100,
       scrollbar_value: "translateY(0px)"
@@ -57,6 +69,18 @@ export default {
   },
 
   methods: {
+    /**
+     * スクロール画面を保持する
+     * @param direction     //保持する方向
+     * @param diff          //スクロールさせる差分
+     *
+     * **/
+    scrollKeep: function(direction, diff) {
+      this.$refs.scrollbar_hider.scrollTop +=
+        direction == "bottom" ? diff : -diff;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
+    },
+
     handleResize: function() {
       // ウィンドウ幅が変わったタイミングで発火
       this.loadScrollBarHeight();
@@ -66,15 +90,26 @@ export default {
       if (!this.$refs.scrollbar_hider_wrapper) return;
       if (!this.$refs.list_box) return;
       this.scroll_box_height = this.$refs.scrollbar_hider_wrapper.clientHeight;
-      this.box_height = this.$refs.list_box.clientHeight + 23;
+      this.list_box_height = this.$refs.list_box.clientHeight + 23;
+    },
+
+    scrollTop: function() {
+      this.$refs.scrollbar_hider.scrollTop = 0;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
+    },
+
+    scrollBottom: function() {
+      this.$refs.scrollbar_hider.scrollTop =
+        this.list_box_height - this.scroll_box_height;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     },
 
     loadScrollBarHeight: function() {
       this.scroll_box_height = this.$refs.scrollbar_hider_wrapper.clientHeight;
-      this.is_scroll = this.box_height - this.scroll_box_height > 0;
+      this.is_scroll = this.list_box_height - this.scroll_box_height > 0;
 
       // スクロールバーの大きさ
-      const percentage = this.scroll_box_height / this.box_height;
+      const percentage = this.scroll_box_height / this.list_box_height;
       this.scrollbar_height =
         this.scroll_box_height * percentage > 56
           ? this.scroll_box_height * percentage
@@ -84,7 +119,7 @@ export default {
     loadScrollValue: function(scroll_value) {
       // スクロールする割合
       const percentage =
-        scroll_value / (this.box_height - this.scroll_box_height);
+        scroll_value / (this.list_box_height - this.scroll_box_height);
 
       const top_height =
         (this.scroll_box_height - this.scrollbar_height - 20) * percentage;
@@ -93,24 +128,14 @@ export default {
 
       /* スクロールイベントを発行 */
       this.$emit("scroll", percentage * 100);
-    },
-
-    scrollBottom: function() {
-      this.$refs.scrollbar_hider.scrollTop =
-        this.box_height - this.scroll_box_height;
-      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   },
 
   watch: {
-    box_height: function(val, oldVal) {
+    list_box_height: function(val, oldVal) {
       /* リサイズイベントを発行 */
       this.$emit("resize", val, oldVal);
       this.loadScrollBarHeight();
-
-      if (oldVal <= 0 || val < oldVal) return;
-      this.$refs.scrollbar_hider.scrollTop += val - oldVal;
-      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     },
 
     scroll_box_height: function(val, oldVal) {

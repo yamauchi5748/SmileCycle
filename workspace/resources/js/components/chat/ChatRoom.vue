@@ -130,8 +130,12 @@ export default {
     },
 
     scrollResize: function(val, oldVal) {
-      if (oldVal <= 0) {
-        this.$refs.scroll.scrollBottom();
+      /* 現在のスクロール画面を保持する */
+      if (oldVal > 0 && val > oldVal) {
+        console.log("遠田よ", val, oldVal);
+        const diff = val - oldVal;
+        console.log("resize", diff);
+        this.$refs.scroll.scrollKeep("bottom", diff);
       }
     },
 
@@ -184,9 +188,13 @@ export default {
 
   watch: {
     room: function(val, oldVal) {
+      // ビュー全体がレンダリングされた後にのみ実行されるコード
       this.$nextTick(function() {
-        // ビュー全体がレンダリングされた後にのみ実行されるコード
-        this.$refs.scroll.scrollBottom();
+        // ポーリングによる実行タイミングの整合性を保つ
+        window.setTimeout(
+          this.$refs.scroll.scrollBottom,
+          this.$root.polling_time + 1
+        );
       });
     }
   }
