@@ -309,7 +309,7 @@ const app = new Vue({
         editAdminInvitation: function (invitation_property) {
             invitation_property._method = "put";
             const form_data = convertObjectToFormData(invitation_property)
-            return axios.put('/api/admin-invitations/' + invitation_property._id, form_data)
+            return axios.post('/api/admin-invitations/' + invitation_property._id, form_data)
                 .then(res => this.checkAuth(res))
         },
 
@@ -340,7 +340,7 @@ const app = new Vue({
         editForum: function (forum_property) {
             forum_property._method = "put";
             const form_data = convertObjectToFormData(forum_property);
-            return axios.put('/api/admin-forums/' + forum_property._id, form_data)
+            return axios.post('/api/admin-forums/' + forum_property._id, form_data)
                 .then(res => this.checkAuth(res))
         },
 
