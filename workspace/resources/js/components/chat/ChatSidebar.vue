@@ -202,11 +202,12 @@ export default {
 }
 
 .p-search-box-wrapper {
-  margin: 18px 0 18px 5px;
+  margin: 18px 5px;
   position: relative;
 }
 
 .p-search-box {
+  width: calc(100% - 10px - 2px - 48px); // 100% - margin - border - padding;
   height: 51px;
   padding: 0 29px;
   font-size: 18px;
