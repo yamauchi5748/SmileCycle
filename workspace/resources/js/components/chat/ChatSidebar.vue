@@ -6,11 +6,17 @@
         :class="{active:(room_type == 'group')}"
         @click="loadRoomType('group')"
       >グループ</span>
+      <div class="c-unread-box p-unread-box__group" v-if="group_unread > 0">
+        <span :class="{'c-more-tag--sidebar':group_unread_more_active}">{{ group_unread }}</span>
+      </div>
       <span
         class="p-chats-nav-container"
         :class="{active:(room_type == 'member')}"
         @click="loadRoomType('member')"
       >会員</span>
+      <div class="c-unread-box p-unread-box__member" v-if="member_unread > 0">
+        <span :class="{'c-more-tag--sidebar':member_unread_more_active}">{{ member_unread }}</span>
+      </div>
     </nav>
     <div class="p-search-box-wrapper">
       <input class="p-search-box" type="text" :placeholder="placeholder" v-model="search_text" />
@@ -50,7 +56,11 @@ export default {
       search_text: "",
       room_type: "",
       placeholder: "",
-      btn_active: false
+      btn_active: false,
+      group_unread_active: false,
+      member_unread_active: false,
+      group_unread_more_active: false,
+      member_unread_more_active: false
     };
   },
 
@@ -67,6 +77,40 @@ export default {
           (this.room_type == "group" ? room.is_group : !room.is_group)
         );
       });
+    },
+
+    group_unread: function() {
+      let unread_count = 0;
+      this.$root.chat_room_list.filter(room => {
+        if (room.is_group) {
+          unread_count += room.contents.filter(content => {
+            return content.unread;
+          }).length;
+        }
+      });
+
+      if (unread_count > 99) {
+        this.group_unread_more_active = true;
+        unread_count = 99;
+      }
+      return unread_count;
+    },
+
+    member_unread: function() {
+      let unread_count = 0;
+      this.$root.chat_room_list.filter(room => {
+        if (!room.is_group) {
+          unread_count += room.contents.filter(content => {
+            return content.unread;
+          }).length;
+        }
+      });
+
+      if (unread_count > 99) {
+        this.member_unread_more_active = true;
+        unread_count = 99;
+      }
+      return unread_count;
     }
   },
 
@@ -86,7 +130,6 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
-
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;
@@ -122,6 +165,34 @@ export default {
     &.active {
       color: $accent-color;
     }
+  }
+}
+
+@mixin p-unread-box($width: 0, $height: 0, $top: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  left: $left;
+  width: $width;
+  height: $height;
+  line-height: $height + 2px;
+}
+
+.p-unread-box {
+  &__group {
+    @include p-unread-box(
+      $width: 25px,
+      $height: 25px,
+      $top: 10px,
+      $left: 125px
+    );
+  }
+  &__member {
+    @include p-unread-box(
+      $width: 25px,
+      $height: 25px,
+      $top: 10px,
+      $left: 262px
+    );
   }
 }
 

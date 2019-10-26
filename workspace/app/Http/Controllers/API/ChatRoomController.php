@@ -68,10 +68,7 @@ class ChatRoomController extends AuthController
                         ]
                     ],
                     'members' => 1,
-                    // コンテンツを最大10件取得
-                    'contents' => [
-                        '$slice' => [ '$contents', 0, 10]
-                    ]
+                    'contents' => 1
                 ]
             ],
             // コンテンツが空でないかの処理
@@ -176,7 +173,10 @@ class ChatRoomController extends AuthController
             [
                 '$set' => [
                     'contents' => [
-                        '$reverseArray' => '$contents'
+                        '$reverseArray' => [
+                            // コンテンツを最大10件取得
+                            '$slice' => [ '$contents', 0, 10]
+                        ]
                     ]
                 ]
             ]

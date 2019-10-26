@@ -5,7 +5,7 @@
       ref="scrollbar_hider"
       @scroll="loadScrollValue($refs.scrollbar_hider.scrollTop)"
     >
-      <div ref="list_box">
+      <div class="c-list" ref="list_box">
         <slot></slot>
       </div>
     </div>
@@ -63,7 +63,9 @@ export default {
     },
 
     resizeEvent: function() {
+      if (!this.$refs.scrollbar_hider_wrapper) return;
       if (!this.$refs.list_box) return;
+      this.scroll_box_height = this.$refs.scrollbar_hider_wrapper.clientHeight;
       this.box_height = this.$refs.list_box.clientHeight + 23;
     },
 
@@ -108,6 +110,11 @@ export default {
 
       if (oldVal <= 0 || val < oldVal) return;
       this.$refs.scrollbar_hider.scrollTop += val - oldVal;
+      this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
+    },
+
+    scroll_box_height: function(val, oldVal) {
+      this.loadScrollBarHeight();
       this.loadScrollValue(this.$refs.scrollbar_hider.scrollTop);
     }
   }
@@ -179,5 +186,9 @@ export default {
   height: 100px;
   transform: translateY(10px);
   z-index: 1;
+}
+
+.c-list {
+  width: calc(100% - 50px);
 }
 </style>

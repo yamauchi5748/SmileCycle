@@ -130,6 +130,7 @@ export default {
   position: absolute;
   background-color: $base-color;
   z-index: 2;
+  overflow: auto;
 }
 
 .p-modal-content {

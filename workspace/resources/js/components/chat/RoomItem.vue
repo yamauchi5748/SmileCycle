@@ -18,8 +18,11 @@
         <span v-if="room.contents[room.contents.length - 1].content_type == '3'">画像を送信しました</span>
       </p>
     </div>
-    <div class="--align-self-center p-unread-box" v-show="unreadCount">
-      <span>{{ unreadCount }}</span>
+    <div class="--align-self-center c-unread-box" v-show="unreadCount">
+      <span>
+        {{ unreadCount }}
+        <span :class="{'c-more-tag':active}"></span>
+      </span>
     </div>
   </router-link>
 </template>
@@ -30,7 +33,8 @@ export default {
   },
   data: function() {
     return {
-      img_url: ""
+      img_url: "",
+      active: false
     };
   },
 
@@ -40,6 +44,7 @@ export default {
 
   computed: {
     unreadCount: function() {
+      if (this.room.unread > 99) this.active = true;
       return this.room.unread;
     }
   },
@@ -100,15 +105,5 @@ a {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-decoration: none;
-}
-
-.p-unread-box {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  line-height: 31px;
-  background-color: $accent-color;
-  color: white;
-  border-radius: 50%;
 }
 </style>
