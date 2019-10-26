@@ -1,62 +1,73 @@
 <template>
-  <div class="details" v-if="room">
-    <div class="name">
-      <span>{{ room.group_name }}</span>
-      <button
-        v-if="!room.is_department && room.admin_member_id == $root.author._id"
-        @click="setMenuActive"
-      >
-        <img src="/img/settings-icon.png" alt />
-      </button>
+  <section class="p-room" v-if="room">
+    <div class="p-room-header layout-flex --justify-content-space-between">
+      <h1 class="p-room-header__title-text --align-self-center">{{ room.group_name }}</h1>
+      <div class="p-room-header__menu layout-flex --align-items-center">
+        <button
+          class="p-room-header__menu-item margin-right-small"
+          v-if="!room.is_department && room.admin_member_id == $root.author._id"
+          @click="setMenuActive"
+        >
+          <img src="/img/settings-icon.png" alt />
+        </button>
+        <button class="p-room-header__menu-item" v-if="!room.is_department">退出ボタン</button>
+      </div>
     </div>
-    <div class="contents">
-      <v-scrollbar
-        class="margin-left-smallest"
-        v-on:scroll="scroll"
-        v-on:resize="scrollResize"
-        ref="scroll"
-      >
-        <ol class="history">
-          <li v-for="(content, index) in contents" :key="index">
-            <div class="content" v-if="!content.is_none">
-              <div class="profile">
-                <img :src="'/members/' + content.sender_id + '/profile-image'" alt="profile" />
+    <div class="p-room-contents">
+      <v-scrollbar v-on:scroll="scroll" v-on:resize="scrollResize" ref="scroll">
+        <ol class="p-room-contents__list" v-if="!contents[0].is_none">
+          <li
+            class="p-room-contents__list-item layout-flex"
+            v-for="(content, index) in contents"
+            :key="index"
+          >
+            <figure class="p-flex--left">
+              <img
+                class="p-room-contents__profile"
+                :src="'/members/' + content.sender_id + '/profile-image'"
+                alt="profile"
+              />
+            </figure>
+            <div class="p-flex--right">
+              <div class="p-room-contents__signature layout-flex margin-bottom-small">
+                <span class="p-room-contents__signature-name">{{ content.sender_name }}</span>
+                <time
+                  class="p-room-contents__signature-date margin-left-small"
+                  :datetime="content.created_at"
+                >{{ content.created_at }}</time>
               </div>
-              <div class="signature">
-                <span>{{ content.sender_name }}</span>
-                <span>{{ content.created_at }}</span>
-              </div>
-              <div class="message">
-                <span v-if="content.content_type == '1'">{{ content.message }}</span>
-                <img
-                  class="p-content-image"
-                  :src="'/stamp-images/' + content.stamp_id"
-                  alt="スタンプ"
-                  v-if="content.content_type == '2'"
-                />
-                <img
-                  class="p-content-image"
-                  :src="'/chat-rooms/' + room._id + '/images/' + content.content_id"
-                  alt="画像"
-                  v-if="content.content_type == '3'"
-                />
-              </div>
+              <p
+                class="p-room-contents__text"
+                v-if="content.content_type == '1'"
+              >{{ content.message }}</p>
+              <img
+                class="p-room-contents__image"
+                :src="'/stamp-images/' + content.stamp_id"
+                alt="スタンプ"
+                v-if="content.content_type == '2'"
+              />
+              <img
+                class="p-room-contents__image"
+                :src="'/chat-rooms/' + room._id + '/images/' + content.content_id"
+                alt="画像"
+                v-if="content.content_type == '3'"
+              />
             </div>
           </li>
         </ol>
       </v-scrollbar>
-      <div class="send-content">
-        <div class="input-box">
-          <button>
-            <img class="upload-image" src alt />
-          </button>
-          <p class="upload-message" contenteditable="true" ref="message"></p>
-          <button>
-            <img src="/img/stamp-icon.png" alt="stamp" class="stamp" />
-          </button>
-        </div>
-        <button class="normal-button" @click="submit">send</button>
+    </div>
+    <div class="p-room-send layout-flex --align-items-center">
+      <div class="p-room-send__input-message-box">
+        <p class="p-room-send__input-message" contenteditable="true" ref="message"></p>
       </div>
+      <button class="p-room-send__stamp-btn layout-flex">
+        <img src="/img/stamp-icon.png" alt="stamp" />
+      </button>
+      <button
+        class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
+        @click="submit"
+      >送信</button>
     </div>
     <edit-modal
       class="p-animation"
@@ -67,7 +78,7 @@
     <edit-room-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_room_active" />
     <add-member-modal :Room="room" v-on:closeModal="closeModal" v-if="add_member_active" />
     <edit-member-modal :Room="room" v-on:closeModal="closeModal" v-if="edit_member_active" />
-  </div>
+  </section>
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
@@ -182,132 +193,109 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.details {
-  background-color: $base-color;
+.p-room {
+  min-width: 444px;
   height: 100%;
   display: grid;
   grid-template-rows: 63px 1fr;
-  div {
-    margin: 0px;
-    margin-top: 20px;
-  }
+  background-color: $base-color;
+  overflow-y: hidden;
+  line-height: normal;
 
-  .name {
-    display: flex;
-    justify-content: space-between;
+  .p-room-header {
+    height: 63px;
+    padding: 0 20px;
     border-bottom: 0.1px solid #707070;
-    height: 43px;
-    padding: 0 16px;
-    align-items: center;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    color: $black;
-  }
+    line-height: 1.7rem;
 
-  .contents {
-    margin: 0 0 0 16px;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr;
-    flex-direction: column;
-    position: relative;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    .contents-inner {
-      height: 100%;
-      .history {
-        width: calc(100% + 17px);
-        height: 0;
-        overflow-y: scroll;
-        li {
-          width: 100%;
-        }
-      }
+    &__title-text {
+      text-decoration: none;
+      font-weight: bold;
+      color: #707070;
     }
   }
-}
-.content {
-  display: grid;
-  grid-template-columns: 1fr 9fr;
-  grid-template-rows: auto auto;
-  width: 100%;
-  background-color: #f2f2f2;
-  position: relative;
-  .profile {
-    grid-column: 1/1;
-    grid-row: 1/1;
-    margin: 0px;
-    padding: 0px;
 
-    img {
-      width: 100%;
+  .p-room-contents {
+    height: 100%;
+    width: 100%;
+    background-color: #f2f2f2;
+
+    &__list {
       height: 100%;
+      padding: 20px;
+    }
+
+    &__list-item {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    &__profile {
+      width: 57px;
+      height: 57px;
       border-radius: 50%;
     }
-  }
-  .signature {
-    padding: 0px;
-    margin: 0px;
-    grid-column: 2/2;
-    grid-row: 1/1;
-    font-size: 16px;
-    font-weight: bold;
-    align-self: center;
-    margin: 0px 20px;
 
-    span {
-      margin: 0px 10px;
+    &__signature-name {
+      font-size: 18px;
+      font-weight: bold;
     }
-  }
-  .message {
-    padding: 0px;
-    margin: 0px;
-    grid-column: 2/2;
-    grid-row: 2/2;
-    font-size: 16px;
-    margin: 0px 20px;
-    .p-content-image {
+
+    &__signature-date {
+      font-size: 13px;
+    }
+
+    &__text {
+      font-size: 16px;
+      font-weight: bold;
+      color: #444444;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    &__image {
       width: 140px;
       height: 140px;
     }
   }
-}
-.send-content {
-  padding: 23px 0;
-  width: 100%;
-  display: flex;
-  background-color: $base-color;
-  max-height: 500px;
-  .input-box {
-    display: flex;
+
+  .p-room-send {
+    $height: 46px;
+
+    max-height: 500px;
+    padding: 20px;
     position: relative;
-    flex-grow: 1;
-    margin: 0 6px 0 0;
-    border: 1px solid #707070;
-    border-radius: 4px;
-    outline: none;
-    overflow-y: scroll;
-    .upload-message {
+    background-color: $base-color;
+
+    &__input-message-box {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #707070;
+      border-radius: 4px;
       box-sizing: border-box;
-      width: 400px;
-      flex-grow: 1;
-      font-size: 30px;
       outline: none;
-      padding: 10px 40px 10px 10px;
-      line-height: 1;
     }
-    button {
+
+    &__input-message {
+      max-height: 350px;
+      padding: 10px 70px 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      outline: none;
+      word-break: break-all;
+      overflow: hidden;
+    }
+
+    &__stamp-btn {
+      height: $height;
       position: absolute;
-      bottom: 0;
-      right: 0;
-      .stamp {
-        height: 100%;
-      }
+      bottom: 20px;
+      right: 123px;
     }
-  }
-  .normal-button {
-    align-self: flex-end;
+
+    &__submit-btn {
+      height: $height;
+    }
   }
 }
 
@@ -318,6 +306,14 @@ export default {
   &.active {
     visibility: unset;
     opacity: 1;
+  }
+}
+
+.p-flex {
+  &--right {
+    width: 100%;
+    max-width: 736px;
+    padding: 8px 0 0 12px;
   }
 }
 </style>
