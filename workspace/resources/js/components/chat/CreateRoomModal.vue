@@ -29,6 +29,10 @@ export default {
     VSelectMembers
   },
 
+  props: {
+    create: Event
+  },
+
   data: function() {
     return {
       group_name: "",
@@ -41,10 +45,6 @@ export default {
   methods: {
     setBtnActive: function() {
       this.$parent.setBtnActive();
-    },
-
-    setRoomList: function(room_list) {
-      this.$parent.setRoomList(room_list);
     },
 
     roomCreate: function() {
@@ -61,6 +61,9 @@ export default {
       // チャットルーム作成
       this.$root.createChatRoom(data).then(room_list => {
         this.setBtnActive();
+
+        /* ルーム作成イベントを発行 */
+        this.$emit("create");
       });
     }
   }

@@ -215,7 +215,7 @@ class ChatRoomController extends AuthController
             'admin_member_id' => $this->author->_id,    // チャットグループの管理者
             'group_name' => $request->group_name,       // チャットグループのグループ名
             'members' => $request->members,             // チャットグループの会員
-            'contents' => [],
+            'contents' => []
         ];
 
         // 投稿者もグループ会員に追加
@@ -246,6 +246,12 @@ class ChatRoomController extends AuthController
         ChatRoom::raw()->insertOne($chat_group);
 
         /* 返すレスポンスデータを整形 */
+        $chat_group['contents'][] = [
+            'is_none' => true,
+            'unread' => false,
+            'already_read' => -1
+        ];
+        $chat_group['unread'] = 0;
         $this->response['chat_room'] = $chat_group;
         
         return response()->json(

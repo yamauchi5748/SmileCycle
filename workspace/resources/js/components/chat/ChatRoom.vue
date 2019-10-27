@@ -10,7 +10,11 @@
         >
           <img src="/img/settings-icon.png" alt />
         </button>
-        <button class="p-room-header__menu-item" v-if="!room.is_department">退出ボタン</button>
+        <button
+          class="p-room-header__menu-item"
+          v-if="room.is_group && !room.is_department"
+          @click="del"
+        >退出ボタン</button>
       </div>
     </div>
     <div class="p-room-contents">
@@ -69,6 +73,12 @@
         @click="submit"
       >送信</button>
     </div>
+    <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
+      <div class="p-dialog-msg-box">
+        <h2 class="p-dialog-msg-title">{{ dialog_msg.title }}</h2>
+        <p class="p-dialog-msg-body">{{ dialog_msg.body }}</p>
+      </div>
+    </v-dialog>
     <edit-modal
       class="p-animation"
       :class="{active:edit_active}"
@@ -82,6 +92,7 @@
 </template>
 <script>
 import VScrollbar from "../VScrollbar";
+import VDialog from "../VDialog";
 import EditModal from "./EditModal";
 import EditRoomModal from "./EditRoomModal";
 import EditMemberModal from "./EditMemberModal";
@@ -89,6 +100,7 @@ import AddMemberModal from "./AddMemberModal";
 export default {
   components: {
     VScrollbar,
+    VDialog,
     EditModal,
     EditRoomModal,
     EditMemberModal,
@@ -96,8 +108,10 @@ export default {
   },
   data() {
     return {
+      dialog_msg: {},
       async_flg: true,
       edit_active: false,
+      dialog_active: false,
       edit_room_active: false,
       add_member_active: false,
       edit_member_active: false,
@@ -140,6 +154,26 @@ export default {
       this.edit_active = !this.edit_active;
     },
 
+    setDialogActive: function(is_active) {
+      this.dialog_active = is_active;
+    },
+
+    dialogAgree: function() {
+      this.setDialogActive(false);
+      this.$root.exitChatRoom(this.room._id);
+      this.$router.push({ path: "/chat-rooms" });
+    },
+
+    dialogCancel: function() {
+      this.setDialogActive(false);
+    },
+
+    del: function() {
+      this.dialog_msg.title = "ルームを退出しますか？";
+      this.dialog_msg.body = "ルーム管理者が退出するとルーム自体削除されます";
+      this.setDialogActive(true);
+    },
+
     submit: function() {
       console.log(this.$refs.message.innerText);
       const data = {
@@ -150,6 +184,7 @@ export default {
       this.$refs.message.innerText = "";
 
       this.$root.chatSubmit(this.room._id, data).then(res => {
+        if (this.room.contents[0].is_none) this.room.contents.splice(0);
         this.room.contents.push(res.content);
 
         /* ルームをソート */
@@ -220,9 +255,9 @@ export default {
   line-height: normal;
 
   .p-room-header {
-    height: 63px;
+    height: 62px;
     padding: 0 20px;
-    border-bottom: 0.1px solid #707070;
+    box-shadow: 0px -18px 50px black;
     line-height: 1.7rem;
 
     &__title-text {
@@ -313,6 +348,23 @@ export default {
     &__submit-btn {
       height: $height;
     }
+  }
+}
+
+.p-dialog-msg-box {
+  padding-right: 10px;
+  display: grid;
+  grid-template-rows: 40px 1fr;
+  justify-content: center;
+  font-weight: bold;
+  overflow-y: auto;
+  .p-dialog-msg-title {
+    font-size: 18px;
+  }
+
+  .p-dialog-msg-body {
+    font-size: 15px;
+    white-space: pre-wrap;
   }
 }
 

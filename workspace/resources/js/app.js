@@ -216,6 +216,7 @@ const app = new Vue({
                                 // 送信者が認証ユーザでなければ未読数を加算
                                 if (data.content.sender_id != this.author._id) room.unread++;
                             }
+                            if (room.contents[0].is_none) room.contents.splice(0);
                             room.contents.push(data.content);
 
                             /* ルームをソート */
@@ -369,7 +370,10 @@ const app = new Vue({
             return axios.post('/api/chat-rooms', data)
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    this.chat_room_list.splice(0, 0, res.data.chat_room);
+                    const first_room_index = this.chat_room_list.findIndex(room => {
+                        return !room.is_department
+                    });
+                    this.chat_room_list.splice(first_room_index, 0, res.data.chat_room);
                 })
                 .catch(error => {
                     console.log(error);
@@ -383,6 +387,20 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ退出 */
+        exitChatRoom: function (room_id) {
+            return axios.delete('/api/chat-rooms/' + room_id + '/members/' + this.author._id)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res);
+                    const index = this.chat_room_list.findIndex(room => room._id === room_id);
+                    this.chat_room_list.splice(index, 1);
                 })
                 .catch(error => {
                     console.log(error);

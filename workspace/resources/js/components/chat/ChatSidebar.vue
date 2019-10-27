@@ -24,7 +24,7 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <v-scrollbar class="margin-left-smallest" v-on:resize="scrollResize" ref="scroll">
+    <v-scrollbar class="margin-left-smallest" ref="scroll">
       <ul class="p-room-list">
         <li
           class="margin-bottom-normal"
@@ -37,7 +37,11 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
-    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
+    <create-room-modal
+      class="p-modal-wrapper"
+      :class="{active:btn_active}"
+      v-on:create="createRoom"
+    />
   </section>
 </template>
 <script>
@@ -115,10 +119,6 @@ export default {
   },
 
   methods: {
-    scrollResize: function(val, oldVal) {
-      this.$refs.scroll.scrollTop;
-    },
-
     setBtnActive: function() {
       this.btn_active = !this.btn_active;
     },
@@ -131,6 +131,11 @@ export default {
       } else {
         this.placeholder = "会員名検索";
       }
+    },
+
+    // ルーム作成イベント
+    createRoom: function() {
+      this.loadRoomType("group");
     },
 
     // ルームへ入室
