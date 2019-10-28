@@ -1,5 +1,6 @@
 <template>
   <div class="members">
+
     <MembersSerch
       class="serch"
       v-model="keyword"
@@ -7,7 +8,14 @@
       name="sample-input"
       type="text"
     />
-    <MembersTabMeny class="tab"></MembersTabMeny>
+
+    <MembersTabMenu  class="tabitem"
+      v-for="Department in Department_list"
+      v-bind="Department" :key="Department.id"
+      @click="event"
+      v-model="currentId"
+    />
+
       <h2 class="member_deploy_name">愛媛笑門会</h2>
         <div v-for="member in filteredUsers" :key="member.id">
       <p
@@ -28,7 +36,7 @@ export default {
   name: "app",
   components: {
     MembersSerch,
-    MembersTabMenu
+    MembersTabMenu,
   },
     data() {
        return{
