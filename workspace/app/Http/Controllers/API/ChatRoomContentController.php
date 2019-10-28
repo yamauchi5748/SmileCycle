@@ -116,6 +116,28 @@ class ChatRoomContentController extends AuthController
      */
     public function store(ChatRoomContentPost $request, $chat_room_id)
     {
+        /* 不正なリクエストかどうか */
+        $room = head(ChatRoom::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $chat_room_id
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'is_auth' => [
+                        '$in' => [$this->author->_id, '$members._id']
+                    ]
+                ]
+            ]
+        ])->toArray());
+        if (!$room['is_auth']) {
+            $this->response['auth'] = false;
+            $this->response['result'] = false;
+            return $this->response;
+        }
+
         $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
 
         /** チャットコンテンツ投稿 **/

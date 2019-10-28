@@ -44,6 +44,8 @@ export default {
 .p-dialog-box {
   @include window();
   position: fixed;
+  top: 0;
+  left: 0;
   .p-overlay {
     @include window();
     top: 0;

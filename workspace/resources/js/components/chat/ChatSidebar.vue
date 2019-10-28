@@ -24,7 +24,7 @@
         <img src="/img/search-icon.png" alt="検索アイコン" />
       </figure>
     </div>
-    <v-scrollbar class="margin-left-smallest">
+    <v-scrollbar class="margin-left-smallest" ref="scroll">
       <ul class="p-room-list">
         <li
           class="margin-bottom-normal"
@@ -37,7 +37,11 @@
       </ul>
     </v-scrollbar>
     <span class="c-add-button p-add-button" @click="setBtnActive"></span>
-    <create-room-modal class="p-modal-wrapper" :class="{active:btn_active}" />
+    <create-room-modal
+      class="p-modal-wrapper"
+      :class="{active:btn_active}"
+      v-on:create="createRoom"
+    />
   </section>
 </template>
 <script>
@@ -120,12 +124,18 @@ export default {
     },
 
     loadRoomType: function(type) {
+      this.$refs.scroll.scrollTop();
       this.room_type = type;
       if (this.room_type === "group") {
         this.placeholder = "グループ名検索";
       } else {
         this.placeholder = "会員名検索";
       }
+    },
+
+    // ルーム作成イベント
+    createRoom: function() {
+      this.loadRoomType("group");
     },
 
     // ルームへ入室
@@ -197,11 +207,12 @@ export default {
 }
 
 .p-search-box-wrapper {
-  margin: 18px 0 18px 5px;
+  margin: 18px 5px;
   position: relative;
 }
 
 .p-search-box {
+  width: calc(100% - 10px - 2px - 48px); // 100% - margin - border - padding;
   height: 51px;
   padding: 0 29px;
   font-size: 18px;

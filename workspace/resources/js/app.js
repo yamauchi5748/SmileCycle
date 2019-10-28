@@ -185,7 +185,7 @@ const app = new Vue({
     router,
     el: '#app',
     data: {
-        polling_time: 500,
+        polling_time: 5,
         author: {},
         member_list: [],
         company_list: [],
@@ -224,21 +224,27 @@ const app = new Vue({
                     console.log('チャット受信', data);
 
                     // 受信チャットの処理
+                    let last_departnebt_index = 0;
                     for (const index in this.chat_room_list) {
                         const room = this.chat_room_list[index];
+                        if (room.is_department) last_departnebt_index++;
                         if (room._id == data.room_id) {
                             // 受信時にルームへ入室している場合
                             if (this.$route.params.id == room._id) {
                                 this.alreadyRead(room._id, [data.content._id]);
                             } else {
-                                room.unread++;
+                                // 送信者が認証ユーザでなければ未読数を加算
+                                if (data.content.sender_id != this.author._id) room.unread++;
                             }
-
+                            if (room.contents[0].is_none) room.contents.splice(0);
                             room.contents.push(data.content);
+
+                            /* ルームをソート */
+                            this.chat_room_list.splice(index, 1);
+                            this.chat_room_list.splice(last_departnebt_index, 0, room);
                             break;
                         };
                     }
-                    console.log(this.$route.params.id);
                 });
         },
 
@@ -471,7 +477,10 @@ const app = new Vue({
             return axios.post('/api/chat-rooms', data)
                 .then(res => this.checkAuth(res))
                 .then(res => {
-                    this.chat_room_list.splice(0, 0, res.data.chat_room);
+                    const first_room_index = this.chat_room_list.findIndex(room => {
+                        return !room.is_department
+                    });
+                    this.chat_room_list.splice(first_room_index, 0, res.data.chat_room);
                 })
                 .catch(error => {
                     console.log(error);
@@ -485,6 +494,20 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
                 .then(res => {
                     return res.data.room;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* チャットグループ退出 */
+        exitChatRoom: function (room_id) {
+            return axios.delete('/api/chat-rooms/' + room_id + '/members/' + this.author._id)
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res);
+                    const index = this.chat_room_list.findIndex(room => room._id === room_id);
+                    this.chat_room_list.splice(index, 1);
                 })
                 .catch(error => {
                     console.log(error);

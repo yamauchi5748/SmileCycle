@@ -15,10 +15,10 @@ export default {
 <style lang="scss" scoped>
 .p-chats {
   height: 100%;
+  min-height: 435px;
   display: grid;
   grid-template-columns: 324px 1fr;
   line-height: 1.4rem;
   position: relative;
-  overflow: hidden;
 }
 </style>
