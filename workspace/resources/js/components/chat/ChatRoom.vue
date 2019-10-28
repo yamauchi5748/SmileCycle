@@ -19,46 +19,7 @@
     </div>
     <div class="p-room-contents">
       <v-scrollbar v-on:scroll="scroll" v-on:resize="scrollResize" ref="scroll">
-        <ol class="p-room-contents__list" v-if="!contents[0].is_none">
-          <li
-            class="p-room-contents__list-item layout-flex"
-            v-for="(content, index) in contents"
-            :key="index"
-          >
-            <figure class="p-flex--left">
-              <img
-                class="p-room-contents__profile"
-                :src="'/members/' + content.sender_id + '/profile-image'"
-                alt="profile"
-              />
-            </figure>
-            <div class="p-flex--right">
-              <div class="p-room-contents__signature layout-flex margin-bottom-small">
-                <span class="p-room-contents__signature-name">{{ content.sender_name }}</span>
-                <time
-                  class="p-room-contents__signature-date margin-left-small"
-                  :datetime="content.created_at"
-                >{{ content.created_at }}</time>
-              </div>
-              <p
-                class="p-room-contents__text"
-                v-if="content.content_type == '1'"
-              >{{ content.message }}</p>
-              <img
-                class="p-room-contents__image"
-                :src="'/stamp-images/' + content.stamp_id"
-                alt="スタンプ"
-                v-if="content.content_type == '2'"
-              />
-              <img
-                class="p-room-contents__image"
-                :src="'/chat-rooms/' + room._id + '/images/' + content.content_id"
-                alt="画像"
-                v-if="content.content_type == '3'"
-              />
-            </div>
-          </li>
-        </ol>
+        <chat-room-content-list :contents="contents" :room_id="room._id" />
       </v-scrollbar>
     </div>
     <div class="p-room-send layout-flex --align-items-center">
@@ -93,6 +54,7 @@
 <script>
 import VScrollbar from "../VScrollbar";
 import VDialog from "../VDialog";
+import chatRoomContentList from "./chatRoomContentList";
 import EditModal from "./EditModal";
 import EditRoomModal from "./EditRoomModal";
 import EditMemberModal from "./EditMemberModal";
@@ -101,6 +63,7 @@ export default {
   components: {
     VScrollbar,
     VDialog,
+    chatRoomContentList,
     EditModal,
     EditRoomModal,
     EditMemberModal,
@@ -271,44 +234,6 @@ export default {
     height: 100%;
     width: 100%;
     background-color: #f2f2f2;
-
-    &__list {
-      height: 100%;
-      padding: 20px;
-    }
-
-    &__list-item {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    &__profile {
-      width: 57px;
-      height: 57px;
-      border-radius: 50%;
-    }
-
-    &__signature-name {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    &__signature-date {
-      font-size: 13px;
-    }
-
-    &__text {
-      font-size: 16px;
-      font-weight: bold;
-      color: #444444;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    &__image {
-      width: 140px;
-      height: 140px;
-    }
   }
 
   .p-room-send {
