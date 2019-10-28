@@ -1,30 +1,28 @@
-<template>
-  <div class="members">
-
-    <MembersSerch
-      class="serch"
-      v-model="keyword"
-      placeholder="サンプル"
-      name="sample-input"
-      type="text"
-    />
-
-    <MembersTabMenu  class="tabitem"
+<<template>
+  <div class="component">
+    <MembersTabMenu　 class="tabitem"
       v-for="Department in Department_list"
       v-bind="Department" :key="Department.id"
       @click="event"
       v-model="currentId"
     />
-
-      <h2 class="member_deploy_name">愛媛笑門会</h2>
-        <div v-for="member in filteredUsers" :key="member.id">
-      <p
-      class="member_user_icon"><img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
-      </p>
-      <p class="member_user_name">{{member.name}}</p>
-      <p class="member_user_post">{{member.post}}</p>
-      <p class="member_user_company">{{member.company}}</p>
-    </div>
+    <MembersSerch class="serch"
+    v-model="keyword"
+    placeholder="サンプル"
+    name="sample-input"
+    type="text"
+  />
+    <div class="members_list">
+      <h2 class="member_deploy_name">愛媛笑門会</h2>
+      <div v-for="member in filteredUsers" :key="member.id">
+        <p class="member_user_icon">
+          <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
+          </p>
+          <p class="member_user_name">{{member.name}}</p>
+          <p class="member_user_post">{{member.post}}</p>
+          <p class="member_user_company">{{member.company}}</p>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -75,6 +73,16 @@ export default {
 </script>
 
 <style lang="scss">
+.component{
+    margin-left: 7em;
+    margin-right: 7em;
+
+}
+
+  .serch{
+    margin-top: 10px;
+    margin-left : 180px ;
+  }
 .members {
   width: 1004px;
   height: 658px;
@@ -83,7 +91,6 @@ export default {
   vertical-align: top;
   margin-left: 7em;
   margin-bottom: 70px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   background-color: #ffffff;
 }
 .member_deploy_name {
@@ -163,15 +170,5 @@ export default {
   letter-spacing: normal;
   text-align: left;
   color: rgba(149, 149, 149, 0.87);
-}
-.tab {
-  margin-top: 0px;
-  margin-left: 180px;
-  margin-bottom: 30px;
-}
-.serch {
-  top: -70px;
-  margin-left: 736px;
-  margin-bottom: 30px;
 }
 </style>
