@@ -1,6 +1,6 @@
 <template>
   <div class="member">
-      <div v-for="member_data in member" :key="member.id">
+      <div v-for="member_data in member" :key="member_data.id">
           <p class="member_user_icon">
               <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
               </p>
