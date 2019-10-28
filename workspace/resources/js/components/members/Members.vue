@@ -20,10 +20,10 @@ import MembersTabMenu from "./MembersTabMenu";
 
 export default {
   name: "app",
-  components: {
-    MembersSerch,
-    MembersTabMenu
-  },
+  components: {
+    Serch:  MembersSerch,
+    Tab:  TabItem ,
+},
   data() {
     return {
       members: [
