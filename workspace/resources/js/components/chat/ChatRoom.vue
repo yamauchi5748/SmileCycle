@@ -29,6 +29,7 @@
       <button class="p-room-send__stamp-btn layout-flex">
         <img src="/img/stamp-icon.png" alt="stamp" />
       </button>
+      <stamp-list-modal/>
       <button
         class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
         @click="submit"
@@ -56,6 +57,7 @@ import VScrollbar from "../VScrollbar";
 import VDialog from "../VDialog";
 import chatRoomContentList from "./chatRoomContentList";
 import EditModal from "./EditModal";
+import StampListModal from "./StampListModal";
 import EditRoomModal from "./EditRoomModal";
 import EditMemberModal from "./EditMemberModal";
 import AddMemberModal from "./AddMemberModal";
@@ -65,6 +67,7 @@ export default {
     VDialog,
     chatRoomContentList,
     EditModal,
+    StampListModal,
     EditRoomModal,
     EditMemberModal,
     AddMemberModal

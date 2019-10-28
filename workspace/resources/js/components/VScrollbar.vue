@@ -90,7 +90,7 @@ export default {
       if (!this.$refs.scrollbar_hider_wrapper) return;
       if (!this.$refs.list_box) return;
       this.scroll_box_height = this.$refs.scrollbar_hider_wrapper.clientHeight;
-      this.list_box_height = this.$refs.list_box.clientHeight + 23;
+      this.list_box_height = this.$refs.list_box.clientHeight;
     },
 
     scrollTop: function() {
@@ -122,7 +122,7 @@ export default {
         scroll_value / (this.list_box_height - this.scroll_box_height);
 
       const top_height =
-        (this.scroll_box_height - this.scrollbar_height - 20) * percentage;
+        (this.scroll_box_height - this.scrollbar_height - 10) * percentage;
 
       this.scrollbar_value = "translateY(" + top_height + "px)";
 
