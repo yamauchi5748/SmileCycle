@@ -6,12 +6,12 @@ require('./bootstrap');
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
-
 import Chat from "./components/chats/Chat.vue";
 import ChatGroup from "./components/chats/ChatGroup.vue";
 import ChatMember from "./components/chats/ChatMember.vue";
 import RoomDetails from "./components/chats/RoomDetails.vue";
 import Members from "./components/members/Members.vue";
+import MemberProfile from "./components/members/MemberProfile"
 import Invitations from "./components/invitations/Invitations.vue";
 import InvitationDetails from "./components/invitations/InvitationDetails.vue";
 import Forum from "./components/forum/Forum.vue";
@@ -77,8 +77,14 @@ const router = new VueRouter({
         },
         {
             path: "/members",
-            component: Members
+            component: Members,
         },
+
+        {
+          path: '/members/:id',
+          component: MemberProfile
+        },
+
         {
             path: "/invitations",
             component: Invitations,
