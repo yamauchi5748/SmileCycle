@@ -1,35 +1,49 @@
 <template>
-  <div class="tabs">
-    <label class="tab_item">愛媛笑門会</label>
-    <label class="tab_item">東京笑門会</label>
-    <label class="tab_item">大阪笑門会</label>
-  </div>
+  <button @click="$emit('input',id ,name)" :class="[active, 'tab']">
+    {{ name }}
+  </button>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      deploy_name: [
-        { id: 1, name: "愛媛笑門会" },
-        { id: 2, name: "大阪笑門会" },
-        { id: 3, name: "鎌倉笑門会" }
-      ]
-    };
+  props: {
+    id: Number,
+    name: String,
+    value: Number
+  },
+  computed: {
+    active() {
+      return this.value === this.id ? 'active' : false
+    }
   }
-};
+
+}
 </script>
 
-<style lang="scss">
-.tab_item {
+<style scoped>
+.tab {
   width: 94px;
   height: 36px;
   border-radius: 2px;
+  margin-left : 10px ;
   box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24);
-  background-color: #ffffff;
-  margin: 0 auto;
+  font-family: Roboto;
+  font-size: 14px;
+  background: #fff;
+  color: #000000;
+  border: none;
+  line-height: 24px;
 }
-.tab_item:hover {
-  opacity: 0.75;
+.tab:hover {
+  font-family: Roboto;
+  font-size: 14px;
+  color: #ffffff;
+  background: #009688
+}
+.active {
+  font-family: Roboto;
+  font-size: 14px;
+  color: #ffffff;
+  background:  #009688;
 }
 </style>

@@ -1,16 +1,28 @@
-<template>
-  <div class="members">
-    <MembersSerch class="serch"></MembersSerch>
-    <MembersTabMeny class="tab"></MembersTabMeny>
-    <h2 class="member_deploy_name">愛媛笑門会</h2>
-    <div v-for="member in members" :key="member.id">
-      <div
-        class="member_user_icon"
-      ><img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png></div>
-      <p class="member_user_name">{{member.name}}</p>
-      <p class="member_user_post">{{member.post}}</p>
-      <p class="member_user_company">{{member.company}}</p>
-    </div>
+<<template>
+  <div class="component">
+    <MembersTabMenu　 class="tabitem"
+      v-for="Department in Department_list"
+      v-bind="Department" :key="Department.id"
+      @click="event"
+      v-model="currentId"
+    />
+    <MembersSerch class="serch"
+    v-model="keyword"
+    placeholder="サンプル"
+    name="sample-input"
+    type="text"
+  />
+    <div class="members_list">
+      <h2 class="member_deploy_name">愛媛笑門会</h2>
+      <div v-for="member in filteredUsers" :key="member.id">
+        <p class="member_user_icon">
+          <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
+          </p>
+          <p class="member_user_name">{{member.name}}</p>
+          <p class="member_user_post">{{member.post}}</p>
+          <p class="member_user_company">{{member.company}}</p>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -22,61 +34,55 @@ export default {
   name: "app",
   components: {
     MembersSerch,
-    MembersTabMenu
+    MembersTabMenu,
   },
-  data() {
-    return {
-      members: [
-        {
-          id: 1,
-          icon: "sample",
-          name: "小川友也",
-          post: "平社員",
-          company: "株式会社デイアイシステム"
-        },
-        {
-          id: 2,
-          icon: "sample",
-          name: "木村祐太郎",
-          post: "ノージョブ",
-          company: "なし"
-        },
-        {
-          id: 3,
-          icon: "sample",
-          name: "山口海都",
-          post: "平社員",
-          company: "株式会社明光フォーラム"
-        },
-        {
-          id: 4,
-          icon: "sample",
-          name: "渡邊小輝",
-          post: "平社員",
-          company: "株式会社セキ"
-        }
-      ]
-    };
-  }
-  /*
-検索の処理（予定）opels
-
-  computed: {
-    filteredUsers: function() {
-      for(var i in this.users) {
-        var user = this.users[i];
-      if(user.name.indexOf(this.keyword) !== -1) {
-        this.users.push(user);
-      }else{
-         this.users.push(user);
+    data() {
+       return{
+           keyword: '',
+           currentId: 1,
+            users: [
+          　{ id: 1, icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム',　department: '愛媛笑門会'},
+          　{ id: 2, icon: 'sample', name: '木村祐太郎', post: 'ノージョブ',  company: 'なし' ,　department: '大阪笑門会'},
+          　{ id: 3, icon: 'sample', name: '山口海都', post: '平社員',  company: '株式会社明光フォーラム' ,　department: '鎌倉笑門会'},
+          　{ id: 4, icon: 'sample', name: '渡邊小輝', post: '平社員',  company: '株式会社セキ',　department: '東京笑門会' },
+            ],
+            Department_list: [
+            { id: 1, name: '愛媛笑門会'},
+            { id: 2, name: '東京笑門会'},
+            { id: 3, name: '大阪笑門会'},
+            { id: 4, name: '鎌倉笑門会'}
+            ]
       }
-      }
-    return this.users;
-    */
+  },
+        computed: {
+            filteredUsers: function() {
+                var users = [];
+                for(var i in this.users) {
+                    var user = this.users[i];
+                    if(user.department.indexOf(this.currentId) !== -1　||
+                      user.name.indexOf(this.keyword) !== -1 ||
+                        user.company.indexOf(this.keyword) !== -1
+                        ) {
+                        users.push(user);
+                    }
+                }
+                return users;
+            }
+}
 };
 </script>
 
 <style lang="scss">
+.component{
+    margin-left: 7em;
+    margin-right: 7em;
+
+}
+
+  .serch{
+    margin-top: 10px;
+    margin-left : 180px ;
+  }
 .members {
   width: 1004px;
   height: 658px;
@@ -85,7 +91,6 @@ export default {
   vertical-align: top;
   margin-left: 7em;
   margin-bottom: 70px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   background-color: #ffffff;
 }
 .member_deploy_name {
@@ -165,15 +170,5 @@ export default {
   letter-spacing: normal;
   text-align: left;
   color: rgba(149, 149, 149, 0.87);
-}
-.tab {
-  margin-top: 0px;
-  margin-left: 180px;
-  margin-bottom: 30px;
-}
-.serch {
-  top: -70px;
-  margin-left: 736px;
-  margin-bottom: 30px;
 }
 </style>
