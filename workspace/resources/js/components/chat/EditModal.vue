@@ -56,7 +56,7 @@ export default {
     font-weight: bold;
     color: #707070;
     &:hover {
-      background-color: aqua;
+      background-color: $sub-color;
       cursor: pointer;
     }
   }

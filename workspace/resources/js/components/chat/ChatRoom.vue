@@ -26,10 +26,10 @@
       <div class="p-room-send__input-message-box">
         <p class="p-room-send__input-message" contenteditable="true" ref="message"></p>
       </div>
-      <button class="p-room-send__stamp-btn layout-flex">
+      <button class="p-room-send__stamp-btn layout-flex" @click="setStampActive">
         <img src="/img/stamp-icon.png" alt="stamp" />
       </button>
-      <stamp-list-modal/>
+      <stamp-list-modal v-on:close="setStampActive" v-show="stamp_active" />
       <button
         class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
         @click="submit"
@@ -77,6 +77,7 @@ export default {
       dialog_msg: {},
       async_flg: true,
       edit_active: false,
+      stamp_active: false,
       dialog_active: false,
       edit_room_active: false,
       add_member_active: false,
@@ -118,6 +119,10 @@ export default {
 
     setMenuActive: function() {
       this.edit_active = !this.edit_active;
+    },
+
+    setStampActive: function() {
+      this.stamp_active = !this.stamp_active;
     },
 
     setDialogActive: function(is_active) {

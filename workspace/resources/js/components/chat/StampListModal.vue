@@ -1,7 +1,8 @@
 <template>
   <div class="p-modal">
-    <div class="p-overlay"></div>
+    <div class="p-overlay" @click="closeModal"></div>
     <div class="p-stamp-box">
+      <!-- 横スクロールバー -->
       <div class="p-stamp-box__tab-list-wrapper">
         <ul class="p-stamp-box__tab-list layout-flex">
           <li
@@ -51,6 +52,10 @@ export default {
   },
 
   methods: {
+    closeModal: function() {
+      this.$emit("close");
+    },
+
     isActive: function(index) {
       return index === this.active_index;
     },
@@ -67,15 +72,18 @@ export default {
   position: absolute;
   bottom: 85px;
   right: 20px;
+  z-index: 4;
 }
 
 .p-overlay {
-  width: 0;
-  height: 0;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  top: -114px;
-  right: -20px;
-  opacity: 0;
+  top: 0;
+  right: 0;
+  opacity: 0.5;
+  background: red;
+  z-index: 2;
 }
 
 .p-stamp-box {
@@ -84,6 +92,7 @@ export default {
   display: grid;
   grid-template-rows: 47px 1fr;
   cursor: pointer;
+  z-index: 4;
 
   &__tab-list-wrapper {
     width: 328px;
