@@ -157,7 +157,6 @@ export default {
     },
 
     sendStamp: function(stamp_id) {
-      console.log(stamp_id);
       const data = {
         is_hurry: this.is_hurry,
         content_type: 2,

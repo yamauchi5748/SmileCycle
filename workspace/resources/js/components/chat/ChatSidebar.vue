@@ -28,10 +28,10 @@
       <ul class="p-room-list">
         <li
           class="p-room-list__item margin-bottom-normal"
-          :class="{active:isActive(index)}"
+          :class="{active:isActive(room._id)}"
           v-for="(room, index) in room_list"
           :key="index"
-          @click="entryRoom(room, index)"
+          @click="entryRoom(room)"
         >
           <room-item :room="room" />
         </li>
@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      active_index: -1,
+      active_room_id: null,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -125,8 +125,8 @@ export default {
       this.btn_active = !this.btn_active;
     },
 
-    isActive: function(index) {
-      return index === this.active_index;
+    isActive: function(room_id) {
+      return room_id === this.active_room_id;
     },
 
     loadRoomType: function(type) {
@@ -145,8 +145,8 @@ export default {
     },
 
     // ルームへ入室
-    entryRoom: function(room, index) {
-      this.active_index = index;
+    entryRoom: function(room) {
+      this.active_room_id = room._id;
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;
