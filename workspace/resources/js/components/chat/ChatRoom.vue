@@ -27,12 +27,12 @@
         <p class="p-room-send__input-message" contenteditable="true" ref="message"></p>
       </div>
       <button class="p-room-send__stamp-btn layout-flex" @click="setStampActive">
-        <img src="/img/stamp-icon.png" alt="stamp" />
+        <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
       </button>
-      <stamp-list-modal v-on:close="setStampActive" v-show="stamp_active" />
+      <stamp-list-modal v-on:close="setStampActive" v-on:send="sendStamp" v-show="stamp_active" />
       <button
         class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
-        @click="submit"
+        @click="sendText"
       >送信</button>
     </div>
     <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
@@ -145,7 +145,7 @@ export default {
       this.setDialogActive(true);
     },
 
-    submit: function() {
+    sendText: function() {
       console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
@@ -153,7 +153,20 @@ export default {
         message: this.$refs.message.innerText
       };
       this.$refs.message.innerText = "";
+      this.submit(data);
+    },
 
+    sendStamp: function(stamp_id) {
+      console.log(stamp_id);
+      const data = {
+        is_hurry: this.is_hurry,
+        content_type: 2,
+        stamp_id: stamp_id
+      };
+      this.submit(data);
+    },
+
+    submit: function(data) {
       this.$root.chatSubmit(this.room._id, data).then(res => {
         if (this.room.contents[0].is_none) this.room.contents.splice(0);
         this.room.contents.push(res.content);
@@ -245,12 +258,12 @@ export default {
   }
 
   .p-room-send {
-    $height: 46px;
+    $height: 43px;
 
     max-height: 500px;
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     position: relative;
-    background-color: $base-color;
+    background-color: #f2f2f2;
 
     &__input-message-box {
       width: 100%;
@@ -263,7 +276,7 @@ export default {
 
     &__input-message {
       max-height: 350px;
-      padding: 10px 70px 10px 20px;
+      padding: 10px 58px 10px 20px;
       font-size: 16px;
       font-weight: bold;
       outline: none;
@@ -276,6 +289,14 @@ export default {
       position: absolute;
       bottom: 20px;
       right: 123px;
+    }
+
+    &__stamp-icon {
+      border-radius: 50%;
+      &:hover {
+        cursor: pointer;
+        opacity: .7;
+      }
     }
 
     &__submit-btn {

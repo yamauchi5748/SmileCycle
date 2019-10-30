@@ -27,10 +27,11 @@
     <v-scrollbar class="margin-left-smallest" ref="scroll">
       <ul class="p-room-list">
         <li
-          class="margin-bottom-normal"
+          class="p-room-list__item margin-bottom-normal"
+          :class="{active:isActive(index)}"
           v-for="(room, index) in room_list"
           :key="index"
-          @click="entryRoom(room)"
+          @click="entryRoom(room, index)"
         >
           <room-item :room="room" />
         </li>
@@ -56,6 +57,7 @@ export default {
   },
   data() {
     return {
+      active_index: -1,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -123,6 +125,10 @@ export default {
       this.btn_active = !this.btn_active;
     },
 
+    isActive: function(index) {
+      return index === this.active_index;
+    },
+
     loadRoomType: function(type) {
       this.$refs.scroll.scrollTop();
       this.room_type = type;
@@ -139,7 +145,8 @@ export default {
     },
 
     // ルームへ入室
-    entryRoom: function(room) {
+    entryRoom: function(room, index) {
+      this.active_index = index;
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;
@@ -237,6 +244,20 @@ export default {
 .p-room-list {
   width: 304px;
   padding-bottom: 58px;
+
+  &__item {
+    padding: 4px;
+
+    &:hover {
+      background-color: rgba(#ff9900, 0.2);
+      border-radius: 10px;
+    }
+  }
+
+  .active {
+    background: aliceblue;
+    border-radius: 10px;
+  }
 }
 
 .p-add-button {

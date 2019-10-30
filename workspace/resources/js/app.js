@@ -81,8 +81,8 @@ const router = new VueRouter({
         },
 
         {
-          path: '/members/:id',
-          component: MemberProfile
+            path: '/members/:id',
+            component: MemberProfile
         },
 
         {
@@ -196,6 +196,7 @@ const app = new Vue({
         member_list: [],
         company_list: [],
         stamp_group_list: [],
+        member_stamp_group_list: [],
         forum_list: [],
         admin_invitation_list: [],
         chat_room_list: [],
@@ -203,12 +204,16 @@ const app = new Vue({
     created: function () {
         Echo.private('user.' + this.author._id); // プライベートチャンネル接続
 
-        this.$root.loadChatRooms().then(res => {
+        /* チャットルーム一覧取得 */
+        this.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
                 const channel = 'room.' + this.chat_room_list[index]._id;
                 this.connect(channel);  // チャットルームのチャンネルに接続
             }
         });
+
+        /* スタンプグループ一覧取得 */
+        this.loadStampGroups();
     },
     methods: {
         /* レスポンスの認証チェック */
@@ -402,7 +407,20 @@ const app = new Vue({
                 .then(res => this.checkAuth(res))
         },
 
-        /* スタンプグループ一覧取得 */
+        /* 会員スタンプグループ一覧取得 */
+        loadStampGroups: function () {
+            return axios.get('/api/stamp-groups')
+                .then(res => this.checkAuth(res))
+                .then(res => {
+                    console.log(res.data.stamp_groups);
+                    this.member_stamp_group_list = res.data.stamp_groups;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        /* 管理者スタンプグループ一覧取得 */
         loadAdminStampGroups: function () {
             return axios.get('/api/admin-stamp-groups')
                 .then(res => this.checkAuth(res))
@@ -487,6 +505,8 @@ const app = new Vue({
                         return !room.is_department
                     });
                     this.chat_room_list.splice(first_room_index, 0, res.data.chat_room);
+                    const channel = "room." + res.data.chat_room._id;
+                    this.connect(channel); // チャットルームのチャンネルに接続
                 })
                 .catch(error => {
                     console.log(error);
