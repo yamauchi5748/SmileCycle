@@ -1,6 +1,6 @@
 <template>
     <secondary-view>
-        <template #title>会のご案内投稿</template>
+        <template #title>みんなの掲示板投稿</template>
         <template #body>
             <div class="input-wrapper">
                 <v-input v-model="title" counter :max="25">タイトル</v-input>
