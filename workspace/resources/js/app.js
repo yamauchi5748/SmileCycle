@@ -249,10 +249,6 @@ const app = new Vue({
                             }
                             if (room.contents[0].is_none) room.contents.splice(0);
                             room.contents.push(data.content);
-
-                            /* ルームをソート */
-                            this.chat_room_list.splice(index, 1);
-                            this.chat_room_list.splice(last_departnebt_index, 0, room);
                             break;
                         };
                     }
@@ -578,7 +574,7 @@ const app = new Vue({
         },
 
         /* チャット送信 */
-        chatSubmit: function (chat_room_id, data) {
+        postContents: function (chat_room_id, data) {
             return axios.post('/api/chat-rooms/' + chat_room_id + '/contents', data)
                 .then(res => this.checkAuth(res))
                 .then(res => {

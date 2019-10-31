@@ -162,13 +162,6 @@ class ChatRoomController extends AuthController
                     ]
                 ]
             ],
-            /* コンテンツの投稿日時順にソート */
-            [
-                '$sort' => [
-                    'is_department' => -1,
-                    'contents.0.created_at' => -1
-                ]
-            ],
             /* コンテンツの中身をリバースする */
             [
                 '$set' => [
