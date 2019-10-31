@@ -1,26 +1,27 @@
 <<template>
   <div class="component">
-    <MembersTabMenu　 class="tabitem"
+    <MembersTabMenu　
+      class="tabitem"
       v-for="Department in Department_list"
       v-bind="Department" :key="Department.id"
       @click="event"
       v-model="currentId"
     />
-    <MembersSerch class="serch"
-    v-model="keyword"
-    placeholder="サンプル"
+    <MembersSerch 
+    class="serch"
+    placeholder="会員名または会社名を検索してください"
     name="sample-input"
     type="text"
+    v-model="keyword"
   />
     <div class="members_list">
       <h2 class="member_deploy_name">愛媛笑門会</h2>
-      <div v-for="member in filteredUsers" :key="member.id">
+      <div v-for="member in $root.member_list" :key="member.id">
         <p class="member_user_icon">
           <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
           </p>
           <p class="member_user_name">{{member.name}}</p>
           <p class="member_user_post">{{member.post}}</p>
-          <p class="member_user_company">{{member.company}}</p>
           </div>
       </div>
   </div>
@@ -29,7 +30,6 @@
 <script>
 import MembersSerch from "./MembersSerche";
 import MembersTabMenu from "./MembersTabMenu";
-
 export default {
   name: "app",
   components: {
@@ -54,7 +54,10 @@ export default {
             ]
       }
   },
-        computed: {
+  created: function() {
+        this.$root.loadMembers();
+    },
+   computed: {
             filteredUsers: function() {
                 var users = [];
                 for(var i in this.users) {
@@ -68,8 +71,8 @@ export default {
                 }
                 return users;
             }
+          }
 }
-};
 </script>
 
 <style lang="scss">
@@ -80,7 +83,8 @@ export default {
 }
 
   .serch{
-    margin-top: 10px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     margin-left : 180px ;
   }
 .members {
@@ -157,18 +161,5 @@ export default {
   text-align: left;
   color: rgba(149, 149, 149, 0.87);
 }
-.member_user_company {
-  margin-top: 20px;
-  margin-left: 180px;
-  margin-bottom: 30px;
-  font-family: HiraKakuProN-W3;
-  font-size: 20px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.7;
-  letter-spacing: normal;
-  text-align: left;
-  color: rgba(149, 149, 149, 0.87);
-}
+
 </style>
