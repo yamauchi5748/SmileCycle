@@ -66,8 +66,8 @@ class ForumCommentController extends AuthController
         /* コメントのモデル */
         $comment = [
             '_id' => (string) Str::uuid(),              // コメントのid
-            'sender_id' => $this->author->_id,          // コメントの投稿者id
-            'sender_name' => $this->author->name,       // コメントの投稿者名
+            'post_member_id' => $this->author->_id,          // コメントの投稿者id
+            'post_member_name' => $this->author->name,       // コメントの投稿者名
             'comment_type' => $request->comment_type,   // コメントのタイプ
             'created_at' => $now                        // コメント投稿日
         ];

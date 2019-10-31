@@ -57,7 +57,6 @@ export default {
   },
   data() {
     return {
-      active_room_id: null,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -99,6 +98,8 @@ export default {
             return 1;
           } else {
             /* 最新投稿日時の降順 */
+            if (!comparison_target.contents[0].created_at) return 1;
+            if (!comparison_source.contents[0].created_at) return -1;
             return comparison_target.contents[
               comparison_target.contents.length - 1
             ].created_at >
@@ -151,7 +152,7 @@ export default {
     },
 
     isActive: function(room_id) {
-      return room_id === this.active_room_id;
+      return room_id === this.$route.params.id;
     },
 
     loadRoomType: function(type) {
@@ -171,7 +172,6 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
-      this.active_room_id = room._id;
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;
