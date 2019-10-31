@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 $factory->define(ChatRoom::class, function () {
     $faker = Faker\Factory::create('ja_JP');
-    $members = Member::select('_id','name')->get();
+    $members = Member::select('_id', 'name')->get();
     $member_count = Member::get()->count();
 
     $chat_members = [];
@@ -45,7 +45,7 @@ $factory->define(ChatRoom::class, function () {
     /** チャットコンテンツ投稿 **/
     for ($i=0; $i < $faker->numberBetween(1, 30); $i++) {
         $second = $i < 10 ? '0'.$i : $i;
-        $now  = (string) Carbon::createFromFormat('Y-m-d H:i', '2019-09-10 19:' . $second, 'Asia/Tokyo');
+        $now  = (string) Carbon::create(2019, 9, 10, 19, $second, $second);
         $now = Str::limit($now, 16, '');
         $chat_member = $faker->randomElement($chat_members);
         

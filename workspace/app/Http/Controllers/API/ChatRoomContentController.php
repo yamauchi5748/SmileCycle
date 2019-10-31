@@ -138,7 +138,7 @@ class ChatRoomContentController extends AuthController
             return $this->response;
         }
 
-        $now  = (string) Carbon::now('Asia/Tokyo')->format('Y-m-d H:i'); // 現在時刻
+        $now  = (string) Carbon::now('Asia/Tokyo');     // 現在時刻
 
         /** チャットコンテンツ投稿 **/
         /* チャットモデル */

@@ -5,7 +5,7 @@
       <div class="p-room-header__menu layout-flex --align-items-center">
         <button
           class="p-room-header__menu-item margin-right-small"
-          v-if="!room.is_department && room.admin_member_id == $root.author._id"
+          v-if="room.is_group && !room.is_department && room.admin_member_id == $root.author._id"
           @click="setMenuActive"
         >
           <img src="/img/settings-icon.png" alt />
@@ -24,15 +24,31 @@
     </div>
     <div class="p-room-send layout-flex --align-items-center">
       <div class="p-room-send__input-message-box">
-        <p class="p-room-send__input-message" contenteditable="true" ref="message"></p>
+        <p class="p-room-send__input-message" contenteditable="true" ref="message" @drop.native.stop></p>
       </div>
-      <button class="p-room-send__stamp-btn layout-flex" @click="setStampActive">
-        <img src="/img/stamp-icon.png" alt="stamp" />
+      <label
+        class="p-room-send__img-btn layout-flex --align-items-center"
+        for="p-room-send__img-input"
+      >
+        <img class="p-room-send__img-icon" src="/img/stamp-icon.png" alt="image" />
+        <input
+          id="p-room-send__img-input"
+          class="p-room-send__img-input"
+          type="file"
+          multiple
+          @change="sendImage"
+        />
+      </label>
+      <button
+        class="p-room-send__stamp-btn layout-flex --align-items-center"
+        @click="setStampActive"
+      >
+        <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
       </button>
-      <stamp-list-modal v-on:close="setStampActive" v-show="stamp_active" />
+      <stamp-list-modal v-on:close="setStampActive" v-on:send="sendStamp" v-show="stamp_active" />
       <button
         class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
-        @click="submit"
+        @click="sendText"
       >送信</button>
     </div>
     <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
@@ -145,7 +161,7 @@ export default {
       this.setDialogActive(true);
     },
 
-    submit: function() {
+    sendText: function() {
       console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
@@ -153,21 +169,36 @@ export default {
         message: this.$refs.message.innerText
       };
       this.$refs.message.innerText = "";
+      this.submit(data);
+    },
 
-      this.$root.chatSubmit(this.room._id, data).then(res => {
+    sendStamp: function(stamp_id) {
+      const data = {
+        is_hurry: this.is_hurry,
+        content_type: 2,
+        stamp_id: stamp_id
+      };
+      this.submit(data);
+    },
+
+    sendImage: function(event) {
+      const files = event.target.files;
+      for (const index in files) {
+        if (!files[index].type || !files[index].type.match("image")) continue;
+        const data = new FormData();
+        data.append("is_hurry", this.is_hurry ? 1 : 0);
+        data.append("content_type", 3);
+        data.append("image", files[index]);
+
+        this.submit(data);
+      }
+    },
+
+    submit: function(data) {
+      this.$root.postContents(this.room._id, data).then(res => {
+        /*  */
         if (this.room.contents[0].is_none) this.room.contents.splice(0);
         this.room.contents.push(res.content);
-
-        /* ルームをソート */
-        let last_departnebt_index = 0;
-        for (const index in this.$root.chat_room_list) {
-          const room = this.$root.chat_room_list[index];
-          if (room.is_department) last_departnebt_index++;
-          if (room._id == this.room._id) {
-            this.$root.chat_room_list.splice(index, 1);
-            this.$root.chat_room_list.splice(last_departnebt_index, 0, room);
-          }
-        }
 
         //ポーリングによる実行タイミングの整合性を保つ
         window.setTimeout(
@@ -245,12 +276,13 @@ export default {
   }
 
   .p-room-send {
-    $height: 46px;
+    $height: 36px;
+    $width: 36px;
 
     max-height: 500px;
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     position: relative;
-    background-color: $base-color;
+    background-color: #f2f2f2;
 
     &__input-message-box {
       width: 100%;
@@ -263,7 +295,7 @@ export default {
 
     &__input-message {
       max-height: 350px;
-      padding: 10px 70px 10px 20px;
+      padding: 10px 58px 10px 20px;
       font-size: 16px;
       font-weight: bold;
       outline: none;
@@ -271,11 +303,42 @@ export default {
       overflow: hidden;
     }
 
+    &__img-btn {
+      height: $height;
+      position: absolute;
+      bottom: 24px;
+      right: 160px;
+    }
+
+    &__img-icon {
+      width: $width;
+      height: $height;
+      border-radius: 50%;
+      &:hover {
+        cursor: pointer;
+        opacity: 0.7;
+      }
+    }
+
+    &__img-input {
+      display: none;
+    }
+
     &__stamp-btn {
       height: $height;
       position: absolute;
-      bottom: 20px;
+      bottom: 24px;
       right: 123px;
+    }
+
+    &__stamp-icon {
+      width: $width;
+      height: $height;
+      border-radius: 50%;
+      &:hover {
+        cursor: pointer;
+        opacity: 0.7;
+      }
     }
 
     &__submit-btn {

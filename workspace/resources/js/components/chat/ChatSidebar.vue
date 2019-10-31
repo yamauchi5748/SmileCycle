@@ -27,7 +27,8 @@
     <v-scrollbar class="margin-left-smallest" ref="scroll">
       <ul class="p-room-list">
         <li
-          class="margin-bottom-normal"
+          class="p-room-list__item margin-bottom-smaller"
+          :class="{active:isActive(room._id)}"
           v-for="(room, index) in room_list"
           :key="index"
           @click="entryRoom(room)"
@@ -56,6 +57,7 @@ export default {
   },
   data() {
     return {
+      active_room_id: null,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -75,12 +77,37 @@ export default {
 
   computed: {
     room_list: function() {
-      return this.$root.chat_room_list.filter(room => {
-        return (
-          room.group_name.indexOf(this.search_text) != -1 &&
-          (this.room_type == "group" ? room.is_group : !room.is_group)
-        );
-      });
+      return this.$root.chat_room_list
+        .filter(room => {
+          return (
+            room.group_name.indexOf(this.search_text) != -1 &&
+            (this.room_type == "group" ? room.is_group : !room.is_group)
+          );
+        })
+        .slice()
+        .sort(function(comparison_target, comparison_source) {
+          /* 部門グループは上位に表示 */
+          if (
+            comparison_target.is_department &&
+            !comparison_source.is_department
+          ) {
+            return -1;
+          } else if (
+            !comparison_target.is_department &&
+            comparison_source.is_department
+          ) {
+            return 1;
+          } else {
+            /* 最新投稿日時の降順 */
+            return comparison_target.contents[
+              comparison_target.contents.length - 1
+            ].created_at >
+              comparison_source.contents[comparison_source.contents.length - 1]
+                .created_at
+              ? -1
+              : 1;
+          }
+        });
     },
 
     group_unread: function() {
@@ -123,6 +150,10 @@ export default {
       this.btn_active = !this.btn_active;
     },
 
+    isActive: function(room_id) {
+      return room_id === this.active_room_id;
+    },
+
     loadRoomType: function(type) {
       this.$refs.scroll.scrollTop();
       this.room_type = type;
@@ -140,6 +171,7 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
+      this.active_room_id = room._id;
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;
@@ -237,6 +269,20 @@ export default {
 .p-room-list {
   width: 304px;
   padding-bottom: 58px;
+
+  &__item {
+    padding: 4px;
+
+    &:hover {
+      background-color: rgba(#ff9900, 0.2);
+      border-radius: 10px;
+    }
+  }
+
+  .active {
+    background: aliceblue;
+    border-radius: 10px;
+  }
 }
 
 .p-add-button {
