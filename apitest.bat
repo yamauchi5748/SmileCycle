@@ -14,3 +14,5 @@ phpunit
 rem テストデータ削除
 docker-compose exec --user=laradock workspace ^
 php artisan db:wipe
+
+cd ..
