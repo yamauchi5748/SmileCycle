@@ -3,6 +3,41 @@ import VueRouter from 'vue-router'
 
 require('./bootstrap');
 
+// directiveの追加
+/*
+    ロード中の表示
+    使用法法
+    v-loadedにfalseを指定している間、ロード中用の表示にする。
+    v-loadedを指定する要素にbackground-colorをつけると背景がその色になる。
+    v-loaded.shadowとするとロード中用の画像を表示しない。
+*/
+Vue.directive('loaded',
+    {
+        bind(el, binding) {
+            let loading_class = "loading"
+            if (binding.modifiers.shadow) {
+                loading_class = "loading-shadow"
+            }
+            if (binding.value) {
+                el.classList.remove(loading_class);
+            } else {
+                el.classList.add(loading_class);
+            }
+        },
+        update(el, binding) {
+            let loading_class = "loading"
+            if (binding.modifiers.shadow) {
+                loading_class = "loading-shadow"
+            }
+            if (binding.value) {
+                el.classList.remove(loading_class);
+            } else {
+                el.classList.add(loading_class);
+            }
+        }
+    }
+);
+
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
@@ -33,6 +68,7 @@ import ControlsStamp from "./components/controls/Stamp.vue";
 import ControlsStampCreate from "./components/controls/StampCreate.vue";
 import ControlsStampDetails from "./components/controls/StampDetails.vue";
 import Axios from 'axios';
+
 const router = new VueRouter({
     mode: "history",
     routes: [
@@ -81,8 +117,8 @@ const router = new VueRouter({
         },
 
         {
-          path: '/members/:id',
-          component: MemberProfile
+            path: '/members/:id',
+            component: MemberProfile
         },
 
         {
@@ -603,4 +639,5 @@ function convertObjectToFormData(object) {
     }
     return form_data;
 }
+
 window.app = app;
