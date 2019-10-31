@@ -97,16 +97,49 @@ export default {
           ) {
             return 1;
           } else {
-            /* 最新投稿日時の降順 */
-            if (!comparison_target.contents[0].created_at) return 1;
-            if (!comparison_source.contents[0].created_at) return -1;
-            return comparison_target.contents[
-              comparison_target.contents.length - 1
-            ].created_at >
-              comparison_source.contents[comparison_source.contents.length - 1]
-                .created_at
-              ? -1
-              : 1;
+            /* コンテンツがなければ */
+            if (
+              !comparison_target.contents[0].created_at &&
+              comparison_source.contents[0].created_at
+            ) {
+              /* 最新コンテンツとルーム作成日時の比較 */
+              return comparison_target.created_at >
+                comparison_source.contents[
+                  comparison_source.contents.length - 1
+                ].created_at
+                ? -1
+                : 1;
+            } else if (
+              comparison_target.contents[0].created_at &&
+              !comparison_source.contents[0].created_at
+            ) {
+              /* 最新コンテンツとルーム作成日時の比較 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at > comparison_source.created_at
+                ? -1
+                : 1;
+            } else if (
+              !comparison_target.contents[0].created_at &&
+              !comparison_source.contents[0].created_at
+            ) {
+              /* ルーム作成日時の比較 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at > comparison_source.created_at
+                ? -1
+                : 1;
+            } else {
+              /* 最新投稿日時の降順 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at >
+                comparison_source.contents[
+                  comparison_source.contents.length - 1
+                ].created_at
+                ? -1
+                : 1;
+            }
           }
         });
     },

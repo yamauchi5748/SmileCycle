@@ -34,6 +34,7 @@ $factory->define(ChatRoom::class, function () {
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
         'members' => $chat_members,
         'contents' => [],
+        'created_at' => (string) Carbon::now('Asia/Tokyo')
     ];
 
     // 画像のパス名をランダムに取得
