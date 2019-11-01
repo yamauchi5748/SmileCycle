@@ -3,6 +3,56 @@ import VueRouter from 'vue-router'
 
 require('./bootstrap');
 
+// directiveの追加
+/*
+    ロード中の表示
+    使用法法
+    v-loaded            falseを指定している間、ロード中用の表示にする。
+    v-loaded.shadow     特定の色で塗りつぶす。
+*/
+Vue.directive('loaded',
+    {
+        bind: function (el, binding) {
+            if (binding.value) {
+                el.classList.remove("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.remove("shadow")
+                } else {
+                    el.removeChild(el.querySelector(".spinner"));
+                }
+            } else {
+                el.classList.add("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.add("shadow")
+                } else {
+                    const child = document.createElement("div");
+                    child.classList.add("spinner")
+                    el.appendChild(child);
+                }
+            }
+        },
+        update: function (el, binding) {
+            if (binding.value) {
+                el.classList.remove("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.remove("shadow")
+                } else {
+                    el.removeChild(el.querySelector(".spinner"));
+                }
+            } else {
+                el.classList.add("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.add("shadow")
+                } else {
+                    const child = document.createElement("div");
+                    child.classList.add("spinner")
+                    el.appendChild(child);
+                }
+            }
+        }
+    }
+);
+
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
@@ -33,6 +83,7 @@ import ControlsStamp from "./components/controls/Stamp.vue";
 import ControlsStampCreate from "./components/controls/StampCreate.vue";
 import ControlsStampDetails from "./components/controls/StampDetails.vue";
 import Axios from 'axios';
+
 const router = new VueRouter({
     mode: "history",
     routes: [
@@ -619,4 +670,5 @@ function convertObjectToFormData(object) {
     }
     return form_data;
 }
+
 window.app = app;
