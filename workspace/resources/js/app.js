@@ -7,32 +7,47 @@ require('./bootstrap');
 /*
     ロード中の表示
     使用法法
-    v-loadedにfalseを指定している間、ロード中用の表示にする。
-    v-loadedを指定する要素にbackground-colorをつけると背景がその色になる。
-    v-loaded.shadowとするとロード中用の画像を表示しない。
+    v-loaded            falseを指定している間、ロード中用の表示にする。
+    v-loaded.shadow     特定の色で塗りつぶす。
 */
 Vue.directive('loaded',
     {
-        bind(el, binding) {
-            let loading_class = "loading"
-            if (binding.modifiers.shadow) {
-                loading_class = "loading-shadow"
-            }
+        bind: function (el, binding) {
             if (binding.value) {
-                el.classList.remove(loading_class);
+                el.classList.remove("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.remove("shadow")
+                } else {
+                    el.removeChild(el.querySelector(".spinner"));
+                }
             } else {
-                el.classList.add(loading_class);
+                el.classList.add("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.add("shadow")
+                } else {
+                    const child = document.createElement("div");
+                    child.classList.add("spinner")
+                    el.appendChild(child);
+                }
             }
         },
-        update(el, binding) {
-            let loading_class = "loading"
-            if (binding.modifiers.shadow) {
-                loading_class = "loading-shadow"
-            }
+        update: function (el, binding) {
             if (binding.value) {
-                el.classList.remove(loading_class);
+                el.classList.remove("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.remove("shadow")
+                } else {
+                    el.removeChild(el.querySelector(".spinner"));
+                }
             } else {
-                el.classList.add(loading_class);
+                el.classList.add("loading");
+                if (binding.modifiers.shadow) {
+                    el.classList.add("shadow")
+                } else {
+                    const child = document.createElement("div");
+                    child.classList.add("spinner")
+                    el.appendChild(child);
+                }
             }
         }
     }
