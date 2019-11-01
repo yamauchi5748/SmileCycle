@@ -1,4 +1,4 @@
-<<template>
+<template>
   <div class="component">
     <MembersTabMenu　
       class="tabitem"
@@ -14,9 +14,9 @@
     type="text"
     v-model="keyword"
   />
-    <div class="members_list">
-      <h2 class="member_deploy_name">愛媛笑門会</h2>
-      <div v-for="member in $root.member_list" :key="member.id">
+    <div class="members_list">
+      <h2 class="member_deploy_name">愛媛笑門会</h2>
+      <div v-for="member in $root.member_list" :key="member.id">
         <p class="member_user_icon">
           <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
           </p>
