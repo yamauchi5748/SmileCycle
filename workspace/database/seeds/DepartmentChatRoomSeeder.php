@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Member;
 use App\Models\ChatRoom;
+use Carbon\Carbon;
 use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +38,7 @@ class DepartmentChatRoomSeeder extends Seeder
                     ]
                 ],
                 'contents' => [],
+                'created_at' => (string) Carbon::now('Asia/Tokyo')
             ];
             
             // 画像のパス名をランダムに取得

@@ -3,11 +3,11 @@
         <div class="p-post-informations">
             <h2 class="p-post-title" @click="goTo">{{post.title}}</h2>
             <time class="p-created">{{post.created_at}}</time>
-            <span class="p-profile" v-if="post.sender_id">
+            <span class="p-profile" v-if="post.post_member_id">
                 <figure class="p-profile-image-wrapper">
                     <img class="p-profile-image" :src="'/img/profile_image.jpg'" />
                 </figure>
-                <span class="p-name">{{post.sender_name}}</span>
+                <span class="p-name">{{post.post_member_name}}</span>
             </span>
         </div>
         <ul v-if="existImages" class="p-post-images" ref="images">
@@ -84,7 +84,7 @@ export default {
         },
         //URLを切り替える
         adjustURL(image_id) {
-            if (this.post.sender_id) {
+            if (this.post.post_member_id) {
                 return "/forums/" + this.post._id + "/images/" + image_id;
             }
             return "/invitations/" + this.post._id + "/images/" + image_id;

@@ -23,8 +23,8 @@ $factory->define(Forum::class, function () {
     /* 掲示板のモデル */
     $forum = [
         '_id' => (string) Str::uuid(),      // 掲示板のid
-        'sender_id' => $member->_id,        // 掲示板の投稿者id
-        'sender_name' => $member->name,     // 掲示板の投稿者名
+        'post_member_id' => $member->_id,        // 掲示板の投稿者id
+        'post_member_name' => $member->name,     // 掲示板の投稿者名
         'title' => $faker->realText(20),    // 掲示板のタイトル
         'text' => $faker->realText,         // 掲示板のテキスト
         'images' => [],                     // 掲示板の画像
@@ -61,7 +61,7 @@ $factory->define(Forum::class, function () {
         $comment = [
             '_id' => (string) Str::uuid(),                          // コメントのid
             'sender_id' => $commenter->_id,                         // コメントの投稿者id
-            'sender_name' => $commenter->name,                      // コメントの投稿者名
+            'post_member_name' => $commenter->name,                      // コメントの投稿者名
             'comment_type' => $faker->randomElement(["1", "2"]),    // コメントのタイプ
             'created_at' => $now                                    // コメント投稿日
         ];

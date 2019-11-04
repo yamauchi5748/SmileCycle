@@ -13,26 +13,41 @@
         />
       </figure>
       <div class="p-flex--right">
-        <div class="p-room-contents__signature layout-flex margin-bottom-small">
+        <div
+          class="p-room-contents__signature layout-flex --align-items-center margin-bottom-small"
+        >
           <span class="p-room-contents__signature-name">{{ content.sender_name }}</span>
           <time
             class="p-room-contents__signature-date margin-left-small"
             :datetime="content.created_at"
           >{{ content.created_at }}</time>
         </div>
-        <p class="p-room-contents__text" v-if="content.content_type == '1'">{{ content.message }}</p>
-        <img
-          class="p-room-contents__image"
-          :src="'/stamp-images/' + content.stamp_id"
-          alt="スタンプ"
-          v-if="content.content_type == '2'"
-        />
-        <img
-          class="p-room-contents__image"
-          :src="'/chat-rooms/' + room_id + '/images/' + content.content_id"
-          alt="画像"
-          v-if="content.content_type == '3'"
-        />
+        <div class="p-room-contents__box layout-flex --align-items-flex-end">
+          <div class="p-room-contents__wrapper">
+            <div class="p-room-contents__wrapper-layout" v-if="content.content_type == '1'"></div>
+            <div class="p-room-contents__inner--text" v-if="content.content_type == '1'">
+              <p class="p-room-contents__text">{{ content.message }}</p>
+            </div>
+            <figure class="p-room-contents__inner--image" v-if="content.content_type !== '1'">
+              <img
+                class="p-room-contents__image"
+                :src="'/stamp-images/' + content.stamp_id"
+                alt="スタンプ"
+                v-if="content.content_type == '2'"
+              />
+              <img
+                class="p-room-contents__image"
+                :src="'/chat-rooms/' + room_id + '/images/' + content.content_id"
+                alt="画像"
+                v-if="content.content_type == '3'"
+              />
+            </figure>
+          </div>
+          <span
+            class="p-room-contents__read margin-bottom-small"
+            v-if="content.already_read >= 0"
+          >既読{{ content.already_read }}</span>
+        </div>
       </div>
     </li>
   </ol>
@@ -72,10 +87,47 @@ export default {
     font-size: 13px;
   }
 
+  &__wrapper {
+    display: inline-block;
+    position: relative;
+    margin: 8px;
+  }
+
+  &__wrapper-layout {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    position: absolute;
+    z-index: 1;
+    background: radial-gradient(
+      circle at 50% 0%,
+      transparent 65%,
+      rgba(255, 209, 140) 65%
+    );
+  }
+
+  &__inner {
+    &--text {
+      background-color: rgba(255, 209, 140);
+      border-radius: 13px;
+      display: inline-block;
+      padding: 5px 10px;
+      z-index: 3;
+      position: relative;
+      word-wrap: break-word;
+      max-width: 200px;
+    }
+
+    &--image {
+    }
+  }
+
   &__text {
     font-size: 16px;
-    font-weight: bold;
-    color: #444444;
+    color: black;
     white-space: pre-wrap;
     word-break: break-all;
   }
@@ -83,6 +135,12 @@ export default {
   &__image {
     width: 140px;
     height: 140px;
+    border-radius: 10px;
+  }
+
+  &__read {
+    font-size: 13px;
+    white-space: nowrap;
   }
 }
 </style>
