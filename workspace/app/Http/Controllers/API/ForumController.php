@@ -28,7 +28,7 @@ class ForumController extends AuthController
             /* 特定会員の投稿した掲示板を指定 */
             $query[] = [
                 '$match' => [
-                    'sender_id' => $request->member_id
+                    'post_member_id' => $request->member_id
                 ]
             ];
         }
@@ -37,8 +37,8 @@ class ForumController extends AuthController
         $query[] = [
             '$project' => [
                 '_id' => 1,
-                'sender_id' => 1,
-                'sender_name' => 1,
+                'post_member_id' => 1,
+                'post_member_name' => 1,
                 'title' => 1,
                 'text' => 1,
                 'images' => 1,
@@ -98,8 +98,8 @@ class ForumController extends AuthController
         /* 掲示板のモデル */
         $forum = [
             '_id' => (string) Str::uuid(),          // 掲示板のid
-            'sender_id' => $this->author->_id,      // 掲示板の投稿者id
-            'sender_name' => $this->author->name,   // 掲示板の投稿者名
+            'post_member_id' => $this->author->_id,      // 掲示板の投稿者id
+            'post_member_name' => $this->author->name,   // 掲示板の投稿者名
             'title' => $request->title,             // 掲示板のタイトル
             'text' => $request->text,               // 掲示板のテキスト
             'images' => [],                         // 掲示板の画像
@@ -157,8 +157,8 @@ class ForumController extends AuthController
             [
                 '$project' => [
                     '_id' => 1,
-                    'sender_id' => 1,
-                    'sender_name' => 1,
+                    'post_member_id' => 1,
+                    'post_member_name' => 1,
                     'title' => 1,
                     'text' => 1,
                     'images' => 1,

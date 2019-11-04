@@ -44,6 +44,7 @@ class PersonalChatRoomSeeder extends Seeder
                         ]
                     ],
                     'contents' => [],
+                    'created_at' => (string) Carbon::now('Asia/Tokyo')
                 ];
 
                 // 画像のパス名をランダムに取得

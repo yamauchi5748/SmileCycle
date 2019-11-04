@@ -30,7 +30,7 @@
         class="p-room-send__img-btn layout-flex --align-items-center"
         for="p-room-send__img-input"
       >
-        <img class="p-room-send__img-icon" src="/img/stamp-icon.png" alt="image" />
+        <img class="p-room-send__img-icon" src="/img/image-icon.svg" alt="image" />
         <input
           id="p-room-send__img-input"
           class="p-room-send__img-input"
@@ -295,7 +295,7 @@ export default {
 
     &__input-message {
       max-height: 350px;
-      padding: 10px 58px 10px 20px;
+      padding: 10px 95px 10px 20px;
       font-size: 16px;
       font-weight: bold;
       outline: none;
@@ -307,13 +307,12 @@ export default {
       height: $height;
       position: absolute;
       bottom: 24px;
-      right: 160px;
+      right: 165px;
     }
 
     &__img-icon {
       width: $width;
       height: $height;
-      border-radius: 50%;
       &:hover {
         cursor: pointer;
         opacity: 0.7;
@@ -342,7 +341,7 @@ export default {
     }
 
     &__submit-btn {
-      height: $height;
+      height: $height + 10.3;
     }
   }
 }

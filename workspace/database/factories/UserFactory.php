@@ -81,7 +81,7 @@ $factory->define(Member::class, function () {
         'stamp_groups' => $stamp_groups_id,
         'invitations' => [],
         'mail' => $faker->safeEmail,
-        'password' => Hash::make(Str::random(10))
+        'password' => Hash::make('aa')
     ];
 
     $chat_room = ChatRoom::where('group_name', $member['department_name'])->first();

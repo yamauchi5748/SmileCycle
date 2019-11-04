@@ -57,7 +57,6 @@ export default {
   },
   data() {
     return {
-      active_room_id: null,
       box_height: 0,
       search_text: "",
       room_type: "",
@@ -98,14 +97,49 @@ export default {
           ) {
             return 1;
           } else {
-            /* 最新投稿日時の降順 */
-            return comparison_target.contents[
-              comparison_target.contents.length - 1
-            ].created_at >
-              comparison_source.contents[comparison_source.contents.length - 1]
-                .created_at
-              ? -1
-              : 1;
+            /* コンテンツがなければ */
+            if (
+              !comparison_target.contents[0].created_at &&
+              comparison_source.contents[0].created_at
+            ) {
+              /* 最新コンテンツとルーム作成日時の比較 */
+              return comparison_target.created_at >
+                comparison_source.contents[
+                  comparison_source.contents.length - 1
+                ].created_at
+                ? -1
+                : 1;
+            } else if (
+              comparison_target.contents[0].created_at &&
+              !comparison_source.contents[0].created_at
+            ) {
+              /* 最新コンテンツとルーム作成日時の比較 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at > comparison_source.created_at
+                ? -1
+                : 1;
+            } else if (
+              !comparison_target.contents[0].created_at &&
+              !comparison_source.contents[0].created_at
+            ) {
+              /* ルーム作成日時の比較 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at > comparison_source.created_at
+                ? -1
+                : 1;
+            } else {
+              /* 最新投稿日時の降順 */
+              return comparison_target.contents[
+                comparison_target.contents.length - 1
+              ].created_at >
+                comparison_source.contents[
+                  comparison_source.contents.length - 1
+                ].created_at
+                ? -1
+                : 1;
+            }
           }
         });
     },
@@ -131,9 +165,7 @@ export default {
       let unread_count = 0;
       this.$root.chat_room_list.filter(room => {
         if (!room.is_group) {
-          unread_count += room.contents.filter(content => {
-            return content.unread;
-          }).length;
+          unread_count += room.unread;
         }
       });
 
@@ -151,7 +183,7 @@ export default {
     },
 
     isActive: function(room_id) {
-      return room_id === this.active_room_id;
+      return room_id === this.$route.params.id;
     },
 
     loadRoomType: function(type) {
@@ -171,7 +203,6 @@ export default {
 
     // ルームへ入室
     entryRoom: function(room) {
-      this.active_room_id = room._id;
       // 既読処理
       let unread_contents_id = [];
       room.unread = 0;

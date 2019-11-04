@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view">
+    <section class="view controls-primary-view" v-loaded.shadow="isLoaded">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">{{ this.$root.stamp_group_list.length }}種</h2>
             <router-link
@@ -7,9 +7,7 @@
                 :to="{name:'controls-stamp-create'}"
             >スタンプを登録する</router-link>
         </div>
-        <ul
-            class="p-stamp-tab-list"
-        >
+        <ul class="p-stamp-tab-list">
             <li v-for="(stamp_group,index) in this.$root.stamp_group_list" :key="index">
                 <router-link :to="stamp_group._id" append>
                     <img class="p-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" />
@@ -20,9 +18,17 @@
 </template>
 <script>
 export default {
-    created: function() {
-        this.$root.loadAdminStampGroups();
+    data: function() {
+        return {
+            isLoaded: false
+        };
     },
+    created: function() {
+        const self = this;
+        this.$root.loadAdminStampGroups().then(function() {
+            self.isLoaded = true;
+        });
+    }
 };
 </script>
 <style lang="scss" scoped>

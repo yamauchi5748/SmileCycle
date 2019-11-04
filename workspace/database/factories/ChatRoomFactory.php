@@ -34,6 +34,7 @@ $factory->define(ChatRoom::class, function () {
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
         'members' => $chat_members,
         'contents' => [],
+        'created_at' => (string) Carbon::now('Asia/Tokyo')
     ];
 
     // 画像のパス名をランダムに取得
@@ -46,7 +47,6 @@ $factory->define(ChatRoom::class, function () {
     for ($i=0; $i < $faker->numberBetween(1, 30); $i++) {
         $second = $i < 10 ? '0'.$i : $i;
         $now  = (string) Carbon::create(2019, 9, 10, 19, $second, $second);
-        $now = Str::limit($now, 16, '');
         $chat_member = $faker->randomElement($chat_members);
         
         /* チャットモデル */
