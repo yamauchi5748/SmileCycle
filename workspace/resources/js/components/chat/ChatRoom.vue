@@ -341,7 +341,7 @@ export default {
     }
 
     &__submit-btn {
-      height: $height + 7.3;
+      height: $height + 10.3;
     }
   }
 }

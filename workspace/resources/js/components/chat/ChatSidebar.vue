@@ -165,9 +165,7 @@ export default {
       let unread_count = 0;
       this.$root.chat_room_list.filter(room => {
         if (!room.is_group) {
-          unread_count += room.contents.filter(content => {
-            return content.unread;
-          }).length;
+          unread_count += room.unread;
         }
       });
 

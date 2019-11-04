@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\ChatRoom;
 use App\Events\ChatRecieved;
+use App\Events\AlreadyRead;
 use App\jobs\ProcessPodcast;
 
 class ChatRoomContentController extends AuthController
@@ -261,11 +262,14 @@ class ChatRoomContentController extends AuthController
             }
         }
 
-        /* 返すレスポンスデータを整形 */
-        $this->response['content'] = $chat;
-
         /* チャット内にブロードキャスト */
+        $chat['already_read'] = -1;
+        $chat['unread'] = true;
         broadcast(new ChatRecieved($chat_room_id, $chat))->toOthers();
+
+        /* 返すレスポンスデータを整形 */
+        $chat['already_read'] = 0;
+        $this->response['content'] = $chat;
         
         return response()->json(
             $this->response,
@@ -297,7 +301,7 @@ class ChatRoomContentController extends AuthController
     {
         /** 既読処理 **/
         /* コンテンツ取得 */
-        $contents = ChatRoom::raw()->aggregate([
+        $rooms = ChatRoom::raw()->aggregate([
             [
                 '$match' => [
                     '_id' => $chat_room_id,
@@ -313,18 +317,23 @@ class ChatRoomContentController extends AuthController
                 ]
             ]
         ])->toArray();
-        $unread_contents = head($contents)['contents'];
+        $contents = head($rooms)['contents'];
         
         /* 対象のコンテンツを探索し、認証ユーザーを追加 */
-        foreach ($unread_contents as $content) {
+        foreach ($contents as $content) {
+            /* 送信者と認証ユーザが同一ならば追加しない */
+            if ($content->sender_id == $this->author->_id) {
+                continue;
+            }
             /* 既に既読しているかチェック */
             $contains = Arr::first($content->already_read, function ($value, $key) {
                 return $value == $this->author->_id;
             }, false);
-            if ($contains) {
-                $this->response['result'] = false;
-            } else {
+            /* 未読であれば既読にする */
+            if (!$contains) {
                 $content->already_read[] = $this->author->_id;
+                /* 既読通知イベント発行 */
+                broadcast(new AlreadyRead($content->sender_id, $chat_room_id, $content->_id));
             }
         }
 
@@ -335,7 +344,7 @@ class ChatRoomContentController extends AuthController
             ],
             [
                 '$set' => [
-                    'contents' => $unread_contents
+                    'contents' => $contents
                 ]
             ]
         );

@@ -21,8 +21,9 @@ export default {
         author: Object
     },
     mounted() {
-        this.$root.author = this.author;
         console.log("Component mounted.");
+        this.$root.author = this.author;
+        this.$root.connectPrivate('member.' + this.author._id);
     },
     /* テスト用ログインメソッド */
     methods: {

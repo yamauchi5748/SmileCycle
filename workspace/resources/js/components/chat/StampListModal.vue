@@ -55,7 +55,7 @@ export default {
 
   data() {
     return {
-      active_index: 1,
+      active_index: 0,
       active_stamp_id: null
     };
   },
@@ -73,7 +73,7 @@ export default {
   methods: {
     closeModal: function() {
       this.$emit("close");
-      this.active_index = 1;
+      this.active_index = 0;
       this.active_stamp_id = null;
     },
 
@@ -103,7 +103,6 @@ export default {
 
     submit: function(stamp_id) {
       this.$emit("send", stamp_id);
-      this.active_index = 1;
       this.active_stamp_id = null;
     }
   }
@@ -113,7 +112,7 @@ export default {
 .p-modal {
   margin: 0;
   position: absolute;
-  bottom: 64px;
+  bottom: 66px;
   right: 20px;
   z-index: 4;
 }
