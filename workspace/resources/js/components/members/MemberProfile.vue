@@ -2,6 +2,14 @@
   <div class="member">
       <div v-for="member_data in member" :key="member_data.id">
           <p class="member_user_icon">
+          <div>
+            <Button
+               class = "button"
+               name="チャット画面"
+                onclick="history.back()"
+             />
+            </div>
+              <p class="member_user_icon">
               <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
               </p>
               <label>名前</label>
@@ -22,7 +30,13 @@
 
 <script>
 
-export default{
+import Button from "./Button";
+
+export default {
+  name: "app",
+  components: {
+    Button,
+  },
    data() {
        return{
            keyword: '',
@@ -68,11 +82,14 @@ export default{
     padding: 25px 54px;
     margin-top: 43px;
     margin-left : 84px ;
-     margin-right : 84px ;
+    margin-right : 84px ;
     margin-bottom : 83px;
     background-color: #f2f2f2;
     font-size: 20px;
    }
+    .button{
+    margin-left : 85px ;
+  }
    label
    {
     margin-left : 84px ;
