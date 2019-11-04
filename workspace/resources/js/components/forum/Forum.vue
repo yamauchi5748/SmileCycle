@@ -2,7 +2,10 @@
     <section class="view controls-primary-view">
         <div class="layout-flex --align-items-center margin-bottom-big">
         </div>
-		<router-view class="p-content"></router-view>
+		<router-link
+			class="create-button" v-on:click="ForumCreate"
+			:to="{name:'forum-create'}"
+		><img src="/img/add-button.png" alt="button"></router-link>
         <v-article
             class="p-post"
             v-for="(forum,index) in forums"
@@ -65,5 +68,12 @@ export default {
 <style lang="scss" scoped>
 .p-post {
     margin: 32px auto;
+}
+.create-button {
+	position: fixed;
+	right: 0px;
+	bottom: 23px;
+	margin-left: 10px;
+	margin-right: 50px;
 }
 </style>
