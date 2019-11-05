@@ -22,7 +22,7 @@ class HomeTest extends TestCase
             // 任意の会員でログイン
             ->actingAs($member[0])
             // 「/」でGETでリクエストを送信
-            ->json('GET', '/');
+            ->getJson('/');
 
         $response
             // ステータスコードが200
@@ -33,8 +33,8 @@ class HomeTest extends TestCase
                 'profile' => [
                     'name' => '橋本環奈',
                     'ruby' => 'はしもとかんな',
-                    'post' => '代表取締役社長',
-                    'mail' => 'hashikann@hashikann.com',
+                    'post' => '女優',
+                    'mail' => 'hashikann@discovery-n.co.jp',
                     'company_id' => 'e6a91e70-bae6-08e0-8ee7-0a7f595f30fc',
                     'department_name' => '東京笑門会',
                     'id_admin' => false
@@ -47,7 +47,7 @@ class HomeTest extends TestCase
     {
         $response = $this
             // 「/」でGETでリクエストを送信
-            ->json('GET', '/');
+            ->getJson('/');
 
         $response
             // ステータスコードが401
