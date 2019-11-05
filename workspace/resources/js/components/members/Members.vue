@@ -18,7 +18,9 @@
       <h2 class="member_deploy_name">愛媛笑門会</h2>
       <div v-for="member in $root.member_list" :key="member.id">
         <p class="member_user_icon">
-          <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
+          <img 
+           :src="'/members/' + member._id + '/profile-image'"
+           >
           </p>
           <p class="member_user_name">{{member.name}}</p>
           <p class="member_user_post">{{member.post}}</p>
