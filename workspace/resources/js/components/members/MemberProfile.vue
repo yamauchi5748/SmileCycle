@@ -1,6 +1,5 @@
 <template>
   <div class="member">
-      <div v-for="member_data in member" :key="member_data.id">
           <p class="member_user_icon">
           <div>
             <Button
@@ -10,21 +9,22 @@
              />
             </div>
               <p class="member_user_icon">
-              <img src=https://3.bp.blogspot.com/-ZWe9UUGMqDI/UylAX8vHpzI/AAAAAAAAeTE/ibSmOYMBp2A/s800/homeless_furousya.png>
+                <img 
+                :src="'/members/' + $route.params.id + '/profile-image'"
+              >
               </p>
               <label>名前</label>
-              <p class="profiledata">{{member_data.name}}</p>
+              <p class="profiledata">{{member.name}}</p>
               <label>ふりがな</label>
-              <p class="profiledata">{{member_data.ruby}}</p>
+              <p class="profiledata">{{member.ruby}}</p>
               <label>部門</label>
-              <p class="profiledata">{{member_data.department}}</p>
+              <p class="profiledata">{{member.department}}</p>
               <label>会社</label>
-              <p class="profiledata">{{member_data.company}}</p>
+              <p class="profiledata">{{member.company}}</p>
               <label>役職</label>
-              <p class="profiledata">{{member_data.post}}</p>
+              <p class="profiledata">{{member.post}}</p>
                <label>メールアドレス</label>
-              <p class="profiledata">{{member_data.mail}}</p>
-      </div>
+              <p class="profiledata">{{member.mail}}</p>
   </div>
 </template>
 
@@ -40,17 +40,19 @@ export default {
    data() {
        return{
            keyword: '',
-            member: [
-          　{ id: 1, icon: 'sample',
-             name: '小川友也',
-             ruby: 'おがわ　ともや', 
-             post: '平社員',  
-             company: '株式会社デイアイシステム',　
-             department: '愛媛笑門会',
-             mail: 'kbc16a01@stu.kawahara.ac.jp'}
-            ]
+            member: [],
       }
-  }
+  },
+    created: function() {
+        this.$root
+            .getMember(this.$route.params.id)
+            .then(function(res) {
+                this.member = response.data.member;
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    },
 }
 
 </script>
