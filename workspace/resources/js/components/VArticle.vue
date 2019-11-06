@@ -5,7 +5,7 @@
             <time class="p-created">{{post.created_at}}</time>
             <span class="p-profile" v-if="post.sender_id">
                 <figure class="p-profile-image-wrapper">
-                    <img class="p-profile-image" :src="'/img/profile_image.jpg'" />
+                    <v-img class="p-profile-image" :src="'/img/profile_image.jpg'" />
                 </figure>
                 <span class="p-name">{{post.sender_name}}</span>
             </span>
@@ -18,9 +18,7 @@
                 @click="previewImage(index)"
                 :key="index"
             >
-                <span class="p-post-image" :style="{'background-image':'url('+adjustURL(image_id)+')'}">
-
-                </span>
+                <img class="p-post-image" :src="adjustURL(image_id)" >
             </li>
         </ul>
         <div class="p-text-wrapper">
@@ -35,6 +33,7 @@
 </template>
 
 <script>
+import VImg from "./VImg";
 export default {
     props: {
         post: Object,
@@ -89,6 +88,9 @@ export default {
             }
             return "/invitations/" + this.post._id + "/images/" + image_id;
         }
+    },
+    components:{
+        VImg
     }
 };
 </script>
@@ -152,7 +154,6 @@ $border-value: solid 1px $gray;
         height: 40px;
         margin-bottom: -80px;
         & + .p-post-image-wrapper:not(.active) {
-            margin-left: 16px;
             cursor: pointer;
         }
         //拡大表示されているときのクラス
@@ -167,10 +168,6 @@ $border-value: solid 1px $gray;
         display: block;
         width: 100%;
         height: 100%;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        background-color: $gray;
     }
 }
 .p-text-wrapper {

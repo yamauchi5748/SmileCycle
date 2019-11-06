@@ -12,47 +12,23 @@ require('./bootstrap');
 */
 Vue.directive('loaded',
     {
-        bind: function (el, binding) {
-            if (binding.value) {
-                el.classList.remove("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.remove("shadow")
-                } else {
-                    el.removeChild(el.querySelector(".spinner"));
-                }
-            } else {
-                el.classList.add("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.add("shadow")
-                } else {
-                    const child = document.createElement("div");
-                    child.classList.add("spinner")
-                    el.appendChild(child);
-                }
-            }
-        },
-        update: function (el, binding) {
-            if (binding.value) {
-                el.classList.remove("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.remove("shadow")
-                } else {
-                    el.removeChild(el.querySelector(".spinner"));
-                }
-            } else {
-                el.classList.add("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.add("shadow")
-                } else {
-                    const child = document.createElement("div");
-                    child.classList.add("spinner")
-                    el.appendChild(child);
-                }
-            }
-        }
+        bind: loadedDirective,
+        update: loadedDirective
     }
 );
-
+function loadedDirective(el, binding) {
+    const style = binding.modifiers.shadow ? "shadow" : "spinner"
+    let child = el.querySelector(":scope > ." + style);
+    if (binding.value && child) {
+        el.classList.remove("loading");
+        el.removeChild(child);
+    } else if (!child) {
+        el.classList.add("loading");
+        child = document.createElement("div");
+        child.classList.add(style)
+        el.appendChild(child);
+    }
+}
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";

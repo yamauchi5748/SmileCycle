@@ -1,9 +1,13 @@
 <template>
-    <secondary-view>
+    <secondary-view v-loaded="is_loaded">
         <template #title>スタンプ詳細</template>
         <template #body>
             <div class="input-wrapper">
-                <v-input-image class="p-stamp-upload" v-model="property.tab_image_id" :prefix="'/stamp-images/'">タブ画像</v-input-image>
+                <v-input-image
+                    class="p-stamp-upload"
+                    v-model="property.tab_image_id"
+                    :prefix="'/stamp-images/'"
+                >タブ画像</v-input-image>
             </div>
             <div class="input-wrapper">
                 <v-input-multiple-images v-model="edit_stamps" :prefix="'/stamp-images/'">スタンプ</v-input-multiple-images>
@@ -35,6 +39,7 @@ import VSelectMembers from "../VSelectMembers";
 export default {
     data: function() {
         return {
+            is_loaded: false,
             edit_stamps: [],
             edit_members: [],
             property: {
@@ -48,15 +53,11 @@ export default {
         };
     },
     created: function() {
-        /* スタンプグループ情報がなければ取得 */
-        if (this.$root.stamp_group_list.length > 0) {
+        // 対象のスタンプグループ情報を取得
+        this.$root.loadAdminStampGroups().then((res)=> {
             this.setData();
-        } else {
-            // 対象のスタンプグループ情報を取得
-            this.$root.loadAdminStampGroups().then(res => {
-                this.setData();
-            });
-        }
+            this.is_loaded = true;
+        });
     },
     methods: {
         handleSubmitButtonClick: function() {

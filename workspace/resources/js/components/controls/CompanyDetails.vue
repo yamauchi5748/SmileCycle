@@ -1,5 +1,5 @@
 <template>
-    <secondary-view>
+    <secondary-view v-loaded="is_loaded">
         <template #title>会社詳細</template>
         <template #body>
             <div class="input-wrapper">
@@ -25,6 +25,7 @@ import VInput from "../VInput";
 export default {
     data: function() {
         return {
+            is_loaded: false,
             errors: {},
             property: {}
         };
@@ -38,6 +39,7 @@ export default {
         const self = this;
         this.$root.getCompany(this.$route.params.id).then(function(response) {
             self.property = response.data.company;
+            self.is_loaded = true;
         });
     },
     methods: {

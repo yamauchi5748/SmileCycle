@@ -7,14 +7,14 @@
         </li>
       </ol>
       <button class="nav-menu" @click="naviChange">
-        <img src="/img/menu.png" />
+        <v-img src="/img/menu.png" />
       </button>
       <div class="nav-close" v-show="navi_active" @click="naviChange"></div>
       <div class="nav-content" :class="{active:navi_active}">
         <ul class="p-sidebar-content">
           <li class="p-sidebar-item p-sidebar-item-header">
             <!-- ここプロフィール画像 -->
-            <img src="/img/nav-icon-header.svg" alt="プロフィール画像" class="nav-header-icon" />
+            <v-img src="/img/nav-icon-header.svg" alt="プロフィール画像" class="nav-header-icon" />
           </li>
           <router-link
             :to="{name:'controls-stamp'}"
@@ -259,6 +259,7 @@
   </header>
 </template>
 <script>
+import VImg from "./VImg";
 export default {
   data: function() {
     return {
@@ -286,6 +287,9 @@ export default {
         return list[value] != undefined;
       });
     }
+  },
+  components:{
+      VImg
   }
 };
 </script>
