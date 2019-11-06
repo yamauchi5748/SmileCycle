@@ -1,21 +1,25 @@
 <template>
   <section class="p-sidebar">
     <nav class="layout-flex p-chats-navigation">
-      <span
-        class="p-chats-nav-container"
-        :class="{active:(room_type == 'group')}"
-        @click="loadRoomType('group')"
-      >グループ</span>
-      <div class="c-unread-box p-unread-box__group" v-if="group_unread > 0">
-        <span :class="{'c-more-tag--sidebar':group_unread_more_active}">{{ group_unread }}</span>
+      <div class="p-chats-navigation__container-wrapper">
+        <span
+          class="p-chats-navigation__container"
+          :class="{active:(room_type == 'group')}"
+          @click="loadRoomType('group')"
+        >グループ</span>
+        <div class="p-chats-navigation__unread-box--group c-unread-box" v-if="group_unread > 0">
+          <span :class="{'c-more-tag--sidebar':group_unread_more_active}">{{ group_unread }}</span>
+        </div>
       </div>
-      <span
-        class="p-chats-nav-container"
-        :class="{active:(room_type == 'member')}"
-        @click="loadRoomType('member')"
-      >会員</span>
-      <div class="c-unread-box p-unread-box__member" v-if="member_unread > 0">
-        <span :class="{'c-more-tag--sidebar':member_unread_more_active}">{{ member_unread }}</span>
+      <div class="p-chats-navigation__container-wrapper">
+        <span
+          class="p-chats-navigation__container"
+          :class="{active:(room_type == 'member')}"
+          @click="loadRoomType('member')"
+        >会員</span>
+        <div class="p-chats-navigation__unread-box--member c-unread-box" v-if="member_unread > 0">
+          <span :class="{'c-more-tag--sidebar':member_unread_more_active}">{{ member_unread }}</span>
+        </div>
       </div>
     </nav>
     <div class="p-search-box-wrapper">
@@ -220,17 +224,33 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-sidebar {
-  background-color: rgba($sub-color, 0.45);
+  height: 100%;
+  position: relative;
+  background-color: rgba(255, 209, 140);
   display: flex;
   flex-direction: column;
+}
+
+@media screen and(max-width: 768px) {
+  .p-sidebar {
+    display: none;
+    position: absolute;
+    z-index: 1;
+  }
 }
 
 .p-chats-navigation {
   border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
-  .p-chats-nav-container {
-    width: 50%;
+  &__container-wrapper {
+    width: 100%;
+    position: relative;
+  }
+
+  &__container {
+    width: 100%;
+    display: inline-block;
     text-align: center;
     padding: 32px 0 9px;
     font-size: 22px;
@@ -239,33 +259,28 @@ export default {
       color: $accent-color;
     }
   }
-}
 
-@mixin p-unread-box($width: 0, $height: 0, $top: 0, $left: 0) {
-  position: absolute;
-  top: $top;
-  left: $left;
-  width: $width;
-  height: $height;
-  line-height: $height + 2px;
-}
-
-.p-unread-box {
-  &__group {
-    @include p-unread-box(
-      $width: 25px,
-      $height: 25px,
-      $top: 10px,
-      $left: 125px
-    );
+  @mixin p-unread-box($width: 0, $height: 0, $top: 0, $right: 0) {
+    position: absolute;
+    top: $top;
+    right: $right;
+    width: $width;
+    height: $height;
+    line-height: $height + 2px;
   }
-  &__member {
-    @include p-unread-box(
-      $width: 25px,
-      $height: 25px,
-      $top: 10px,
-      $left: 262px
-    );
+
+  &__unread-box {
+    &--group {
+      @include p-unread-box($width: 25px, $height: 25px, $top: 10px, $right: 0);
+    }
+    &--member {
+      @include p-unread-box(
+        $width: 25px,
+        $height: 25px,
+        $top: 10px,
+        $right: 25px
+      );
+    }
   }
 }
 
@@ -298,8 +313,12 @@ export default {
 }
 
 .p-room-list {
-  width: 304px;
+  width: 100%;
   padding-bottom: 58px;
+
+  @media screen and (max-width: 768px) {
+    width: calc(100% - 15px);
+  }
 
   &__item {
     padding: 4px;
@@ -319,7 +338,7 @@ export default {
 .p-add-button {
   position: absolute;
   bottom: 23px;
-  left: 248px;
+  right: 21px;
 }
 
 .p-modal-wrapper {

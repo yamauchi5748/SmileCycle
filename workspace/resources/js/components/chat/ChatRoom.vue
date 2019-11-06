@@ -23,29 +23,36 @@
       </v-scrollbar>
     </div>
     <div class="p-room-send layout-flex --align-items-center">
-      <div class="p-room-send__input-message-box">
-        <p class="p-room-send__input-message" contenteditable="true" ref="message" @drop.native.stop></p>
+      <div class="p-room-send__wrapper">
+        <div class="p-room-send__input-message-box">
+          <p
+            class="p-room-send__input-message"
+            contenteditable="true"
+            ref="message"
+            @drop.native.stop
+          ></p>
+        </div>
+        <label
+          class="p-room-send__img-btn layout-flex --align-items-center"
+          for="p-room-send__img-input"
+        >
+          <img class="p-room-send__img-icon" src="/img/image-icon.svg" alt="image" />
+          <input
+            id="p-room-send__img-input"
+            class="p-room-send__img-input"
+            type="file"
+            multiple
+            @change="sendImage"
+          />
+        </label>
+        <button
+          class="p-room-send__stamp-btn layout-flex --align-items-center"
+          @click="setStampActive"
+        >
+          <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
+        </button>
+        <stamp-list-modal v-on:close="setStampActive" v-on:send="sendStamp" v-show="stamp_active" />
       </div>
-      <label
-        class="p-room-send__img-btn layout-flex --align-items-center"
-        for="p-room-send__img-input"
-      >
-        <img class="p-room-send__img-icon" src="/img/image-icon.svg" alt="image" />
-        <input
-          id="p-room-send__img-input"
-          class="p-room-send__img-input"
-          type="file"
-          multiple
-          @change="sendImage"
-        />
-      </label>
-      <button
-        class="p-room-send__stamp-btn layout-flex --align-items-center"
-        @click="setStampActive"
-      >
-        <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
-      </button>
-      <stamp-list-modal v-on:close="setStampActive" v-on:send="sendStamp" v-show="stamp_active" />
       <button
         class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
         @click="sendText"
@@ -256,6 +263,13 @@ export default {
   overflow-y: hidden;
   line-height: normal;
 
+  @media screen and(max-width: 768px) {
+    & {
+      width: 100vw;
+      min-width: 0;
+    }
+  }
+
   .p-room-header {
     height: 62px;
     padding: 0 20px;
@@ -284,6 +298,11 @@ export default {
     position: relative;
     background-color: #f2f2f2;
 
+    &__wrapper {
+      width: 100%;
+      position: relative;
+    }
+
     &__input-message-box {
       width: 100%;
       height: 100%;
@@ -306,8 +325,8 @@ export default {
     &__img-btn {
       height: $height;
       position: absolute;
-      bottom: 24px;
-      right: 165px;
+      bottom: 3px;
+      right: 45px;
     }
 
     &__img-icon {
@@ -326,8 +345,8 @@ export default {
     &__stamp-btn {
       height: $height;
       position: absolute;
-      bottom: 24px;
-      right: 123px;
+      bottom: 3px;
+      right: 6px;
     }
 
     &__stamp-icon {

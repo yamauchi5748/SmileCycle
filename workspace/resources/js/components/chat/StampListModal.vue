@@ -112,8 +112,8 @@ export default {
 .p-modal {
   margin: 0;
   position: absolute;
-  bottom: 66px;
-  right: 20px;
+  bottom: 43px;
+  right: 0;
   z-index: 4;
 }
 

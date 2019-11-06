@@ -21,4 +21,10 @@ export default {
   line-height: 1.4rem;
   position: relative;
 }
+
+@media screen and(max-width: 768px) {
+  .p-chats {
+    display: block;
+  }
+}
 </style>
