@@ -45,8 +45,12 @@
           </div>
           <span
             class="p-room-contents__read margin-bottom-small"
-            v-if="content.already_read >= 0"
+            v-if="content.already_read >= 0 && is_group"
           >既読{{ content.already_read }}</span>
+          <span
+            class="p-room-contents__read margin-bottom-small"
+            v-if="content.already_read >= 1 && !is_group"
+          >既読</span>
         </div>
       </div>
     </li>
@@ -56,7 +60,8 @@
 export default {
   props: {
     contents: Array,
-    room_id: String
+    room_id: String,
+    is_group: Boolean
   }
 };
 </script>

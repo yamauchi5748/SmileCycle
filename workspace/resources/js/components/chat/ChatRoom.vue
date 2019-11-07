@@ -18,22 +18,31 @@
           class="p-room-header__menu-item"
           v-if="room.is_group && !room.is_department"
           @click="del"
-        >退出ボタン</button>
+        >
+          <img src="/img/exit.svg" alt />
+        </button>
       </div>
     </div>
     <div class="p-room-contents">
       <v-scrollbar v-on:scroll="scroll" v-on:resize="scrollResize" ref="scroll">
-        <chat-room-content-list :contents="contents" :room_id="room._id" />
+        <chat-room-content-list
+          :contents="contents"
+          :room_id="room._id"
+          :is_group="room.is_group ? true : false"
+        />
       </v-scrollbar>
     </div>
     <div class="p-room-send layout-flex --align-items-flex-end">
       <div class="p-room-send__input-message-box">
         <p
           class="p-room-send__input-message"
+          :class="{opacity: is_none_text}"
           contenteditable="true"
           ref="message"
+          @focus="inputFocus"
+          @blur="outputFocus"
           @drop.native.stop
-        ></p>
+        >{{ placeholder }}</p>
       </div>
       <div class="p-room-send__wrapper">
         <label
@@ -82,7 +91,7 @@
 <script>
 import VScrollbar from "../VScrollbar";
 import VDialog from "../VDialog";
-import chatRoomContentList from "./chatRoomContentList";
+import ChatRoomContentList from "./ChatRoomContentList";
 import EditModal from "./EditModal";
 import StampListModal from "./StampListModal";
 import EditRoomModal from "./EditRoomModal";
@@ -92,7 +101,7 @@ export default {
   components: {
     VScrollbar,
     VDialog,
-    chatRoomContentList,
+    ChatRoomContentList,
     EditModal,
     StampListModal,
     EditRoomModal,
@@ -101,6 +110,8 @@ export default {
   },
   data() {
     return {
+      placeholder: "チャット",
+      is_none_text: true,
       dialog_msg: {},
       async_flg: true,
       edit_active: false,
@@ -219,6 +230,18 @@ export default {
       });
     },
 
+    inputFocus: function() {
+      if (!this.is_none_text) return;
+      this.$refs.message.innerText = "";
+      this.is_none_text = false;
+    },
+
+    outputFocus: function() {
+      if (this.$refs.message.innerText !== "") return;
+      this.$refs.message.innerText = this.placeholder;
+      this.is_none_text = true;
+    },
+
     openModal: function(target_id) {
       this.setMenuActive();
       switch (target_id) {
@@ -299,6 +322,11 @@ export default {
       text-decoration: none;
       font-weight: bold;
       color: #707070;
+    }
+
+    &__menu-item {
+      width: 36px;
+      height: 36px;
     }
   }
 
@@ -466,6 +494,10 @@ export default {
     max-width: 736px;
     padding: 8px 0 0 12px;
   }
+}
+
+.opacity {
+  opacity: 0.2;
 }
 </style>
 
