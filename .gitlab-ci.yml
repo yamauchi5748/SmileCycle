@@ -19,7 +19,7 @@ deploy:
   - rsync -rlOzv --delete --checksum ./ /home/kbcadminstudent/
   - cd /home/kbcadminstudent/
   - else
-  - echo 'developr以外なので何もしない'
+  - echo 'エラーです
   - fi
   tags:
   - testdeploy
