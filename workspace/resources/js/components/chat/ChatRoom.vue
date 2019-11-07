@@ -41,10 +41,11 @@
           ref="message"
           @focus="inputFocus"
           @blur="outputFocus"
+          @input="change"
           @drop.native.stop
         >{{ placeholder }}</p>
       </div>
-      <div class="p-room-send__wrapper">
+      <div class="p-room-send__wrapper layout-flex">
         <label
           class="p-room-send__img-btn layout-flex --align-items-center"
           for="p-room-send__img-input"
@@ -65,7 +66,13 @@
           <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
         </button>
         <button
+          class="p-room-send__hurry-btn normal-button --align-self-flex-end margin-left-small"
+          :class="{active: is_hurry}"
+          @click="changeHurry"
+        >急ぎ</button>
+        <button
           class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
+          :class="{active: !is_none_text}"
           @click="sendText"
         >送信</button>
       </div>
@@ -183,14 +190,23 @@ export default {
       this.setDialogActive(true);
     },
 
+    changeHurry: function() {
+      this.is_hurry = !this.is_hurry;
+    },
+
     sendText: function() {
+      /* テキストが空なら抜ける */
+      if (this.is_none_text) return;
       console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
         content_type: 1,
         message: this.$refs.message.innerText
       };
-      this.$refs.message.innerText = "";
+      /* 初期化 */
+      this.$refs.message.innerText = this.placeholder;
+      this.is_none_text = true;
+      this.is_hurry = false;
       this.submit(data);
     },
 
@@ -233,13 +249,16 @@ export default {
     inputFocus: function() {
       if (!this.is_none_text) return;
       this.$refs.message.innerText = "";
-      this.is_none_text = false;
     },
 
     outputFocus: function() {
-      if (this.$refs.message.innerText !== "") return;
+      if (!this.is_none_text) return;
       this.$refs.message.innerText = this.placeholder;
-      this.is_none_text = true;
+    },
+
+    change: function() {
+      console.log(this.$refs.message.innerText);
+      this.is_none_text = this.$refs.message.innerText === "";
     },
 
     openModal: function(target_id) {
@@ -304,6 +323,7 @@ export default {
     line-height: 1.7rem;
 
     &__back-icon {
+      display: none;
       width: 20px;
 
       &::before {
@@ -327,6 +347,12 @@ export default {
     &__menu-item {
       width: 36px;
       height: 36px;
+    }
+
+    @media screen and(max-width: 414px) {
+      &__back-icon {
+        display: inherit;
+      }
     }
   }
 
@@ -372,7 +398,7 @@ export default {
       height: $height;
       position: absolute;
       bottom: 5px;
-      right: 145px;
+      right: 230px;
     }
 
     &__img-icon {
@@ -392,7 +418,7 @@ export default {
       height: $height;
       position: absolute;
       bottom: 5px;
-      right: 100px;
+      right: 190px;
     }
 
     &__stamp-icon {
@@ -405,11 +431,29 @@ export default {
       }
     }
 
-    &__submit-btn {
+    &__hurry-btn {
       height: $height + 10.3;
+      background-color: gray;
+      color: #dddddd;
+
+      &.active {
+        background-color: #0096e3;
+        color: $base-color;
+      }
     }
 
-    @media screen and(max-width: 414px) {
+    &__submit-btn {
+      height: $height + 10.3;
+      background-color: gray;
+      color: #dddddd;
+
+      &.active {
+        background-color: #009680;
+        color: $base-color;
+      }
+    }
+
+    @media screen and(max-width: 768px) {
       $height: 30px;
       $width: 30px;
 
@@ -431,11 +475,8 @@ export default {
         padding: 10px;
       }
 
-      &__wrapper {
-      }
-
       &__img-btn {
-        right: 116px;
+        right: calc(100vw - 40px);
       }
 
       &__img-icon {
@@ -444,12 +485,18 @@ export default {
       }
 
       &__stamp-btn {
-        right: 71px;
+        right: calc(100vw - 80px);
       }
 
       &__stamp-icon {
         width: $width;
         height: $height;
+      }
+
+      &__hurry-btn {
+        height: 36px;
+        min-width: unset;
+        margin: 3px;
       }
 
       &__submit-btn {
@@ -497,7 +544,7 @@ export default {
 }
 
 .opacity {
-  opacity: 0.2;
+  color: rgb(194, 194, 194);
 }
 </style>
 

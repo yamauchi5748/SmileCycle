@@ -86,6 +86,7 @@ export default {
   &__signature-name {
     font-size: 20px;
     font-weight: bold;
+    white-space: pre;
   }
 
   &__signature-date {
@@ -124,9 +125,6 @@ export default {
       position: relative;
       word-wrap: break-word;
       max-width: 200px;
-    }
-
-    &--image {
     }
   }
 
