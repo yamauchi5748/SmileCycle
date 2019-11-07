@@ -458,6 +458,7 @@ export default {
       $width: 30px;
 
       & {
+        position: relative;
         flex-direction: column;
         padding: 0;
       }
@@ -475,8 +476,12 @@ export default {
         padding: 10px;
       }
 
+      &__wrapper {
+        position: static;
+      }
+
       &__img-btn {
-        right: calc(100vw - 40px);
+        left: 10px;
       }
 
       &__img-icon {
@@ -485,7 +490,7 @@ export default {
       }
 
       &__stamp-btn {
-        right: calc(100vw - 80px);
+        left: 50px;
       }
 
       &__stamp-icon {
@@ -496,13 +501,13 @@ export default {
       &__hurry-btn {
         height: 36px;
         min-width: unset;
-        margin: 3px;
+        margin: 0 10px 5px 0;
       }
 
       &__submit-btn {
         height: 36px;
         min-width: unset;
-        margin: 3px;
+        margin: 0 10px 5px 0;
       }
     }
   }
@@ -547,13 +552,3 @@ export default {
   color: rgb(194, 194, 194);
 }
 </style>
-
-
-
-
-
-
-
-
-
-
