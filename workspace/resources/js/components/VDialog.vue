@@ -77,4 +77,10 @@ export default {
 .p-cancel-btn {
   background-color: darkgray;
 }
+
+@media screen and(max-width: 414px) {
+  .p-dialog {
+    max-height: 300px !important;
+  }
+}
 </style>

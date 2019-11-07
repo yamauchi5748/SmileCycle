@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view">
+    <section class="view controls-primary-view" v-loaded="is_loaded">
         <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">{{$root.admin_invitation_list.length}}記事</h2>
     	    <router-link
@@ -20,10 +20,15 @@
 import VArticle from "../VArticle.vue";
 export default {
     data() {
-        return {};
+        return {
+            is_loaded:false
+        };
     },
     created: function() {
-        this.$root.loadAdminInvitations();
+        const self = this;
+        this.$root.loadAdminInvitations().then(function(){
+            self.is_loaded = true;
+        });
     },
     components: {
         VArticle

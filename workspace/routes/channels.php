@@ -13,7 +13,7 @@ use App\Models\ChatRoom;
 |
 */
 
-Broadcast::channel('room.{room_id}', function ($user, $room_id) {
+Broadcast::channel('room.{room_id}', function ($member, $room_id) {
     $rooms = ChatRoom::raw()->aggregate([
         [
             '$match' => [
@@ -25,8 +25,8 @@ Broadcast::channel('room.{room_id}', function ($user, $room_id) {
 
     return $room;
 });
-Broadcast::channel('user.{user_id}', function ($user, $user_id) {
-    if ($user_id == Auth::id()) {
-        return $user;
+Broadcast::channel('member.{member_id}', function ($member) {
+    if ($member->_id == Auth::id()) {
+        return $member;
     }
 });

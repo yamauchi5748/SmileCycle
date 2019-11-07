@@ -1,5 +1,5 @@
 <template>
-    <secondary-view>
+    <secondary-view v-loaded="is_loaded">
         <template #title>みんなの掲示板詳細</template>
         <template #body>
             <div class="input-wrapper">
@@ -28,11 +28,16 @@ import VInput from "../VInput.vue";
 import VInputMultipleImages from "../VInputMultipleImages.vue";
 import VSelectMembers from "../VSelectMembers.vue";
 export default {
-    components: {
-        SecondaryView,
-        VInput,
-        VInputMultipleImages,
-        VSelectMembers
+    data: function() {
+        return {
+            is_loaded: false,
+            edit_images: [],
+            property: {
+                title: "",
+                text: "",
+                images: []
+            }
+        };
     },
     created: function() {
         const self = this;
@@ -43,17 +48,8 @@ export default {
                 response.data.forum
             );
             self.edit_images = self.property.images;
+            self.is_loaded = true;
         });
-    },
-    data: function() {
-        return {
-            edit_images: [],
-            property: {
-                title: "",
-                text: "",
-                images: []
-            }
-        };
     },
 
     methods: {
@@ -92,6 +88,12 @@ export default {
                     console.error(error);
                 });
         }
+    },
+    components: {
+        SecondaryView,
+        VInput,
+        VInputMultipleImages,
+        VSelectMembers
     }
 };
 </script>

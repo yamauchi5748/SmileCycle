@@ -1,6 +1,8 @@
 <template>
     <div class="p-page">
-        <the-global-header class="p-header"></the-global-header>
+        <the-global-header class="p-header">
+            
+        </the-global-header>
         <main class="p-content">
             <router-view></router-view>
             <!-- テストログイン要素 -->
@@ -15,8 +17,9 @@ export default {
         author: Object
     },
     mounted() {
-        this.$root.author = this.author;
         console.log("Component mounted.");
+        this.$root.author = this.author;
+        this.$root.connectPrivate('member.' + this.author._id);
     },
     /* テスト用ログインメソッド */
     components: {
@@ -31,6 +34,7 @@ export default {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
+    overflow-y: hidden;
 }
 .p-content {
     height: 100%;

@@ -12,47 +12,23 @@ require('./bootstrap');
 */
 Vue.directive('loaded',
     {
-        bind: function (el, binding) {
-            if (binding.value) {
-                el.classList.remove("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.remove("shadow")
-                } else {
-                    el.removeChild(el.querySelector(".spinner"));
-                }
-            } else {
-                el.classList.add("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.add("shadow")
-                } else {
-                    const child = document.createElement("div");
-                    child.classList.add("spinner")
-                    el.appendChild(child);
-                }
-            }
-        },
-        update: function (el, binding) {
-            if (binding.value) {
-                el.classList.remove("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.remove("shadow")
-                } else {
-                    el.removeChild(el.querySelector(".spinner"));
-                }
-            } else {
-                el.classList.add("loading");
-                if (binding.modifiers.shadow) {
-                    el.classList.add("shadow")
-                } else {
-                    const child = document.createElement("div");
-                    child.classList.add("spinner")
-                    el.appendChild(child);
-                }
-            }
-        }
+        bind: loadedDirective,
+        update: loadedDirective
     }
 );
-
+function loadedDirective(el, binding) {
+    const style = binding.modifiers.shadow ? "shadow" : "spinner"
+    let child = el.querySelector(":scope > ." + style);
+    if (binding.value && child) {
+        el.classList.remove("loading");
+        el.removeChild(child);
+    } else if (!child) {
+        el.classList.add("loading");
+        child = document.createElement("div");
+        child.classList.add(style)
+        el.appendChild(child);
+    }
+}
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
@@ -229,13 +205,11 @@ const app = new Vue({
         chat_room_list: [],
     },
     created: function () {
-        Echo.private('user.' + this.author._id); // プライベートチャンネル接続
-
         /* チャットルーム一覧取得 */
         this.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
                 const channel = 'room.' + this.chat_room_list[index]._id;
-                this.connect(channel);  // チャットルームのチャンネルに接続
+                this.connectPresence(channel);  // チャットルームのチャンネルに接続
             }
         });
 
@@ -252,8 +226,8 @@ const app = new Vue({
             return Promise.reject('認証エラー');
         },
 
-        /* チャンネル接続 */
-        connect: function (channel) {
+        /* プレゼンスチャンネル接続 */
+        connectPresence: function (channel) {
             Echo.join(channel)
                 .here((users) => {
                     console.log("参加しました");
@@ -262,21 +236,46 @@ const app = new Vue({
                     console.log('チャット受信', data);
 
                     // 受信チャットの処理
-                    let last_departnebt_index = 0;
                     for (const index in this.chat_room_list) {
                         const room = this.chat_room_list[index];
-                        if (room.is_department) last_departnebt_index++;
                         if (room._id == data.room_id) {
                             // 受信時にルームへ入室している場合
                             if (this.$route.params.id == room._id) {
-                                this.alreadyRead(room._id, [data.content._id]);
+                                this.alreadyRead(room._id, [data.content._id]).then(res => {
+                                    console.log(res);
+                                });
                             } else {
                                 // 送信者が認証ユーザでなければ未読数を加算
                                 if (data.content.sender_id != this.author._id) room.unread++;
                             }
+                            // ルームのコンテンツが空の場合
                             if (room.contents[0].is_none) room.contents.splice(0);
                             room.contents.push(data.content);
                             break;
+                        };
+                    }
+                });
+        },
+
+        /* プライベートチャンネル接続 */
+        connectPrivate: function (channel) {
+            Echo.private(channel)
+                /* 既読通知受信処理 */
+                .listen('AlreadyRead', (data) => {
+                    console.log('既読通知', data);
+
+                    for (const index in this.chat_room_list) {
+                        const room = this.chat_room_list[index];
+                        if (room._id == data.room_id) {
+                            room.contents.filter(content => {
+                                if (content._id === data.content_id) {
+                                    if (room.is_group) {
+                                        content.already_read++;
+                                    } else {
+                                        content.already_read++;
+                                    }
+                                }
+                            });
                         };
                     }
                 });

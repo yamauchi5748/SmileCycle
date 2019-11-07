@@ -342,6 +342,7 @@
     </header>
 </template>
 <script>
+import VImg from "./VImg";
 export default {
     data: function() {
         return {

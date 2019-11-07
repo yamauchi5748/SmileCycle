@@ -1,5 +1,5 @@
 <template>
-    <secondary-view>
+    <secondary-view v-loaded="is_loaded">
         <template #title>会員詳細</template>
         <template #body>
             <div class="input-wrapper">
@@ -56,14 +56,17 @@ export default {
     data: function() {
         return {
             errprs: {},
-            property: {}
+            property: {},
+            is_loaded:false
         };
     },
     created: function() {
+        const self = this;
         this.$root
             .getMember(this.$route.params.id)
-            .then(function(res) {
-                this.property = response.data.member;
+            .then(function(response) {
+                self.property = response.data.member;
+                self.is_loaded = true;
             })
             .catch(function(error) {
                 console.error(error);

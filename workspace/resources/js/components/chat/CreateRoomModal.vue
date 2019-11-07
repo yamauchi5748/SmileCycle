@@ -71,7 +71,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-modal {
-  width: 100%;
+  width: 100vw;
   height: 100%;
   position: absolute;
   background-color: $base-color;
@@ -131,5 +131,26 @@ export default {
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+@media screen and(max-width: 414px) {
+  .p-modal-content {
+    width: calc(100% - 20px);
+    height: 100%;
+    min-height: unset;
+    position: relative;
+  }
+
+  .p-modal-title {
+    display: none;
+  }
+
+  .p-list-box {
+    height: 255px;
+  }
+
+  .p-esc-btn {
+    top: -10px;
+  }
 }
 </style>

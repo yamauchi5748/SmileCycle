@@ -68,7 +68,8 @@ class ChatRoomController extends AuthController
                         ]
                     ],
                     'members' => 1,
-                    'contents' => 1
+                    'contents' => 1,
+                    'created_at' => 1
                 ]
             ],
             // コンテンツが空でないかの処理
@@ -145,6 +146,9 @@ class ChatRoomController extends AuthController
                     'group_name' => [
                         '$first' => '$group_name'
                     ],
+                    'created_at' => [
+                        '$first' => '$created_at'
+                    ],
                     'members' => [
                         '$first' => '$members'
                     ],
@@ -208,7 +212,8 @@ class ChatRoomController extends AuthController
             'admin_member_id' => $this->author->_id,    // チャットグループの管理者
             'group_name' => $request->group_name,       // チャットグループのグループ名
             'members' => $request->members,             // チャットグループの会員
-            'contents' => []
+            'contents' => [],
+            'created_at' => (string) Carbon::now('Asia/Tokyo')
         ];
 
         // 投稿者もグループ会員に追加
