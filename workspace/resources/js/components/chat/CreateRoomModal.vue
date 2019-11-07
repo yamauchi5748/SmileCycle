@@ -71,7 +71,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .p-modal {
-  width: 100%;
+  width: 100vw;
   height: 100%;
   position: absolute;
   background-color: $base-color;

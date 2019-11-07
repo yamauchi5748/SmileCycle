@@ -51,6 +51,7 @@ export default {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
+    overflow-y: hidden;
 }
 .p-content {
     height: 100%;

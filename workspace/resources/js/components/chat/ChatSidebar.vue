@@ -231,11 +231,10 @@ export default {
   flex-direction: column;
 }
 
-@media screen and(max-width: 768px) {
+@media screen and(max-width: 414px) {
   .p-sidebar {
-    display: none;
-    position: absolute;
-    z-index: 1;
+    width: 100%;
+    position: static;
   }
 }
 
@@ -316,8 +315,11 @@ export default {
   width: 100%;
   padding-bottom: 58px;
 
-  @media screen and (max-width: 768px) {
-    width: calc(100% - 15px);
+  /* モバイル端末 */
+  @media screen and (max-width: 768px), (width: 1024px) {
+    & {
+      width: calc(100% - 15px);
+    }
   }
 
   &__item {

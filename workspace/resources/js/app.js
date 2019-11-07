@@ -38,6 +38,7 @@ const router = new VueRouter({
     routes: [
         {
             path: "/chat-rooms",
+            name: "chat-rooms",
             component: ChatRooms,
             children: [
                 {

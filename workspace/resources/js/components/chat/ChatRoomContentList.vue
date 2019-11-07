@@ -79,12 +79,12 @@ export default {
   }
 
   &__signature-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
   }
 
   &__signature-date {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   &__wrapper {
@@ -126,7 +126,7 @@ export default {
   }
 
   &__text {
-    font-size: 16px;
+    font-size: 18px;
     color: black;
     white-space: pre-wrap;
     word-break: break-all;
@@ -139,7 +139,7 @@ export default {
   }
 
   &__read {
-    font-size: 13px;
+    font-size: 15px;
     white-space: nowrap;
   }
 }
