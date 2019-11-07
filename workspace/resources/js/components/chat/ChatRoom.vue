@@ -1,6 +1,10 @@
 <template>
   <section class="p-room" v-if="room">
     <div class="p-room-header layout-flex --justify-content-space-between">
+      <router-link
+        class="p-room-header__back-icon layout-flex --align-items-center --justify-content-center"
+        :to="{name:'chat-rooms'}"
+      ></router-link>
       <h1 class="p-room-header__title-text --align-self-center">{{ room.group_name }}</h1>
       <div class="p-room-header__menu layout-flex --align-items-center">
         <button
@@ -22,34 +26,41 @@
         <chat-room-content-list :contents="contents" :room_id="room._id" />
       </v-scrollbar>
     </div>
-    <div class="p-room-send layout-flex --align-items-center">
+    <div class="p-room-send layout-flex --align-items-flex-end">
       <div class="p-room-send__input-message-box">
-        <p class="p-room-send__input-message" contenteditable="true" ref="message" @drop.native.stop></p>
+        <p
+          class="p-room-send__input-message"
+          contenteditable="true"
+          ref="message"
+          @drop.native.stop
+        ></p>
       </div>
-      <label
-        class="p-room-send__img-btn layout-flex --align-items-center"
-        for="p-room-send__img-input"
-      >
-        <img class="p-room-send__img-icon" src="/img/image-icon.svg" alt="image" />
-        <input
-          id="p-room-send__img-input"
-          class="p-room-send__img-input"
-          type="file"
-          multiple
-          @change="sendImage"
-        />
-      </label>
-      <button
-        class="p-room-send__stamp-btn layout-flex --align-items-center"
-        @click="setStampActive"
-      >
-        <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
-      </button>
+      <div class="p-room-send__wrapper">
+        <label
+          class="p-room-send__img-btn layout-flex --align-items-center"
+          for="p-room-send__img-input"
+        >
+          <img class="p-room-send__img-icon" src="/img/image-icon.svg" alt="image" />
+          <input
+            id="p-room-send__img-input"
+            class="p-room-send__img-input"
+            type="file"
+            multiple
+            @change="sendImage"
+          />
+        </label>
+        <button
+          class="p-room-send__stamp-btn layout-flex --align-items-center"
+          @click="setStampActive"
+        >
+          <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
+        </button>
+        <button
+          class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
+          @click="sendText"
+        >送信</button>
+      </div>
       <stamp-list-modal v-on:close="setStampActive" v-on:send="sendStamp" v-show="stamp_active" />
-      <button
-        class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
-        @click="sendText"
-      >送信</button>
     </div>
     <v-dialog v-on:agree="dialogAgree" v-on:cancel="dialogCancel" v-show="dialog_active">
       <div class="p-dialog-msg-box">
@@ -196,7 +207,7 @@ export default {
 
     submit: function(data) {
       this.$root.postContents(this.room._id, data).then(res => {
-        /*  */
+        /* ルームのコンテンツが空の場合 */
         if (this.room.contents[0].is_none) this.room.contents.splice(0);
         this.room.contents.push(res.content);
 
@@ -256,11 +267,33 @@ export default {
   overflow-y: hidden;
   line-height: normal;
 
+  @media screen and(max-width: 414px) {
+    & {
+      width: 100vw;
+      min-width: 0;
+    }
+  }
+
   .p-room-header {
     height: 62px;
     padding: 0 20px;
     box-shadow: 0px -18px 50px black;
     line-height: 1.7rem;
+
+    &__back-icon {
+      width: 20px;
+
+      &::before {
+        content: "";
+        left: 0;
+        width: 12px;
+        height: 12px;
+        border-bottom: 2px solid #707070;
+        border-left: 2px solid #707070;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }
 
     &__title-text {
       text-decoration: none;
@@ -303,11 +336,15 @@ export default {
       overflow: hidden;
     }
 
+    &__wrapper {
+      position: relative;
+    }
+
     &__img-btn {
       height: $height;
       position: absolute;
-      bottom: 24px;
-      right: 165px;
+      bottom: 5px;
+      right: 145px;
     }
 
     &__img-icon {
@@ -326,8 +363,8 @@ export default {
     &__stamp-btn {
       height: $height;
       position: absolute;
-      bottom: 24px;
-      right: 123px;
+      bottom: 5px;
+      right: 100px;
     }
 
     &__stamp-icon {
@@ -342,6 +379,56 @@ export default {
 
     &__submit-btn {
       height: $height + 10.3;
+    }
+
+    @media screen and(max-width: 414px) {
+      $height: 30px;
+      $width: 30px;
+
+      & {
+        flex-direction: column;
+        padding: 0;
+      }
+
+      &__input-message-box {
+        max-height: 191px;
+        overflow: scroll;
+        border: none;
+        border-radius: unset;
+        border-top: 1px solid #707070;
+      }
+
+      &__input-message {
+        max-height: unset;
+        padding: 10px;
+      }
+
+      &__wrapper {
+      }
+
+      &__img-btn {
+        right: 116px;
+      }
+
+      &__img-icon {
+        width: $width;
+        height: $height;
+      }
+
+      &__stamp-btn {
+        right: 71px;
+      }
+
+      &__stamp-icon {
+        width: $width;
+        height: $height;
+      }
+
+      &__submit-btn {
+        height: 36px;
+        min-width: unset;
+        margin: 3px;
+      }
     }
   }
 }

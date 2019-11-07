@@ -112,9 +112,17 @@ export default {
 .p-modal {
   margin: 0;
   position: absolute;
-  bottom: 66px;
-  right: 20px;
-  z-index: 4;
+  bottom: 64px;
+  right: 112px;
+  z-index: 1;
+
+  @media screen and(max-width: 414px) {
+    & {
+      width: 100%;
+      position: static;
+      align-self: center;
+    }
+  }
 }
 
 .p-overlay {
@@ -125,11 +133,18 @@ export default {
   right: 0;
   opacity: 0;
   z-index: -1;
+
+  @media screen and(max-width: 414px) {
+    & {
+      z-index: 0;
+    }
+  }
 }
 
 .p-stamp-preview {
   width: 100%;
   height: 120px;
+  position: relative;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 
@@ -145,6 +160,12 @@ export default {
     width: 78px;
     height: 78px;
   }
+
+  @media screen and(max-width: 414px) {
+    & {
+      border-radius: unset;
+    }
+  }
 }
 
 .p-stamp-box {
@@ -153,10 +174,9 @@ export default {
   display: grid;
   grid-template-rows: 47px 1fr;
   cursor: pointer;
-  z-index: 4;
 
   &__tab-list-wrapper {
-    width: 328px;
+    width: 280px;
     height: 100%;
     padding: 0 16px;
     border-top: 1px solid #707070;
@@ -192,25 +212,27 @@ export default {
   }
 
   &__body-list-wrapper {
+    width: 312px;
     border-bottom: 1px solid #707070;
     border-left: 1px solid #707070;
     border-right: 1px solid #707070;
     border-radius: 0 0 10px 10px;
     background-color: #f2f2f2;
+    z-index: 1;
   }
 
   &__body-list {
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(5, 64.5px);
-    grid-template-rows: repeat(5, 60.5px);
+    grid-template-columns: repeat(4, 71px);
+    grid-template-rows: repeat(5, 71px);
     background-color: #f2f2f2;
     overflow-x: hidden;
   }
 
   &__body-list-item {
-    width: 64.5px;
-    height: 60.5px;
+    width: 71px;
+    height: 71px;
     border-radius: 10px;
 
     &:hover {
@@ -223,8 +245,35 @@ export default {
   }
 
   &__body-stamp {
-    width: 40px;
-    height: 40px;
+    width: 47px;
+    height: 47px;
+  }
+
+  @media screen and(max-width: 414px) {
+    & {
+      height: 189px;
+      border-top: 1px solid #707070;
+    }
+
+    &__tab-list-wrapper {
+      width: calc(100vw - 20px);
+      padding: 0 10px;
+      border: unset;
+      border-radius: unset;
+      z-index: 1;
+    }
+
+    &__body-list-wrapper {
+      width: 100%;
+      border: unset;
+      border-radius: unset;
+    }
+
+    &__body-list {
+      margin: 0 10px;
+      grid-template-columns: repeat(auto-fit, minmax(71px, 1fr));
+      grid-template-rows: repeat(auto-fit, minmax(71px, 1fr));
+    }
   }
 }
 </style>
