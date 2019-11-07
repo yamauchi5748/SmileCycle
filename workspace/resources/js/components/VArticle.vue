@@ -1,10 +1,14 @@
 <template>
     <article class="p-post">
         <div class="p-post-header">
-            <v-img v-if="post.sender_id" class="p-profile-image" :src="'/img/profile_image.jpg'" />
+            <v-img
+                v-if="post.post_member_id"
+                class="p-profile-image"
+                :src="'/img/profile_image.jpg'"
+            />
             <div class="p-post-header-right">
                 <h2 class="p-post-title" @click="goTo">{{post.title}}</h2>
-                <span v-if="post.sender_id" class="p-profile-name">{{post.sender_name}}</span>
+                <span v-if="post.post_member_id" class="p-profile-name">{{post.post_member_name}}</span>
             </div>
         </div>
         <v-carousel class="p-slider" v-if="existImages" :slides="post.images"></v-carousel>
@@ -119,7 +123,7 @@ $border-value: solid 1px $gray;
     font-weight: 600;
     color: #000000de;
 }
-.p-slider{
+.p-slider {
     border-bottom: $border-value;
 }
 .p-text-wrapper {
