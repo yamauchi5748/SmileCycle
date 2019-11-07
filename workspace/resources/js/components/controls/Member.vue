@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view">
+    <section class="view controls-primary-view" v-loaded="is_loaded">
         <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">{{ $root.member_list.length }}人</h2>
             <router-link
@@ -26,25 +26,33 @@
                     append
                 >
                     <td>
-                        <img
-                            class="profile-img"
-                            :src="'/members/' + member._id + '/profile-image'"
-                        />
+                        <v-img class="profile-img" :src="'/members/' + member._id + '/profile-image'" />
                     </td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.ruby }}</td>
                     <td>{{ member.post }}</td>
-
                 </router-link>
             </tbody>
         </table>
     </section>
 </template>
 <script>
+import VImg from "../VImg";
 export default {
-    created: function() {
-        this.$root.loadMembers();
+    data:function(){
+        return {
+            is_loaded:false
+        }
     },
+    created: function() {
+        const self = this;
+        this.$root.loadMembers().then(function(){
+            self.is_loaded = true;
+        });
+    },
+    components: {
+        VImg
+    }
 };
 </script>
 <style lang="scss" scoped>

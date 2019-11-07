@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view">
+    <section class="view controls-primary-view" v-loaded="is_loaded">
         <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">{{ $root.company_list.length }}社</h2>
             <router-link
@@ -30,8 +30,16 @@
 </template>
 <script>
 export default {
+    data: function() {
+        return {
+            is_loaded: false
+        };
+    },
     created: function() {
-        this.$root.loadCompanies();
+        const self = this;
+        this.$root.loadCompanies().then(function() {
+            self.is_loaded = true;
+        });
     }
 };
 </script>

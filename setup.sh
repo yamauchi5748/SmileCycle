@@ -1,31 +1,45 @@
-#このファイルの場所をカレントディレクトリとする
+# このファイルの場所をカレントディレクトリとする
 cd `dirname $0`
 
-#workspaceの.envファイルを作成
+# workspaceの.envファイルを作成
 cd workspace
-cp env-example .env
+\cp -f env-example .env
 
-#laradockの.envファイルを作成
+# laradockの.envファイルを作成
 cd ../laradock
-cp env-example .env
+\cp -f env-example .env
 
-#各コンテナを起動
-docker-compose up -d
+# 各コンテナを起動
+sudo docker-compose up -d
 
-#mongodbをインストール
-docker-compose exec workspace pecl install mongodb
+# mongodbをインストール
+sudo docker-compose exec workspace \
+pecl install mongodb
 
-#composerをインストール
-docker-compose exec --user=laradock workspace composer install
+# composerをインストール
+sudo docker-compose exec --user=laradock workspace \
+composer install
 
-#npmをインストール
-docker-compose exec --user=laradock workspace npm install
+# npmをインストール
+sudo docker-compose exec --user=laradock workspace \
+npm install
 
-#Laravelの.envのAPP_KEYを生成
-docker-compose exec --user=laradock workspace php artisan key:generate
+# Laravelの.envのAPP_KEYを生成
+sudo docker-compose exec --user=laradock workspace  \
+php artisan key:generate
 
-#テストデータを生成
-docker-compose exec --user=laradock workspace php artisan db:seed
+# シンボリックリンクを張る
+sudo docker-compose exec --user=laradock workspace \
+php artisan storage:link
 
-#LaravelMixによるBuildを実行
-docker-compose exec --user=laradock workspace npm run watch-poll
+# テストデータを生成
+sudo docker-compose exec --user=laradock workspace \
+php artisan db:seed
+
+# スーパーバイザ起動
+sudo docker-compose exec workspace \
+service supervisor start
+
+# LaravelMixによるBuildを実行
+sudo docker-compose exec --user=laradock workspace \
+npm run dev
