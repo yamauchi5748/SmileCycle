@@ -9,7 +9,7 @@
         ></v-article>
 		<ul class="attendance">
 			<h2 class="attendance-list">出欠状況</h2>
-			<li v-for="user in users">
+			<li v-for="user in users" :key="user">
 				<p class="Invitations-user-name">氏名:　{{user.name}}</p>
 				<p class="Invitations-user-ruby">ふりがな: {{user.ruby}}</p>
 				<p class="Invitations-user-select">{{user.select}}</p>
@@ -45,7 +45,7 @@ export default {
 				_id: "l66ec26-3768-48aa-9ca9-a7d604815507",
 				title: "第59回愛媛笑門会",
 				sender_id: "l66ec26-3768-48aa-9ca9-a7d604815507",
-				sender_name: "松下",
+				post_member_name: "松下",
 				text: "とだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、本日はお日柄もよく非常に過ごしやすくなっております。皆様のますますのご活躍のことだと存じます、、、、",
 				images: [
 					"/img/check.svg",
@@ -81,18 +81,22 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$border-value: solid 1px $gray;
 .p-post {
     margin: 32px auto;
 }
 .attendance {
 	display: table;
 	margin: 32px auto;
+	padding-bottom: 20px;
 	width: 600px;
-	line-height: 26px;
+	line-height: 30px;
+	box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+		0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 	background-color: #baf9af
 }
 .attendance-list {
-	padding: 10px;
+	padding: 16px;
 }
 .Invitations-user-name {
 	display: inline;
@@ -110,24 +114,33 @@ export default {
 .attendance-selection {
 	margin: 32px auto;
 	width: 600px;
-	height: 230px;
+	height: auto;
 	background-color: rgba(0, 0, 0, 0);
-	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+	border-radius: 8px;
+	box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+		0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
 .attendance-selection-title {
-	padding: 10px;
+	padding: 16px;
 }
 .precautions {
-	padding: 10px;
-	border-top: 2px solid #eee;
-	line-height: 20px;
+	padding-top: 10px;
+	padding-left: 16px;
+	padding-bottom: 6px;
+	border-top: $border-value;
+	line-height: 24px;
 }
 .selection-field {
-	padding: 6px;
+	padding-left: 16px;
+	padding-bottom: 10px;
 	line-height: 30px;
 }
 .buttons-wrapper {
-	padding: 8px 14px;
-	border-top: 2px solid #eee;
+	display: block;
+	text-align: right;
+	padding-top: 10px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+	border-top: $border-value;
 }
 </style>

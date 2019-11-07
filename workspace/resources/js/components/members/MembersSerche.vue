@@ -30,7 +30,6 @@ input[type="text"]:focus {
 .search_text {
     width: 402px;
     height: 48px;
-    text-align: center;
     font-size: 19px;
     border: none;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24);

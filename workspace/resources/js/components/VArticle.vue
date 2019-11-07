@@ -70,7 +70,7 @@ export default {
         },
         //URLを切り替える
         adjustURL(image_id) {
-            if (this.post.sender_id) {
+            if (this.post.post_member_id) {
                 return "/forums/" + this.post._id + "/images/" + image_id;
             }
             return "/invitations/" + this.post._id + "/images/" + image_id;
