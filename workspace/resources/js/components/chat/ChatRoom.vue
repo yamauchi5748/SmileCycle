@@ -18,24 +18,34 @@
           class="p-room-header__menu-item"
           v-if="room.is_group && !room.is_department"
           @click="del"
-        >退出ボタン</button>
+        >
+          <img src="/img/exit.svg" alt />
+        </button>
       </div>
     </div>
     <div class="p-room-contents">
       <v-scrollbar v-on:scroll="scroll" v-on:resize="scrollResize" ref="scroll">
-        <chat-room-content-list :contents="contents" :room_id="room._id" />
+        <chat-room-content-list
+          :contents="contents"
+          :room_id="room._id"
+          :is_group="room.is_group ? true : false"
+        />
       </v-scrollbar>
     </div>
     <div class="p-room-send layout-flex --align-items-flex-end">
       <div class="p-room-send__input-message-box">
         <p
           class="p-room-send__input-message"
+          :class="{opacity: is_none_text}"
           contenteditable="true"
           ref="message"
+          @focus="inputFocus"
+          @blur="outputFocus"
+          @input="change"
           @drop.native.stop
-        ></p>
+        >{{ placeholder }}</p>
       </div>
-      <div class="p-room-send__wrapper">
+      <div class="p-room-send__wrapper layout-flex">
         <label
           class="p-room-send__img-btn layout-flex --align-items-center"
           for="p-room-send__img-input"
@@ -56,7 +66,13 @@
           <img class="p-room-send__stamp-icon" src="/img/stamp-icon.png" alt="stamp" />
         </button>
         <button
+          class="p-room-send__hurry-btn normal-button --align-self-flex-end margin-left-small"
+          :class="{active: is_hurry}"
+          @click="changeHurry"
+        >急ぎ</button>
+        <button
           class="p-room-send__submit-btn normal-button --align-self-flex-end margin-left-small"
+          :class="{active: !is_none_text}"
           @click="sendText"
         >送信</button>
       </div>
@@ -82,7 +98,7 @@
 <script>
 import VScrollbar from "../VScrollbar";
 import VDialog from "../VDialog";
-import chatRoomContentList from "./chatRoomContentList";
+import ChatRoomContentList from "./ChatRoomContentList";
 import EditModal from "./EditModal";
 import StampListModal from "./StampListModal";
 import EditRoomModal from "./EditRoomModal";
@@ -92,7 +108,7 @@ export default {
   components: {
     VScrollbar,
     VDialog,
-    chatRoomContentList,
+    ChatRoomContentList,
     EditModal,
     StampListModal,
     EditRoomModal,
@@ -101,6 +117,8 @@ export default {
   },
   data() {
     return {
+      placeholder: "チャット",
+      is_none_text: true,
       dialog_msg: {},
       async_flg: true,
       edit_active: false,
@@ -172,14 +190,23 @@ export default {
       this.setDialogActive(true);
     },
 
+    changeHurry: function() {
+      this.is_hurry = !this.is_hurry;
+    },
+
     sendText: function() {
+      /* テキストが空なら抜ける */
+      if (this.is_none_text) return;
       console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
         content_type: 1,
         message: this.$refs.message.innerText
       };
-      this.$refs.message.innerText = "";
+      /* 初期化 */
+      this.$refs.message.innerText = this.placeholder;
+      this.is_none_text = true;
+      this.is_hurry = false;
       this.submit(data);
     },
 
@@ -217,6 +244,21 @@ export default {
           this.$root.polling_time + 1
         );
       });
+    },
+
+    inputFocus: function() {
+      if (!this.is_none_text) return;
+      this.$refs.message.innerText = "";
+    },
+
+    outputFocus: function() {
+      if (!this.is_none_text) return;
+      this.$refs.message.innerText = this.placeholder;
+    },
+
+    change: function() {
+      console.log(this.$refs.message.innerText);
+      this.is_none_text = this.$refs.message.innerText === "";
     },
 
     openModal: function(target_id) {
@@ -281,6 +323,7 @@ export default {
     line-height: 1.7rem;
 
     &__back-icon {
+      display: none;
       width: 20px;
 
       &::before {
@@ -299,6 +342,17 @@ export default {
       text-decoration: none;
       font-weight: bold;
       color: #707070;
+    }
+
+    &__menu-item {
+      width: 36px;
+      height: 36px;
+    }
+
+    @media screen and(max-width: 414px) {
+      &__back-icon {
+        display: inherit;
+      }
     }
   }
 
@@ -344,7 +398,7 @@ export default {
       height: $height;
       position: absolute;
       bottom: 5px;
-      right: 145px;
+      right: 230px;
     }
 
     &__img-icon {
@@ -364,7 +418,7 @@ export default {
       height: $height;
       position: absolute;
       bottom: 5px;
-      right: 100px;
+      right: 190px;
     }
 
     &__stamp-icon {
@@ -377,11 +431,29 @@ export default {
       }
     }
 
-    &__submit-btn {
+    &__hurry-btn {
       height: $height + 10.3;
+      background-color: gray;
+      color: #dddddd;
+
+      &.active {
+        background-color: #0096e3;
+        color: $base-color;
+      }
     }
 
-    @media screen and(max-width: 414px) {
+    &__submit-btn {
+      height: $height + 10.3;
+      background-color: gray;
+      color: #dddddd;
+
+      &.active {
+        background-color: #009680;
+        color: $base-color;
+      }
+    }
+
+    @media screen and(max-width: 768px) {
       $height: 30px;
       $width: 30px;
 
@@ -403,11 +475,8 @@ export default {
         padding: 10px;
       }
 
-      &__wrapper {
-      }
-
       &__img-btn {
-        right: 116px;
+        right: calc(100vw - 40px);
       }
 
       &__img-icon {
@@ -416,12 +485,18 @@ export default {
       }
 
       &__stamp-btn {
-        right: 71px;
+        right: calc(100vw - 80px);
       }
 
       &__stamp-icon {
         width: $width;
         height: $height;
+      }
+
+      &__hurry-btn {
+        height: 36px;
+        min-width: unset;
+        margin: 3px;
       }
 
       &__submit-btn {
@@ -466,6 +541,10 @@ export default {
     max-width: 736px;
     padding: 8px 0 0 12px;
   }
+}
+
+.opacity {
+  color: rgb(194, 194, 194);
 }
 </style>
 

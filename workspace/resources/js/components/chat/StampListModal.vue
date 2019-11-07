@@ -163,6 +163,8 @@ export default {
 
   @media screen and(max-width: 414px) {
     & {
+      position: absolute;
+      top: -120px;
       border-radius: unset;
     }
   }
