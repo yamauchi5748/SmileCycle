@@ -25,6 +25,8 @@ export default {
 
 <style lang="scss" scoped>
 .p-img {
+    border: inherit;
+    border-radius: inherit;
     height: inherit;
     width: inherit;
     display: inherit;

@@ -1,6 +1,8 @@
 <template>
     <div class="p-page">
-        <the-global-header class="p-header"></the-global-header>
+        <the-global-header class="p-header">
+            
+        </the-global-header>
         <main class="p-content">
             <router-view></router-view>
             <!-- テストログイン要素 -->

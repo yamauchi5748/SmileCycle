@@ -64,7 +64,7 @@ export default {
         const self = this;
         this.$root
             .getMember(this.$route.params.id)
-            .then(function(res) {
+            .then(function(response) {
                 self.property = response.data.member;
                 self.is_loaded = true;
             })
