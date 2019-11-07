@@ -6,12 +6,6 @@
         <main class="p-content">
             <router-view></router-view>
             <!-- テストログイン要素 -->
-            <input
-                type="button"
-                value="logout"
-                @click="logout"
-                style="position: absolute; top: 2%; left: 50%;"
-            />
         </main>
     </div>
 </template>
@@ -28,19 +22,6 @@ export default {
         this.$root.connectPrivate('member.' + this.author._id);
     },
     /* テスト用ログインメソッド */
-    methods: {
-        logout: function() {
-            axios
-                .post("/logout")
-                .then(res => {
-                    console.log(res.data);
-                    location.href = "/";
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
-    },
     components: {
         TheGlobalHeader
     }

@@ -76,35 +76,8 @@ const router = new VueRouter({
             ]
         },
         {
-            path: "/chats/",
-            component: Chat,
-            redirect: "/chats/group/",
-            children: [
-                {
-                    path: "group",
-                    name: "chat-group",
-                    components: {
-                        default: ChatGroup,
-                        details: RoomDetails
-                    }
-                },
-                {
-                    path: "member",
-                    name: "chat-member",
-                    components: {
-                        default: ChatMember,
-                        details: RoomDetails
-                    }
-                },
-                {
-                    path: "details",
-                    name: "room-details",
-                    component: RoomDetails
-                }
-            ]
-        },
-        {
             path: "/members",
+            name: "members",
             component: Members,
         },
 
@@ -115,6 +88,7 @@ const router = new VueRouter({
 
         {
             path: "/invitations",
+            name: "invitations",
             component: Invitations,
         },
         {
@@ -124,6 +98,7 @@ const router = new VueRouter({
         },
         {
             path: "/forum",
+            name: "forum",
             component: Forum,
         },
         {
