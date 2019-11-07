@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,11 +15,9 @@ class GetMembersTest extends TestCase
     /** 認証されている状態でリクエストした場合、会員一覧情報が取得できること */
     public function testAuthenticated()
     {
-        $member = Member::find(['_id' => '83b5603f-8436-4c93-189e-8387c15f823f']);
-
         $response = $this
-            // 任意の会員でログイン
-            ->actingAs($member[0])
+            // 任意の会員で認証
+            ->withHeaders(['Authorization' => 'Bearer EgGvxAr4Wm97jGg1VNitMGj5JFovqhTZEDSIssnmkiFF6Sp0anJ5v07nLeHQ'])
             // 「/api/members」でGETでリクエストを送信
             ->getJson('/api/members');
 
@@ -32,16 +30,18 @@ class GetMembersTest extends TestCase
                 'result' => true,
                 'members' => [
                     [
-                        'id' => '83b5603f-8436-4c93-189e-8387c15f823f',
+                        '_id' => '83b5603f-8436-4c93-189e-8387c15f823f',
                         'name' => '橋本環奈',
                         'ruby' => 'はしもとかんな',
-                        'post' => '女優'
+                        'post' => '女優',
+                        'department_name' => '東京笑門会'
                     ],
                     [
-                        'id' => 'a08999b6-c1ff-a0e7-81cb-d04e2466b61d',
+                        '_id' => 'a08999b6-c1ff-a0e7-81cb-d04e2466b61d',
                         'name' => '井手上漠',
                         'ruby' => 'いでがみばく',
-                        'post' => 'モデル'
+                        'post' => 'モデル',
+                        'department_name' => '東京笑門会'
                     ]
                 ]
             ]);
@@ -60,7 +60,8 @@ class GetMembersTest extends TestCase
             // レスポンスデータが下記の通り
             ->assertExactJson([
                 'auth' => false,
-                'result' => false
+                'result' => false,
+                'message' => '認証エラー'
             ]);
     }
 }
