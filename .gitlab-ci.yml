@@ -1,0 +1,9 @@
+stages:
+- develop
+
+deploy:
+  stage: develop
+  script:
+  - echo "hello!"
+  tags:
+  - testdeploy
