@@ -1,31 +1,62 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Home!</div><br>
-
-                    <div class="card-body">
-                        <a :href="'http://localhost:3000/api/members?api_token=' + api_token">メンバー一覧</a>
-                    </div><br>
-
-                    <div class="card-body">
-                        Member:{{ member }}
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="p-page">
+        <the-global-header class="p-header"></the-global-header>
+        <main class="p-content">
+            <router-view></router-view>
+            <!-- テストログイン要素 -->
+            <input
+                type="button"
+                value="logout"
+                @click="logout"
+                style="position: absolute; top: 2%; left: 50%;"
+            />
+        </main>
     </div>
 </template>
 
 <script>
-    export default {
-        props : {
-            member : String,
-            api_token : String
-        },
-        mounted() {
-            console.log('Component mounted.')
+import TheGlobalHeader from "./TheGlobalHeader";
+export default {
+    props: {
+        author: Object
+    },
+    mounted() {
+        console.log("Component mounted.");
+        this.$root.author = this.author;
+        this.$root.connectPrivate('member.' + this.author._id);
+    },
+    /* テスト用ログインメソッド */
+    methods: {
+        logout: function() {
+            axios
+                .post("/logout")
+                .then(res => {
+                    console.log(res.data);
+                    location.href = "/";
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
+    },
+    components: {
+        TheGlobalHeader
     }
+};
 </script>
+
+<style lang="scss" scoped>
+.p-page {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: 1fr;
+    overflow-y: hidden;
+}
+.p-content {
+    height: 100%;
+}
+.p-header {
+    height: 60px;
+}
+</style>

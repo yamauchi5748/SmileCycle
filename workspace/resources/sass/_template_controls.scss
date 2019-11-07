@@ -1,0 +1,56 @@
+.controls-primary-view {
+    padding: 32px;
+    background-color: $base-color;
+}
+
+.item-count {
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border: solid 1px $gray;
+    .table-head-item {
+        text-align: left;
+        border-bottom: solid 1px $gray;
+        th {
+            height: 64px;
+            padding: 1px 16px;
+            font-weight: 700;
+            color: $black;
+            vertical-align: middle;
+        }
+    }
+    .table-body-item {
+        text-align: left;
+        border-bottom: solid 1px $gray;
+        td {
+            height: 64px;
+            padding: 1px 16px;
+            color: $black;
+            vertical-align: middle;
+        }
+        &:hover {
+            background-color: $gray;
+        }
+    }
+    .profile-img {
+        height: 100%;
+    }
+}
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    .input-title {
+        margin-bottom: 16px;
+    }
+    .input-label {
+        display: flex;
+        align-items: center;
+    }
+}
+.buttons-wrapper {
+    display: flex;
+}

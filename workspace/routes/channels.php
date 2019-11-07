@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ChatRoom;
+
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -11,6 +13,20 @@
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('room.{room_id}', function ($member, $room_id) {
+    $rooms = ChatRoom::raw()->aggregate([
+        [
+            '$match' => [
+                '_id' => $room_id
+            ]
+        ]
+    ])->toArray();
+    $room = head($rooms);
+
+    return $room;
+});
+Broadcast::channel('member.{member_id}', function ($member) {
+    if ($member->_id == Auth::id()) {
+        return $member;
+    }
 });

@@ -11,12 +11,27 @@
 |
 */
 
-//home
-Route::get('/', 'HomeController@index')->name('home');
-
-//help
-Route::get('/help', 'HelpController@index')->name('help');
-
 
 //login,logout
-Auth::routes();
+Route::get('/login', 'Auth\LoginController@index')->name("login.page");
+Route::post('/login', 'Auth\LoginController@authenticate')->name("login");
+Route::post('/logout', 'Auth\LoginController@logout')->name("logout");
+
+// stamp.image
+Route::get('/stamp-images/{image_id}', 'ImageController@stampImage')->name("stamp.image");
+
+// member.image
+Route::get('/members/{member_id}/profile-image', 'ImageController@memberImage')->name("member.image");
+
+// invitation.image
+Route::get('/invitations/{invitation_id}/images/{image_id}', 'ImageController@invitationImage')->name("invitation.image");
+
+// forum.image
+Route::get('/forums/{forum_id}/images/{image_id}', 'ImageController@forumImage')->name("forum.image");
+
+// chat.image
+Route::get('/chat-rooms/{chat_room_id}/profile-image', 'ImageController@chatRoomProfileImage')->name("chat_room.profile_image");
+Route::get('/chat-rooms/{chat_room_id}/images/{image_id}', 'ImageController@chatRoomImage')->name("chat_room.image");
+
+//home
+Route::get('/{any}', 'HomeController@index')->where('any','.*')->name('home');

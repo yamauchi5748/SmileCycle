@@ -1,148 +1,146 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
+    <title>{{ config('app.name', 'SmileCycle') }}</title>
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link
+        href="{{ asset('css/app.css') }}"
+        rel="stylesheet"
+    >
 </head>
+
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+    <main class="login-container-wrapper">
+        <h1 class="login-title">SmileCycle</h1>
+        <form class="login-container" method="post" action="{{ route('login') }}" name="Login">
+            @csrf
+            <div class="login-content-wrapper">
+                @if($errors->has('name'))
+                    <input class="login-content error" type="text" name="name" placeholder="ユーザ名">
+                @else
+                    <input class="login-content" type="text" name="name" placeholder="ユーザ名">
+                @endif 
+                @error('name')
+                    <div class="alert">{{ $message }}</div>
+                @enderror
             </div>
-        </nav>
-
-        <main class="py-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">{{ __('Login') }}</div>
-
-                            <div class="card-body">
-                                <form method="POST" action="{{ route('login') }}">
-                                    @csrf
-
-                                    <div class="form-group row">
-                                        <label for="name" class="col-md-4 col-form-label text-md-right">会員名</label>
-
-                                        <div class="col-md-6">
-                                            <input id="name" type="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                            @error('email')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-md-6 offset-md-4">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                                <label class="form-check-label" for="remember">
-                                                    {{ __('Remember Me') }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row mb-0">
-                                        <div class="col-md-8 offset-md-4">
-                                            <button type="submit" class="btn btn-primary">
-                                                {{ __('Login') }}
-                                            </button>
-
-                                            @if (Route::has('password.request'))
-                                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                    {{ __('Forgot Your Password?') }}
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="login-content-wrapper">
+                @if($errors->has('password'))
+                    <input class="login-content error" type="password" name="password" placeholder="パスワード">
+                @else
+                    <input class="login-content" type="password" name="password" placeholder="パスワード">
+                @endif 
+                @error('password')
+                    <div class="alert">{{ $message }}</div>
+                @enderror
             </div>
-
-        </main>
-    </div>
+            <button class="login-btn" type="submit">ログイン</button>
+        </form>
+    </main>
 </body>
+
+<style> 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+.login-container-wrapper {
+    width: 100%;
+    max-width: 600px;
+    padding: 4%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 2px 3px #aaaaaa;
+    background-color: #ffffff;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-title {
+    margin-bottom: 15%;
+    color: #ff9900;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: .2rem;
+}
+
+.login-content-wrapper {
+    width: 60%;
+    margin-bottom: 15%;
+}
+
+.login-content {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border: none;
+    border-bottom: solid 2px gray;
+    font-size: 18px;
+}
+
+.login-content:focus {
+  outline: 0;
+  background: none;
+}
+
+.login-btn {
+    width: 60%;
+    height: 36px;
+    min-width: 80px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    background-color: #009680;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.24);
+    flex-shrink: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: all 80ms linear;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.alert {
+    color: #b92d00;
+}
+
+.error {
+    border-bottom: solid 2px #b92d00;
+}
+
+</style>
+
 </html>
-
-

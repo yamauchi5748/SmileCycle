@@ -44,6 +44,7 @@ RUN set -xe; \
     groupadd -g ${PGID} laradock && \
     useradd -u ${PUID} -g laradock -m laradock -G docker_env && \
     usermod -p "*" laradock -s /bin/bash && \
+    apt-get install -y supervisor && \
     apt-get install -yqq \
       apt-utils \
       #

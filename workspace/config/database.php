@@ -42,6 +42,13 @@ return [
             'port' => env('DB_PORT', 27017),
             'database' => env('DB_DATABASE', 'SmileCycle'),
         ],
+        
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => '{default}',
+            'retry_after' => 90,
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -130,8 +137,7 @@ return [
         'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
-            'cluster' => env('REDIS_CLUSTER', 'predis'),
-            'prefix' => Str::slug(env('APP_NAME', 'laravel'), '_').'_database_',
+            'cluster' => env('REDIS_CLUSTER', 'predis')
         ],
 
         'default' => [

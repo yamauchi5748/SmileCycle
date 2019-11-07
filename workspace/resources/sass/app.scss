@@ -1,5 +1,7 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import "reset";
+@import "default";
+@import "layout";
 
-// Variables
-@import 'variables';
+@import "template";
+@import "template_controls";
+@import "template_chats";

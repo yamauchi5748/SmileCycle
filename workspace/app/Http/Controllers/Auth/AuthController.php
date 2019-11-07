@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 class AuthController extends Controller
 {
     /* 認証ユーザーを保持 */
-    protected $auther;
+    protected $author;
 
     /* レスポンスの枠組み変数 */
     protected $response = [
@@ -23,7 +23,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->auther= Auth::guard('api')->user();
+        $this->author = Auth::guard('api')->user();
         $this->middleware('auth:api');
     }
 }

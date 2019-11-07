@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Requests\CompanyGet;
+use App\Models\Company;
 
 class CompanyController extends AuthController
 {
@@ -14,7 +16,29 @@ class CompanyController extends AuthController
      */
     public function index()
     {
-        return [ "response" => "return companies.index"];
+        /** 会社情報を返す **/
+        $companies = Company::raw()->aggregate([
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        if($companies){
+            $this->response['companies'] = $companies;
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -34,9 +58,54 @@ class CompanyController extends AuthController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($company_id)
+    public function show(CompanyGet $request, $company_id)
     {
-        return [ "response" => "return companies.show"];
+        /** 会社情報を返す **/
+        $company_corsor = Company::raw()->aggregate([
+            [
+                '$match' => [
+                    '_id' => $company_id
+                ]
+            ],
+            [
+                '$lookup' => [
+                    'from' => 'members',
+                    'let' => [
+                        'members' => '$members'
+                    ],
+                    'pipeline' => [
+                        [
+                            '$match' => [
+                                '$expr' => [
+                                    '$in' => ['$_id', '$$members']
+                                ]
+                            ]
+                        ],
+                        [
+                            '$project' => [
+                                '_id' => 1,
+                                'name' => 1
+                            ]
+                        ]
+                    ],
+                    'as' => 'members'
+                ]
+            ]
+        ])->toArray();
+        
+        /* 返すレスポンスデータを整形 */
+        if(head($company_corsor)){
+            $this->response['company'] = head($company_corsor);
+        }else{
+            $this->response['result'] = false;
+        }
+        
+        return response()->json(
+            $this->response,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

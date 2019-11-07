@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\AuthenticationException;
 
 class AdminAuthority
 {
@@ -17,13 +18,12 @@ class AdminAuthority
     public function handle($request, Closure $next)
     {
         /* 認証された会員を取得 */
-        $auther =  Auth::guard('api')->user();
-
+        $author =  Auth::guard('api')->user();
 
         /* 認証された会員が管理者かチェック */
-        if(!$auther['is_admin'])
-        {
-            abort(403);
+        if (!$author['is_admin']) {
+            
+            throw new AuthenticationException('管理者認証エラー');
         }
 
         return $next($request);
