@@ -4,7 +4,7 @@ stages:
 deploy:
   stage: develop
   script:
-  - if [ $CI_COMMIT_REF_NAME = 'master' ]; then
+  - if [ $CI_COMMIT_REF_NAME = 'develop' ]; then
   - rm -Rf ~/testdeploy/
   - mkdir ~/testdeploy/
   - cd ~/testdeploy/
@@ -14,12 +14,12 @@ deploy:
   - mkdir site
   - git clone --mirror git@gitlab.com:kbc-itw/smile-cycle ./repository
   - cd ./repository
-  - git --work-tree=../site/ checkout -f master
+  - git --work-tree=../site/ checkout -f develop
   - cd ../site/
   - rsync -rlOzv --delete --checksum ./ /home/kbcadminstudent/
   - cd /home/kbcadminstudent/
   - else
-  - echo 'master以外なので何もしない'
+  - echo 'developr以外なので何もしない'
   - fi
   tags:
   - testdeploy
