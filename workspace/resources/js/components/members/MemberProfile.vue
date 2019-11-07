@@ -5,7 +5,7 @@
             <Button
                class = "button"
                name="チャット画面"
-                onclick="history.back()"
+               nextpage="history.back()"
              />
             </div>
               <p class="member_user_icon">
@@ -18,7 +18,7 @@
               <label>ふりがな</label>
               <p class="profiledata">{{member.ruby}}</p>
               <label>部門</label>
-              <p class="profiledata">{{member.department}}</p>
+              <p class="profiledata">{{member.department_name}}</p>
               <label>会社</label>
               <p class="profiledata">{{member.company}}</p>
               <label>役職</label>
@@ -40,19 +40,19 @@ export default {
    data() {
        return{
            keyword: '',
-            member: [],
+           member: {}
       }
   },
     created: function() {
         this.$root
             .getMember(this.$route.params.id)
-            .then(function(res) {
+            .then(function(response) {
                 this.member = response.data.member;
             })
             .catch(function(error) {
                 console.error(error);
             });
-    },
+    }
 }
 
 </script>
