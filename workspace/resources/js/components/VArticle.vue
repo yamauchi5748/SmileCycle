@@ -1,28 +1,17 @@
 <template>
     <article class="p-post">
-        <div class="p-post-informations">
-            <h2 class="p-post-title" @click="goTo">{{post.title}}</h2>
-            <time class="p-created">{{post.created_at}}</time>
-            <span class="p-profile" v-if="post.post_member_id">
-                <figure class="p-profile-image-wrapper">
-                    <img class="p-profile-image" :src="'/img/profile_image.jpg'" />
-                </figure>
-                <span class="p-name">{{post.post_member_name}}</span>
-            </span>
+        <div class="p-post-header">
+            <v-img
+                v-if="post.post_member_id"
+                class="p-profile-image"
+                :src="'/img/profile_image.jpg'"
+            />
+            <div class="p-post-header-right">
+                <h2 class="p-post-title" @click="goTo">{{post.title}}</h2>
+                <span v-if="post.post_member_id" class="p-profile-name">{{post.post_member_name}}</span>
+            </div>
         </div>
-        <ul v-if="existImages" class="p-post-images" ref="images">
-            <li
-                class="p-post-image-wrapper"
-                v-for="(image_id,index) in post.images"
-                :class="{active: slider_point == index}"
-                @click="previewImage(index)"
-                :key="index"
-            >
-                <span class="p-post-image" :style="{'background-image':'url('+adjustURL(image_id)+')'}">
-
-                </span>
-            </li>
-        </ul>
+        <v-carousel class="p-slider" v-if="existImages" :slides="post.images"></v-carousel>
         <div class="p-text-wrapper">
             <p
                 ref="text"
@@ -31,10 +20,13 @@
             >{{post.text}}</p>
             <button class="p-read-more" :class="{active:isTextOver}" @click="openText">続きを読む</button>
         </div>
+        <time class="p-created-at">{{post.created_at}}</time>
     </article>
 </template>
 
 <script>
+import VImg from "./VImg";
+import VCarousel from "./VCarousel";
 export default {
     props: {
         post: Object,
@@ -46,8 +38,6 @@ export default {
     },
     data: function() {
         return {
-            image_width: 600,
-            slider_point: 0,
             isTextOver: this.readmore,
             isReadMore: this.readmore
         };
@@ -63,10 +53,6 @@ export default {
         }
     },
     methods: {
-        //index番目の画像が大きく表示される
-        previewImage: function(index) {
-            this.slider_point = index;
-        },
         goTo() {
             if (!this.to) {
                 return;
@@ -89,6 +75,10 @@ export default {
             }
             return "/invitations/" + this.post._id + "/images/" + image_id;
         }
+    },
+    components: {
+        VImg,
+        VCarousel
     }
 };
 </script>
@@ -96,87 +86,52 @@ export default {
 <style lang="scss" scoped>
 $border-value: solid 1px $gray;
 .p-post {
-    width: 600px;
-    border-radius: 8px;
+    max-width: 100%;
     border: $border-value;
-    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
-        0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
 }
-.p-post-informations {
+.p-post-header {
     display: flex;
-    flex-direction: column;
-    .p-post-title {
-        padding: 0 16px;
-        padding-top: 16px;
-        font-size: 21px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .p-created {
-        font-size: 14px;
-        color: gray;
-        margin-right: 16px;
-        margin-bottom: 8px;
-        margin-left: auto;
-    }
-    .p-profile {
-        display: inline-flex;
-        padding: 8px 16px;
-        font-size: 16px;
-        align-items: center;
-        border-top: $border-value;
-        border-bottom: $border-value;
-        .p-profile-image {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-        }
-        .p-name {
-            margin-left: 16px;
-        }
-    }
-}
-.p-post-images {
-    display: flex;
-    width: 600px;
-    height: 400px;
-    flex-wrap: wrap;
-    justify-content: center;
-    transition-duration: 0.5s;
-    .p-post-image-wrapper {
+    height: 72px;
+    border-bottom: $border-value;
+    &-right {
         display: flex;
-        flex-shrink: 0;
-        flex-grow: 0;
-        width: 40px;
-        height: 40px;
-        margin-bottom: -80px;
-        & + .p-post-image-wrapper:not(.active) {
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+        &:only-child {
             margin-left: 16px;
-            cursor: pointer;
-        }
-        //拡大表示されているときのクラス
-        &.active {
-            width: 100%;
-            height: 400px;
-            order: -1;
-            z-index: -1;
         }
     }
-    .p-post-image {
-        display: block;
-        width: 100%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        background-color: $gray;
-    }
+}
+.p-profile-image {
+    display: block;
+    margin: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.p-profile-name {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    color: #00000099;
+}
+.p-post-title {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000de;
+}
+.p-slider {
+    border-bottom: $border-value;
 }
 .p-text-wrapper {
     position: relative;
-    margin: 16px 24px;
+    margin: 0 16px;
     .p-text {
+        font-size: 14px;
+        color: #00000099;
         max-height: 10rem;
         line-height: 2rem;
         overflow-y: hidden;
@@ -206,7 +161,6 @@ $border-value: solid 1px $gray;
         margin: 0 auto;
         padding: 6px 12px;
         font-size: 14px;
-        font-weight: 500;
         border-radius: 20px;
         box-shadow: 0 0 5px rgba(28, 28, 29, 0.65);
         background-color: $base-color;
@@ -215,5 +169,12 @@ $border-value: solid 1px $gray;
             display: inline-block;
         }
     }
+}
+.p-created-at {
+    display: flex;
+    margin: 0 16px 16px auto;
+    font-size: 11px;
+    color: #00000099;
+    justify-content: flex-end;
 }
 </style>

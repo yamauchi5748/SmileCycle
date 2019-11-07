@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view">
+    <section class="view controls-primary-view" v-loaded="is_loaded">
         <div class="layout-flex --align-items-center margin-bottom-big">
             <h2 class="item-count">{{$root.forum_list.length}}記事</h2>
         </div>
@@ -15,8 +15,16 @@
 <script>
 import VArticle from "../VArticle.vue";
 export default {
+    data:function(){
+        return {
+            is_loaded:false
+        }
+    },
     created: function() {
-        this.$root.loadForums()
+        const self = this;
+        this.$root.loadForums().then(function(){
+            self.is_loaded = true;
+        })
     },
     components: {
         VArticle
