@@ -4,7 +4,7 @@ stages:
 deploy:
   stage: develop
   script:
-  - if [ $CI_COMMIT_REF_NAME = 'develop' ]; then
+  - if [ $CI_COMMIT_REF_NAME = 'master' ]; then
   - rm -Rf ~/testdeploy/
   - mkdir ~/testdeploy/
   - cd ~/testdeploy/
@@ -25,3 +25,30 @@ deploy:
   - testdeploy
 
 
+
+
+stages:
+- master
+
+deploy:
+  stage: master
+  script:
+  - if [ $CI_COMMIT_REF_NAME = 'master' ]; then
+  - rm -Rf ~/testdeploy/
+  - mkdir ~/testdeploy/
+  - cd ~/testdeploy/
+  - rm -Rf repository/
+  - rm -Rf site/
+  - mkdir repository
+  - mkdir site
+  - git clone --mirror git@gitlab.com:GitLabのURL ./repository
+  - cd ./repository
+  - git --work-tree=../site/ checkout -f master
+  - cd ../site/
+  - rsync -rlOzv --delete --checksum ./ /var/www/html/
+  - cd /var/www/html/
+  - else
+  - echo 'master以外なので何もしない'
+  - fi
+  tags:
+  - testdeploy
