@@ -132,4 +132,25 @@ export default {
   top: 20px;
   right: 20px;
 }
+
+@media screen and(max-width: 414px) {
+  .p-modal-content {
+    width: calc(100% - 20px);
+    height: 100%;
+    min-height: unset;
+    position: relative;
+  }
+
+  .p-modal-title {
+    display: none;
+  }
+
+  .p-list-box {
+    height: 255px;
+  }
+
+  .p-esc-btn {
+    top: -10px;
+  }
+}
 </style>
