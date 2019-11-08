@@ -65,8 +65,11 @@ class MemberController extends AdminAuthController
             ];
         }
 
+        // 画像のパス名をランダムに取得
+        $path_name = Arr::random(['profile', 'profile_purple', 'profile_blue', 'profile_green']);
+
         // 会員のプロフィール画像をストレージに保存
-        Storage::copy('images/boy_3.png', 'private/images/profile_images/' . $member['_id'] . '.png');
+        Storage::copy('images/' . $path_name . '.png', 'private/images/profile_images/' . $member['_id'] . '.png');
 
         /** 会社の会員情報を更新 **/
         Company::raw()->updateOne(

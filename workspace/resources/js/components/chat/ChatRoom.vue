@@ -43,6 +43,7 @@
           @blur="outputFocus"
           @input="change"
           @drop.native.stop
+          @keydown.ctrl.enter="sendText"
         >{{ placeholder }}</p>
       </div>
       <div class="p-room-send__wrapper layout-flex">
@@ -204,6 +205,7 @@ export default {
         message: this.$refs.message.innerText
       };
       /* 初期化 */
+      this.$refs.message.blur();
       this.$refs.message.innerText = this.placeholder;
       this.is_none_text = true;
       this.is_hurry = false;
