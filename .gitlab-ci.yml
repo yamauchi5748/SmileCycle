@@ -21,7 +21,11 @@ deploy:
   - else
   - echo 'エラーです'
   - fi
-  tags:
-  - testdeploy
-   only:
-  - merge_requests
+   tags:
+      - testdeploy
+  only:
+    refs:
+      - merge_requests
+  variables:
+      - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+
