@@ -1,7 +1,8 @@
 <template>
-    <secondary-view>
+    <secondary-view v-loaded="is_loaded">
         <template #title>会のご案内詳細</template>
         <template #body>
+            {{is_loaded}}
             <div class="input-wrapper">
                 <v-input v-model="property.title" counter :max="25">タイトル</v-input>
             </div>
@@ -36,6 +37,20 @@ import VInputDate from "../VInputDate.vue";
 import VInputMultipleImages from "../VInputMultipleImages.vue";
 import VSelectMembers from "../VSelectMembers.vue";
 export default {
+    data: function() {
+        return {
+            is_loaded:false,
+            edit_images: [],
+            edit_attend_members: [],
+            property: {
+                title: "",
+                text: "",
+                images: [],
+                deadline_at: "",
+                attend_members: []
+            }
+        };
+    },
     created: function() {
         const self = this;
         this.$root
@@ -55,20 +70,8 @@ export default {
                         return member._id;
                     }
                 );
+                self.is_loaded = true;
             });
-    },
-    data: function() {
-        return {
-            edit_images: [],
-            edit_attend_members: [],
-            property: {
-                title: "",
-                text: "",
-                images: [],
-                deadline_at: "",
-                attend_members: []
-            }
-        };
     },
     methods: {
         handleSubmitButtonClick: function() {

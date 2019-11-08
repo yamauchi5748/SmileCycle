@@ -45,8 +45,12 @@
           </div>
           <span
             class="p-room-contents__read margin-bottom-small"
-            v-if="content.already_read >= 0"
+            v-if="content.already_read >= 0 && is_group"
           >既読{{ content.already_read }}</span>
+          <span
+            class="p-room-contents__read margin-bottom-small"
+            v-if="content.already_read >= 1 && !is_group"
+          >既読</span>
         </div>
       </div>
     </li>
@@ -56,7 +60,8 @@
 export default {
   props: {
     contents: Array,
-    room_id: String
+    room_id: String,
+    is_group: Boolean
   }
 };
 </script>
@@ -79,12 +84,13 @@ export default {
   }
 
   &__signature-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
+    white-space: pre;
   }
 
   &__signature-date {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   &__wrapper {
@@ -120,13 +126,10 @@ export default {
       word-wrap: break-word;
       max-width: 200px;
     }
-
-    &--image {
-    }
   }
 
   &__text {
-    font-size: 16px;
+    font-size: 18px;
     color: black;
     white-space: pre-wrap;
     word-break: break-all;
@@ -139,7 +142,7 @@ export default {
   }
 
   &__read {
-    font-size: 13px;
+    font-size: 15px;
     white-space: nowrap;
   }
 }

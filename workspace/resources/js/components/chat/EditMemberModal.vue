@@ -165,9 +165,6 @@ export default {
 
 .p-dialog-msg-box {
   padding-right: 10px;
-  display: grid;
-  grid-template-rows: 40px 1fr;
-  justify-content: center;
   font-weight: bold;
   overflow-y: auto;
   .p-dialog-msg-title {
@@ -185,5 +182,22 @@ export default {
 
 .p-esc-btn {
   margin: 0 0 0 auto;
+}
+
+@media screen and(max-width: 414px) {
+  .p-modal-content {
+    width: calc(100% - 20px);
+    height: 100%;
+    min-height: unset;
+    position: relative;
+  }
+
+  .p-list {
+    height: 255px;
+  }
+
+  .p-esc-btn {
+    top: -10px;
+  }
 }
 </style>

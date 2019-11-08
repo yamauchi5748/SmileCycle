@@ -1,5 +1,5 @@
 <template>
-    <section class="view controls-primary-view" v-loaded.shadow="isLoaded">
+    <section class="view controls-primary-view" v-loaded="isLoaded">
         <div class="layout-flex --align-items-center">
             <h2 class="item-count">{{ this.$root.stamp_group_list.length }}種</h2>
             <router-link
@@ -10,13 +10,14 @@
         <ul class="p-stamp-tab-list">
             <li v-for="(stamp_group,index) in this.$root.stamp_group_list" :key="index">
                 <router-link :to="stamp_group._id" append>
-                    <img class="p-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" />
+                    <v-img class="p-stamp" :src="'/stamp-images/' + stamp_group.tab_image_id" />
                 </router-link>
             </li>
         </ul>
     </section>
 </template>
 <script>
+import VImg from "../VImg.vue";
 export default {
     data: function() {
         return {
@@ -28,6 +29,9 @@ export default {
         this.$root.loadAdminStampGroups().then(function() {
             self.isLoaded = true;
         });
+    },
+    components: {
+        VImg
     }
 };
 </script>

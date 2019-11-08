@@ -1,15 +1,11 @@
 <template>
     <div class="p-page">
-        <the-global-header class="p-header"></the-global-header>
+        <the-global-header class="p-header">
+            
+        </the-global-header>
         <main class="p-content">
             <router-view></router-view>
             <!-- テストログイン要素 -->
-            <input
-                type="button"
-                value="logout"
-                @click="logout"
-                style="position: absolute; top: 2%; left: 50%;"
-            />
         </main>
     </div>
 </template>
@@ -26,19 +22,6 @@ export default {
         this.$root.connectPrivate('member.' + this.author._id);
     },
     /* テスト用ログインメソッド */
-    methods: {
-        logout: function() {
-            axios
-                .post("/logout")
-                .then(res => {
-                    console.log(res.data);
-                    location.href = "/";
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
-    },
     components: {
         TheGlobalHeader
     }
@@ -51,6 +34,7 @@ export default {
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
+    overflow-y: hidden;
 }
 .p-content {
     height: 100%;
