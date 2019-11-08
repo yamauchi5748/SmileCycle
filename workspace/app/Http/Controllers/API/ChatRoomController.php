@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\Http\Requests\ChatRoomPost;
 use App\Http\Requests\ChatRoomPut;
 use App\Http\Requests\ChatRoomDelete;
