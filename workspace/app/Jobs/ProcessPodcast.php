@@ -28,7 +28,7 @@ class ProcessPodcast implements ShouldQueue
             'f_name'  => env('MAIL_FROM_NAME'),
             'to'      => $to_member['mail'],
             'to_name' => $to_member['name'],
-            'subject' => 'テストメールです'
+            'subject' => $to_member['name'] . '様宛にチャットが届きました！'
         ];
 
         /**
@@ -36,7 +36,7 @@ class ProcessPodcast implements ShouldQueue
          **/
 
         /* メール本文を表示するbladeを設定 */
-        $this->view = 'contact.mail';
+        $this->view = 'mail.chat';
 
         /**
          * bladeで扱うデータを記述
@@ -46,7 +46,8 @@ class ProcessPodcast implements ShouldQueue
          **/
         $this->data = [
             'room_name' => $room['group_name'],
-            'sender_name' => $chat['sender_name']
+            'sender_name' => $chat['sender_name'],
+            'to_name' => $to_member['name']
         ];
     }
 
