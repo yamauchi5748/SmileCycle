@@ -23,3 +23,5 @@ deploy:
   - fi
   tags:
   - testdeploy
+   only:
+  - merge_requests
