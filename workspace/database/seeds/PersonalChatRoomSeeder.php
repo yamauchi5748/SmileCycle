@@ -48,7 +48,7 @@ class PersonalChatRoomSeeder extends Seeder
                 ];
 
                 // 画像のパス名をランダムに取得
-                $path_name = $faker->randomElement(['boy_1', 'boy_2', 'boy_3']);
+                $path_name = $faker->randomElement(['chat', 'chat_purple', 'chat_blue', 'chat_green']);
 
                 // チャットグループのアイコン画像をストレージに保存
                 Storage::putFileAs('private/images/chats', new File('storage/app/images/' . $path_name . '.png'), $chat_group['_id'] . '.png', 'private');

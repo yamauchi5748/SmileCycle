@@ -257,7 +257,6 @@ export default {
     },
 
     change: function() {
-      console.log(this.$refs.message.innerText);
       this.is_none_text = this.$refs.message.innerText === "";
     },
 

@@ -237,8 +237,11 @@ class ChatRoomController extends AuthController
         ])->toArray();
         $chat_group['members'] = $members;
 
+        // 画像のパス名をランダムに取得
+        $path_name = Arr::random(['chat', 'chat_purple', 'chat_blue', 'chat_green']);
+
         // チャットグループのアイコン画像をストレージに保存
-        Storage::copy('images/boy_3.png', 'private/images/chats/' . $chat_group['_id'] . '.png');
+        Storage::copy('images/' . $path_name . '.png', 'private/images/chats/' . $chat_group['_id'] . '.png');
 
         /* DBにモデル登録 */
         ChatRoom::raw()->insertOne($chat_group);
