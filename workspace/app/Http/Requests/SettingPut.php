@@ -48,13 +48,9 @@ class SettingPut extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['data']    = [
-            'auth' => true,
-            'result' => false
-        ];
-        $response['status']  = 'NG';
-        $response['summary'] = 'Failed validation.';
-        $response['errors']  = $validator->errors()->toArray();
+        $response['auth'] = true;
+        $response['result'] = false;
+        $response['message'] = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)

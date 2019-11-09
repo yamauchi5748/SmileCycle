@@ -28,7 +28,7 @@ class ForumCommentPost extends FormRequest
     {
         return [
             'comment_type' => ['required', Rule::in(['1', '2'])],
-            'text' => ['string', 'required_if:comment_type,1', 'min:1', 'max:200'],
+            'text' => ['string', 'required_if:comment_type,1', 'between:1,200'],
             'stamp_id' => ['uuid', 'required_if:comment_type,2', 'exists:stamp_groups,stamps'],
         ];
     }
@@ -47,13 +47,9 @@ class ForumCommentPost extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['data']    = [
-            'auth' => true,
-            'result' => false
-        ];
-        $response['status']  = 'NG';
-        $response['summary'] = 'Failed validation.';
-        $response['errors']  = $validator->errors()->toArray();
+        $response['auth'] = true;
+        $response['result'] = false;
+        $response['message'] = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)

@@ -16,7 +16,7 @@ class TestSeeder extends Seeder
         // _id, name, ruby, post, mail, api_token, password, telephone_number, secretary, stamp_groups, department_name, is_notification, notification_interval, is_admin, invitations
         $members = [
             ['83b5603f-8436-4c93-189e-8387c15f823f', '橋本環奈', 'はしもとかんな', '女優', 'hashikann@discovery-n.co.jp', 'EgGvxAr4Wm97jGg1VNitMGj5JFovqhTZEDSIssnmkiFF6Sp0anJ5v07nLeHQ', '$2y$10$MPEgFZgwoRLZ3idAD4Oo9uSO2kGWl33o4QOvVIPU5Cu8z2TXQBMvS'/* 19990203 */, '080-0000-0000', [], [], '東京笑門会', true, '1h', false, []],
-            ['a08999b6-c1ff-a0e7-81cb-d04e2466b61d', '井手上漠', 'いでがみばく', 'モデル', 'baaaakuuuu@discovery-n.co.jp', 'uq5VaRjvWwAZ1yx8KiB4vdfdD31QXuVrMBpySn3XajnuzMkkhAKfD49WEBQp', '$2y$10$Pgtc5Lh7D6esT9NLzonfx.xuf1UXl8XWbFAF91NuRa6kwaQN7Olfe'/* 20030120 */, '080-0000-0001', [], [], '東京笑門会', false, '5h', false, []]
+            ['a08999b6-c1ff-a0e7-81cb-d04e2466b61d', '井手上漠', 'いでがみばく', 'モデル', 'baaaakuuuu@discovery-n.co.jp', 'uq5VaRjvWwAZ1yx8KiB4vdfdD31QXuVrMBpySn3XajnuzMkkhAKfD49WEBQp', '$2y$10$Pgtc5Lh7D6esT9NLzonfx.xuf1UXl8XWbFAF91NuRa6kwaQN7Olfe'/* 20030120 */, '080-0000-0001', ['name' => '井手上秘書男', 'mail' => 'bakuhisyo@discovery-n.co.jp'], [], '東京笑門会', false, '5h', false, []]
         ];
 
         // _id, name, address, telephone_number, members
