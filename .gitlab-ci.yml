@@ -1,9 +1,9 @@
 stages:
 - develop
+- master
 
 deploy:
-  stage:
-    - develop
+  stage: develop
   script:
   - if [ $CI_COMMIT_REF_NAME = 'develop' ]; then
   - rm -Rf ~/testdeploy/
@@ -13,15 +13,14 @@ deploy:
   - rm -Rf site/
   - mkdir repository
   - mkdir site
-  - git clone --mirror git@gitlab.com:kbc-itw/smile-cycle ./repository
+  - git clone --mirror git@gitlab.com:GitLabのURL ./repository
   - cd ./repository
   - git --work-tree=../site/ checkout -f develop
   - cd ../site/
-  - rsync -rlOzv --delete --checksum ./ /home/kbcadminstudent/
-  - cd /home/kbcadminstudent/
+  - rsync -rlOzv --delete --checksum ./ /var/www/html/
+  - cd /var/www/html/
   - else
-  - echo 'エラーです'
+  - echo 'develop以外なので何もしない'
   - fi
-   tags:
+  tags:
   - testdeploy
-
