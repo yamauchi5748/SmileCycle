@@ -14,12 +14,12 @@ deploy:
   - rm -Rf site/
   - mkdir repository
   - mkdir site
-  - git clone --mirror git@gitlab.com:GitLabのURL ./repository
+  - git clone --mirror git@gitlab.com:https://gitlab.com/kbc-itw/smile-cycle/ ./repository
   - cd ./repository
   - git --work-tree=../site/ checkout -f develop
   - cd ../site/
-  - rsync -rlOzv --delete --checksum ./ /home/kbcadminstudent/
-  - cd /home/kbcadminstudent/
+  - rsync -rlOzv --delete --checksum ./ /home/src
+  - cd /home/src
   - else
   - echo 'develop以外なので何もしない'
   - fi
