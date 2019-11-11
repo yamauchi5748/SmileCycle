@@ -2,9 +2,8 @@ stages:
 - develop
 
 deploy:
-  stage: develop
-   tags:
-      - testdeploy
+  stage:
+    - develop
   script:
   - if [ $CI_COMMIT_REF_NAME = 'develop' ]; then
   - rm -Rf ~/testdeploy/
@@ -23,9 +22,6 @@ deploy:
   - else
   - echo 'エラーです'
   - fi
-  only:
-    refs:
-      - merge_requests
-  variables:
-      - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+   tags:
+  - testdeploy
 
