@@ -5,6 +5,7 @@ stages:
 deploy:
   stage: develop
   script:
+  - whoami
   - if [ $CI_COMMIT_REF_NAME = 'develop' ]; then
   - rm -Rf ~/testdeploy/
   - mkdir ~/testdeploy/
