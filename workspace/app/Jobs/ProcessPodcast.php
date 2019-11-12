@@ -23,12 +23,14 @@ class ProcessPodcast implements ShouldQueue
  
     public function __construct($room, $chat, $to_member)
     {
+        $name = $room['is_group'] ?  $room['group_name'] . 'グループ' : $to_member['name'] . '様宛';
+        
         $this->mail = [
             'from'    => env('MAIL_FROM_ADDRESS'),
             'f_name'  => env('MAIL_FROM_NAME'),
             'to'      => $to_member['mail'],
             'to_name' => $to_member['name'],
-            'subject' => $to_member['name'] . '様宛にチャットが届きました！'
+            'subject' => $name . 'にチャットが届きました！'
         ];
 
         /**
@@ -45,9 +47,7 @@ class ProcessPodcast implements ShouldQueue
          *
          **/
         $this->data = [
-            'room_name' => $room['group_name'],
-            'sender_name' => $chat['sender_name'],
-            'to_name' => $to_member['name']
+            'name' => $name
         ];
     }
 
