@@ -15,7 +15,7 @@ use App\Models\Member;
 use App\Models\ChatRoom;
 use App\Events\ChatRecieved;
 use App\Events\AlreadyRead;
-use App\jobs\ProcessPodcast;
+use App\Jobs\ProcessPodcast;
 
 class ChatRoomContentController extends AuthController
 {
