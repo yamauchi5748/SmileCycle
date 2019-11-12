@@ -223,11 +223,6 @@ LARAVEL_ECHO_SERVER_PORT=6001
 MAILHOG_PORT=1025
 MAILHOG_SUBMISSIION_PORT=8025
 
-### POSTFIX ################################################
-POSTFIX_PORT=25
-POSTFIX_SUBMISSIION_PORT=587
-POSTFIX_SMTPS_PORT=465
-
 ### BLACKFIRE #############################################
 
 # Create an account on blackfire.io. Don't enable blackfire and xDebug at the same time. # visit https://blackfire.io/docs/24-days/06-installation#install-probe-debian for more info.
