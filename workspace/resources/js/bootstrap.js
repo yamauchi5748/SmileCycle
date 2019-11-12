@@ -36,7 +36,7 @@ if (token) {
 
  window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: 'http://localhost:6001',
+    host: 'http://yamauchi.eyebook-test.info:6001',
     auth: {
         headers: {
             'Authorization' : 'Bearer ' + api_token.content,
