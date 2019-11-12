@@ -4,11 +4,11 @@ cd laradock
 
 # 保存されたローカルの画像を削除
 cd ../workspace/storage/app/private
-rm .\images
-rm .\videos
+rm -rf .\images
+rm -rf .\videos
 cd ../public
-rm .\images
-rm .\videos
+rm -rf .\images
+rm -rf .\videos
 
 # 各コンテナを停止
 cd ../../../../laradock
