@@ -43,6 +43,7 @@
           @blur="outputFocus"
           @input="change"
           @drop.native.stop
+          @keydown.ctrl.enter="sendText"
         >{{ placeholder }}</p>
       </div>
       <div class="p-room-send__wrapper layout-flex">
@@ -204,6 +205,7 @@ export default {
         message: this.$refs.message.innerText
       };
       /* 初期化 */
+      this.$refs.message.blur();
       this.$refs.message.innerText = this.placeholder;
       this.is_none_text = true;
       this.is_hurry = false;
@@ -257,7 +259,6 @@ export default {
     },
 
     change: function() {
-      console.log(this.$refs.message.innerText);
       this.is_none_text = this.$refs.message.innerText === "";
     },
 
@@ -458,6 +459,7 @@ export default {
       $width: 30px;
 
       & {
+        position: relative;
         flex-direction: column;
         padding: 0;
       }
@@ -475,8 +477,12 @@ export default {
         padding: 10px;
       }
 
+      &__wrapper {
+        position: static;
+      }
+
       &__img-btn {
-        right: calc(100vw - 40px);
+        left: 10px;
       }
 
       &__img-icon {
@@ -485,7 +491,7 @@ export default {
       }
 
       &__stamp-btn {
-        right: calc(100vw - 80px);
+        left: 50px;
       }
 
       &__stamp-icon {
@@ -496,13 +502,13 @@ export default {
       &__hurry-btn {
         height: 36px;
         min-width: unset;
-        margin: 3px;
+        margin: 0 10px 5px 0;
       }
 
       &__submit-btn {
         height: 36px;
         min-width: unset;
-        margin: 3px;
+        margin: 0 10px 5px 0;
       }
     }
   }
@@ -547,13 +553,3 @@ export default {
   color: rgb(194, 194, 194);
 }
 </style>
-
-
-
-
-
-
-
-
-
-

@@ -9,11 +9,13 @@ use App\Http\Requests\MemberDelete;
 use App\Http\Controllers\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\Models\Member;
 use App\Models\Company;
 use App\Models\ChatRoom;
+use App\Models\StampGroup;
+use Carbon\Carbon;
 
 class MemberController extends AdminAuthController
 {
@@ -63,11 +65,11 @@ class MemberController extends AdminAuthController
             ];
         }
 
+        // 画像のパス名をランダムに取得
+        $path_name = Arr::random(['profile', 'profile_purple', 'profile_blue', 'profile_green']);
+
         // 会員のプロフィール画像をストレージに保存
-        Storage::copy('images/boy_3.png', 'private/images/profile_images/' . $member['_id'] . '.png');
-        
-        /* 会員モデルをDBに登録 */
-        Member::raw()->insertOne($member);
+        Storage::copy('images/' . $path_name . '.png', 'private/images/profile_images/' . $member['_id'] . '.png');
 
         /** 会社の会員情報を更新 **/
         Company::raw()->updateOne(
@@ -85,7 +87,7 @@ class MemberController extends AdminAuthController
         ChatRoom::raw()->updateOne(
             [
                 'group_name' => $request->department_name,
-                'is_department' => true,
+                'is_department' => 1,
             ],
             [
                 '$push' => [
@@ -96,6 +98,73 @@ class MemberController extends AdminAuthController
                 ]
             ]
         );
+
+        /** 各会員とのチャットルーム作成 **/
+        $chat_members = Member::raw()->aggregate([
+            [
+                '$project' => [
+                    '_id' => 1,
+                    'name' => 1
+                ]
+            ]
+        ])->toArray();
+
+        foreach ($chat_members as $chat_member) {
+            /** チャットグループ作成 **/
+            // モデル作成
+            $chat_group = [
+                '_id' => (string) Str::uuid(),
+                'is_group' => 0,
+                'is_department' => 0,
+                'admin_member_id' => $member['_id'],
+                'group_name' => '',
+                'members' => [
+                    [
+                        '_id' => $member['_id'],
+                        'name' => $member['name'],
+                    ],
+                    [
+                        '_id' => $chat_member['_id'],
+                        'name' => $chat_member['name'],
+                    ]
+                ],
+                'contents' => [],
+                'created_at' => (string) Carbon::now('Asia/Tokyo')
+            ];
+            
+            /* チャットグループモデルをDBに登録 */
+            ChatRoom::raw()->insertOne($chat_group);
+        }
+
+        /** スタンプグループの追加処理 **/
+        StampGroup::raw()->updateMany(
+            // スタンプグループを指定
+            [
+                'is_all' => true
+            ],
+            [
+                '$push' => [
+                    // 会員を追加
+                    'members' => $member['_id']
+                ]
+            ]
+        );
+
+        $member['stamp_groups'][] = StampGroup::raw()->aggregate([
+            [
+                '$match' => [
+                    'is_all' => true
+                ]
+            ],
+            [
+                '$project' => [
+                    '_id' => 1
+                ]
+            ]
+        ])->toArray();
+
+        /* 会員モデルをDBに登録 */
+        Member::raw()->insertOne($member);
 
         /* 会員が作成できたかチェック */
         $return_member = $this->getMember($member['_id']);

@@ -39,7 +39,9 @@ export default {
   },
 
   mounted: function() {
-    this.img_url = "/chat-rooms/" + this.room._id + "/profile-image";
+    this.img_url = this.room.is_group
+      ? "/chat-rooms/" + this.room._id + "/profile-image"
+      : "/members/" + this.room.members[1]._id + "/profile-image";
   },
 
   computed: {
@@ -52,10 +54,16 @@ export default {
   watch: {
     room: {
       handler: function(val, oldVal) {
-        this.img_url = "/chat-rooms/" + this.room._id + "/profile-image";
+        this.img_url = this.room.is_group
+          ? "/chat-rooms/" + this.room._id + "/profile-image"
+          : "/members/" + this.room.members[1]._id + "/profile-image";
         if (val._id === oldVal._id) {
-          this.img_url =
-            "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random();
+          this.img_url = this.room.is_group
+            ? "/chat-rooms/" + this.room._id + "/profile-image?" + Math.random()
+            : "/members/" +
+              this.room.members[1]._id +
+              "/profile-image?" +
+              Math.random();
         }
       },
       deep: true
