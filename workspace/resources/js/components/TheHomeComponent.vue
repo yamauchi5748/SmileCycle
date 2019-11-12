@@ -20,6 +20,7 @@ export default {
         console.log("Component mounted.");
         this.$root.author = this.author;
         this.$root.connectPrivate('member.' + this.author._id);
+        location.href = "/chat-rooms";
     },
     /* テスト用ログインメソッド */
     components: {
