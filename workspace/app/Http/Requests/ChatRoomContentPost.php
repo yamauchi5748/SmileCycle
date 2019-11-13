@@ -48,7 +48,7 @@ class ChatRoomContentPost extends FormRequest
             'chat_room_id' => ['required', 'uuid', 'exists:chat_rooms,_id'],
             'is_hurry' => ['required', 'boolean'],
             'content_type' => ['required', Rule::in(['1', '2', '3', '4'])],
-            'message' => ['required_if:content_type,1', 'string', 'max:500', 'min:1'],
+            'message' => ['required_if:content_type,1', 'string', 'between:1,500'],
             'stamp_id' => ['required_if:content_type,2', 'uuid', 'exists:stamp_groups,stamps'],
             'image' => ['required_if:content_type,3', 'image', 'mimes:jpeg,png,jpg,gif'],
             'video' => ['required_if:content_type,4', 'mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime']
@@ -69,13 +69,9 @@ class ChatRoomContentPost extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['data']    = [
-            'auth' => true,
-            'result' => false
-        ];
-        $response['status']  = 'NG';
-        $response['summary'] = 'Failed validation.';
-        $response['errors']  = $validator->errors()->toArray();
+        $response['auth'] = true;
+        $response['result'] = false;
+        $response['message'] = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)

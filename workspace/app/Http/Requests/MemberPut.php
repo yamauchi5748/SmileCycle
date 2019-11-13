@@ -41,14 +41,14 @@ class MemberPut extends FormRequest
         $member = Member::where('_id', $this->member)->first();
         return [
             'member_id' => ['required' ,'uuid', 'exists:members,_id'],
-            'name' => ['required' ,'string', 'max:15', 'min:2', Rule::unique('members')->ignore($member)],
-            'ruby' => ['required' ,'string', 'max:30', 'min:2'],
-            'post' => ['required' ,'string', 'max:50', 'min:1'],
+            'name' => ['required' ,'string', 'between:2,15', Rule::unique('members')->ignore($member)],
+            'ruby' => ['required' ,'string', 'between:2,30'],
+            'post' => ['required' ,'string', 'between:1,50'],
             'telephone_number' => ['required' ,'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
             'company_id' => ['required' ,'uuid', 'exists:companies,_id'],
             'department_name' => ['required', Rule::in(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会'])],
             'mail' => ['required', 'email', 'max:256'],
-            'secretary_name' => ['required_with:secretary_mail','string', 'max:15', 'min:2'],
+            'secretary_name' => ['required_with:secretary_mail','string', 'between:2,15'],
             'secretary_mail' => ['required_with:secretary_name', 'email'],
             'password' => ['string', 'min:8', 'confirmed']
         ];
@@ -68,13 +68,9 @@ class MemberPut extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['data']    = [
-            'auth' => true,
-            'result' => false
-        ];
-        $response['status']  = 'NG';
-        $response['summary'] = 'Failed validation.';
-        $response['errors']  = $validator->errors()->toArray();
+        $response['auth'] = true;
+        $response['result'] = false;
+        $response['message'] = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)
