@@ -39,7 +39,7 @@ export default {
 
     @media screen and(max-width: 414px) {
     & {
-      height: 94vh;
+      height: 90vh;
     }
   }
 }
