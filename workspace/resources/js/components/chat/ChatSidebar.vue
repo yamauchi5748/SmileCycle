@@ -238,7 +238,7 @@ export default {
 
 .p-chats-navigation {
   cursor: pointer;
-  margin-bottom: 18px;
+  padding-bottom: 18px;
 
   &__container-wrapper {
     width: 100%;
