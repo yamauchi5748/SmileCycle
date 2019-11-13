@@ -237,6 +237,7 @@ export default {
 }
 
 .p-chats-navigation {
+  height: 63px;
   border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
