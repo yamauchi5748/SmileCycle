@@ -152,14 +152,13 @@ export default {
       let unread_count = 0;
       this.$root.chat_room_list.filter(room => {
         if (room.is_group) {
-          unread_count += room.unread
+          unread_count += room.unread;
         }
       });
 
-      if (unread_count > 99) {
-        this.group_unread_more_active = true;
-        unread_count = 99;
-      }
+      this.group_unread_more_active = unread_count > 99;
+      if (this.group_unread_more_active) unread_count = 99;
+  
       return unread_count;
     },
 
@@ -171,10 +170,9 @@ export default {
         }
       });
 
-      if (unread_count > 99) {
-        this.member_unread_more_active = true;
-        unread_count = 99;
-      }
+      this.member_unread_more_active = unread_count > 99;
+      if (this.member_unread_more_active) unread_count = 99;
+
       return unread_count;
     }
   },

@@ -198,7 +198,6 @@ export default {
     sendText: function() {
       /* テキストが空なら抜ける */
       if (this.is_none_text) return;
-      console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
         content_type: 1,
@@ -259,6 +258,7 @@ export default {
     },
 
     change: function() {
+      console.log(this.$refs.message.innerText);
       this.is_none_text = this.$refs.message.innerText === "";
     },
 
