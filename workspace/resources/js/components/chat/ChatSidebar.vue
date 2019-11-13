@@ -238,6 +238,7 @@ export default {
 
 .p-chats-navigation {
   cursor: pointer;
+  margin-bottom: 18px;
 
   &__container-wrapper {
     width: 100%;
@@ -283,8 +284,7 @@ export default {
 }
 
 .p-search-box-wrapper {
-  margin-top: 18px;
-  margin: 18px 5px;
+  margin: 0 5px 18px;
   position: relative;
 }
 
