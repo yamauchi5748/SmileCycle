@@ -421,7 +421,7 @@ export default {
 
     @media screen and(max-width: 414px) {
       & {
-          width: auto;
+          width: 70vw;
       }
     }
 }
