@@ -242,9 +242,7 @@ export default {
   &__container-wrapper {
     width: 100%;
     position: relative;
-    border-bottom: solid 0.05px #606060;
     padding-top: 32px;
-    padding-bottom: 9px;
   }
 
   &__container {
@@ -253,6 +251,8 @@ export default {
     text-align: center;
     font-size: 22px;
     color: #707070;
+    border-bottom: solid 0.05px #606060;
+    padding-bottom: 9px;
     &.active {
       color: $accent-color;
     }
