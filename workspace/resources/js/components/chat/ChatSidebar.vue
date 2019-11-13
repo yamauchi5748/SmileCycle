@@ -243,7 +243,6 @@ export default {
     width: 100%;
     position: relative;
     border-bottom: solid 0.05px #606060;
-    padding: 32px 0 9px;
     box-sizing: border-box;
   }
 
