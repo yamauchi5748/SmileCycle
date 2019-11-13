@@ -33,9 +33,9 @@ class MemberPost extends FormRequest
             'telephone_number' => ['required', 'string', 'regex:/^(070|080|090)-\d{4}-\d{4}$/'],
             'company_id' => ['required', 'uuid', 'exists:companies,_id'],
             'department_name' => ['required', Rule::in(['東京笑門会', '鎌倉笑門会', '大阪笑門会', '愛媛笑門会'])],
-            'mail' => ['required', 'email', 'max:256'],
+            'mail' => ['required', 'email:strict'],
             'secretary_name' => ['required_with:secretary_mail','string', 'between:2,15'],
-            'secretary_mail' => ['required_with:secretary_name', 'email'],
+            'secretary_mail' => ['required_with:secretary_name', 'email:strict'],
             'password' => ['required', 'string', 'regex:/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]*\z/', 'between:8,100', 'confirmed'],
         ];
     }

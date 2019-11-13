@@ -42,6 +42,13 @@ class GetMembersTest extends TestCase
                         'ruby' => 'いでがみばく',
                         'post' => 'モデル',
                         'department_name' => '東京笑門会'
+                    ],
+                    [
+                        '_id' => '8a488ce6-dbd0-3b66-4570-981dfe0b7641',
+                        'name' => '亜戸明',
+                        'ruby' => 'あどみん',
+                        'post' => '管理者',
+                        'department_name' => '愛媛笑門会'
                     ]
                 ]
             ]);
