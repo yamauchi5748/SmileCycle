@@ -283,6 +283,7 @@ export default {
 }
 
 .p-search-box-wrapper {
+  margin-top: 18px;
   margin: 18px 5px;
   position: relative;
 }
