@@ -36,6 +36,12 @@ export default {
     grid-template-rows: 60px 1fr;
     grid-template-columns: 1fr;
     overflow-y: hidden;
+
+    @media screen and(max-width: 414px) {
+    & {
+      height: 94vh;
+    }
+  }
 }
 .p-content {
     height: 100%;
