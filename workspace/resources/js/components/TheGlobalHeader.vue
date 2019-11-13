@@ -418,6 +418,12 @@ export default {
         -webkit-transform: translateX(0%);
         transform: translateX(0%);
     }
+
+    @media screen and(max-width: 414px) {
+      & {
+          width: auto;
+      }
+    }
 }
 
 .p-sidebar-item-header {
