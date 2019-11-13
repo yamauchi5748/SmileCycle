@@ -424,6 +424,7 @@ export default {
     background-color: #ff9900;
 }
 .nav-header-icon {
+    height: 50px;
     background: #ffffff;
     border-radius: 50%;
     margin-left: 10px;
