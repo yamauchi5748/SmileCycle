@@ -256,8 +256,12 @@ class ChatRoomContentController extends AuthController
                     ]
                 ])->toArray());
 
+                $name = $room['is_group'] ?  $room['group_name'] . 'グループ' : $to_member['name'] . '様宛';
+                $subject = $name . 'にチャットが届きました！';
+                $url = env('APP_URL') . '/chat-rooms/' . $room['_id'];
+
                 /* メール通知を飛ばす */
-                $job = (new ProcessPodcast($room, $chat, $to_member));
+                $job = (new ProcessPodcast($room, $chat, $to_member, $name, $subject, $url));
 
                 // jobs テーブルに登録
                 dispatch($job);
