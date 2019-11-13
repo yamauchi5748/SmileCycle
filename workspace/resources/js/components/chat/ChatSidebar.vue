@@ -237,12 +237,12 @@ export default {
 }
 
 .p-chats-navigation {
-  height: 63px;
   border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
   &__container-wrapper {
     width: 100%;
+    padding: 32px 0 9px;
     position: relative;
   }
 
@@ -250,7 +250,6 @@ export default {
     width: 100%;
     display: inline-block;
     text-align: center;
-    padding: 32px 0 9px;
     font-size: 22px;
     color: #707070;
     &.active {
