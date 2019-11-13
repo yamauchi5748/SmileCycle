@@ -237,7 +237,6 @@ export default {
 }
 
 .p-chats-navigation {
-  border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
   &__container-wrapper {
@@ -247,11 +246,13 @@ export default {
 
   &__container {
     width: 100%;
+    padding-top: 32px;
+    padding-bottom: 9px;
     display: inline-block;
     text-align: center;
-    padding: 32px 0 9px;
     font-size: 22px;
     color: #707070;
+    border-bottom: solid 0.05px #606060;
     &.active {
       color: $accent-color;
     }

@@ -418,12 +418,19 @@ export default {
         -webkit-transform: translateX(0%);
         transform: translateX(0%);
     }
+
+    @media screen and(max-width: 414px) {
+      & {
+          width: 70vw;
+      }
+    }
 }
 
 .p-sidebar-item-header {
     background-color: #ff9900;
 }
 .nav-header-icon {
+    height: 50px;
     background: #ffffff;
     border-radius: 50%;
     margin-left: 10px;
