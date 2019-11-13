@@ -18,7 +18,7 @@ export default {
     console.log("Component mounted.");
     this.$root.author = this.author;
     this.$root.connectPrivate("member." + this.author._id);
-    this.$router.push({ path: "/chat-rooms" });
+    //this.$router.push({ path: "/chat-rooms" });
 
     // 最初に、ビューポートの高さを取得し、0.01を掛けて1%の値を算出して、vh単位の値を取得
     let vh = window.innerHeight * 0.01;
