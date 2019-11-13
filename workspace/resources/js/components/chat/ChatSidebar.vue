@@ -237,13 +237,13 @@ export default {
 }
 
 .p-chats-navigation {
-  border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
   &__container-wrapper {
     width: 100%;
     padding: 32px 0 9px;
     position: relative;
+    border-bottom: solid 0.05px #606060;
   }
 
   &__container {
