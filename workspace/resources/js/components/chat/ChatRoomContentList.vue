@@ -12,7 +12,7 @@
           alt="profile"
         />
       </figure>
-      <div class="p-flex--right">
+      <div class="p-flex--right margin-left-smaller">
         <div
           class="p-room-contents__signature layout-flex --align-items-center margin-bottom-small"
         >
