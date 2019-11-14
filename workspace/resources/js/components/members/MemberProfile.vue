@@ -40,19 +40,21 @@ export default {
    data() {
        return{
            keyword: '',
-           member: {}
+           member: {},
       }
   },
     created: function() {
+        const self = this;
         this.$root
             .getMember(this.$route.params.id)
             .then(function(response) {
-                this.member = response.data.member;
+                self.member = response.data.member;
+                self.is_loaded = true;
             })
             .catch(function(error) {
                 console.error(error);
             });
-    }
+    },
 }
 
 </script>
