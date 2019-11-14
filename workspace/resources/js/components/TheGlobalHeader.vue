@@ -2,6 +2,7 @@
     <header class="header">
         <nav class="header-container">
             <slot></slot>
+            <router-view name="header"> </router-view>
             <button class="nav-menu" @click="naviChange">
                 <img src="/img/menu.png" />
             </button>
@@ -369,6 +370,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .header {
+    //ヘッダー固定解決したら消す
+    //position: fixed;
     display: flex;
     width: 100%;
     background-color: $sub-color;
