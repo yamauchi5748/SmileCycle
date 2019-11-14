@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Tests\Feature\TestData;
 
 /**t Post /api/members */
 class PostMemberTest extends TestCase
@@ -28,20 +29,22 @@ class PostMemberTest extends TestCase
         $member = Member::where('name', '=', '新田真剣佑')->get()->first();
         $companies = Company::whereIn('members', [$member['_id']])->get();
         $departmentChatRooms = ChatRoom::where('is_department', '=', true)->whereIn('members.name', ['新田真剣佑'])->get();
-        $personalChatRooms = ChatRoom::where('is_department', '=', false)->whereIn('members.name', ['新田真剣佑'])->get();
+        $personalChatRooms = ChatRoom::where('is_department', '=', false)->where('is_group', '=', false)->whereIn('members.name', ['新田真剣佑'])->get();
 
         // membersに会員情報が追加されている
         $this->assertDatabaseHas('members', ['name' => '新田真剣佑', 'ruby' => 'あらたまっけんゆう', 'post' => '俳優', 'telephone_number' => '080-9999-9999', 'department_name' => '鎌倉笑門会', 'mail' => 'makken@test.co.jp', 'secretary' => ['name' => '綿谷新', 'mail' => 'wataya@test.co.jp']]);
         $this->assertTrue(Hash::check('Makken96', $member['password']), 'members.passwordに正しいハッシュ値が挿入されていない');
 
         // 指定したcompanies._idのcompanies.membersだけに、登録した会員の_idが追加されている
-        $this->assertCount(1, $companies);  // 0ならどの会社にも追加されていない。2以上なら指定した会社以外にも追加されている
+        $this->assertCount(1, $companies);  // 0なら指定した会社に追加されていない。（2以上なら指定した会社以外に追加されている）
         $this->assertEquals('da192210-b876-0b59-1a96-095d2ef2dd11', $companies[0]['_id']);  // 違ったら別の会社に追加されている
 
         // プロフィール画像が保存されている
         Storage::disk('local')->assertExists('/private/images/profile_images/' . $member['_id'] . '.png');
 
-
+        // 
+        $this->assertCount(1, $departmentChatRooms);
+        $this->assertEquals('鎌倉笑門会', $departmentChatRooms[0]['group_name']);
         // chatroomが追加されている
         // stampgroup isall が追加されている
 
