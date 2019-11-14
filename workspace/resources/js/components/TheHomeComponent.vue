@@ -38,7 +38,7 @@ export default {
   display: grid;
   grid-template-rows: 60px 1fr;
   grid-template-columns: 1fr;
-  overflow-y: hidden;
+  //overflow-y: hidden;
 
   @media screen and(max-width: 414px) {
     & {
