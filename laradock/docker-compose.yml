@@ -193,8 +193,8 @@ services:
       ports:
         - "${MONGODB_PORT}:27017"
       ## Windowsではローカルとデータをマウントすると動かないためコメントアウト ##
-      #volumes:
-      #  - ${DATA_PATH_HOST}/mongo:/data/db
+      volumes:
+        - ${DATA_PATH_HOST}/mongo:/data/backup
       networks:
         - backend
 
