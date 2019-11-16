@@ -70,6 +70,7 @@ class PostMemberTest extends TestCase
 
         // stampgroup isall が追加されている
         $alls = TestData::getStampGroupsAreAll($testDataStampGroups);
+        echo 'hoge';
 
         $response
             // ステータスコードが200
