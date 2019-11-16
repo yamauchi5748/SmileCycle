@@ -59,14 +59,20 @@ import ControlsStamp from "./components/controls/Stamp.vue";
 import ControlsStampCreate from "./components/controls/StampCreate.vue";
 import ControlsStampDetails from "./components/controls/StampDetails.vue";
 import Axios from 'axios';
+import HeaderTest from "./components/HeaderTest"
 
 const router = new VueRouter({
     mode: "history",
+    // header対応するには
+    // componentに　header を追加します
+    // components: {default: 最初のcomponent名 header: ヘッダーのvueファイル}
     routes: [
         {
             path: "/chat-rooms",
             name: "chat-rooms",
-            component: ChatRooms,
+            components: {default: ChatRooms,
+                        header: HeaderTest
+            },
             children: [
                 {
                     path: ":id",

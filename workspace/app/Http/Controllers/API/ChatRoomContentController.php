@@ -15,7 +15,7 @@ use App\Models\Member;
 use App\Models\ChatRoom;
 use App\Events\ChatRecieved;
 use App\Events\AlreadyRead;
-use App\jobs\ProcessPodcast;
+use App\Jobs\ProcessPodcast;
 
 class ChatRoomContentController extends AuthController
 {
@@ -229,7 +229,7 @@ class ChatRoomContentController extends AuthController
                 ],
                 [
                     '$project' => [
-                        '_id' => 0,
+                        '_id' => 1,
                         'is_group' => 1,
                         'group_name' => 1,
                         'members' => 1,
@@ -241,6 +241,7 @@ class ChatRoomContentController extends AuthController
         
             /* ルーム会員に送信するメール情報をセット */
             foreach ($to_members as $to_member) {
+                if ($to_member['_id'] == $this->author->_id) continue;
                 $to_member = head(Member::raw()->aggregate([
                     [
                         '$match' => [
@@ -255,8 +256,12 @@ class ChatRoomContentController extends AuthController
                     ]
                 ])->toArray());
 
+                $name = $room['is_group'] ?  $room['group_name'] . 'グループ' : $to_member['name'] . '様宛';
+                $subject = $name . 'にチャットが届きました！';
+                $url = env('APP_URL') . '/chat-rooms/' . $room['_id'];
+
                 /* メール通知を飛ばす */
-                $job = (new ProcessPodcast($room, $chat, $to_member));
+                $job = (new ProcessPodcast($room, $chat, $to_member, $name, $subject, $url));
 
                 // jobs テーブルに登録
                 dispatch($job);

@@ -33,7 +33,7 @@
       </v-scrollbar>
     </div>
     <div class="p-room-send layout-flex --align-items-flex-end">
-      <div class="p-room-send__input-message-box">
+      <div class="p-room-send__input-message-box" :class="{small: stamp_active}">
         <p
           class="p-room-send__input-message"
           :class="{opacity: is_none_text}"
@@ -198,7 +198,6 @@ export default {
     sendText: function() {
       /* テキストが空なら抜ける */
       if (this.is_none_text) return;
-      console.log(this.$refs.message.innerText);
       const data = {
         is_hurry: this.is_hurry,
         content_type: 1,
@@ -259,6 +258,7 @@ export default {
     },
 
     change: function() {
+      console.log(this.$refs.message.innerText);
       this.is_none_text = this.$refs.message.innerText === "";
     },
 
@@ -389,6 +389,10 @@ export default {
       outline: none;
       word-break: break-all;
       overflow: hidden;
+
+      &.opacity {
+        color: rgb(194, 194, 194);
+      }
     }
 
     &__wrapper {
@@ -470,6 +474,10 @@ export default {
         border: none;
         border-radius: unset;
         border-top: 1px solid #707070;
+
+        &.small {
+          max-height: 55px;
+        }
       }
 
       &__input-message {
@@ -547,9 +555,5 @@ export default {
     max-width: 736px;
     padding: 8px 0 0 12px;
   }
-}
-
-.opacity {
-  color: rgb(194, 194, 194);
 }
 </style>

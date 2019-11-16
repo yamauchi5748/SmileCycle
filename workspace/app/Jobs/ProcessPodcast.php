@@ -21,16 +21,14 @@ class ProcessPodcast implements ShouldQueue
     /** @var array メールの送信先等の属性 */
     protected $mail;
  
-    public function __construct($room, $chat, $to_member)
-    {
-        $name = $room['is_group'] ?  $room['group_name'] . 'グループ' : $to_member['name'] . '様宛';
-        
+    public function __construct($room, $chat, $to_member, $name, $subject, $url)
+    {   
         $this->mail = [
             'from'    => env('MAIL_FROM_ADDRESS'),
             'f_name'  => env('MAIL_FROM_NAME'),
             'to'      => $to_member['mail'],
             'to_name' => $to_member['name'],
-            'subject' => $name . 'にチャットが届きました！'
+            'subject' => $subject
         ];
 
         /**
@@ -47,7 +45,8 @@ class ProcessPodcast implements ShouldQueue
          *
          **/
         $this->data = [
-            'name' => $name
+            'name' => $name,
+            'url' => $url
         ];
     }
 

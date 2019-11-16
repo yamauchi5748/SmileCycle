@@ -152,14 +152,13 @@ export default {
       let unread_count = 0;
       this.$root.chat_room_list.filter(room => {
         if (room.is_group) {
-          unread_count += room.unread
+          unread_count += room.unread;
         }
       });
 
-      if (unread_count > 99) {
-        this.group_unread_more_active = true;
-        unread_count = 99;
-      }
+      this.group_unread_more_active = unread_count > 99;
+      if (this.group_unread_more_active) unread_count = 99;
+  
       return unread_count;
     },
 
@@ -171,10 +170,9 @@ export default {
         }
       });
 
-      if (unread_count > 99) {
-        this.member_unread_more_active = true;
-        unread_count = 99;
-      }
+      this.member_unread_more_active = unread_count > 99;
+      if (this.member_unread_more_active) unread_count = 99;
+
       return unread_count;
     }
   },
@@ -237,7 +235,6 @@ export default {
 }
 
 .p-chats-navigation {
-  border-bottom: solid 0.05px #606060;
   cursor: pointer;
 
   &__container-wrapper {
@@ -247,11 +244,13 @@ export default {
 
   &__container {
     width: 100%;
+    padding-top: 32px;
+    padding-bottom: 9px;
     display: inline-block;
     text-align: center;
-    padding: 32px 0 9px;
     font-size: 22px;
     color: #707070;
+    border-bottom: solid 0.05px #606060;
     &.active {
       color: $accent-color;
     }

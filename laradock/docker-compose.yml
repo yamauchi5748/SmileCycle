@@ -193,8 +193,8 @@ services:
       ports:
         - "${MONGODB_PORT}:27017"
       ## Windowsではローカルとデータをマウントすると動かないためコメントアウト ##
-      #volumes:
-      #  - ${DATA_PATH_HOST}/mongo:/data/db
+      volumes:
+        - ${DATA_PATH_HOST}/mongo:/data/backup
       networks:
         - backend
 
@@ -207,21 +207,6 @@ services:
       networks:
         - backend
         - frontend
-
-### Postfix ################################################    
-    postfix:
-      build: ./postfix
-      privileged: true
-      volumes:
-        - ${DATA_PATH_HOST}/postfix/config/:/tmp/postfix
-      ports:
-        - "${POSTFIX_PORT}:25"
-        - "${POSTFIX_SUBMISSIION_PORT}:587"
-        - "${POSTFIX_SMTPS_PORT}:465"
-      networks:
-        - backend
-        - frontend
-
 
 ### Redis ################################################
     redis:
