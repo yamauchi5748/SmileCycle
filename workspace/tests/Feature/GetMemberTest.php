@@ -5,6 +5,7 @@ namespace Tests\Feature\API;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\RefreshDatabase;
+use Tests\Feature\TestData;
 
 /**t GET /api/members/{member_id} */
 class GetMemberTest extends TestCase
@@ -14,33 +15,37 @@ class GetMemberTest extends TestCase
     /** 認証されている状態でリクエストした場合、会員詳細情報が取得できること */
     public function testAuthenticated()
     {
+        $testDataMembers = TestData::MEMBERS;
+        $authMember = TestData::getRandMember($testDataMembers);
+        $targetMember = TestData::getRandMember($testDataMembers);
+
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer EgGvxAr4Wm97jGg1VNitMGj5JFovqhTZEDSIssnmkiFF6Sp0anJ5v07nLeHQ'])
+            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
             // 「/api/members/{任意の会員のmembers._id}」でGETでリクエストを送信
-            ->getJson('/api/members/a08999b6-c1ff-a0e7-81cb-d04e2466b61d');
+            ->getJson('/api/members/' . TestData::getMemberField($targetMember, '_id'));
         
+        $testDataCompanies = TestData::COMPANIES;
+        $company = TestData::getCompanyWithMemberId($testDataCompanies, TestData::getMemberField($targetMember, '_id'));
+
         $response
             // ステータスコードが200
-            ->assertStatus(200)
+            ->assertOk()
             // レスポンスデータが下記の通り
             ->assertExactJson([
                 'auth' => true,
                 'result' => true,
                 'member' => [
-                    '_id' => 'a08999b6-c1ff-a0e7-81cb-d04e2466b61d',
-                    'name' => '井手上漠',
-                    'ruby' => 'いでがみばく',
-                    'post' => 'モデル',
-                    'telephone_number' => '080-0000-0001',
-                    'mail' => 'baaaakuuuu@discovery-n.co.jp',
-                    'department_name' => '東京笑門会',
-                    'company_id' => 'e6a91e70-bae6-08e0-8ee7-0a7f595f30fc',
-                    'company_name' => '株式会社 ディスカバリー･ネクスト',
-                    'secretary' => [
-                        'name' => '井手上秘書男',
-                        'mail' => 'bakuhisyo@discovery-n.co.jp'
-                    ]
+                    '_id' => TestData::getMemberField($targetMember, '_id'),
+                    'name' => TestData::getMemberField($targetMember, 'name'),
+                    'ruby' => TestData::getMemberField($targetMember, 'ruby'),
+                    'post' => TestData::getMemberField($targetMember, 'post'),
+                    'telephone_number' => TestData::getMemberField($targetMember, 'telephone_number'),
+                    'mail' => TestData::getMemberField($targetMember, 'mail'),
+                    'department_name' => TestData::getMemberField($targetMember, 'department_name'),
+                    'company_id' => TestData::getCompanyField($company, '_id'),
+                    'company_name' => TestData::getCompanyField($company, 'name'),
+                    'secretary' => TestData::getMemberField($targetMember, 'secretary')
                 ]
             ]);
     }
@@ -48,9 +53,11 @@ class GetMemberTest extends TestCase
     /** 認証されていない状態でリクエストした場合、会員詳細情報取得に失敗すること */
     public function testNotAuthenticated()
     {
+        $targetMember = TestData::getRandMember(TestData::MEMBERS);
+
         $response = $this
             // 「/api/members/{任意の会員のmembers._id}」でGETでリクエストを送信
-            ->getJson('/api/members/a08999b6-c1ff-a0e7-81cb-d04e2466b61d');
+            ->getJson('/api/members/' . TestData::getMemberField($targetMember, '_id'));
 
         $response
             // ステータスコードが401
@@ -66,11 +73,14 @@ class GetMemberTest extends TestCase
     /** member_idに存在しないmembers._idが指定された場合、バリデーションエラーが返されること */
     public function testNotExist()
     {
+        $testDataMembers = TestData::MEMBERS;
+        $authMember = TestData::getRandMember($testDataMembers);
+
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer EgGvxAr4Wm97jGg1VNitMGj5JFovqhTZEDSIssnmkiFF6Sp0anJ5v07nLeHQ'])
+            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
             // 「/api/members/{members._idに存在しないuuid}」でGETでリクエストを送信
-            ->getJson('/api/members/f6eae376-502b-4aca-0829-5cacfa397df4');
+            ->getJson('/api/members/' . TestData::noDuplicateMemberUuid($testDataMembers));
 
         $response
             // ステータスコードが422
@@ -88,9 +98,11 @@ class GetMemberTest extends TestCase
     /** member_idにuuidの形式でない値が指定された場合、バリデーションエラーが返されること */
     public function testNotUUID()
     {
+        $authMember = TestData::getRandMember(TestData::MEMBERS);
+
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer EgGvxAr4Wm97jGg1VNitMGj5JFovqhTZEDSIssnmkiFF6Sp0anJ5v07nLeHQ'])
+            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
             // 「/api/members/{uuidでない任意の文字列}」でGETでリクエストを送信
             ->getJson('/api/members/hogee');
 
