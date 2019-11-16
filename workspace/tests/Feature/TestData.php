@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Str;
+
 class TestData
 {
     const MEMBER_INDEX = ['_id', 'name', 'ruby', 'post', 'mail', 'api_token', 'password', 'telephone_number', 'secretary', 'stamp_groups', 'department_name', 'is_notification', 'notification_interval', 'is_admin', 'invitations', 'profile_image'];
@@ -33,6 +35,9 @@ class TestData
         ['6edc6ccd-4177-00c6-cdca-277c59ece21e', 'a08999b6-c1ff-a0e7-81cb-d04e2466b61d', '8a488ce6-dbd0-3b66-4570-981dfe0b7641', []]
     ];
 
+    const STAMP_GROUP_INDEX = ['_id', 'tab_image_id', 'tab_image', 'is_all', 'stamps', 'members'];
+    const STAMP_GROUPS = [];
+
     public static function getMemberField($member, $field)
     {
         return $member[array_search($field, self::MEMBER_INDEX)];
@@ -49,7 +54,12 @@ class TestData
     {
         return $personalChatRoom[array_search($field, self::PERSONAL_CHAT_ROOM_INDEX)];
     }
+    public static function getStampGroupField($stampGroup, $field)
+    {
+        return $stampGroup[array_search($field, self::STAMP_GROUP_INDEX)];
+    }
 
+    // $membersの中から_idが$idの会員を返す
     public static function getMember($members, $id)
     {
         foreach ($members as $idx => $member) {
@@ -59,6 +69,23 @@ class TestData
         }
     }
 
+    // $membersの中からランダムで会員を返す
+    public static function getRandMember($members)
+    {
+        return $members[array_rand($members)];
+    }
+    // $membersの中からランダムで一般会員を返す
+    public static function getRandGeneralMember($members)
+    {
+        return self::getRandMember(self::getGeneralMembers($members));
+    }
+    // $membersの中からランダムで管理者を返す
+    public static function getRandAdminMember($members)
+    {
+        return self::getRandMember(self::getAdminMembers($members));
+    }
+
+    // $membersの中から一般会員を配列で返す
     public static function getGeneralMembers($members)
     {
         $generalMembers = [];
@@ -69,7 +96,33 @@ class TestData
         }
         return $generalMembers;
     }
+    // $membersの中から管理者を配列で返す
+    public static function getAdminMembers($members)
+    {
+        $adminMembers = [];
+        foreach ($members as $idx => $member) {
+            if (self::getMemberField($member, 'is_admin')) {
+                $adminMembers[] = $member;
+            }
+        }
+        return $adminMembers;
+    }
 
+    // $membersの_idに存在しないuuidを返す
+    public static function noDuplicateMemberUuid($members)
+    {
+        while (true) {
+            $uuid = (string) Str::uuid();
+            foreach ($members as $idx => $member) {
+                if (strcmp(self::getMemberField($member, '_id'), $uuid) === 0) {
+                    continue;
+                }
+            }
+            return $uuid;
+        }
+    }
+
+    // $companiesの中から$memberIdがmembersに含まれている会社を返す
     public static function getCompanyWithMemberId($companies, $memberId)
     {
         foreach ($companies as $idx => $company) {
@@ -77,5 +130,17 @@ class TestData
                 return $company;
             }
         }
+    }
+
+    // $stampGroupsの中からis_allがtrueのやつを配列で返す
+    public static function getStampGroupsAreAll($stampGroups)
+    {
+        $alls = [];
+        foreach ($stampGroups as $stampGroup) {
+            if (self::getStampGroupField($stampGroups, 'is_all')) {
+                $alls[] = $stampGroup;
+            }
+        }
+        return $alls;
     }
 }

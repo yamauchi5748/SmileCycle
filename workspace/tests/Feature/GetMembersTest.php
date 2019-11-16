@@ -17,11 +17,11 @@ class GetMembersTest extends TestCase
     public function testAuthenticated()
     {
         $testDataMembers = TestData::MEMBERS;
-        $generalMembers = TestData::getGeneralMembers($testDataMembers);
+        $authMember = TestData::getRandMember($testDataMembers);
 
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($generalMembers[0], 'api_token')])
+            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
             // 「/api/members」でGETでリクエストを送信
             ->getJson('/api/members');
 

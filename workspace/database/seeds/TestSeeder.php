@@ -21,6 +21,7 @@ class TestSeeder extends Seeder
         $companies = TestData::COMPANIES;
         $departmentChatRooms = TestData::DEPARTMENT_CHAT_ROOMS;
         $personalChatRooms = TestData::PERSONAL_CHAT_ROOMS;
+        $stampGroups = TestData::STAMP_GROUPS;
 
         foreach ($members as $idx => $member) {
             Member::create([
@@ -79,6 +80,17 @@ class TestSeeder extends Seeder
                 'members' => [['_id' => TestData::getPersonalChatRoomField($personalChatRoom, 'members._id1'), 'name' => TestData::getMemberField(TestData::getMember($members, TestData::getPersonalChatRoomField($personalChatRoom, 'members._id1')), 'name')], ['_id' => TestData::getPersonalChatRoomField($personalChatRoom, 'members._id2'), 'name' => TestData::getMemberField(TestData::getMember($members, TestData::getPersonalChatRoomField($personalChatRoom, 'members._id2')), 'name')]],
                 'contents' => TestData::getPersonalChatRoomField($personalChatRoom, 'contents')
             ]);
+        }
+
+        foreach ($stampGroups as $idx => $stampGroup) {
+            StampGroup::create([
+                '_id' => TestData::getStampGroupField($stampGroup, '_id'),
+                'tab_image_id' => TestData::getStampGroupField($stampGroup, 'tab_image_id'),
+                'is_all' => TestData::getStampGroupField($stampGroup, 'is_all'),
+                'stamps' => TestData::getStampGroupField($stampGroup, 'stamps'),
+                'members' => TestData::getStampGroupField($stampGroup, 'members')
+            ]);
+            Storage::putFileAs('private/images/chats', new File('storage/app/images/test/' . TestData::getStampGroupField($stampGroup, 'tab_image') . '.png'), TestData::getStampGroupField($stampGroup, 'tab_image_id') . '.png', 'private');
         }
     }
 }
