@@ -37,6 +37,10 @@ rem テストデータを生成
 docker-compose exec --user=laradock workspace ^
 php artisan db:seed
 
+rem クーロン起動
+docker-compose exec --user=laradock workspace ^
+crontab cron.txt
+
 rem スーパーバイザ起動
 docker-compose exec workspace ^
 service supervisor start

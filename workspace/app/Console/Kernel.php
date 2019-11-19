@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $filePath = './bat/timpo.txt';
+        $schedule->exec('sh ./bat/timpo.sh')->everyMinute()->appendOutputTo($filePath);
     }
 
     /**
