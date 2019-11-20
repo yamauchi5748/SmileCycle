@@ -13,9 +13,9 @@
             v-model="drawer"
             :clipped="$vuetify.breakpoint.lgAndUp"
             :mobile-break-point="$vuetify.breakpoint.thresholds.md"
-            width="192"
+            width="200"
         >
-            <v-list dense>
+            <v-list nav dense>
                 <v-list-item>
                     <v-list-item-content>
                         <v-list-item-title>管理</v-list-item-title>

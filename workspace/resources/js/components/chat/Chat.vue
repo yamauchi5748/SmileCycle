@@ -28,11 +28,15 @@
                         <v-list-item-avatar>
                             <img :src="room.img" alt />
                         </v-list-item-avatar>
-
                         <v-list-item-content>
                             <v-list-item-title>{{room.name}}</v-list-item-title>
                             <v-list-item-subtitle>{{latestContentsText(room)}}</v-list-item-subtitle>
                         </v-list-item-content>
+                        <v-list-item-action>
+                            <v-badge>
+                                <template v-slot:badge>0</template>
+                            </v-badge>
+                        </v-list-item-action>
                     </v-list-item>
                 </v-list>
                 {{store.profile}}

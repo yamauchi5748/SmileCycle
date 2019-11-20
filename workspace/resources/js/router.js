@@ -2,7 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter)
 
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
+import ProfileInformation from "./components/profile/Information";
+import ProfileForums from "./components/profile/Forums";
+import ProfileSettings from "./components/profile/Settings";
 import Chat from "./components/chat/Chat";
 import ChatNotFound from "./components/chat/NotFound";
 import ChatRoom from "./components/chat/Room";
@@ -21,7 +24,24 @@ const router = new VueRouter({
         {
             path: "/profile",
             name: "profile",
-            component: Profile
+            component: Profile,
+            children: [
+                {
+                    path: "information",
+                    name: "profile-information",
+                    component: ProfileInformation
+                },
+                {
+                    path: "forums",
+                    name: "profile-forums",
+                    component: ProfileForums
+                },
+                {
+                    path: "information",
+                    name: "profile-settings",
+                    component: ProfileSettings
+                },
+            ]
         },
         {
             path: "/chat",
