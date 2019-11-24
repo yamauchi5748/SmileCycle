@@ -15,18 +15,18 @@ class GetMemberTest extends TestCase
     /** 認証されている状態でリクエストした場合、会員詳細情報が取得できること */
     public function testAuthenticated()
     {
-        $testDataMembers = TestData::MEMBERS;
+        $testDataMembers = TestData::getMembers();
         $authMember = TestData::getRandMember($testDataMembers);
         $targetMember = TestData::getRandMember($testDataMembers);
 
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
+            ->withHeaders(['Authorization' => 'Bearer ' . $authMember['api_token']])
             // 「/api/members/{任意の会員のmembers._id}」でGETでリクエストを送信
-            ->getJson('/api/members/' . TestData::getMemberField($targetMember, '_id'));
+            ->getJson('/api/members/' . $targetMember['_id']);
         
-        $testDataCompanies = TestData::COMPANIES;
-        $company = TestData::getCompanyWithMemberId($testDataCompanies, TestData::getMemberField($targetMember, '_id'));
+        $testDataCompanies = TestData::getCompanies();
+        $company = TestData::getCompanyWithMemberId($testDataCompanies, $targetMember['_id']);
 
         $response
             // ステータスコードが200
@@ -36,16 +36,16 @@ class GetMemberTest extends TestCase
                 'auth' => true,
                 'result' => true,
                 'member' => [
-                    '_id' => TestData::getMemberField($targetMember, '_id'),
-                    'name' => TestData::getMemberField($targetMember, 'name'),
-                    'ruby' => TestData::getMemberField($targetMember, 'ruby'),
-                    'post' => TestData::getMemberField($targetMember, 'post'),
-                    'telephone_number' => TestData::getMemberField($targetMember, 'telephone_number'),
-                    'mail' => TestData::getMemberField($targetMember, 'mail'),
-                    'department_name' => TestData::getMemberField($targetMember, 'department_name'),
-                    'company_id' => TestData::getCompanyField($company, '_id'),
-                    'company_name' => TestData::getCompanyField($company, 'name'),
-                    'secretary' => TestData::getMemberField($targetMember, 'secretary')
+                    '_id' => $targetMember['_id'],
+                    'name' => $targetMember['name'],
+                    'ruby' => $targetMember['ruby'],
+                    'post' => $targetMember['post'],
+                    'telephone_number' => $targetMember['telephone_number'],
+                    'mail' => $targetMember['mail'],
+                    'department_name' => $targetMember['department_name'],
+                    'company_id' => $company['_id'],
+                    'company_name' => $company['name'],
+                    'secretary' => $targetMember['secretary']
                 ]
             ]);
     }
@@ -53,11 +53,11 @@ class GetMemberTest extends TestCase
     /** 認証されていない状態でリクエストした場合、会員詳細情報取得に失敗すること */
     public function testNotAuthenticated()
     {
-        $targetMember = TestData::getRandMember(TestData::MEMBERS);
+        $targetMember = TestData::getRandMember(TestData::getMembers());
 
         $response = $this
             // 「/api/members/{任意の会員のmembers._id}」でGETでリクエストを送信
-            ->getJson('/api/members/' . TestData::getMemberField($targetMember, '_id'));
+            ->getJson('/api/members/' . $targetMember['_id']);
 
         $response
             // ステータスコードが401
@@ -73,12 +73,12 @@ class GetMemberTest extends TestCase
     /** member_idに存在しないmembers._idが指定された場合、バリデーションエラーが返されること */
     public function testNotExist()
     {
-        $testDataMembers = TestData::MEMBERS;
+        $testDataMembers = TestData::getMembers();
         $authMember = TestData::getRandMember($testDataMembers);
 
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
+            ->withHeaders(['Authorization' => 'Bearer ' . $authMember['api_token']])
             // 「/api/members/{members._idに存在しないuuid}」でGETでリクエストを送信
             ->getJson('/api/members/' . TestData::noDuplicateMemberUuid($testDataMembers));
 
@@ -98,11 +98,11 @@ class GetMemberTest extends TestCase
     /** member_idにuuidの形式でない値が指定された場合、バリデーションエラーが返されること */
     public function testNotUUID()
     {
-        $authMember = TestData::getRandMember(TestData::MEMBERS);
+        $authMember = TestData::getRandMember(TestData::getMembers());
 
         $response = $this
             // 任意の会員で認証
-            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authMember, 'api_token')])
+            ->withHeaders(['Authorization' => 'Bearer ' . $authMember['api_token']])
             // 「/api/members/{uuidでない任意の文字列}」でGETでリクエストを送信
             ->getJson('/api/members/hogee');
 

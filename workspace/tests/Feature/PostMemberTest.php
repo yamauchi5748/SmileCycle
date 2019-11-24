@@ -21,56 +21,65 @@ class PostMemberTest extends TestCase
     /** 全項目に正しい値を入力してリクエストした場合、会員の登録が行えること */
     public function testAllParameter()
     {
-        $testDataMembers = TestData::MEMBERS;
+        $testDataMembers = TestData::getMembers();
         $authAdminMember = TestData::getRandAdminMember($testDataMembers);
+        $useCompany = TestData::getRandCompany(TestData::getCompanies());
+        $testDataStampGroups = TestData::getStampGroups();
+        $postMember = [
+            'name' => '新田真剣佑', 'ruby' => 'あらたまっけんゆう', 'post' => '俳優', 'telephone_number' => '080-9999-9999', 'company_id' => $useCompany['_id'], 'department_name' => '鎌倉笑門会', 'mail' => 'makken@test.co.jp', 'secretary_name' => '綿谷新', 'secretary_mail' => 'wataya@test.co.jp', 'password' => 'Makken96', 'password_confirmation' => 'Makken96'
+        ];
 
         $response = $this
             // 任意の管理者で認証
-            ->withHeaders(['Authorization' => 'Bearer ' . TestData::getMemberField($authAdminMember, 'api_token')])
+            ->withHeaders(['Authorization' => 'Bearer ' . $authAdminMember['api_token']])
             // 「/api/members」（すべてのパラメータに正しい範囲の任意の値を入力）でPOSTでリクエストを送信
-            ->postJson('/api/members', ['name' => '新田真剣佑', 'ruby' => 'あらたまっけんゆう', 'post' => '俳優', 'telephone_number' => '080-9999-9999', 'company_id' => 'da192210-b876-0b59-1a96-095d2ef2dd11', 'department_name' => '鎌倉笑門会', 'mail' => 'makken@test.co.jp', 'secretary_name' => '綿谷新', 'secretary_mail' => 'wataya@test.co.jp', 'password' => 'Makken96', 'password_confirmation' => 'Makken96']);
+            ->postJson('/api/members', $postMember);
 
-        $createMember = Member::where('name', '=', '新田真剣佑')->get()->first();
+        $createMember = Member::where('name', '=', $postMember['name'])->get()->first();
         $companies = Company::whereIn('members', [$createMember['_id']])->get();
-        $departmentChatRooms = ChatRoom::where('is_department', '=', true)->whereIn('members.name', ['新田真剣佑'])->get();
-        $personalChatRooms = ChatRoom::where('is_group', '=', false)->whereIn('members.name', ['新田真剣佑'])->get();
-        $testDataStampGroups = TestData::STAMP_GROUPS;
+        $departmentChatRooms = ChatRoom::where('is_department', '=', 1)->whereIn('members.name', [$postMember['name']])->get();
+        $personalChatRooms = ChatRoom::where('is_group', '=', 0)->whereIn('members.name', [$postMember['name']])->get();
+        $stampGroupsAreAll = StampGroup::where('is_all', '=', 1)->get();
 
         // membersに会員情報が追加されている
-        $this->assertDatabaseHas('members', ['name' => '新田真剣佑', 'ruby' => 'あらたまっけんゆう', 'post' => '俳優', 'telephone_number' => '080-9999-9999', 'department_name' => '鎌倉笑門会', 'mail' => 'makken@test.co.jp', 'secretary' => ['name' => '綿谷新', 'mail' => 'wataya@test.co.jp']]);
-        $this->assertTrue(Hash::check('Makken96', $createMember['password']), 'members.passwordに正しいハッシュ値が挿入されていない');
+        $this->assertDatabaseHas('members', ['name' => $postMember['name'], 'ruby' => $postMember['ruby'], 'post' => $postMember['post'], 'telephone_number' => $postMember['telephone_number'], 'department_name' => $postMember['department_name'], 'mail' => $postMember['mail'], 'secretary' => ['name' => $postMember['secretary_name'], 'mail' => $postMember['secretary_mail']]]);
+        $this->assertTrue(Hash::check($postMember['password'], $createMember['password']), 'members.passwordに正しいハッシュ値が挿入されていない');
 
         // 指定したcompanies._idのcompanies.membersだけに、登録した会員の_idが追加されている
         $this->assertCount(1, $companies);  // 0なら指定した会社に追加されていない。（2以上なら指定した会社以外に追加されている）
-        $this->assertEquals('da192210-b876-0b59-1a96-095d2ef2dd11', $companies[0]['_id']);  // 違ったら別の会社に追加されている
+        $this->assertEquals($postMember['company_id'], $companies[0]['_id']);  // 違ったら別の会社に追加されている
 
         // プロフィール画像が保存されている
         Storage::disk('local')->assertExists('/private/images/profile_images/' . $createMember['_id'] . '.png');
 
         // 指定した部門のchat_room.membersにmembers._idが追加されている
         $this->assertCount(1, $departmentChatRooms);
-        $this->assertEquals('鎌倉笑門会', $departmentChatRooms[0]['group_name']);
+        $this->assertEquals($postMember['department_name'], $departmentChatRooms[0]['group_name']);
         // 全会員との個人チャットが追加されている
         $this->assertCount(count($testDataMembers), $personalChatRooms);
+        $membersId = array_column($testDataMembers, '_id');
         foreach ($personalChatRooms as $personalChatRoom) {
             $this->assertCount(2, $personalChatRoom['members'], 'chat_roomが正しく作成されていない');
-            $id = $personalChatRoom['members'][1 - array_search($createMember['_id'])];
-            $foundIdx = -1;
-            foreach ($testDataMembers as $idx => $member) {
-                if (strcmp($id, TestData::getMemberField($member, '_id')) === 0) {
-                    $foundIdx = $idx;
-                    break;
-                }
-            }
-            $this->assertTrue($foundIdx !== -1, 'chat_roomが正しく作成されていない');
-            array_splice($testDataMembers, $foundIdx, 1);
-            dump($testDataMembers);
-            dump(TestData::MEMBERS);
+            $id = $personalChatRoom['members'][1 - array_search($createMember['_id'], $personalChatRoom['members'])]['_id'];
+            $foundIdx = array_search($id, $membersId);
+            $this->assertTrue($foundIdx !== FALSE, 'chat_roomが正しく作成されていない');
+            array_splice($membersId, $foundIdx, 1);
         }
 
-        // stampgroup isall が追加されている
+        // is_all が 1 の stamp_groups._id が members.stamp_groups に追加されている
         $alls = TestData::getStampGroupsAreAll($testDataStampGroups);
-        echo 'hoge';
+        $this->assertCount(count($alls), $createMember['stamp_groups']);
+        $allsId = array_column($alls, '_id');
+        foreach ($createMember['stamp_groups'] as $stampGroup) {
+            $foundIdx = array_search($stampGroup, $allsId);
+            $this->assertTrue($foundIdx !== FALSE, 'members.stamp_groupsが正しく作成されていない');
+            array_splice($allsId, $foundIdx, 1);
+        }
+
+        // is_all が 1 の stamp_groups.members に members._id が追加されている
+        foreach ($stampGroupsAreAll as $stampGroupIsAll) {
+            $this->assertContains($createMember['_id'], $stampGroupIsAll['members'], 'is_allが1のstamp_groups.membersにmembers._idが追加されていない');
+        }
 
         $response
             // ステータスコードが200
@@ -80,19 +89,19 @@ class PostMemberTest extends TestCase
                 'auth' => true,
                 'result' => true,
                 'member' => [
-                    '_id' => $member['_id'],
-                    'name' => '新田真剣佑',
-                    'ruby' => 'あらたまっけんゆう',
-                    'post' => '俳優',
-                    'telephone_number' => '080-9999-9999',
-                    'mail' => 'makken@test.co.jp',
-                    'department_name' => '鎌倉笑門会',
+                    '_id' => $createMember['_id'],
+                    'name' => $postMember['name'],
+                    'ruby' => $postMember['ruby'],
+                    'post' => $postMember['post'],
+                    'telephone_number' => $postMember['telephone_number'],
+                    'mail' => $postMember['mail'],
+                    'department_name' => $postMember['department_name'],
                     'secretary' => [
-                        'name' => '綿谷新',
-                        'mail' => 'wataya@test.co.jp'
+                        'name' => $postMember['secretary_name'],
+                        'mail' => $postMember['secretary_mail']
                     ],
-                    'company_id' => 'da192210-b876-0b59-1a96-095d2ef2dd11',
-                    'company_name' => '有限会社 テスト'
+                    'company_id' => $postMember['company_id'],
+                    'company_name' => $useCompany['name']
                 ]
             ]);
     }
