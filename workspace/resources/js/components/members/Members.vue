@@ -1,167 +1,169 @@
 <template>
-  <div class="component">
-    <MembersTabMenu　
-      class="tabitem"
-      v-for="Department in Department_list"
-      v-bind="Department" :key="Department.id"
-      @click="event"
-      v-model="currentId"
-    />
-    <MembersSerch 
-    class="serch"
-    placeholder="会員名または会社名を検索してください"
-    name="sample-input"
-    type="text"
-    v-model="keyword"
-  />
-    <div class="members_list">
-      <h2 class="member_deploy_name">愛媛笑門会</h2>
-      <div v-for="member in $root.member_list" :key="member.id">
-        <p class="member_user_icon">
-          <img 
-           :src="'/members/' + member._id + '/profile-image'"
-           >
-          </p>
-          <p class="member_user_name">{{member.name}}</p>
-          <p class="member_user_post">{{member.post}}</p>
-          </div>
+  <section class="p-members">
+    <div class="p-members-inner">
+      <div class="p-members__menu layout-flex --justify-content-space-between">
+        <ul
+          class="p-members__menu__list layout-flex --justify-content-space-around --align-items-center"
+        >
+          <li
+            class="p-members__menu__item"
+            v-for="(department, index) in department_list"
+            :key="index"
+          >
+            <department-button :department="department" v-on:change="onChangeDepartmentStatus" />
+          </li>
+        </ul>
+        <v-input
+          class="p-members__menu__search-box"
+          v-model="search_text"
+          :placeholder="placeholder"
+        />
       </div>
-  </div>
+      <div class="p-members__body">
+        <h1 class="p-members__body__title">
+          {{ department_name }}笑門会
+          <hr />
+        </h1>
+        <v-scrollbar class="p-members__body__list-wrapper">
+          <ul class="p-members__body__list">
+            <router-link
+              tag="li"
+              class="p-members__body__item"
+              :to="{name:'member-details', params:{id:member._id}}"
+              v-for="(member, index) in member_list"
+              :key="index"
+            >
+              <member-item :member="member" v-if="isShowItem(member)" />
+            </router-link>
+          </ul>
+        </v-scrollbar>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
-import MembersSerch from "./MembersSerche";
-import MembersTabMenu from "./MembersTabMenu";
+import VInput from "../VInput";
+import VScrollbar from "../VScrollbar";
+import DepartmentButton from "./DepartmentButton";
+import MemberItem from "./MemberItem";
 export default {
-  name: "app",
   components: {
-    MembersSerch,
-    MembersTabMenu,
+    VInput,
+    VScrollbar,
+    DepartmentButton,
+    MemberItem
   },
-    data() {
-       return{
-           keyword: '',
-           currentId: 1,
-            users: [
-          　{ id: 1, icon: 'sample', name: '小川友也', post: '平社員',  company: '株式会社デイアイシステム',　department: '愛媛笑門会'},
-          　{ id: 2, icon: 'sample', name: '木村祐太郎', post: 'ノージョブ',  company: 'なし' ,　department: '大阪笑門会'},
-          　{ id: 3, icon: 'sample', name: '山口海都', post: '平社員',  company: '株式会社明光フォーラム' ,　department: '鎌倉笑門会'},
-          　{ id: 4, icon: 'sample', name: '渡邊小輝', post: '平社員',  company: '株式会社セキ',　department: '東京笑門会' },
-            ],
-            Department_list: [
-            { id: 1, name: '愛媛笑門会'},
-            { id: 2, name: '東京笑門会'},
-            { id: 3, name: '大阪笑門会'},
-            { id: 4, name: '鎌倉笑門会'}
-            ]
+
+  data() {
+    return {
+      department_status: [true, false, false, false],
+      search_text: "",
+      placeholder: "会員名または会社名で検索"
+    };
+  },
+
+  computed: {
+    department_list: function() {
+      let list = [];
+      for (const index in this.$root.department_list) {
+        const department = {
+          key: index,
+          name: this.$root.department_list[index],
+          status: this.department_status[index]
+        };
+        list.push(department);
       }
-  },
-  created: function() {
-        this.$root.loadMembers();
+      return list;
     },
-   computed: {
-            filteredUsers: function() {
-                var users = [];
-                for(var i in this.users) {
-                    var user = this.users[i];
-                    if(user.department.indexOf(this.currentId) !== -1　||
-                      user.name.indexOf(this.keyword) !== -1 ||
-                        user.company.indexOf(this.keyword) !== -1
-                        ) {
-                        users.push(user);
-                    }
-                }
-                return users;
-            }
-          }
-}
-</script>
 
-<style lang="scss">
-.component{
-    margin-left: 7em;
-    margin-right: 7em;
+    department_name: function() {
+      return this.department_list.filter(department => {
+        return department.status;
+      })[0].name;
+    },
 
-}
+    member_list: function() {
+      return this.$root.member_list;
+    }
+  },
 
-  .serch{
-    margin-top: 30px;
-    margin-bottom: 10px;
-    margin-left : 180px ;
+  methods: {
+    onChangeDepartmentStatus: function(key) {
+      for (const index in this.department_status) {
+        this.department_status.splice(index, 1, false);
+      }
+      this.department_status.splice(key, 1, true);
+    },
+
+    isShowItem: function(member) {
+      for (const index in this.department_status) {
+        if (!this.department_status[index]) continue;
+        return (
+          this.department_list[index].name + "笑門会" ==
+            member.department_name &&
+          member.name.indexOf(this.search_text) != -1
+        );
+      }
+    }
   }
-.members {
-  width: 1004px;
-  height: 658px;
-  margin-top: 90px;
-  display: table;
-  vertical-align: top;
-  margin-left: 7em;
-  margin-bottom: 70px;
-  background-color: #ffffff;
-}
-.member_deploy_name {
-  margin-left: 24px;
-  font-family: HiraKakuProN-W3;
-  font-size: 60px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.9;
-  letter-spacing: normal;
-  text-align: left;
-  color: #f57d00;
-  position: relative;
-  overflow: hidden;
-  padding: 0.9em;
-}
-.member_deploy_name::before,
-.member_deploy_name::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-}
-.member_deploy_name:before {
-  margin-left: -80px;
-  border-bottom: 1px solid #707070;
-  width: 100%;
-}
-.member_user_icon {
-  margin-top: 60px;
-  margin-left: 30px;
-}
-.member_user_icon img {
-  border-radius: 50px;
-  height: 100px;
-  width: 100px;
-}
+};
+</script>
+<style lang="scss" scoped>
+.p-members {
+  height: 100%;
+  background-color: #f4f4f4;
 
-.member_user_name {
-  height: 50px;
-  margin-top: -100px;
-  margin-left: 170px;
-  vertical-align: middle;
-  font-family: Roboto;
-  font-size: 22px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.32;
-  letter-spacing: normal;
-  text-align: left;
-  color: #000000;
-}
+  &-inner {
+    max-width: 1100px;
+    min-width: 688px;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 76px 1fr;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
 
-.member_user_post {
-  margin-left: 180px;
-  font-family: Roboto;
-  font-size: 20px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1.3;
-  letter-spacing: normal;
-  text-align: left;
-  color: rgba(149, 149, 149, 0.87);
-}
+  &__menu {
+    margin: 10px 0;
+  }
 
+  &__menu__list {
+    min-width: 460px;
+    flex: 3;
+  }
+
+  &__menu__search-box {
+    flex: 2;
+  }
+
+  &__body {
+    display: grid;
+    grid-template-rows: 59px 1fr;
+    background-color: #fff;
+  }
+
+  &__body__title {
+    padding: 17px 0 7px;
+    font-size: 35px;
+    color: $main-color;
+    text-align: center;
+  }
+
+  &__body__list-wrapper {
+    height: calc(100% - 15px);
+    margin-top: 15px;
+  }
+
+  &__body__item {
+    margin: 20px 0 20px 10px;
+    cursor: pointer;
+
+    @media screen and(min-width: 769px) {
+      &:hover {
+        background-color: rgba(#ff9900, 0.2);
+      }
+    }
+  }
+}
 </style>

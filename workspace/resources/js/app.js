@@ -32,12 +32,8 @@ function loadedDirective(el, binding) {
 Vue.use(VueRouter)
 import ChatRooms from "./components/chat/Chat.vue";
 import ChatRoom from "./components/chat/ChatRoom.vue";
-import Chat from "./components/chats/Chat.vue";
-import ChatGroup from "./components/chats/ChatGroup.vue";
-import ChatMember from "./components/chats/ChatMember.vue";
-import RoomDetails from "./components/chats/RoomDetails.vue";
 import Members from "./components/members/Members.vue";
-import MemberProfile from "./components/members/MemberProfile"
+import Member from "./components/members/Member.vue";
 import Invitations from "./components/invitations/Invitations.vue";
 import InvitationDetails from "./components/invitations/InvitationDetails.vue";
 import Forum from "./components/forum/Forum.vue";
@@ -80,10 +76,10 @@ const router = new VueRouter({
             name: "members",
             component: Members,
         },
-
         {
-            path: '/members/:id',
-            component: MemberProfile
+            path: "/members/:id",
+            name: "member-details",
+            component: Member,
         },
 
         {
@@ -196,6 +192,7 @@ const app = new Vue({
     data: {
         polling_time: 5,
         author: {},
+        department_list: ['東京', '鎌倉', '大阪', '愛媛'],
         member_list: [],
         company_list: [],
         stamp_group_list: [],
@@ -205,6 +202,9 @@ const app = new Vue({
         chat_room_list: [],
     },
     created: function () {
+        /* 会員一覧取得 */
+        this.loadMembers();
+
         /* チャットルーム一覧取得 */
         this.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
