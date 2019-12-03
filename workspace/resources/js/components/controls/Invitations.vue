@@ -26,64 +26,81 @@
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-text-field v-model="editedItem.title" label="タイトル"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-textarea
-                                                v-model="editedItem.text"
-                                                label="本文"
-                                                no-resize
-                                            ></v-textarea>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <!-- デザインの考案 -->
-                                            <v-file-input accept="image/*" multiple label="画像"></v-file-input>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-menu
-                                                ref="menu"
-                                                v-model="menu"
-                                                :close-on-content-click="false"
-                                                :return-value.sync="editedItem.deadline_at"
-                                                transition="scale-transition"
-                                                offset-y
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="editedItem.deadline_at"
-                                                        label="締切期限"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker
-                                                    v-model="editedItem.deadline_at"
-                                                    no-title
-                                                    scrollable
+                                <v-form ref="form" lazy-validation>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="editedItem.title"
+                                                    label="タイトル"
+                                                    :rules="validation.titleRules"
+                                                    :counter="20"
+                                                    required
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-textarea
+                                                    v-model="editedItem.text"
+                                                    label="本文"
+                                                    :rules="validation.textRules"
+                                                    :counter="500"
+                                                    required
+                                                    no-resize
+                                                ></v-textarea>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <!-- デザインの考案 -->
+                                                <v-file-input accept="image/*" multiple label="画像"></v-file-input>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-menu
+                                                    ref="menu"
+                                                    v-model="menu"
+                                                    :close-on-content-click="false"
+                                                    :return-value.sync="editedItem.deadline_at"
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    min-width="290px"
                                                 >
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn
-                                                        text
-                                                        color="primary"
-                                                        @click="menu = false"
-                                                    >取り消し</v-btn>
-                                                    <v-btn
-                                                        text
-                                                        color="primary"
-                                                        @click="$refs.menu.save(editedItem.deadline_at)"
-                                                    >設定</v-btn>
-                                                </v-date-picker>
-                                            </v-menu>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-select-members v-model="editedItem.attend_members"></v-select-members>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-text-field
+                                                            v-model="editedItem.deadline_at"
+                                                            :rules="validation.deadline_atRules"
+                                                            required
+                                                            label="締切期限"
+                                                            readonly
+                                                            v-on="on"
+                                                        ></v-text-field>
+                                                    </template>
+                                                    <v-date-picker
+                                                        v-model="editedItem.deadline_at"
+                                                        no-title
+                                                        scrollable
+                                                        :allowed-dates="allowedDate"
+                                                    >
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn
+                                                            text
+                                                            color="primary"
+                                                            @click="menu = false"
+                                                        >取り消し</v-btn>
+                                                        <v-btn
+                                                            text
+                                                            color="primary"
+                                                            @click="$refs.menu.save(editedItem.deadline_at)"
+                                                        >設定</v-btn>
+                                                    </v-date-picker>
+                                                </v-menu>
+                                            </v-col>
+                                            <!-- select未完成 -->
+                                            <v-col cols="12">
+                                                <v-select-members
+                                                    v-model="editedItem.attend_members"
+                                                ></v-select-members>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-form>
                             </v-card-text>
 
                             <v-card-actions>
@@ -115,9 +132,11 @@
 
 <script>
 import store from "../../store";
+import validation from "../../validation";
 export default {
     data: () => ({
         dialog: false,
+        validation,
         menu: false, //ダイアログの内のdata-pickerの表示切替に使用
         headers: [
             {
@@ -201,18 +220,31 @@ export default {
         close() {
             this.dialog = false;
             setTimeout(() => {
+                this.$refs.form.resetValidation();
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedIndex = -1;
             }, 300);
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                this.store.invitations.edit(this.editedItem);
-            } else {
-                this.store.invitations.create(this.editedItem);
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    this.store.invitations.edit(this.editedItem);
+                } else {
+                    this.store.invitations.create(this.editedItem);
+                }
+                this.close();
             }
-            this.close();
+        },
+        allowedDate: function(val) {
+            // 今日～100日後までを選べるようにする
+            let today = new Date();
+            today = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate()
+            );
+            return today <= new Date(val);
         }
     }
 };

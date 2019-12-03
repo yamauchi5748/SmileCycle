@@ -26,22 +26,40 @@
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-text-field v-model="editedItem.name" label="会社名"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="editedItem.telephone_number"
-                                                label="電話番号"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field v-model="editedItem.address" label="住所"></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
+                                <v-form ref="form" lazy-validation>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="editedItem.name"
+                                                    label="会社名"
+                                                    :rules="validation.companyNameRules"
+                                                    :counter="140"
+                                                    required
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="editedItem.telephone_number"
+                                                    label="電話番号"
+                                                    :rules="validation.telRules"
+                                                     hint="数値のみの入力にしてください。ハイフン(-)不要"
+                                                    persistent-hint
+                                                    required
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="editedItem.address"
+                                                    label="住所"
+                                                    :rules="validation.addressRules"
+                                                    :counter="140"
+                                                    required
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-form>
                             </v-card-text>
 
                             <v-card-actions>
@@ -64,9 +82,11 @@
 
 <script>
 import store from "../../store";
+import validation from "../../validation";
 export default {
     data: () => ({
         dialog: false,
+        validation,
         headers: [
             {
                 text: "会社名",
@@ -87,7 +107,7 @@ export default {
             name: "",
             address: "",
             telephone_number: ""
-        }
+        },
     }),
 
     computed: {
@@ -120,18 +140,21 @@ export default {
         close() {
             this.dialog = false;
             setTimeout(() => {
+                this.$refs.form.resetValidation();
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedIndex = -1;
             }, 300);
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                store.companies.edit(this.editedItem);
-            } else {
-                store.companies.create(this.editedItem);
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    store.companies.edit(this.editedItem);
+                } else {
+                    store.companies.create(this.editedItem);
+                }
+                this.close();
             }
-            this.close();
         }
     }
 };

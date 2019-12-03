@@ -15,7 +15,7 @@ import store from "../store";
 export default {
     props: {
         label: String,
-        value: Array
+        value: Array,
     },
     data: () => ({
         headers: [
