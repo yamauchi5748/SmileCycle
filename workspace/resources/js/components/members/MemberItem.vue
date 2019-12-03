@@ -6,9 +6,18 @@
     <div
       class="p-member__data-box margin-left-normal layout-flex --flex-direction-column --justify-content-space-around"
     >
-      <span class="p-member__data --name">{{member.name}} ({{ member.ruby }})</span>
-      <span class="p-member__data --post">{{member.post}}</span>
-      <span class="p-member__data --company">会社</span>
+      <p class="p-member__data-wrapper">
+        <span>会員名</span>
+        <span class="p-member__data --name">{{member.name}} ({{ member.ruby }})</span>
+      </p>
+      <p class="p-member__data-wrapper">
+        <span>役職名</span>
+        <span class="p-member__data --post">{{member.post}}</span>
+      </p>
+      <p class="p-member__data-wrapper">
+        <span>会社名</span>
+        <span class="p-member__data --company">会社</span>
+      </p>
     </div>
   </div>
 </template>
@@ -37,6 +46,7 @@ export default {
   }
 
   &__data {
+    margin-left: 5px;
     font-size: 20px;
   }
 }

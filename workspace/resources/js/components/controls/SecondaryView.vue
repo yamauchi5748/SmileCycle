@@ -6,17 +6,24 @@
                 <slot name="title"></slot>
             </h2>
         </div>
-        <div class="p-body-wrapper">
-            <div class="p-body">
-                <slot name="body"></slot>
+        <v-scrollbar>
+            <div class="p-body-wrapper">
+                <div class="p-body">
+                    <slot name="body"></slot>
+                </div>
             </div>
-        </div>
+        </v-scrollbar>
     </div>
 </template>
 
 <script>
 import VInputImage from "../VInputImage";
+import VScrollbar from "../VScrollbar";
 export default {
+    components: {
+        VScrollbar
+    },
+
     methods: {
         //1つ前のページに戻る
         goBack: function() {
@@ -33,7 +40,10 @@ export default {
 
 <style lang="scss" scoped>
 .p-view {
-    padding-bottom: 128px;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 56px 1fr;
+    
     .p-header {
         display: flex;
         padding: 16px 0 12px;
