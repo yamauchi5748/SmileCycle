@@ -20,13 +20,13 @@
                 ></v-text-field>
                 <v-list nav class="p-rooms flex-grow-1 flex-shrink-1">
                     <v-list-item
-                        v-for="room in rooms"
+                        v-for="room in display_rooms"
                         :key="room._id"
                         link
                         :to="{name:'chat-room',params:{id:room._id}}"
                     >
-                        <v-list-item-avatar>
-                            <img :src="room.img" alt />
+                        <v-list-item-avatar color="grey">
+                            <img :src="room.img" />
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>{{room.name}}</v-list-item-title>
@@ -39,7 +39,6 @@
                         </v-list-item-action>
                     </v-list-item>
                 </v-list>
-                {{store.profile}}
                 <!-- チャットルーム作成ダイアログ -->
                 <v-dialog
                     v-model="dialog"
@@ -72,7 +71,6 @@
                                 </v-row>
                             </v-container>
                         </v-card-text>
-
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" text @click="close">取り消し</v-btn>
@@ -93,7 +91,9 @@ export default {
         dialog: false,
         room_type: 0, // 個人 == 0 , グループ == 1
         search: null,
-        store,
+        rooms_collection: store.collection("rooms"),
+        unsubscribe: null,
+        rooms: [],
         editedItem: {
             name: "",
             members: []
@@ -103,6 +103,11 @@ export default {
             members: []
         }
     }),
+
+    created() {
+        this.rooms_collection.get().then(this.setData);
+        this.unsubscribe = this.rooms_collection.onSnapshot(this.setData);
+    },
     watch: {
         $route() {
             if (this.$route.name == "chat") {
@@ -111,18 +116,12 @@ export default {
         },
         dialog(val) {
             val || this.close();
-        },
-        // 初期ユーザを設定
-        "store.members.data": {
-            handler() {
-                this.store.profile = this.store.members.data[0];
-            }
         }
     },
     computed: {
         // 表示用にフィルターをかける
-        rooms() {
-            return this.store.rooms.data.filter(room => {
+        display_rooms() {
+            return this.rooms.filter(room => {
                 if (
                     !(
                         (this.room_type == 0 && !room.is_group) ||
@@ -131,15 +130,6 @@ export default {
                 ) {
                     return false;
                 }
-
-                if (
-                    !room.members.some(
-                        member_id => member_id === this.store.profile._id
-                    )
-                ) {
-                    return false;
-                }
-
                 return room.name.indexOf(this.search ? this.search : "") !== -1;
             });
         },
@@ -147,7 +137,10 @@ export default {
         sidebar_width() {
             if (this.$vuetify.breakpoint.lgAndUp) {
                 return "300";
-            } else if (this.$route.name == "chat-not-found") {
+            } else if (
+                this.$route.name == "chat" ||
+                this.$route.name == "chat-not-found"
+            ) {
                 return "100%";
             } else if (this.$route.name == "chat-room") {
                 return "0";
@@ -157,6 +150,12 @@ export default {
         }
     },
     methods: {
+        setData(snapshot) {
+            this.rooms = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         // ルームの最新のコンテンツを表示用文字列にする
         latestContentsText(room) {
             if (room.contents && room.contents[0] && room.contents[0].message) {
@@ -171,9 +170,12 @@ export default {
             }, 300);
         },
         save() {
-            store.rooms.create({ ...this.editedItem, is_group: false });
+            this.rooms_collection.add({ ...this.editedItem, is_group: true });
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

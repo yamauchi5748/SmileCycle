@@ -70,7 +70,6 @@
         </v-list>
         <v-textarea
             v-model="message"
-            :key="room && room._id"
             append-icon="mdi-face"
             append-outer-icon="mdi-send"
             @click:append-outer="sendMessage"
@@ -92,36 +91,68 @@ export default {
     data: () => ({
         dialog: false,
         message: "",
-        store,
+        rooms_collection: store.collection("rooms"),
+        room_doc: store.collection("rooms"),
+        room: {},
+        room_unsubscribe: null,
+        contents: [],
+        contents_collection: null,
+        contents_unsubscribe: null,
         editedItem: {
             name: "",
             members: []
         }
     }),
+    created() {
+        this.loadRoom();
+    },
     watch: {
         dialog(val) {
             val || this.close();
         },
-    },
-    computed: {
-        room() {
-            return this.store.rooms.data.find(
-                room => room._id == this.$route.params.id
-            );
-        },
-        // 表示用にソートする
-        contents() {
-            if (!this.room.contents) return [];
-            return this.room.contents.slice().sort((content1, content2) => {
-                return content1 > content2;
-            });
+        $route() {
+            this.loadRoom();
         }
     },
     methods: {
+        loadRoom() {
+            this.unsubscribe();
+            this.room_doc = this.rooms_collection.doc(this.$route.params.id);
+            this.contents_collection = this.room_doc.collection("contents");
+
+            this.room_doc.get().then(this.setRoomData);
+            this.room_unsubscribe = this.room_doc.onSnapshot(this.setRoomData);
+            this.contents_collection
+                .orderBy("created_at")
+                .get()
+                .then(this.setContentsData);
+            this.contents_unsubscribe = this.contents_collection
+                .orderBy("created_at")
+                .onSnapshot(this.setContentsData);
+        },
+        setRoomData(doc) {
+            this.room = {
+                ...doc.data(),
+                _id: doc.id
+            };
+        },
+        setContentsData(snapshot) {
+            this.contents = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+            this.$nextTick(this.scrollToTop);
+        },
         sendMessage() {
             if (!this.message) return;
-
+            this.contents_collection.add({
+                sender_name: "送信者",
+                content_type: 1,
+                message: this.message,
+                created_at: new Date()
+            });
             this.message = "";
+            this.$nextTick(this.scrollToTop);
         },
         //コンテンツ一覧の一番下までスクロール
         scrollToTop() {
@@ -132,23 +163,29 @@ export default {
             this.dialog = true;
         },
         exitRoom() {
-            this.room.members = this.room.members.filter(
-                member_id => member_id !== this.store.profile._id
-            );
-            store.rooms.edit(this.room);
+            /*
+                退出処理をかく
+            */
             this.$router.replace({ name: "chat-not-found" });
         },
         deleteRoom() {
-            store.rooms.delete(this.room);
+            this.room_doc.delete();
             this.$router.replace({ name: "chat-not-found" });
         },
         close() {
             this.dialog = false;
         },
         save() {
-            store.rooms.edit(this.editedItem);
+            this.room_doc.set(this.editedItem);
             this.close();
+        },
+        unsubscribe() {
+            this.room_unsubscribe && this.room_unsubscribe();
+            this.contents_unsubscribe && this.contents_unsubscribe();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     },
     components: {
         NotFound,

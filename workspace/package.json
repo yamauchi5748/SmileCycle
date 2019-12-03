@@ -18,6 +18,7 @@
         "vuetify": "^2.1.0"
     },
     "devDependencies": {
+        "@vue/cli": "^4.1.1",
         "@vue/cli-plugin-babel": "^4.0.0",
         "@vue/cli-plugin-eslint": "^4.0.0",
         "@vue/cli-service": "^4.0.0",

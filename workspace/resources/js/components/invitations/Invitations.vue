@@ -1,36 +1,42 @@
 <template>
     <v-container>
-        <invitation-item
-            class="mx-auto mb-4"
-            v-for="invitation in invitations"
-            :key="invitation._id"
-            :invitation="invitation"
-            :max-width="300"
-        ></invitation-item>
+        <v-row>
+            <v-col cols="12">
+                <div class="headline ml-4">会のご案内</div>
+                <v-divider></v-divider>
+            </v-col>
+            <v-col cols="12" md="6" v-for="invitation in invitations" :key="invitation._id">
+                <invitation-item class="mx-auto mb-4" :invitation="invitation"></invitation-item>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import store from "../../store";
 import InvitationItem from "./InvitationItem";
 export default {
     data: () => ({
+        invitations_collection: store.collection("invitations"),
         invitations: []
     }),
     created() {
-        this.initialize();
+        this.invitations_collection.get().then(this.setData);
+        this.unsubscribe = this.invitations_collection.onSnapshot(this.setData);
     },
     methods: {
-        initialize() {
-            // https://next.json-generator.com/api/json/get/VysGuyBiw
-            axios
-                .get("https://next.json-generator.com/api/json/get/VysGuyBiw")
-                .then(response => {
-                    this.invitations = response.data;
-                    this.loading = false;
-                });
+        setData(snapshot) {
+            this.invitations = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
         }
     },
-    components: { InvitationItem }
+    destroyed() {
+        this.unsubscribe();
+    },
+    components: {
+        InvitationItem
+    }
 };
 </script>

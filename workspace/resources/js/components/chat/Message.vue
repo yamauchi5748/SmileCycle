@@ -5,7 +5,7 @@
                 <img :src="'https://picsum.photos/400?random='+Math.random()" />
             </v-avatar>
             <span class="ml-2 subtitle-2">{{content.sender_name}}</span>
-            <span class="ml-4 caption">{{content.created_at}}</span>
+            <span class="ml-4 caption">{{content.created_at | date_format}}</span>
         </div>
         <p
             v-if="content.content_type=='1'"

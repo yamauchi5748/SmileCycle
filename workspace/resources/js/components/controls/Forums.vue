@@ -5,7 +5,7 @@
             :items="forums"
             multi-sort
             loading-text="データを取得中..."
-            :loading="store.forums.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -57,12 +57,7 @@
             <template v-slot:item.text="{ item }">
                 <span class="d-inline-block text-truncate" style="max-width:200px;">{{item.text}}</span>
             </template>
-            <template v-slot:item.created_at="{ item }">
-                <span
-                    class="d-inline-block text-truncate"
-                    style="max-width:200px;"
-                >{{item.created_at}}</span>
-            </template>
+            <template v-slot:item.created_at="{ item }">{{item.created_at | date_format}}</template>
             <template v-slot:item.action="{ item }">
                 <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
                 <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -76,6 +71,7 @@
 import store from "../../store";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         headers: [
             {
@@ -104,23 +100,31 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        forums_collection: store.collection("forums"),
+        unsubscribe: null,
+        forums: [],
         editedIndex: -1,
         editedItem: {
             title: "",
             text: "",
-            images: [""]
+            images: [],
+            comments: []
         },
         defaultItem: {
             title: "",
             text: "",
-            images: []
+            images: [],
+            comments: []
         }
     }),
+    created() {
+        this.forums_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.forums_collection.onSnapshot(this.setData);
+    },
     computed: {
-        forums() {
-            return this.store.forums.data;
-        },
         formTitle() {
             return "投稿編集";
         }
@@ -131,6 +135,12 @@ export default {
         }
     },
     methods: {
+        setData(snapshot) {
+            this.forums = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.forums.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -138,11 +148,8 @@ export default {
         },
 
         deleteItem(item) {
-            const index = this.forums.indexOf(item);
-            if (confirm("この投稿を削除してもよろしいですか？")) {
-                // 削除
-                this.forums.splice(index, 1);
-            }
+            confirm("この投稿を削除してもよろしいですか？") &&
+                this.forums_collection.doc(item._id).delete();
         },
 
         close() {
@@ -154,11 +161,14 @@ export default {
         },
 
         save() {
-            //保存
-            Object.assign(this.forums[this.editedIndex], this.editedItem);
-
+            this.forums_collection
+                .doc(this.editedItem._id)
+                .set(this.editedItem);
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

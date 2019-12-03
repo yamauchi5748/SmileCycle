@@ -1,5 +1,5 @@
 <template>
-    <v-card :max-width="$vuetify.breakpoint.thresholds.md">
+    <v-card>
         <v-list-item>
             <v-list-item-content>
                 <v-list-item-title class="headline">{{invitation.title}}</v-list-item-title>
@@ -22,14 +22,14 @@
             ></v-text-field>
         </v-card-title>
         <v-data-table :headers="headers" :items="invitation.attend_members" :search="search" dense>
-            <template v-slot:item.status="{ item }">{{ [,"参加","不参加","未回答"][item.status]}}</template>
+            <template v-slot:item.status="{ item }">{{ ["未回答","参加","不参加"][item.status]}}</template>
         </v-data-table>
-        <p class="text-center">回答締切期限:{{invitation.deadline_at}}</p>
+        <p class="text-center">回答締切期限:{{invitation.deadline_at | date_format}}</p>
         <v-card-actions class="mt-12 d-flex justify-space-around">
             <v-btn outlined color="accent">不参加</v-btn>
             <v-btn outlined color="accent">参加</v-btn>
         </v-card-actions>
-        <div class="mx-4 text-right caption grey--text">投稿日時:{{invitation.created_at}}</div>
+        <div class="mx-4 text-right caption grey--text">投稿日時:{{invitation.created_at | date_format}}</div>
     </v-card>
 </template>
 
@@ -65,7 +65,7 @@ export default {
                 }
             ]
         };
-    },
+    }
 };
 </script>
 

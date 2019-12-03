@@ -5,7 +5,7 @@
             :items="invitations"
             multi-sort
             loading-text="データを取得中..."
-            :loading="store.invitations.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -80,7 +80,10 @@
                                             </v-menu>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-select-members v-model="editedItem.attend_members"></v-select-members>
+                                            <v-select-members
+                                                v-model="editedItem.attend_members"
+                                                return-object
+                                            ></v-select-members>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -102,13 +105,17 @@
                 <span class="d-inline-block text-truncate" style="max-width:200px;">{{item.text}}</span>
             </template>
             <template
+                v-slot:item.deadline_at="{ item }"
+            >{{item.deadline_at | date_format("yyyy年MM月dd日")}}</template>
+            <template v-slot:item.created_at="{ item }">{{item.created_at | date_format}}</template>
+            <template
                 v-slot:item.attend_member_count="{ item }"
             >{{item.attend_members && item.attend_members.length}}</template>
             <template v-slot:item.action="{ item }">
                 <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
                 <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
             </template>
-            <template v-slot:no-data>データが存在しません。</template>
+            <template v-slot:no-data>データが存在しません。</template>)
         </v-data-table>
     </v-container>
 </template>
@@ -117,6 +124,7 @@
 import store from "../../store";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         menu: false, //ダイアログの内のdata-pickerの表示切替に使用
         headers: [
@@ -152,7 +160,9 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        invitations_collection: store.collection("invitations"),
+        unsubscribe: null,
+        invitations: [],
         editedIndex: -1,
         editedItem: {
             title: "",
@@ -169,11 +179,14 @@ export default {
             deadline_at: ""
         }
     }),
-
+    created() {
+        this.invitations_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.invitations_collection.onSnapshot(this.setData);
+    },
     computed: {
-        invitations() {
-            return this.store.invitations.data;
-        },
         formTitle() {
             return this.editedIndex === -1
                 ? "会のご案内作成"
@@ -187,6 +200,12 @@ export default {
         }
     },
     methods: {
+        setData(snapshot) {
+            this.invitations = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.invitations.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -195,7 +214,7 @@ export default {
 
         deleteItem(item) {
             confirm("このご案内を削除してもよろしいですか？") &&
-                this.store.invitations.delete(item);
+                this.invitations_collection.doc(item._id).delete();
         },
 
         close() {
@@ -208,12 +227,22 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                this.store.invitations.edit(this.editedItem);
+                this.invitations_collection.doc(this.editedItem._id).set({
+                    ...this.editedItem,
+                    deadline_at: new Date(this.editedItem.deadline_at)
+                });
             } else {
-                this.store.invitations.create(this.editedItem);
+                this.invitations_collection.add({
+                    ...this.editedItem,
+                    created_at: new Date(),
+                    deadline_at: new Date(this.editedItem.deadline_at)
+                });
             }
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

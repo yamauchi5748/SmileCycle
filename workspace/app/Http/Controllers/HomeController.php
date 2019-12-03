@@ -29,6 +29,6 @@ class HomeController extends AuthController
         // 認証された会員を取得
         $member = Auth::user();
 
-        return view('home', [ "member" => $member]);
+        return view('home');
     }
 }

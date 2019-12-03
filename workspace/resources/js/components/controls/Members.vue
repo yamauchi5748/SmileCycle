@@ -5,7 +5,7 @@
             :items="members"
             multi-sort
             loading-text="データ取得中..."
-            :loading="store.members.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -37,6 +37,7 @@
                                         <v-col cols="12">
                                             <v-text-field
                                                 v-model="editedItem.telephone_number"
+                                                type="tel"
                                                 label="電話番号"
                                             ></v-text-field>
                                         </v-col>
@@ -44,13 +45,10 @@
                                             <v-text-field v-model="editedItem.mail" label="メールアドレス"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-select
+                                            <v-select-company
                                                 v-model="editedItem.company_id"
-                                                :items="store.companies.data"
-                                                item-text="name"
-                                                item-value="_id"
-                                                label="会社名"
-                                            ></v-select>
+                                                label="会社"
+                                            ></v-select-company>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-text-field v-model="editedItem.post" label="役職"></v-text-field>
@@ -77,6 +75,7 @@
                                         <v-col cols="12">
                                             <v-text-field
                                                 v-model="editedItem.password"
+                                                type="password"
                                                 label="パスワード"
                                             ></v-text-field>
                                         </v-col>
@@ -109,8 +108,10 @@
 
 <script>
 import store from "../../store";
+import VSelectCompany from "../VSelectCompany";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         headers: [
             {
@@ -129,7 +130,9 @@ export default {
             { text: "役職名", align: "left", sortable: true, value: "post" },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        members_collection: store.collection("members"),
+        unsubscribe: null,
+        members: [],
         editedIndex: -1,
         editedItem: {
             name: "",
@@ -156,11 +159,14 @@ export default {
             password: ""
         }
     }),
-
+    created() {
+        this.members_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.members_collection.onSnapshot(this.setData);
+    },
     computed: {
-        members() {
-            return this.store.members.data;
-        },
         formTitle() {
             return this.editedIndex === -1 ? "会員作成" : "会員編集";
         }
@@ -173,6 +179,12 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.members = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.members.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -181,7 +193,7 @@ export default {
 
         deleteItem(item) {
             confirm("この会社を削除してもよろしいですか？") &&
-                store.members.delete(item);
+                this.members_collection.doc(item._id).delete();
         },
 
         close() {
@@ -194,12 +206,20 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                store.members.edit(this.editedItem);
+                this.members_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
             } else {
-                store.members.create(this.editedItem);
+                this.members_collection.add(this.editedItem);
             }
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
+    },
+    components: {
+        VSelectCompany
     }
 };
 </script>

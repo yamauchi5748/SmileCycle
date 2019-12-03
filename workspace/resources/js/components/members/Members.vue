@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import store from "../../store";
 export default {
     data: () => ({
         search: "",
@@ -74,21 +74,27 @@ export default {
                 value: "department_name"
             }
         ],
+        members_collection: store.collection("members"),
+        unsubscribe: null,
         members: []
     }),
     created() {
-        this.initialize();
+        this.members_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.members_collection.onSnapshot(this.setData);
     },
     methods: {
-        initialize() {
-            // https://next.json-generator.com/api/json/get/VJzF81SsP
-            axios
-                .get("https://next.json-generator.com/api/json/get/VJzF81SsP")
-                .then(response => {
-                    this.members = response.data;
-                    this.loading = false;
-                });
+        setData(snapshot) {
+            this.members = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

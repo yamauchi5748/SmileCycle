@@ -1,11 +1,6 @@
 <template>
     <v-container>
-        <v-data-table
-            :headers="headers"
-            :items="stamps"
-            :loading="store.stamps.loading"
-            class="elevation-1"
-        >
+        <v-data-table :headers="headers" :items="stamps" :loading="loading" class="elevation-1">
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>スタンプ</v-toolbar-title>
@@ -61,6 +56,7 @@
 import store from "../../store";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         headers: [
             {
@@ -77,7 +73,9 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        stamps_collection: store.collection("stamps"),
+        unsubscribe: null,
+        stamps: [],
         editedIndex: -1,
         editedItem: {
             tab_image: "",
@@ -88,11 +86,14 @@ export default {
             stamps: []
         }
     }),
-
+    created() {
+        this.stamps_collection.get().then(snapshot => {
+            this.setData(snapshot)
+            this.loading = false;
+        });
+        this.unsubscribe = this.stamps_collection.onSnapshot(this.setData);
+    },
     computed: {
-        stamps() {
-            return this.store.stamps.data;
-        },
         formTitle() {
             return this.editedIndex === -1 ? "スタンプ作成" : "スタンプ編集";
         }
@@ -105,6 +106,12 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.stamps = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.stamps.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -113,7 +120,7 @@ export default {
 
         deleteItem(item) {
             confirm("このスタンプを削除してもよろしいですか？") &&
-                store.stamps.delete(item);
+                this.stamps_collection.doc(item._id).delete();
         },
 
         close() {
@@ -126,12 +133,17 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                store.stamps.edit(this.editedItem);
+                this.stamps_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
             } else {
-                store.stamps.create(this.editedItem);
+                this.stamps_collection.add(this.editedItem);
             }
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

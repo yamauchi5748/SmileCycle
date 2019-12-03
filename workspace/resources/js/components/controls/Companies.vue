@@ -5,7 +5,7 @@
             :items="companies"
             multi-sort
             loading-text="データ取得中..."
-            :loading="store.companies.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -29,12 +29,19 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <v-text-field v-model="editedItem.name" label="会社名"></v-text-field>
+                                            <v-text-field
+                                                v-model="editedItem.name"
+                                                label="会社名"
+                                                :rules="[rules.required]"
+                                                validate-on-blur
+                                                counter="20"
+                                            ></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-text-field
                                                 v-model="editedItem.telephone_number"
                                                 label="電話番号"
+                                                mask="phone"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
@@ -66,6 +73,7 @@
 import store from "../../store";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         headers: [
             {
@@ -76,7 +84,9 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        companies_collection: store.collection("companies"),
+        companies: [],
+        unsubscribe: null, //リスナーのデタッチ用の関数が入る
         editedIndex: -1,
         editedItem: {
             name: "",
@@ -87,13 +97,16 @@ export default {
             name: "",
             address: "",
             telephone_number: ""
-        }
-    }),
-
-    computed: {
-        companies() {
-            return this.store.companies.data;
         },
+    }),
+    created() {
+        this.companies_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.companies_collection.onSnapshot(this.setData);
+    },
+    computed: {
         formTitle() {
             return this.editedIndex === -1 ? "会社作成" : "会社編集";
         }
@@ -106,15 +119,20 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.companies = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.companies.indexOf(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
-
         deleteItem(item) {
             confirm("この会社を削除してもよろしいですか？") &&
-                store.companies.delete(item);
+                this.companies_collection.doc(item._id).delete();
         },
 
         close() {
@@ -124,15 +142,19 @@ export default {
                 this.editedIndex = -1;
             }, 300);
         },
-
         save() {
             if (this.editedIndex > -1) {
-                store.companies.edit(this.editedItem);
+                this.companies_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
             } else {
-                store.companies.create(this.editedItem);
+                this.companies_collection.add(this.editedItem);
             }
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>
