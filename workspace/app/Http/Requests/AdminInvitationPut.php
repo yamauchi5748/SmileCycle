@@ -65,9 +65,13 @@ class AdminInvitationPut extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['auth'] = true;
-        $response['result'] = false;
-        $response['message'] = $validator->errors()->toArray();
+        $response['data']    = [
+            'auth' => true,
+            'result' => false
+        ];
+        $response['status']  = 'NG';
+        $response['summary'] = 'Failed validation.';
+        $response['errors']  = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)

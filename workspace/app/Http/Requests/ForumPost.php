@@ -26,7 +26,7 @@ class ForumPost extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'string', 'between:1,20'],
+            'title' => ['required', 'string', 'min:1', 'max:20'],
             'text' => ['string', 'nullable', 'max:500'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif'],
         ];
@@ -46,9 +46,13 @@ class ForumPost extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $response['auth'] = true;
-        $response['result'] = false;
-        $response['message'] = $validator->errors()->toArray();
+        $response['data']    = [
+            'auth' => true,
+            'result' => false
+        ];
+        $response['status']  = 'NG';
+        $response['summary'] = 'Failed validation.';
+        $response['errors']  = $validator->errors()->toArray();
 
         throw new HttpResponseException(
             response()->json($response, 422)

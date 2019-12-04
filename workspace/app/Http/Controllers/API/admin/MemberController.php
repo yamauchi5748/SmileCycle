@@ -140,7 +140,7 @@ class MemberController extends AdminAuthController
         StampGroup::raw()->updateMany(
             // スタンプグループを指定
             [
-                'is_all' => 1
+                'is_all' => true
             ],
             [
                 '$push' => [
@@ -150,10 +150,10 @@ class MemberController extends AdminAuthController
             ]
         );
 
-        $member['stamp_groups'] = array_column(StampGroup::raw()->aggregate([
+        $member['stamp_groups'][] = StampGroup::raw()->aggregate([
             [
                 '$match' => [
-                    'is_all' => 1
+                    'is_all' => true
                 ]
             ],
             [
@@ -161,7 +161,7 @@ class MemberController extends AdminAuthController
                     '_id' => 1
                 ]
             ]
-        ])->toArray(), '_id');
+        ])->toArray();
 
         /* 会員モデルをDBに登録 */
         Member::raw()->insertOne($member);

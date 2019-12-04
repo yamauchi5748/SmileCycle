@@ -1,11 +1,6 @@
 <template>
     <v-container>
-        <v-data-table
-            :headers="headers"
-            :items="stamps"
-            :loading="store.stamps.loading"
-            class="elevation-1"
-        >
+        <v-data-table :headers="headers" :items="stamps" :loading="loading" class="elevation-1">
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>スタンプ</v-toolbar-title>
@@ -90,11 +85,14 @@ export default {
             stamps: []
         }
     }),
-
+    created() {
+        this.stamps_collection.get().then(snapshot => {
+            this.setData(snapshot)
+            this.loading = false;
+        });
+        this.unsubscribe = this.stamps_collection.onSnapshot(this.setData);
+    },
     computed: {
-        stamps() {
-            return this.store.stamps.data;
-        },
         formTitle() {
             return this.editedIndex === -1 ? "スタンプ作成" : "スタンプ編集";
         }
