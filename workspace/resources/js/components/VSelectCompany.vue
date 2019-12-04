@@ -2,12 +2,9 @@
     <v-select
         :label="label"
         v-model="selected"
-        :items="members"
+        :items="companies"
         item-text="name"
         item-value="_id"
-        multiple
-        chips
-        :return-object="returnObject"
         :loading="loading"
     ></v-select>
 </template>
@@ -16,8 +13,7 @@
 export default {
     props: {
         label: String,
-        value: Array,
-        returnObject: Boolean
+        value: String
     },
     data: () => ({
         loading: true,
@@ -29,16 +25,16 @@ export default {
                 value: "name"
             }
         ],
-        members_collection: [],
-        members: [],
+        companies_collection: [],
+        companies: [],
         unsubscribe: null
     }),
     created() {
-        this.members_collection.get().then(snapshot => {
+        this.companies_collection.get().then(snapshot => {
             this.setData(snapshot);
             this.loading = false;
         });
-        this.unsubscribe = this.members_collection.onSnapshot(this.setData);
+        this.unsubscribe = this.companies_collection.onSnapshot(this.setData);
     },
     computed: {
         selected: {
@@ -52,17 +48,10 @@ export default {
     },
     methods: {
         setData(snapshot) {
-            this.members = snapshot.docs
-                .map(doc => ({
-                    ...doc.data(),
-                    _id: doc.id
-                }))
-                .map(({ _id, name, ruby }) => ({
-                    _id,
-                    name,
-                    ruby,
-                    status: 0
-                }));
+            this.companies = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
         }
     },
     destroyed() {

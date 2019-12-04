@@ -1,68 +1,41 @@
 <template>
-    <section class="view controls-primary-view">
-        <div class="layout-flex --align-items-center margin-bottom-big">
-        </div>
-        <v-article
-            class="p-post"
-            v-for="(invitation,index) in invitations"
-            :key="index"
-            :post="invitation"
-            :to="{name:'invitation-details',params:{id:invitation.id}}"
-        ></v-article>
-    </section>
+    <v-container>
+        <v-row>
+            <v-col cols="12">
+                <div class="headline ml-4">会のご案内</div>
+                <v-divider></v-divider>
+            </v-col>
+            <v-col cols="12" md="6" v-for="invitation in invitations" :key="invitation._id">
+                <invitation-item class="mx-auto mb-4" :invitation="invitation"></invitation-item>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
+
 <script>
-import VArticle from "../VArticle.vue";
+import InvitationItem from "./InvitationItem";
 export default {
-    data() {
-        return {
-            invitations: [
-                {
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会愛媛笑門会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                },
-				{
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会愛媛笑門会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                },
-				{
-                    id: "l43as26-3768-48aa-9ca9-a7d604815507",
-                    title: "第59回会愛媛笑門会のお知らせ",
-                    text:
-                        "本日はお日柄もよく非常に過ごしやすくなっております。",
-                    images: [
-                        "l43as26-3768-48aa-9ca9-a7d604815507",
-                        "l43as26-3768-48aa-9ca9-a7d604815507"
-                    ],
-                    created_at: "2019-06-01 16:27:03"
-                }
-            ]
-        };
+    data: () => ({
+        invitations_collection: [],
+        invitations: []
+    }),
+    created() {
+        this.invitations_collection.get().then(this.setData);
+        this.unsubscribe = this.invitations_collection.onSnapshot(this.setData);
     },
-    created: function() {
-        this.$root.loadMembers();
+    methods: {
+        setData(snapshot) {
+            this.invitations = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        }
+    },
+    destroyed() {
+        this.unsubscribe();
     },
     components: {
-        VArticle
+        InvitationItem
     }
 };
 </script>
-<style lang="scss" scoped>
-.p-post {
-    margin: 32px auto;
-}
-</style>
