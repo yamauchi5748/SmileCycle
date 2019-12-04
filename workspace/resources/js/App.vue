@@ -43,27 +43,6 @@
 
 <script>
 export default {
-    name: "App",
-    data() {
-        return {
-            drawer: false,
-            items: [
-                {
-                    title: "チャット",
-                    to: { name: "chat" },
-                    icon: "fas fa-comments"
-                },
-                {
-                    title: "会のご案内",
-                    to: { name: "invitations" },
-                    icon: "question_answer"
-                },
-                { title: "みんなの掲示板", to: { name: "forums" } },
-                { title: "会員一覧", to: { name: "members" } },
-                { title: "利用案内", to: { name: "help" } },
-                { title: "プロフィール", to: { name: "profile" } }
-            ]
-        };
-    }
+    name: "App"
 };
 </script>

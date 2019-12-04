@@ -21,11 +21,6 @@
     <title>{{ config('app.name', 'SmileCycle') }}</title>
 
     <!-- Scripts -->
-    <script>
-        window.Laravel = {!! json_encode([
-            'apiToken' => \Auth::user()->api_token ?? null
-        ]) !!};
-    </script>
     <script
         src="{{ mix('js/app.js') }}"
         defer
@@ -43,5 +38,10 @@
         <home-component :author ="{{$member}} "></home-component>
     </div>
 </body>
+<style>
+    html {
+        overflow: hidden;
+    }
+</style>
 
 </html>

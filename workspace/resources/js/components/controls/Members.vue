@@ -5,7 +5,7 @@
             :items="members"
             multi-sort
             loading-text="データ取得中..."
-            :loading="store.members.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -26,98 +26,61 @@
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
-                                <v-form ref="form" lazy-validation>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.name"
-                                                    label="会員名"
-                                                    :rules="validation.memberNameRules"
-                                                    :counter="15"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.ruby"
-                                                    label="ふりがな"
-                                                    :rules="validation.rubyRules"
-                                                    :counter="15"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.telephone_number"
-                                                    label="電話番号"
-                                                    :rules="validation.telRules"
-                                                    hint="数値のみの入力にしてください。ハイフン(-)不要"
-                                                    persistent-hint
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.mail"
-                                                    label="メールアドレス"
-                                                    :rules="validation.emailRules"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-select
-                                                    v-model="editedItem.company_id"
-                                                    :items="store.companies.data"
-                                                    item-text="name"
-                                                    item-value="_id"
-                                                    label="会社名"
-                                                    :rules="validation.company_nameRules"
-                                                    required
-                                                ></v-select>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.post"
-                                                    label="役職"
-                                                    :rules="validation.postRules"
-                                                    :counter="50"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-select
-                                                    v-model="editedItem.department_name"
-                                                    :items="['愛媛笑門会','東京笑門会','大阪笑門会','鎌倉笑門会']"
-                                                    label="部門"
-                                                    :rules="validation.department_nameRules"
-                                                    required
-                                                ></v-select>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.secretary_name"
-                                                    label="秘書名"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.secretary_mail"
-                                                    label="秘書メールアドレス"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.password"
-                                                    label="パスワード"
-                                                    :rules="validation.passwordRules"
-                                                    :counter="100"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-form>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="editedItem.name" label="名前"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="editedItem.ruby" label="ふりがな"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.telephone_number"
+                                                type="tel"
+                                                label="電話番号"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="editedItem.mail" label="メールアドレス"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-select-company
+                                                v-model="editedItem.company_id"
+                                                label="会社"
+                                            ></v-select-company>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="editedItem.post" label="役職"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-select
+                                                v-model="editedItem.department_name"
+                                                :items="['愛媛笑門会','東京笑門会','大阪笑門会','鎌倉笑門会']"
+                                                label="部門"
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.secretary_name"
+                                                label="秘書名"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.secretary_mail"
+                                                label="秘書メールアドレス"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.password"
+                                                type="password"
+                                                label="パスワード"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
                             </v-card-text>
 
                             <v-card-actions>
@@ -144,12 +107,11 @@
 </template>
 
 <script>
-import store from "../../store";
-import validation from "../../validation";
+import VSelectCompany from "../VSelectCompany";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
-        validation,
         headers: [
             {
                 text: "プロフ画像",
@@ -167,7 +129,9 @@ export default {
             { text: "役職名", align: "left", sortable: true, value: "post" },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        members_collection: [],
+        unsubscribe: null,
+        members: [],
         editedIndex: -1,
         editedItem: {
             name: "",
@@ -194,11 +158,14 @@ export default {
             password: ""
         }
     }),
-
+    created() {
+        this.members_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.members_collection.onSnapshot(this.setData);
+    },
     computed: {
-        members() {
-            return this.store.members.data;
-        },
         formTitle() {
             return this.editedIndex === -1 ? "会員作成" : "会員編集";
         }
@@ -211,6 +178,12 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.members = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.members.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -219,28 +192,33 @@ export default {
 
         deleteItem(item) {
             confirm("この会社を削除してもよろしいですか？") &&
-                store.members.delete(item);
+                this.members_collection.doc(item._id).delete();
         },
 
         close() {
             this.dialog = false;
             setTimeout(() => {
-                this.$refs.form.resetValidation();
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedIndex = -1;
             }, 300);
         },
 
         save() {
-            if (this.$refs.form.validate()) {
-                if (this.editedIndex > -1) {
-                    store.members.edit(this.editedItem);
-                } else {
-                    store.members.create(this.editedItem);
-                }
-                this.close();
+            if (this.editedIndex > -1) {
+                this.members_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
+            } else {
+                this.members_collection.add(this.editedItem);
             }
-        },
+            this.close();
+        }
+    },
+    destroyed() {
+        this.unsubscribe();
+    },
+    components: {
+        VSelectCompany
     }
 };
 </script>

@@ -5,7 +5,7 @@
             :items="companies"
             multi-sort
             loading-text="データ取得中..."
-            :loading="store.companies.loading"
+            :loading="loading"
             class="elevation-1"
         >
             <template v-slot:top>
@@ -26,40 +26,29 @@
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
-                                <v-form ref="form" lazy-validation>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.name"
-                                                    label="会社名"
-                                                    :rules="validation.companyNameRules"
-                                                    :counter="140"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.telephone_number"
-                                                    label="電話番号"
-                                                    :rules="validation.telRules"
-                                                     hint="数値のみの入力にしてください。ハイフン(-)不要"
-                                                    persistent-hint
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="editedItem.address"
-                                                    label="住所"
-                                                    :rules="validation.addressRules"
-                                                    :counter="140"
-                                                    required
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-form>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.name"
+                                                label="会社名"
+                                                :rules="[rules.required]"
+                                                validate-on-blur
+                                                counter="20"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="editedItem.telephone_number"
+                                                label="電話番号"
+                                                mask="phone"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="editedItem.address" label="住所"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
                             </v-card-text>
 
                             <v-card-actions>
@@ -81,12 +70,10 @@
 </template>
 
 <script>
-import store from "../../store";
-import validation from "../../validation";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
-        validation,
         headers: [
             {
                 text: "会社名",
@@ -96,7 +83,9 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        companies_collection: [],
+        companies: [],
+        unsubscribe: null, //リスナーのデタッチ用の関数が入る
         editedIndex: -1,
         editedItem: {
             name: "",
@@ -109,11 +98,14 @@ export default {
             telephone_number: ""
         },
     }),
-
+    created() {
+        this.companies_collection.get().then(snapshot => {
+            this.setData(snapshot);
+            this.loading = false;
+        });
+        this.unsubscribe = this.companies_collection.onSnapshot(this.setData);
+    },
     computed: {
-        companies() {
-            return this.store.companies.data;
-        },
         formTitle() {
             return this.editedIndex === -1 ? "会社作成" : "会社編集";
         }
@@ -126,36 +118,42 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.companies = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.companies.indexOf(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
-
         deleteItem(item) {
             confirm("この会社を削除してもよろしいですか？") &&
-                store.companies.delete(item);
+                this.companies_collection.doc(item._id).delete();
         },
 
         close() {
             this.dialog = false;
             setTimeout(() => {
-                this.$refs.form.resetValidation();
                 this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedIndex = -1;
             }, 300);
         },
-
         save() {
-            if (this.$refs.form.validate()) {
-                if (this.editedIndex > -1) {
-                    store.companies.edit(this.editedItem);
-                } else {
-                    store.companies.create(this.editedItem);
-                }
-                this.close();
+            if (this.editedIndex > -1) {
+                this.companies_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
+            } else {
+                this.companies_collection.add(this.editedItem);
             }
+            this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>

@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import store from "../../store";
 export default {
     data: () => ({
+        loading: true,
         dialog: false,
         headers: [
             {
@@ -77,7 +77,9 @@ export default {
             },
             { text: "", align: "right", sortable: false, value: "action" }
         ],
-        store,
+        stamps_collection: [],
+        unsubscribe: null,
+        stamps: [],
         editedIndex: -1,
         editedItem: {
             tab_image: "",
@@ -105,6 +107,12 @@ export default {
     },
 
     methods: {
+        setData(snapshot) {
+            this.stamps = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                _id: doc.id
+            }));
+        },
         editItem(item) {
             this.editedIndex = this.stamps.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -113,7 +121,7 @@ export default {
 
         deleteItem(item) {
             confirm("このスタンプを削除してもよろしいですか？") &&
-                store.stamps.delete(item);
+                this.stamps_collection.doc(item._id).delete();
         },
 
         close() {
@@ -126,12 +134,17 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                store.stamps.edit(this.editedItem);
+                this.stamps_collection
+                    .doc(this.editedItem._id)
+                    .set(this.editedItem);
             } else {
-                store.stamps.create(this.editedItem);
+                this.stamps_collection.add(this.editedItem);
             }
             this.close();
         }
+    },
+    destroyed() {
+        this.unsubscribe();
     }
 };
 </script>
