@@ -34,7 +34,7 @@ $factory->define(StampGroup::class, function () {
     return [
         '_id' => (string) Str::uuid(),  
         'tab_image_id' => $tab_image_id,           
-        'is_all' => $faker->boolean,   
+        'is_all' => $faker->numberBetween(0, 1),   
         'stamps' => $stamps,                 
         'members' => []
     ];

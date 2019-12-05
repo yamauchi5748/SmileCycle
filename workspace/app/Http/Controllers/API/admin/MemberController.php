@@ -42,9 +42,9 @@ class MemberController extends AdminAuthController
         $member = [
             '_id' => (string) Str::uuid(),                      // 会員id
             'api_token' => Str::random(60),                     // api_token
-            'is_notification' => true,                          // 通知の可否情報
+            'is_notification' => 1,                             // 通知の可否情報
             'notification_interval' => '0.5h',                  // 通知間隔
-            'is_admin' => false,                                // 管理者かどうか
+            'is_admin' => 0,                                    // 管理者かどうか
             'name' => $request->name,                           // 会員名
             'ruby' => $request->ruby,                           // ふりがな
             'post' => $request->post,                           // 役職名
@@ -140,7 +140,7 @@ class MemberController extends AdminAuthController
         StampGroup::raw()->updateMany(
             // スタンプグループを指定
             [
-                'is_all' => true
+                'is_all' => 1
             ],
             [
                 '$push' => [
@@ -153,7 +153,7 @@ class MemberController extends AdminAuthController
         $member['stamp_groups'][] = StampGroup::raw()->aggregate([
             [
                 '$match' => [
-                    'is_all' => true
+                    'is_all' => 1
                 ]
             ],
             [

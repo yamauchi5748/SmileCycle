@@ -36,9 +36,9 @@ $factory->define(Member::class, function () {
     $company->save();
 
     /* スタンプグループデータと紐づけ */
-    $private_stamp_groups_obj = StampGroup::where('is_all', false)->get();
-    $public_stamp_groups_obj = StampGroup::where('is_all', true)->get();
-    $private_stamp_groups_count = StampGroup::where('is_all', false)->get()->count();
+    $private_stamp_groups_obj = StampGroup::where('is_all', 0)->get();
+    $public_stamp_groups_obj = StampGroup::where('is_all', 1)->get();
+    $private_stamp_groups_count = StampGroup::where('is_all', 0)->get()->count();
     $stamp_groups_id = [];
 
     // ランダムにスタンプグループを追加
@@ -70,9 +70,9 @@ $factory->define(Member::class, function () {
     $member = [
         '_id' => $_id,
         'api_token' => Str::random(60),
-        'is_notification' => true,
+        'is_notification' => 1,
         'notification_interval' => '0.5h',
-        'is_admin' => false,
+        'is_admin' => 0,
         'name' => $faker->unique()->name,
         'ruby' => $faker->unique()->kanaName,
         'post' => $faker->randomElement(['社長', '会長', '取締役', '社員']),

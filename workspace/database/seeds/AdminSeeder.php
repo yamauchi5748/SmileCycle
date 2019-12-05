@@ -59,9 +59,9 @@ class AdminSeeder extends Seeder
         Member::create([
             '_id' => $_id,
             'api_token' => Str::random(60),
-            'is_notification' => true,
+            'is_notification' => 1,
             'notification_interval' => '0.5h',
-            'is_admin' => true,
+            'is_admin' => 1,
             'name' => 'admin',
             'ruby' => 'あどみん',
             'post' => '管理者',
@@ -75,9 +75,9 @@ class AdminSeeder extends Seeder
         Member::create([
             '_id' => $_id2,
             'api_token' => Str::random(60),
-            'is_notification' => true,
+            'is_notification' => 1,
             'notification_interval' => '0.5h',
-            'is_admin' => true,
+            'is_admin' => 1,
             'name' => 'admin2',
             'ruby' => 'あどみん2',
             'post' => '管理者',
