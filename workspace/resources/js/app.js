@@ -1,201 +1,191 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter)
+
+import vuetify from './vuetify';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import '@mdi/font/css/materialdesignicons.css';
+
 
 require('./bootstrap');
 
-// directiveの追加
-/*
-    ロード中の表示
-    使用法法
-    v-loaded            falseを指定している間、ロード中用の表示にする。
-    v-loaded.shadow     特定の色で塗りつぶす。
-*/
-Vue.directive('loaded',
-    {
-        bind: loadedDirective,
-        update: loadedDirective
-    }
-);
-function loadedDirective(el, binding) {
-    const style = binding.modifiers.shadow ? "shadow" : "spinner"
-    let child = el.querySelector(":scope > ." + style);
-    if (binding.value && child) {
-        el.classList.remove("loading");
-        el.removeChild(child);
-    } else if (!child) {
-        el.classList.add("loading");
-        child = document.createElement("div");
-        child.classList.add(style)
-        el.appendChild(child);
-    }
-}
-Vue.use(VueRouter)
-import ChatRooms from "./components/chat/Chat.vue";
-import ChatRoom from "./components/chat/ChatRoom.vue";
-import Chat from "./components/chats/Chat.vue";
-import ChatGroup from "./components/chats/ChatGroup.vue";
-import ChatMember from "./components/chats/ChatMember.vue";
-import RoomDetails from "./components/chats/RoomDetails.vue";
-import Members from "./components/members/Members.vue";
-import MemberProfile from "./components/members/MemberProfile"
-import Invitations from "./components/invitations/Invitations.vue";
-import InvitationDetails from "./components/invitations/InvitationDetails.vue";
-import Forum from "./components/forum/Forum.vue";
-import ForumDetails from "./components/forum/ForumDetails.vue";
-import ForumCreate from "./components/forum/ForumCreate.vue";
-import Controls from "./components/controls/Controls.vue";
-import ControlsInvitation from "./components/controls/Invitation.vue";
-import ControlsInvitationCreate from "./components/controls/InvitationCreate.vue";
-import ControlsInvitationDetails from "./components/controls/InvitationDetails.vue";
-import ControlsForum from "./components/controls/Forum.vue"
-import ControlsForumDetails from "./components/controls/ForumDetails.vue";
-import ControlsMember from "./components/controls/Member.vue";
-import ControlsMemberCreate from "./components/controls/MemberCreate.vue";
-import ControlsMemberDetails from "./components/controls/MemberDetails.vue";
-import ControlsCompany from "./components/controls/Company.vue";
-import ControlsCompanyCreate from "./components/controls/CompanyCreate.vue";
-import ControlsCompanyDetails from "./components/controls/CompanyDetails.vue";
-import ControlsStamp from "./components/controls/Stamp.vue";
-import ControlsStampCreate from "./components/controls/StampCreate.vue";
-import ControlsStampDetails from "./components/controls/StampDetails.vue";
-import Axios from 'axios';
+import Login from "./components/PageLogin";
+import Main from "./components/PageMain";
+import NotFound from "./components/PageNotFound"
+import Profile from "./components/profile/Profile";
+import ProfileInformation from "./components/profile/Information";
+import ProfileForums from "./components/profile/Forums";
+import ProfileSettings from "./components/profile/Settings";
+import Chat from "./components/chat/Chat";
+import ChatNotFound from "./components/chat/NotFound";
+import ChatRoom from "./components/chat/Room";
+import Invitations from "./components/invitations/Invitations";
+import Forums from "./components/forums/Forums";
+import Members from "./components/members/Members"
+import Controls from "./components/controls/Controls";
+import ControlsInvitations from "./components/controls/Invitations"
+import ControlsForums from "./components/controls/Forums";
+import ControlsMembers from "./components/controls/Members";
+import ControlsCompanies from "./components/controls/Companies";
+import ControlsStamps from "./components/controls/Stamps";
+
 
 const router = new VueRouter({
     mode: "history",
     routes: [
         {
-            path: "/chat-rooms",
-            name: "chat-rooms",
-            component: ChatRooms,
+            path: "/login",
+            name: "login",
+            component: Login,
+            meta: { isPublic: true }
+        },
+        {
+            path: "/",
+            name: "main",
+            component: Main,
             children: [
                 {
-                    path: ":id",
-                    name: "chat-room",
-                    component: ChatRoom
-                }
+                    path: "/profile",
+                    name: "profile",
+                    component: Profile,
+                    children: [
+                        {
+                            path: "information",
+                            name: "profile-information",
+                            component: ProfileInformation
+                        },
+                        {
+                            path: "forums",
+                            name: "profile-forums",
+                            component: ProfileForums
+                        },
+                        {
+                            path: "settings",
+                            name: "profile-settings",
+                            component: ProfileSettings
+                        },
+                    ]
+                },
+                {
+                    path: "/chat",
+                    name: "chat",
+                    component: Chat,
+                    children: [
+                        {
+                            path: "",
+                            name: "chat-not-found",
+                            component: ChatNotFound
+                        },
+                        {
+                            path: ":id",
+                            name: "chat-room",
+                            component: ChatRoom,
+                        }
+                    ]
+                },
+                {
+                    path: "/invitations",
+                    name: "invitations",
+                    component: Invitations
+                },
+                {
+                    path: "/forums",
+                    name: "forums",
+                    component: Forums
+                },
+                {
+                    path: "/members",
+                    name: "members",
+                    component: Members
+                },
+                {
+                    path: "/controls",
+                    name: "controls",
+                    component: Controls,
+                    children: [
+                        {
+                            path: "invitations",
+                            name: "controls-invitations",
+                            component: ControlsInvitations
+                        },
+                        {
+                            path: "forums",
+                            name: "controls-forums",
+                            component: ControlsForums
+                        },
+                        {
+                            path: "members",
+                            name: "controls-members",
+                            component: ControlsMembers
+                        },
+                        {
+                            path: "companies",
+                            name: "controls-companies",
+                            component: ControlsCompanies
+                        },
+                        {
+                            path: "stamps",
+                            name: "controls-stamps",
+                            component: ControlsStamps
+                        }
+                    ]
+                },
             ]
         },
         {
-            path: "/members",
-            name: "members",
-            component: Members,
-        },
-
-        {
-            path: '/members/:id',
-            component: MemberProfile
-        },
-
-        {
-            path: "/invitations",
-            name: "invitations",
-            component: Invitations,
-        },
-        {
-            path: "/invitations/:id",
-            name: "invitation-details",
-            component: InvitationDetails,
-        },
-        {
-            path: "/forum",
-            name: "forum",
-            component: Forum,
-        },
-        {
-            path: "/forum/:id",
-            name: "forum-details",
-            component: ForumDetails,
-        },
-        {
-            path: "/forum/create",
-            name: "forum-create",
-            component: ForumCreate,
-        },
-        {
-            path: "/controls",
-            name: "controls",
-            component: Controls,
-            children: [
-                {
-                    path: "invitation",
-                    name: "controls-invitation",
-                    component: ControlsInvitation
-                },
-                {
-                    path: "invitation/create",
-                    name: "controls-invitation-create",
-                    component: ControlsInvitationCreate
-                },
-                {
-                    path: "invitation/:id",
-                    name: "controls-invitation-details",
-                    component: ControlsInvitationDetails
-                },
-                {
-                    path: "forum",
-                    name: "controls-forum",
-                    component: ControlsForum
-                },
-                {
-                    path: "forum/:id",
-                    name: "controls-forum-details",
-                    component: ControlsForumDetails
-                },
-                {
-                    path: "member",
-                    name: "controls-member",
-                    component: ControlsMember
-                },
-                {
-                    path: "member/create",
-                    name: "controls-member-create",
-                    component: ControlsMemberCreate
-                },
-                {
-                    path: "member/:id",
-                    component: ControlsMemberDetails
-                },
-                {
-                    path: "company",
-                    name: "controls-company",
-                    component: ControlsCompany
-                },
-                {
-                    path: "company/create",
-                    name: "controls-company-create",
-                    component: ControlsCompanyCreate
-                },
-                {
-                    path: "company/:id",
-                    component: ControlsCompanyDetails
-                },
-                {
-                    path: "stamp",
-                    name: "controls-stamp",
-                    component: ControlsStamp,
-                },
-                {
-                    path: "stamp/create",
-                    name: "controls-stamp-create",
-                    component: ControlsStampCreate,
-                },
-                {
-                    path: "stamp/:id",
-                    component: ControlsStampDetails,
-                }
-            ]
-        },
+            path: "*",
+            component: NotFound,
+        }
     ]
+    , scrollBehavior() {
+        return {
+            x: 0,
+            y: 0
+        }
+    }
 });
+router.beforeEach((to, from, next) => {
+    next();
+    // if (to.matched.some(record => !record.meta.isPublic) && false) {
+    //     next({ name: "login" })
+    // } else {
+    //     next();
+    // }
 
-Vue.component('home-component', require('./components/TheHomeComponent.vue').default);
+})
 
-const app = new Vue({
+// コンポーネントのグローバル登録
+import VSelectMembers from "./components/VSelectMembers";
+Vue.component("v-select-members", VSelectMembers);
+
+const dateFormat = (date, format) => {
+    const _fmt = {
+        "yyyy": function (date) { return date.getFullYear() + ''; },
+        "MM": function (date) { return ('0' + (date.getMonth() + 1)).slice(-2); },
+        "dd": function (date) { return ('0' + date.getDate()).slice(-2); },
+        "hh": function (date) { return ('0' + date.getHours()).slice(-2); },
+        "mm": function (date) { return ('0' + date.getMinutes()).slice(-2); },
+        "ss": function (date) { return ('0' + date.getSeconds()).slice(-2); }
+    }
+    const _priority = ["yyyy", "MM", "dd", "hh", "mm", "ss"]
+    return _priority.reduce((res, fmt) => res.replace(fmt, _fmt[fmt](date)), format);
+}
+
+Vue.filter('date_format', function (date, format = "yyyy年MM月dd日 hh:mm") {
+    if (!date) return '';
+    return dateFormat(new Date(date), format);
+})
+
+Vue.config.productionTip = true;
+Vue.component('home-component', require('./App.vue').default);
+
+new Vue({
     router,
-    el: '#app',
+    vuetify,
     data: {
         polling_time: 5,
         author: {},
+        department_list: ['東京', '鎌倉', '大阪', '愛媛'],
         member_list: [],
         company_list: [],
         stamp_group_list: [],
@@ -205,6 +195,9 @@ const app = new Vue({
         chat_room_list: [],
     },
     created: function () {
+        /* 会員一覧取得 */
+        this.loadMembers();
+
         /* チャットルーム一覧取得 */
         this.loadChatRooms().then(res => {
             for (const index in this.chat_room_list) {
@@ -623,27 +616,4 @@ const app = new Vue({
                 });
         },
     }
-});
-function convertObjectToFormData(object) {
-    const form_data = new FormData();
-    for (let key in object) {
-        const value = object[key];
-
-        if (Array.isArray(value)) {
-            value.forEach((v, i) => {
-                form_data.append(key + '[]', v);
-            });
-        } else if (typeof value === "boolean") {
-            if (value) {
-                form_data.append(key, 1);
-            } else {
-                form_data.append(key, 0);
-            }
-        } else {
-            form_data.append(key, value);
-        }
-    }
-    return form_data;
-}
-
-window.app = app;
+}).$mount('#app');
