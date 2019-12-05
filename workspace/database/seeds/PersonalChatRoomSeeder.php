@@ -63,7 +63,7 @@ class PersonalChatRoomSeeder extends Seeder
                     /* チャットモデル */
                     $chat = [
                         '_id' => (string) Str::uuid(),
-                        'is_hurry' => $faker->boolean,
+                        'is_hurry' => $faker->numberBetween(0, 1),
                         'content_type' => $faker->randomElement(["1", "2", "3"]),
                         'sender_id' => $chat_member['_id'],
                         'sender_name' => $chat_member['name'],
@@ -79,7 +79,7 @@ class PersonalChatRoomSeeder extends Seeder
                             break;
                         case '2':
                             // スタンプ
-                            $stamps = StampGroup::select('stamps')->where('is_all', true)->get();
+                            $stamps = StampGroup::select('stamps')->where('is_all', 1)->get();
                             $stamp = $faker->randomElement($stamps)->stamps[0];
                             $chat['stamp_id'] = $stamp;
                             break;

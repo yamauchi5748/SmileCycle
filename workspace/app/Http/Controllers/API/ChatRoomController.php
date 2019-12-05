@@ -54,7 +54,7 @@ class ChatRoomController extends AuthController
                     'group_name' => [
                         '$cond' => [
                             'if' => [
-                                '$eq' => ['$is_group', true]
+                                '$eq' => ['$is_group', 1]
                             ],
                             'then' => '$group_name',
                             'else' => [

@@ -28,7 +28,7 @@ $factory->define(ChatRoom::class, function () {
     // モデル作成
     $chat_group = [
         '_id' => (string) Str::uuid(),
-        'is_group' => true,
+        'is_group' => 1,
         'is_department' => 0,
         'admin_member_id' => $faker->randomElement($chat_members)['_id'],
         'group_name' => $faker->randomElement(['べあーず', 'もんきーず', 'らいおんきんぐ', 'マウンテンゴリラ']),
@@ -52,7 +52,7 @@ $factory->define(ChatRoom::class, function () {
         /* チャットモデル */
         $chat = [
             '_id' => (string) Str::uuid(),
-            'is_hurry' => $faker->boolean,
+            'is_hurry' => $faker->numberBetween(0, 1),
             'content_type' => $faker->randomElement(["1", "2", "3"]),
             'sender_id' => $chat_member['_id'],
             'sender_name' => $chat_member['name'],
@@ -68,7 +68,7 @@ $factory->define(ChatRoom::class, function () {
                 break;
             case '2':
                 // スタンプ
-                $stamps = StampGroup::select('stamps')->where('is_all', true)->get();
+                $stamps = StampGroup::select('stamps')->where('is_all', 1)->get();
                 $stamp = $faker->randomElement($stamps)->stamps[0];
                 $chat['stamp_id'] = $stamp;
                 break;
