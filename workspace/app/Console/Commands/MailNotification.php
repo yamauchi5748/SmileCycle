@@ -39,27 +39,46 @@ class MailNotification extends Command
      */
     public function handle()
     {
+        $match = ['is_notification' => 1];
         $interval = $this->option('interval');
-        $members = array_column(Member::raw()->aggregate(
+        if (!is_null($interval)) {
+            $match['notification_interval'] = $interval;
+        }
+        $members = Member::raw()->aggregate(
             [
                 [
-                    '$match' => [
-                        'is_notification' => 1,
-                        'notification_interval' => $interval
+                    '$match' => $match
+                ],
+                [
+                    '$set' => [
+                        'unread' => 0
                     ]
                 ],
                 [
                     '$project' => [
-                        '_id' => 1
+                        '_id' => 1,
+                        'name' => 1,
+                        'unread' => 1
                     ]
                 ]
             ]
-        )->toArray(), '_id');
+        )->toArray();
+        $membersIds = array_column($members, '_id');
         $chatRooms = ChatRoom::raw()->aggregate([])->toArray();
         foreach ($chatRooms as $chatRoom) {
-            // dump($chatRoom->members->get());
-            // $in = array_intersect($members, $chatRoom->members);
-            // dump($in);
+            $in = array_intersect($membersIds, array_column($chatRoom->members->bsonSerialize(), '_id'));
+            foreach ($chatRoom->contents as $content) {
+                $unreadMembers = array_diff($in, $content->already_read->bsonSerialize());
+                foreach ($unreadMembers as $unreadMember) {
+                    $members[array_search($unreadMember, $membersIds)]->unread++;
+                }
+            }
+        }
+        foreach ($members as $member) {
+            if ($member->unread > 0) {
+                echo $member->name . 'さん ' . $member->unread . '件の未読があります。';
+                echo "\n";
+            }
         }
     }
 }

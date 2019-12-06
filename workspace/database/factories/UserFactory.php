@@ -71,7 +71,7 @@ $factory->define(Member::class, function () {
         '_id' => $_id,
         'api_token' => Str::random(60),
         'is_notification' => 1,
-        'notification_interval' => '0.5h',
+        'notification_interval' => $faker->randomElement(['0.5h', '1h', '2h', '3h', '4h', '5h']),
         'is_admin' => 0,
         'name' => $faker->unique()->name,
         'ruby' => $faker->unique()->kanaName,
