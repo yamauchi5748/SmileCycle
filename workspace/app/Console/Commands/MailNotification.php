@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Member;
 use App\Models\ChatRoom;
+use App\Jobs\MailNotice;
 
 class MailNotification extends Command
 {
@@ -58,6 +59,7 @@ class MailNotification extends Command
                     '$project' => [
                         '_id' => 1,
                         'name' => 1,
+                        'mail' => 1,
                         'unread' => 1
                     ]
                 ]
@@ -76,8 +78,8 @@ class MailNotification extends Command
         }
         foreach ($members as $member) {
             if ($member->unread > 0) {
-                echo $member->name . 'さん ' . $member->unread . '件の未読があります。';
-                echo "\n";
+                $job = new MailNotice($member->name, $member->mail, $member->unread);
+                dispatch($job);
             }
         }
     }
