@@ -26,12 +26,12 @@ class Kernel extends ConsoleKernel
     {
         $filePath = './bat/timpo.txt';
         $schedule->exec('sh ./bat/timpo.sh')->everyMinute()->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 0.5h')->everyThirtyMinutes()->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 1h')->hourly()->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 2h')->cron('0 */2 * * *')->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 3h')->cron('0 */3 * * *')->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 4h')->cron('0 */4 * * *')->appendOutputTo($filePath);
-        $schedule->command('mail:notice -I 5h')->cron('0 */5 * * *')->appendOutputTo($filePath);
+        $schedule->command('mail:notice -I 0.5h')->everyThirtyMinutes();
+        $schedule->command('mail:notice -I 1h')->hourly();
+        $schedule->command('mail:notice -I 2h')->cron('0 */2 * * *');
+        $schedule->command('mail:notice -I 3h')->cron('0 */3 * * *');
+        $schedule->command('mail:notice -I 4h')->cron('0 */4 * * *');
+        $schedule->command('mail:notice -I 5h')->cron('0 */5 * * *');
     }
 
     /**
