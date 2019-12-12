@@ -40,6 +40,56 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <!-- デザインの考案 -->
+                                            <v-card class="my-4">
+                                              <v-btn text color="deep-purple accent-3" @click="afterItemShowSwitch">前回アップロードした画像を表示</v-btn>
+                                              <v-expand-transition>
+                                                <v-row v-show="after_item">
+                                                  <v-col 
+                                                    v-for="(item, i) in items"
+                                                    :key="i"
+                                                    :cols="i === 0 ? 12 : 6"
+                                                  >
+                                                    <v-card>
+                                                      <v-badge class="d-block" color="red" overlap>
+                                                        <v-img :src="item.src">
+                                                        </v-img>
+                                                        <template v-slot:badge>
+                                                          <v-icon dark dense>
+                                                            mdi-close
+                                                          </v-icon>
+                                                        </template>
+                                                      </v-badge>
+                                                    </v-card>
+                                                  </v-col>
+                                                </v-row>
+                                              </v-expand-transition>
+                                            </v-card>
+
+                                            <v-card class="my-4">
+                                              <v-btn text color="deep-purple accent-3" @click="uploadItemShowSwitch">アップロードする画像を表示</v-btn>
+                                              <v-expand-transition>
+                                                <v-row v-show="upload_item">
+                                                  <v-col 
+                                                    v-for="(item, i) in items"
+                                                    :key="i"
+                                                    :cols="i === 0 ? 12 : 6"
+                                                  >
+                                                    <v-card>
+                                                      <v-badge class="d-block" color="red" overlap>
+                                                        <v-img :src="item.src">
+                                                        </v-img>
+                                                        <template v-slot:badge>
+                                                          <v-icon dark dense>
+                                                            mdi-close
+                                                          </v-icon>
+                                                        </template>
+                                                      </v-badge>
+                                                    </v-card>
+                                                  </v-col>
+                                                </v-row>
+                                              </v-expand-transition>
+                                            </v-card>
+
                                             <v-file-input accept="image/*" multiple label="画像"></v-file-input>
                                         </v-col>
                                         <v-col cols="12">
@@ -176,7 +226,34 @@ export default {
             images: [],
             attend_members: [],
             deadline_at: ""
-        }
+        },
+        after_item: false, // 前回アップロードした画像の表示可否を操るプロパティ
+        upload_item: true, // アップロードした画像の表示可否を操るプロパティ
+        
+        // 画像のダミーデータ
+        items: [
+            {
+              text: 'Item 1',
+              src: 'https://picsum.photos/800/800',
+            },
+            {
+              text: 'Item 2',
+              src: 'https://picsum.photos/500/300',
+            },
+            {
+              text: 'Item3',
+              src: 'https://picsum.photos/500/500',
+            },
+            {
+              text: 'Item4',
+              src: 'https://picsum.photos/800/900',
+            },
+            {
+              text: 'Item5',
+              src: 'https://picsum.photos/600/500',
+            },
+        ],
+
     }),
     created() {
         this.invitations_collection.get().then(snapshot => {
