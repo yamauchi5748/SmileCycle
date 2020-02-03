@@ -6,7 +6,7 @@
         "serve:browse": "DEBUG=-* vue-cli-service serve",
         "serve:api": "DEBUG=$DEBUG,-engine*,-express* nodemon -L ./srv/server.js",
         "serve:ws": "DEBUG=$DEBUG,-engine* nodemon -L ./srv/ws.js",
-        "serve": "DEBUG=$DEBUG,-engine* nodemon -L ./srv/ws.js && DEBUG=$DEBUG,-engine*,-express* nodemon -L ./srv/server.js && DEBUG=-* vue-cli-service serve",
+        "serve": "node ./srv/server.js",
         "build": "DEBUG=-* vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
