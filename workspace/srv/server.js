@@ -59,12 +59,12 @@ app.use(function (req, res, next) {
     next();
 })
 /*=== 公開ディレクトリ ===*/
-// app.use(express.static("./dist"));
+app.use(express.static("./dist"));
 
 const api = require("./api");
 app.use("/api", api);
 
-// app.get("/*", express.static("./dist"));
+app.get(/\*/, express.static("./dist"));
 
 server.listen(PORT, function () {
     debug(`listening. Port: \u001b[32m${PORT}\u001b[0m`);
