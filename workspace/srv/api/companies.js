@@ -1,5 +1,6 @@
 const { Company } = require("../model");
 const { Router } = require("express");
+const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization } = require("./util/authorization");
 const ws = require("../ws");
 const debug = require("debug")("app:api-companies")
@@ -12,28 +13,39 @@ router.get("/", async function (req, res, next) {
 router.post("/", adminAuthorization, async function (req, res, next) {
     const instance = req.body;
     const result = await Company.create(instance).catch(next);
-    debug(result);
-    const { operationType = "insert", documentId } = { documentId: result._id };
-    delete result._id;
-    const document = result;
-    const obj = {
-        operationType,
-        documentId,
-        document,
-    }
-    ws.emit("companies", obj);
+    notifyChange("insert", result._id);
     res.json(result);
 });
 router.post("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
     const result = await Company.updateOne({ _id: id }, { $set: instance }).catch(next);
+    notifyChange("update", id);
     res.json(result);
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const result = await Company.deleteOne({ _id: id }).catch(next);
+    notifyChange("delete", id);
     res.json(result);
 });
+
+
+async function notifyChange(operationType, id) {
+    const obj = {
+        operationType,
+        documentId: id,
+    }
+    if (operationType == "insert" || operationType == "update") {
+        const documents = await Company.aggregate()
+            .match({
+                _id: ObjectId(id)
+            })
+            .exec();
+        obj.document = documents[0];
+    } else if (operationType == "delete") {
+    }
+    ws.emit("companies", obj);
+}
 
 module.exports = router;
