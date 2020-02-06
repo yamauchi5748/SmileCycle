@@ -109,16 +109,7 @@ router.put("/:id/status", adminOrMineAuthorization, async function (req, res, ne
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const result = await Invitation.deleteOne({ _id: id }).catch(next);
-<<<<<<< HEAD
-    const { operationType = "delete", documentId } = { documentId: id };
-    const obj = {
-        operationType,
-        documentId
-    }
-    ws.emit("invitations", obj);
-=======
     notifyChange("delete", id);
->>>>>>> 095ca91a695f6f73968c0539035ee279e1c488e2
     res.json(result);
 });
 
