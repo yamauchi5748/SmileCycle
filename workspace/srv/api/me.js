@@ -1,6 +1,7 @@
 const { Member } = require("../model");
 const { Timeline } = require("../model");
 const { Router } = require("express");
+const { authorization } = require("./util/authorization");
 const { Types: { ObjectId } } = require("mongoose");
 const debug = require("debug")("app:me");
 const router = Router();
@@ -8,13 +9,15 @@ router.get("/test", async function (req, res, next) {
     res.json(member);
 });
 // ログインしているユーザの情報を返す
-router.get("/", async function (req, res, next) {
+router.get("/", authorization, async function (req, res, next) {
+    debug("計測");
+    debug("開始");
     const memberId = req.session.memberId;
     const member = await Member.findOne({ _id: ObjectId(memberId) }, { __v: 0 }).catch(next);
     res.json(member);
 });
 // ログインしているユーザの投稿したタイムラインを返す
-router.get("/timelines", async function (req, res, next) {
+router.get("/timelines", authorization, async function (req, res, next) {
     const memberId = req.session.memberId;
     const result = await Timeline.aggregate()
         .match({
