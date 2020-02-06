@@ -20,9 +20,12 @@ export const auth = {
     },
     isInitialized: false,
     async init() {
-        const { data } = await axios.get("me").catch(console.dir);
-        this.user = Object.assign({}, this.user, data);
+        return axios.get("me").then(({ data }) => {
+            this.isInitialized = true;
+            this.user = Object.assign({}, this.user, data);
+        }).catch(() => {
 
+        });
     },
     user: {}
 }
