@@ -34,10 +34,6 @@ module.exports = model("Member", Schema({
         required: true,
         ref: "Company"
     },
-    companyName: {
-        type: String,
-        default: ""
-    },
     post: {
         type: String,
         required: true,

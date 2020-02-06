@@ -9,12 +9,8 @@ router.get("/test", async function (req, res, next) {
 });
 // ログインしているユーザの情報を返す
 router.get("/", async function (req, res, next) {
-    debug("計測");
-    debug("開始");
     const memberId = req.session.memberId;
-    debug(req.session.memberId);
     const member = await Member.findOne({ _id: ObjectId(memberId) }, { __v: 0 }).catch(next);
-    debug("終了");
     res.json(member);
 });
 // ログインしているユーザの投稿したタイムラインを返す

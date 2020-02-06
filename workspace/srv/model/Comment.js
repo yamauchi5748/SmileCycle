@@ -11,14 +11,6 @@ module.exports = model("Comment", new Schema({
         ref: "Member",
         required: true
     },
-    avatar: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
     text: {
         type: String,
         required: true,
