@@ -9,8 +9,8 @@ router.get("/", async function (req, res, next) {
     const result = await Member.find({},"-password").exec().catch(next);
     res.json(result);
 });
-// router.post("/", adminAuthorization, async function (req, res, next) {
-router.post("/", async function (req, res, next) {
+router.post("/", adminAuthorization, async function (req, res, next) {
+// router.post("/", async function (req, res, next) {
     const instance = req.body;
     delete instance.isAdmin;
     instance.password = bcrypt.hashSync(instance.password, 11);
