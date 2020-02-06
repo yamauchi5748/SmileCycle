@@ -7,7 +7,7 @@ const debug = require("debug")("app:api-invitations");
 const router = Router();
 
 router.get("/", async function (req, res, next) {
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Invitation.aggregate()
         .match({
             "members": { $in: [ObjectId(memberId)] }
@@ -66,7 +66,7 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
 });
 // 会の参加への可否を更新する
 router.put("/:id/status", adminOrMineAuthorization, async function (req, res, next) {
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const id = req.params.id;
     const status = req.body.status;
     const result = await Invitation.updateOne({ _id: id }, { $set: { ["statusTable." + memberId]: status } }).catch(next);

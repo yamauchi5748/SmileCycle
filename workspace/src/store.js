@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-export const socket = io("http://localhost:5000");
+export const socket = io(location.hostname + ":5000");
 
 import axiosBase from "axios";
 export const axios = axiosBase.create({
@@ -20,9 +20,12 @@ export const auth = {
     },
     isInitialized: false,
     async init() {
-        const { data } = await axios.get("me").catch(console.dir);
-        this.user = Object.assign({}, this.user, data);
+        return axios.get("me").then(({ data }) => {
+            this.isInitialized = true;
+            this.user = Object.assign({}, this.user, data);
+        }).catch(() => {
 
+        });
     },
     user: {}
 }

@@ -5,6 +5,10 @@ content-type: application/json
 
 
 ###
+GET http://localhost:3000/api/me/test HTTP/1.1
+content-type: application/json
+
+###
 GET http://localhost:3000/api/me/timelines HTTP/1.1
 content-type: application/json
 
@@ -14,8 +18,8 @@ POST http://localhost:3000/api/login HTTP/1.1
 content-type: application/json
 
 {
-    "name": "名前",
-    "password":"unko"
+    "name": "管理者",
+    "password":"lkwjaoieu"
 }
 
 ###

@@ -135,9 +135,8 @@ router.beforeEach(async (to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requireAuth);
     const requiresAdmin = to.matched.some(record => record.meta.requireAdmin);
     if (!requiresAuth) return next();
-    if (!auth.isInitialized) await auth.init().catch(() => {
-        next({ name: "login" });
-    });
+    if (!auth.isInitialized) await auth.init();
+    console.log(auth);
     if (!auth.user._id) return next({ name: "login" });
     if (requiresAdmin && !auth.user.isAdmin) return next({ name: "main" });
     return next();

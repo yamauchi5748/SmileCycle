@@ -1,9 +1,22 @@
-const { Router } = require("express");
-const router = Router();
+const express = require("express");
+const router = express.Router();
+
+// body-parser
+router.use(express.json());
+/*==== session ====*/
+const session = require("express-session");
+// const redis = require("redis");
+// const RedisStore = require("connect-redis")(session);
+router.use(session({
+    secret: "secret",  // Secret Keyで暗号化し、改ざんを防ぐ
+    resave: false,
+    saveUninitialized: false,
+}));
+
 router.use("/login", require("./login"));
 router.use("/logout", require("./logout"));
-const authRouter = Router();
-// authRouter.use(require("./util/authorization").authorization);
+const authRouter = express.Router();
+authRouter.use(require("./util/authorization").authorization);
 authRouter.use("/me", require("./me"));
 authRouter.use("/members", require("./members"));
 authRouter.use("/companies", require("./companies"));
@@ -15,8 +28,9 @@ authRouter.use("/images", require("./images"));
 
 router.use(authRouter);
 
-const debug = require("debug")("app:api-errors")
+const debug = require("debug")("app:api-errors");
 router.use(function (err, req, res, next) {
+    debug(req);
     let result = {
         name: err.name,
         errors: {}

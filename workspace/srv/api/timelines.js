@@ -10,7 +10,7 @@ router.get("/", async function (req, res, next) {
     res.json(result);
 });
 router.post("/", async function (req, res, next) {
-    const sender = await Member.findOne({ _id: req.session.member._id });
+    const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = Object.assign({}, req.body, {
         senderId: sender._id,
         avatar: sender.avatar,
@@ -32,7 +32,7 @@ router.get("/:id/comment", async function (req, res, next) {
 });
 router.post("/:id/comment", async function (req, res, next) {
     const timelineId = req.params.id
-    const sender = await Member.findOne({ _id: req.session.member._id });
+    const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = Object.assign(
         {},
         req.body,

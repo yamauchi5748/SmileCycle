@@ -5,10 +5,9 @@ services:
         environment:
           TZ: "Asia/Tokyo"
           PORT: "${NODE_PORT:-8080}"
-          DEBUG: "*,-nodemon*,-engine*,-socket.io-parser"
           DEBUG_DEPTH: "2"
           DEBUG_COLORS: "true"
-          DEBUG_HIDE_DATE: "true"
+          DEBUG_HIDE_DATE: "false"
         ports:
           - "8080:8080"
           - "3000:3000"

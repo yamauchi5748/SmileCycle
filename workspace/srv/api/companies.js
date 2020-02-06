@@ -1,6 +1,7 @@
 const { Company } = require("../model");
 const { Router } = require("express");
 const { adminAuthorization } = require("./util/authorization");
+const ws = require("../ws");
 const debug = require("debug")("app:api-companies")
 const router = Router();
 
@@ -11,6 +12,16 @@ router.get("/", async function (req, res, next) {
 router.post("/", adminAuthorization, async function (req, res, next) {
     const instance = req.body;
     const result = await Company.create(instance).catch(next);
+    debug(result);
+    const { operationType = "insert", documentId } = { documentId: result._id };
+    delete result._id;
+    const document = result;
+    const obj = {
+        operationType,
+        documentId,
+        document,
+    }
+    ws.emit("companies", obj);
     res.json(result);
 });
 router.post("/:id", adminAuthorization, async function (req, res, next) {
