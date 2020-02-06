@@ -1,5 +1,8 @@
 const { Schema, model } = require("../mongoose");
 const { Types: { ObjectId } } = require("mongoose");
+const moment = require("moment-timezone");
+moment.tz.setDefault('Asia/Tokyo');
+
 module.exports = model("Content", Schema({
     roomId: {
         type: ObjectId,
@@ -45,6 +48,6 @@ module.exports = model("Content", Schema({
     },
     created_at: {
         type: Date,
-        default: Date.now
+        default: moment
     }
 }));

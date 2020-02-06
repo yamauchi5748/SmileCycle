@@ -9,7 +9,7 @@ import router from "@/router";
 import moment from "moment";
 moment.locale("ja")
 Vue.filter('fromNow', function (date) {
-    if (!date) return '';
+    if (!date) return "";
     return moment(date).fromNow();
 })
 
