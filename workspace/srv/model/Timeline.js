@@ -7,14 +7,6 @@ module.exports = model("Timeline", Schema({
         required: true,
         ref: "Member"
     },
-    avatar: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
     title: {
         type: String,
         required: true,

@@ -11,14 +11,6 @@ module.exports = model("Content", Schema({
         required: true,
         ref: "Member"
     },
-    avatar: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
     contentType: {
         type: Number,
         required: true,

@@ -2,6 +2,7 @@ const { Room, Content, Member } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
+const ws = require("../ws");
 const debug = require("debug")("app:api-rooms")
 const router = Router();
 
@@ -18,6 +19,7 @@ router.post("/", async function (req, res, next) {
     const instance = req.body;
     instance.managerId = req.session.memberId;
     const result = await Room.create(instance).catch(next);
+    noticeRoomChanges("insert", result._id);
     res.json(result);
 });
 // roomのコンテンツが帰ってくる
@@ -27,13 +29,23 @@ router.get("/:id/contents", async function (req, res, next) {
         .match({
             roomId: ObjectId(id)
         })
+        .lookup({
+            from: "members",
+            localField: "senderId",
+            foreignField: "_id",
+            as: "member_temp"
+        })
+        .unwind({
+            path: "$member_temp",
+            preserveNullAndEmptyArrays: true
+        })
         .project({
             _id: 1,
             roomId: 1,
             alreadyReadCount: { $size: "$alreadyReadList" },
             senderId: 1,
-            avator: 1,
-            name: 1,
+            avator: "$member_temp.avatar",
+            name: "$member_temp.name",
             message: 1,
             stamp: 1,
             image: 1,
@@ -49,6 +61,7 @@ router.post("/:id", async function (req, res, next) {
     const instance = req.body;
     const memberId = req.session.memberId;
     const result = await Room.updateOne({ _id: id, managerId: memberId }, { $set: instance }).catch(next);
+    noticeRoomChanges("update", id);
     res.json(result);
 });
 //メッセージの送信
@@ -58,12 +71,12 @@ router.post("/:id/message", async function (req, res, next) {
     const instance = {
         roomId,
         senderId: sender._id,
-        avatar: sender.avatar,
-        name: sender.name,
         message: req.body.message,
         contentType: 1
     };
     let result = await Content.create(instance).catch(next);
+    noticeContentChanges("insert", result._id);
+
     const updateFields = await Room.aggregate()
         .match({ _id: ObjectId(roomId) })
         .project({
@@ -93,6 +106,7 @@ router.post("/:id/message", async function (req, res, next) {
         },
         $inc: updateFields[0].incrementFields
     }).catch(next);
+    noticeRoomChanges("update", roomId);
     res.json(result);
 
 });
@@ -103,12 +117,11 @@ router.post("/:id/stamp", async function (req, res, next) {
     const instance = {
         roomId,
         senderId: sender._id,
-        avatar: sender.avatar,
-        name: sender.name,
         stamp: req.body.stamp,
         contentType: 2
     };
     let result = await Content.create(instance).catch(next);
+    noticeContentChanges("insert", result._id);
     const updateFields = await Room.aggregate()
         .match({ _id: ObjectId(roomId) })
         .project({
@@ -137,6 +150,7 @@ router.post("/:id/stamp", async function (req, res, next) {
             $inc: updateFields[0].incrementFields
         }
     }).catch(next);
+    noticeRoomChanges("update", roomId);
     res.json(result);
 });
 // 画像の送信
@@ -146,12 +160,11 @@ router.post("/:id/image", async function (req, res, next) {
     const instance = {
         roomId,
         senderId: sender._id,
-        avatar: sender.avatar,
-        name: sender.name,
         image: req.body.image,
         contentType: 3
     };
     let result = await Content.create(instance).catch(next);
+    noticeContentChanges("insert", result._id);
     const updateFields = await Room.aggregate()
         .match({ _id: ObjectId(roomId) })
         .project({
@@ -180,6 +193,7 @@ router.post("/:id/image", async function (req, res, next) {
         },
         $inc: updateFields[0].incrementFields
     }).catch(next);
+    noticeRoomChanges("update", roomId);
     res.json(result);
 });
 
@@ -187,17 +201,22 @@ router.post("/:id/image", async function (req, res, next) {
 router.put("/:id/read", async function (req, res, next) {
     const id = req.params.id;
     const memberId = req.session.memberId;
-    const result = await Content.updateMany({
+    const changeList = await Content.find({ roomId: id, alreadyReadList: { $nin: [memberId] } }).catch(next);
+    let result = await Content.updateMany({
         roomId: id,
         alreadyReadList: { $nin: [memberId] }
     }, {
         $addToSet: { alreadyReadList: memberId }
     }).catch(next);
-    await Room.updateOne({
+    for (let c of changeList) {
+        noticeContentChanges("update", c._id);
+    }
+    result = await Room.updateOne({
         _id: id,
     }, {
         $set: { [`unreadCountTable.${memberId}`]: 0 }
     }).catch(next);
+    noticeRoomChanges("update", id);
     res.json(result);
 });
 
@@ -211,6 +230,10 @@ router.put("/:id/exit", async function (req, res, next) {
                 members: req.session.memberId
             }
         }).catch(next);
+        noticeRoomChanges("update", id);
+    } else {
+        await Content.deleteMany({ roomId: id }).catch(next);
+        noticeRoomChanges("delete", id);
     }
     res.json(result);
 });
@@ -218,7 +241,53 @@ router.delete("/:id", async function (req, res, next) {
     const id = req.params.id;
     const memberId = req.session.memberId;
     const result = await Room.deleteOne({ _id: id, managerId: memberId }).catch(next);
+    await Content.deleteMany({ roomId: id }).catch(next);
+    noticeRoomChanges("delete", id);
     res.json(result);
 });
+
+async function noticeRoomChanges(operationType, documentId) {
+    const obj = {
+        operationType,
+        documentId
+    }
+    if (operationType != "delete") {
+        const document = await Room.findOne({ _id: ObjectId(documentId) }, "-_id").exec();
+        obj.document = document;
+    }
+    ws.emit("rooms", obj);
+}
+async function noticeContentChanges(operationType, documentId) {
+    const obj = {
+        operationType,
+        documentId
+    }
+    if (operationType != "delete") {
+        const document = await Content.aggregate()
+            .match({ _id: ObjectId(documentId) })
+            .lookup({
+                from: "members",
+                localField: "senderId",
+                foreignField: "_id",
+                as: "member_temp"
+            })
+            .unwind({
+                path: "$member_temp",
+                preserveNullAndEmptyArrays: true
+            })
+            .addFields({
+                avatar: "$member_temp.avatar",
+                name: "$member_temp.name"
+            })
+            .project({
+                _id: 0,
+                member_temp: 0
+            })
+            .exec();
+        obj.document = document[0];
+    }
+    ws.emit("contents", obj);
+}
+
 module.exports = router;
 

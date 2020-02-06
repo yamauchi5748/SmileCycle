@@ -75,6 +75,12 @@ router.put("/:id/status", adminOrMineAuthorization, async function (req, res, ne
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const result = await Invitation.deleteOne({ _id: id }).catch(next);
+    const { operationType = "delete", documentId } = { documentId: id };
+    const obj = {
+        operationType,
+        documentId
+    }
+    ws.emit("invitations", obj);
     res.json(result);
 });
 
