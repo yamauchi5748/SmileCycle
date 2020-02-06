@@ -8,6 +8,7 @@ const io = require("socket.io")(5000, {
 io.on("connect", socket => {
 
 });
+
 const { Member } = require("./model");
 Member.watch().on("change", async change => {
     const { operationType, documentKey: { _id: documentId } } = change;

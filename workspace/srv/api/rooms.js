@@ -6,7 +6,7 @@ const debug = require("debug")("app:api-rooms")
 const router = Router();
 
 router.get("/", async function (req, res, next) {
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Room.aggregate()
         .match({
             "members": { $in: [ObjectId(memberId)] }
@@ -16,7 +16,7 @@ router.get("/", async function (req, res, next) {
 });
 router.post("/", async function (req, res, next) {
     const instance = req.body;
-    instance.managerId = req.session.member._id;
+    instance.managerId = req.session.memberId;
     const result = await Room.create(instance).catch(next);
     res.json(result);
 });
@@ -47,14 +47,14 @@ router.get("/:id/contents", async function (req, res, next) {
 router.post("/:id", async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Room.updateOne({ _id: id, managerId: memberId }, { $set: instance }).catch(next);
     res.json(result);
 });
 //メッセージの送信
 router.post("/:id/message", async function (req, res, next) {
     const roomId = req.params.id;
-    const sender = await Member.findOne({ _id: req.session.member._id });
+    const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = {
         roomId,
         senderId: sender._id,
@@ -99,7 +99,7 @@ router.post("/:id/message", async function (req, res, next) {
 // スタンプの送信
 router.post("/:id/stamp", async function (req, res, next) {
     const roomId = req.params.id;
-    const sender = await Member.findOne({ _id: req.session.member._id });
+    const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = {
         roomId,
         senderId: sender._id,
@@ -142,7 +142,7 @@ router.post("/:id/stamp", async function (req, res, next) {
 // 画像の送信
 router.post("/:id/image", async function (req, res, next) {
     const roomId = req.params.id;
-    const sender = await Member.findOne({ _id: req.session.member._id });
+    const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = {
         roomId,
         senderId: sender._id,
@@ -186,7 +186,7 @@ router.post("/:id/image", async function (req, res, next) {
 // 既読
 router.put("/:id/read", async function (req, res, next) {
     const id = req.params.id;
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Content.updateMany({
         roomId: id,
         alreadyReadList: { $nin: [memberId] }
@@ -203,12 +203,12 @@ router.put("/:id/read", async function (req, res, next) {
 
 router.put("/:id/exit", async function (req, res, next) {
     const id = req.params.id;
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     let result = await Room.deleteOne({ _id: id, managerId: memberId }).catch(next);
     if (result.deletedCount == 0) {
         result = await Room.updateOne({ _id: id }, {
             $pull: {
-                members: req.session.member._id
+                members: req.session.memberId
             }
         }).catch(next);
     }
@@ -216,7 +216,7 @@ router.put("/:id/exit", async function (req, res, next) {
 });
 router.delete("/:id", async function (req, res, next) {
     const id = req.params.id;
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Room.deleteOne({ _id: id, managerId: memberId }).catch(next);
     res.json(result);
 });

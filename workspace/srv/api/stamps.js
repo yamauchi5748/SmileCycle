@@ -6,7 +6,7 @@ const debug = require("debug")("app:api-members")
 const router = Router();
 
 router.get("/", async function (req, res, next) {
-    const memberId = req.session.member._id;
+    const memberId = req.session.memberId;
     const result = await Stamp.aggregate()
         .match({
             $or: [

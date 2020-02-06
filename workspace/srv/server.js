@@ -7,7 +7,10 @@ const PORT = 3000 || process.env.PORT;
 /* =====================================
  * middlewareの設定
  * ===================================== */
-
+app.use(function (req, res, next) {
+    req.connection.setNoDelay(true);
+    next();
+});
 /*=== Logger ===*/
 const LOG_DIRECTORY = "../logs"
 // フォルダがなければ作成
@@ -22,52 +25,22 @@ app.use(require("morgan")("combined", {
         date_format: "YYYY-MM-DD"
     })
 }));
-/*==== session ====*/
-const session = require("express-session");
-const redis = require("redis");
-const RedisStore = require("connect-redis")(session);
-
-app.use(session({
-    secret: "secret",  // Secret Keyで暗号化し、改ざんを防ぐ
-    resave: false,
-    saveUninitialized: true,
-    store: new RedisStore({
-        host: "redis",
-        port: 6379,
-        client: redis.createClient({
-            host: "redis",
-            port: 6379,
-        })
-    }),
-}));
-
-
-/*==== body-parser ====*/
-app.use(express.json());
-app.use(function (req, res, next) {
-    debug("================body===================");
-    debug(req.body);
-    debug("=======================================");
-    debug("================session================");
-    debug(req.session);
-    debug("=======================================");
-    if (req.session.views) {
-        req.session.views++
-    } else {
-        req.session.views = 1
-    }
-    next();
-})
-/*=== 公開ディレクトリ ===*/
-app.use(express.static("./dist"));
 
 const api = require("./api");
 app.use("/api", api);
 
-app.get(/\*/, express.static("./dist"));
+/*=== 公開ディレクトリ ===*/
+const staticFileMiddleware = express.static("dist");
+const history = require('connect-history-api-fallback');
+app.use(staticFileMiddleware);
+app.use(history({
+    disableDotRule: true,
+    verbose: true
+}));
+app.use(staticFileMiddleware);
 
 server.listen(PORT, function () {
-    debug(`listening. Port: \u001b[32m${PORT}\u001b[0m`);
+    console.log(`listening. Port: \u001b[32m${PORT}\u001b[0m`);
 });
 
 // 各ドキュメントが更新された際に関係するドキュメントを更新する
@@ -110,7 +83,6 @@ Member.watch().on("change", async change => {
         updateLog(await Comment.updateMany({ senderId: documentId }, { $set: instance }).exec());
         updateLog(await Content.updateMany({ senderId: documentId }, { $set: instance }).exec());
     }
-
 });
 Company.watch().on("change", async change => {
     const {
