@@ -14,6 +14,10 @@ module.exports = model("Content", Schema({
         required: true,
         ref: "Member"
     },
+    isHurry: {
+        type: Boolean,
+        default: false
+    },
     contentType: {
         type: Number,
         required: true,
