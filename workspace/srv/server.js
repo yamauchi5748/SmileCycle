@@ -43,69 +43,6 @@ server.listen(PORT, function () {
     console.log(`listening. Port: \u001b[32m${PORT}\u001b[0m`);
 });
 
-// 各ドキュメントが更新された際に関係するドキュメントを更新する
-const updateLog = require("debug")("app:document-update");
-const { Member, Company, Timeline, Comment, Content, Room } = require("./model");
-
-// Member.watch().on("change", async change => {
-//     updateLog(change);
-//     const {
-//         operationType,
-//         fullDocument,
-//         documentKey: { _id: documentId }
-//     } = change;
-//     if (operationType == "insert") {
-//         const company = await Company.findOne({ _id: fullDocument.companyId });
-//         updateLog(await Member.updateOne({ _id: documentId }, { $set: { companyName: company.name } }));
-//     }
-
-//     if (operationType == "update") {
-//         const {
-//             updateDescription: {
-//                 updatedFields
-//             } } = change;
-//         if (updatedFields.avatar || updatedFields.name) {
-//             const instance = {};
-//             if (updatedFields.avatar) instance.avatar = updatedFields.avatar;
-//             if (updatedFields.name) instance.name = updatedFields.name;
-//             updateLog(await Timeline.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//             updateLog(await Comment.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//             updateLog(await Content.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//         }
-//         if (updatedFields.companyId) {
-//             const company = await Company.findOne({ _id: updatedFields.companyId });
-//             updateLog(await Member.updateOne({ _id: documentId }, { $set: { companyName: company.name } }));
-//         }
-//     }
-//     if (operationType == "delete") {
-//         const instance = { avatar: "avatar", name: "削除された会員", };
-//         updateLog(await Timeline.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//         updateLog(await Comment.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//         updateLog(await Content.updateMany({ senderId: documentId }, { $set: instance }).exec());
-//     }
-// });
-// Company.watch().on("change", async change => {
-//     const {
-//         operationType,
-//         fullDocument,
-//         documentKey: { _id: documentId }
-//     } = change;
-//     if (operationType == "update") {
-//         const
-//             {
-//                 updateDescription: {
-//                     updatedFields
-//                 }
-//             } = change;
-//         if (updatedFields.name) {
-//             updateLog(await Member.updateMany({ companyId: documentId }, { $set: { companyName: updatedFields.name } }).exec());
-//         }
-//     }
-//     if (operationType == "delete") {
-//         updateLog(await Member.updateMany({ companyId: documentId }, { $set: { companyName: "削除された会社" } }).exec());
-//     }
-// });
-
 // パセリスープ
 const mail = require("./mail");
 setInterval(() => {
@@ -146,6 +83,3 @@ setInterval(() => {
         .exec();
     // mail.send(members, { type: "unreadchat", url: "https://aho.com/chat" });
 }, 1000 * 60 * 30);
-
-// websocket
-// require("./ws");
