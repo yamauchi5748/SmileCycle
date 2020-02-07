@@ -3,7 +3,6 @@ services:
     node:
         image: node
         environment:
-          TZ: "Asia/Tokyo"
           PORT: "${NODE_PORT:-8080}"
           DEBUG_DEPTH: "2"
           DEBUG_COLORS: "true"
@@ -16,46 +15,13 @@ services:
           - "./workspace:/app"
         working_dir: /app
         tty: true
-    redis:
-        image: "redis"
-        restart: always
-        volumes:
-          - "/redis/data:/data"
     mongo:
         image: mongo
         restart: always
         volumes:
           - ./mongo/data:/data
-          - ./mongo/init/:/docker-entrypoint-initdb.d/
         ports:
           - "27017:27017"
         tty: true
         environment:
           - MONGO_INITDB_DATABASE=test
-        networks:
-          - default
-          - mongo_link
-        command: --replSet mongo-set
-    mongo-secondary:
-        image: mongo
-        restart: always
-        volumes:
-          - ./mongo-secondary/data:/data
-          - ./mongo-secondary/init/:/docker-entrypoint-initdb.d/
-        tty: true
-        environment:
-          - MONGO_INITDB_DATABASE=test
-        networks:
-          - default
-          - mongo_link
-        command: --replSet mongo-set
-    mongo-arbiter:
-        image: mongo
-        restart: always
-        tty: true
-        networks:
-          - default
-          - mongo_link
-        command: --replSet mongo-set
-networks:
-    mongo_link:
