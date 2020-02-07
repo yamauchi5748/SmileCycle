@@ -4,10 +4,8 @@
     "private": true,
     "scripts": {
         "serve:browse": "DEBUG=-* vue-cli-service serve",
-        "serve:api": "DEBUG=$DEBUG,-engine*,-express* nodemon -L ./srv/server.js",
-        "serve:ws": "DEBUG=$DEBUG,-engine* nodemon -L ./srv/ws.js",
-        "serve": "DEBUG=-* node ./srv/server.js",
-        "serve:debug": "DEBUG=*,-engine* nodemon -L ./srv/server.js",
+        "serve": "DEBUG=-* node ./srv/wwww.js",
+        "serve:debug": "DEBUG=*,-engine* nodemon -L ./srv/www.js",
         "build": "DEBUG=-* vue-cli-service build",
         "lint": "vue-cli-service lint"
     },

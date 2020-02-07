@@ -2,7 +2,7 @@ const { Company } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization } = require("./util/authorization");
-const ws = require("../ws");
+const { io } = require("../server");
 const debug = require("debug")("app:api-companies")
 const router = Router();
 
@@ -45,7 +45,7 @@ async function notifyChange(operationType, id) {
         obj.document = documents[0];
     } else if (operationType == "delete") {
     }
-    ws.emit("companies", obj);
+    io.emit("companies", obj);
 }
 
 module.exports = router;

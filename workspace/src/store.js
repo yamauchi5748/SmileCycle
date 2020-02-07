@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-export const socket = io(location.hostname + ":5000");
+export const socket = io();
 
 import axiosBase from "axios";
 export const axios = axiosBase.create({

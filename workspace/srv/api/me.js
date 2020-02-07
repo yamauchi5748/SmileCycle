@@ -2,7 +2,7 @@ const { Member } = require("../model");
 const { Timeline } = require("../model");
 const { Router } = require("express");
 const { authorization } = require("./util/authorization");
-const ws = require("../ws");
+const { io } = require("../server");
 const { Types: { ObjectId } } = require("mongoose");
 const debug = require("debug")("app:me");
 const router = Router();
@@ -59,7 +59,7 @@ async function notifyChange(operationType, id) {
         obj.document = documents[0];
     } else if (operationType == "delete") {
     }
-    ws.emit("members", obj);
+    io.emit("members", obj);
 }
 // ログインしているユーザの投稿したタイムラインを返す
 router.get("/timelines", authorization, async function (req, res, next) {

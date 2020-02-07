@@ -2,7 +2,7 @@ const { Stamp } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
-const ws = require("../ws");
+const { io } = require("../server");
 const debug = require("debug")("app:api-members")
 const router = Router();
 
@@ -59,7 +59,7 @@ async function notifyChange(operationType, id) {
         obj.document = documents[0];
     } else if (operationType == "delete") {
     }
-    ws.emit("stamps", obj);
+    io.emit("stamps", obj);
 }
 
 module.exports = router;

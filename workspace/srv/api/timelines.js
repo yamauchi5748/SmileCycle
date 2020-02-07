@@ -2,7 +2,7 @@ const { Timeline, Comment, Member } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
-const ws = require("../ws");
+const { io } = require("../server");
 const debug = require("debug")("app:api-timelines")
 const router = Router();
 
@@ -129,7 +129,7 @@ async function noticeTimelineChanges(operationType, documentId) {
         obj.document = document[0];
     }
     debug(obj);
-    ws.emit("timelines", obj);
+    io.emit("timelines", obj);
 }
 
 async function noticeCommentChanges(operationType, documentId) {
@@ -161,7 +161,7 @@ async function noticeCommentChanges(operationType, documentId) {
             .exec();
         obj.document = document[0];
     }
-    ws.emit("comments", obj);
+    io.emit("comments", obj);
 }
 
 module.exports = router;

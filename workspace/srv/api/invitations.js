@@ -1,7 +1,7 @@
 const { Invitation, Member } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
-const ws = require("../ws");
+const { io } = require("../server");
 const mail = require("../mail");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
 const debug = require("debug")("app:api-invitations");
@@ -157,7 +157,7 @@ async function notifyChange(operationType, id) {
         obj.document = documents[0];
     } else if (operationType == "delete") {
     }
-    ws.emit("invitations", obj);
+    io.emit("invitations", obj);
 }
 
 module.exports = router;

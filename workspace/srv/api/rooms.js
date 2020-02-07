@@ -2,7 +2,7 @@ const { Room, Content, Member } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
-const ws = require("../ws");
+const { io } = require("../server");
 const mail = require("../mail");
 const debug = require("debug")("app:api-rooms")
 const router = Router();
@@ -213,7 +213,7 @@ async function noticeRoomChanges(operationType, documentId) {
         const document = await Room.findOne({ _id: ObjectId(documentId) }, "-_id").exec();
         obj.document = document;
     }
-    ws.emit("rooms", obj);
+    io.emit("rooms", obj);
 }
 async function noticeContentChanges(operationType, documentId) {
     const obj = {
@@ -244,7 +244,7 @@ async function noticeContentChanges(operationType, documentId) {
             .exec();
         obj.document = document[0];
     }
-    ws.emit("contents", obj);
+    io.emit("contents", obj);
 }
 
 module.exports = router;
