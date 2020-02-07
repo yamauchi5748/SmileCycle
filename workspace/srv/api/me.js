@@ -16,6 +16,9 @@ router.get("/", authorization, async function (req, res, next) {
     const member = await Member.findOne({ _id: ObjectId(memberId) }, { __v: 0 }).catch(next);
     res.json(member);
 });
+router.post("/", authorization, async function (req, res, next) {
+    
+});
 // ログインしているユーザの投稿したタイムラインを返す
 router.get("/timelines", authorization, async function (req, res, next) {
     const memberId = req.session.memberId;

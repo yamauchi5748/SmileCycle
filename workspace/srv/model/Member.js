@@ -68,5 +68,14 @@ module.exports = model("Member", Schema({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    notificationInterval: {
+        type: Number,
+        required: true,
+        enum: [0.5, 1, 2, 3, 4, 5, 12, 24]
+    },
+    isNotification: {
+        type: Boolean,
+        required: true
     }
 }));
