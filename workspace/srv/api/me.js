@@ -2,6 +2,7 @@ const { Member } = require("../model");
 const { Timeline } = require("../model");
 const { Router } = require("express");
 const { authorization } = require("./util/authorization");
+const ws = require("../ws");
 const { Types: { ObjectId } } = require("mongoose");
 const debug = require("debug")("app:me");
 const router = Router();
@@ -17,8 +18,49 @@ router.get("/", authorization, async function (req, res, next) {
     res.json(member);
 });
 router.post("/", authorization, async function (req, res, next) {
-    
+    const id = req.session.memberId;
+    const instance = req.body;
+    delete instance.isAdmin;
+    if (instance.password) {
+        instance.password = bcrypt.hashSync(instance.password, 11);
+    }
+    const result = await Member.updateOne({ _id: id }, { $set: instance }).catch(next);
+    notifyChange("update", id);
+    res.json(result);
 });
+async function notifyChange(operationType, id) {
+    const obj = {
+        operationType,
+        documentId: id,
+    }
+    if (operationType == "insert" || operationType == "update") {
+        const documents = await Member.aggregate()
+            .match({
+                _id: ObjectId(id)
+            })
+            .lookup({
+                from: "companies",
+                localField: "companyId",
+                foreignField: "_id",
+                as: "company"
+            })
+            .unwind({
+                path: "$company",
+                preserveNullAndEmptyArrays: true
+            })
+            .addFields({
+                companyName: "$company.name"
+            })
+            .project({
+                password: 0,
+                company: 0
+            })
+            .exec();
+        obj.document = documents[0];
+    } else if (operationType == "delete") {
+    }
+    ws.emit("members", obj);
+}
 // ログインしているユーザの投稿したタイムラインを返す
 router.get("/timelines", authorization, async function (req, res, next) {
     const memberId = req.session.memberId;

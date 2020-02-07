@@ -38,7 +38,7 @@ router.post("/", adminAuthorization, async function (req, res, next) {
     notifyChange("insert", result._id);
     res.json(result);
 });
-router.post("/:id", adminOrMineAuthorization, async function (req, res, next) {
+router.post("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
     delete instance.isAdmin;
