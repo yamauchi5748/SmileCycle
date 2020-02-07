@@ -8,6 +8,7 @@ const
     Room = require("./Room"),
     Content = require("./Content"),
     Stamp = require("./Stamp");
+    Image = require("./Image");
 module.exports = {
     Member,
     Company,
@@ -16,7 +17,8 @@ module.exports = {
     Comment,
     Room,
     Content,
-    Stamp
+    Stamp,
+    Image
 }
 const bcrypt = require('bcrypt');
 Member.find({}).exec().then(collection => {

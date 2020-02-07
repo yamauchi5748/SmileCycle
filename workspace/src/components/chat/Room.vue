@@ -66,6 +66,11 @@
             class="mb-2 mx-4 flex-grow-0 flex-shrink-0"
         >
             <template v-slot:prepend>
+                <v-icon
+                    @click="isHurry = !isHurry"
+                    :color="isHurry ? 'red':''"
+                    class="mr-2"
+                >mdi-email-alert</v-icon>
                 <v-icon @click="choseImage">mdi-camera-image</v-icon>
                 <input
                     v-show="false"
@@ -124,6 +129,7 @@ export default {
         MRoomEditor
     },
     data: () => ({
+        isHurry: false,
         isStampMenuDisplayed: false,
         user: auth.user,
         placeholder: "メッセージを入力してください",
@@ -169,24 +175,51 @@ export default {
         },
         async sendMessage() {
             if (!this.message) return;
+            if (
+                this.isHurry &&
+                !confirm(
+                    "ルーム内の会員全てにメールで通知されます。\nよろしいですか？"
+                )
+            )
+                return;
             axios.post("rooms/" + this.room.id + "/message", {
+                isHurry: this.isHurry,
                 message: this.message
             });
+            this.isHurry = false;
             this.message = "";
         },
         async sendStamp(name) {
+            if (
+                this.isHurry &&
+                !confirm(
+                    "ルーム内の会員全てにメールで通知されます。\nよろしいですか？"
+                )
+            )
+                return;
             await axios.post("rooms/" + this.room.id + "/stamp", {
+                isHurry: this.isHurry,
                 stamp: name
             });
+            this.isHurry = false;
         },
         choseImage() {
             this.$refs.input.value = null;
             this.$refs.input.click();
         },
         async sendImage(image) {
+            if (
+                this.isHurry &&
+                !confirm(
+                    "ルーム内の会員全てにメールで通知されます。\nよろしいですか？"
+                )
+            )
+                return;
             await axios.post("rooms/" + this.room.id + "/image", {
+                isHurry: this.isHurry,
                 image: image
             });
+            this.isHurry = false;
         },
         async onFileChange(event) {
             for (const file of event.target.files) {
