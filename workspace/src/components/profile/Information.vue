@@ -95,7 +95,7 @@ export default {
     methods: {
         save() {
             confirm("現在の情報に更新しますか？") &&
-                axios.post("members/" + this.user._id, this.editedItem);
+                axios.post("me", this.editedItem);
         }
     }
 };
