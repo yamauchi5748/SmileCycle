@@ -28,7 +28,7 @@
                     </v-list-item>
                     <v-list-item link @click="controlEditor('exitRoom',room)">
                         <v-list-item-title>退出</v-list-item-title>
-                    </v-list-item>
+                    </v-list-item>  
                     <v-list-item
                         v-show="user._id == room.managerId"
                         link

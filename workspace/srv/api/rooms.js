@@ -50,6 +50,7 @@ router.get("/:id/contents", async function (req, res, next) {
             message: 1,
             stamp: 1,
             image: 1,
+            isHurry: 1,
             contentType: 1,
             created_at: 1,
         })
@@ -77,7 +78,7 @@ router.post("/:id/stamp", async function (req, res, next) {
 router.post("/:id/image", async function (req, res, next) {
     postContent(req, res, next, 3);
 });
-async function postContent (req, res, next, contentType) {
+async function postContent(req, res, next, contentType) {
     const roomId = req.params.id;
     const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = {
@@ -134,7 +135,7 @@ async function postContent (req, res, next, contentType) {
                     $filter: {
                         input: "$members",
                         as: "member",
-                        cond: { $ne: [ "$$member", sender._id ] }
+                        cond: { $ne: ["$$member", sender._id] }
                     }
                 }
             })

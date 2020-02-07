@@ -34,10 +34,13 @@
                     </v-row>
                 </template>
             </v-img>
-            <span
-                class="ml-2 mt-auto grey--text caption"
-                v-show="content.alreadyReadCount"
-            >既読{{content.alreadyReadCount-1}}</span>
+            <span class="d-flex flex-column justify-end ml-2">
+                <span v-if="content.isHurry" class="red--text caption">急ぎ</span>
+                <span
+                    class="mt-auto grey--text caption"
+                    v-show="content.alreadyReadCount"
+                >既読{{content.alreadyReadCount-1}}</span>
+            </span>
         </p>
     </v-list-item>
 </template>

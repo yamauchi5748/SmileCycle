@@ -2,7 +2,6 @@ const debug = require("debug")("app:server");
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const PORT = 3000 || process.env.PORT;
 
 /* =====================================
  * middlewareの設定
@@ -39,6 +38,7 @@ app.use(history({
 }));
 app.use(staticFileMiddleware);
 
+const PORT = 3000 || process.env.PORT;
 server.listen(PORT, function () {
     console.log(`listening. Port: \u001b[32m${PORT}\u001b[0m`);
 });

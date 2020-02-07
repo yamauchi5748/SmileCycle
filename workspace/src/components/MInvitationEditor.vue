@@ -76,7 +76,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="close">取り消し</v-btn>
-                <v-btn color="blue darken-1" text @click="save">保存する</v-btn>
+                <v-btn :disabled="!valid" color="blue darken-1" text @click="save">保存する</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
