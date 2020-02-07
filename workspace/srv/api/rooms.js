@@ -139,6 +139,15 @@ async function postContent(req, res, next, contentType) {
                     }
                 }
             })
+            .lookup({
+                from: "members",
+                localField: "members",
+                foreignField: "_id",
+                as: "members_temp"
+            })
+            .project({
+                members: "$members_temp"
+            })
             .exec().catch(next);
         mail.send(members[0].members, { type: 'hurrychat', url: 'https://ponzu.com/chat' });
     }
