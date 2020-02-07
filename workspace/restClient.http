@@ -205,11 +205,12 @@ GET http://localhost:3000/api/rooms/5e30f4aede956233eb3ac831/contents HTTP/1.1
 Content-Type: application/json
 
 ###
-POST http://localhost:3000/api/rooms/5e3167bab4f069012241a0d3/message HTTP/1.1
+POST http://localhost:3000/api/rooms/5e3ba9566e0fb101c0b12d31/message HTTP/1.1
 content-type: application/json
 
 {
-    "message":"うんれーど"
+    "message":"うんれーど",
+    "isHurry": true
 }
 
 ###

@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
 const ws = require("../ws");
+const mail = require("../mail");
 const debug = require("debug")("app:api-rooms")
 const router = Router();
 
@@ -66,103 +67,35 @@ router.post("/:id", async function (req, res, next) {
 });
 //メッセージの送信
 router.post("/:id/message", async function (req, res, next) {
-    const roomId = req.params.id;
-    const sender = await Member.findOne({ _id: req.session.memberId });
-    const instance = {
-        roomId,
-        senderId: sender._id,
-        message: req.body.message,
-        contentType: 1
-    };
-    let result = await Content.create(instance).catch(next);
-    noticeContentChanges("insert", result._id);
-
-    const updateFields = await Room.aggregate()
-        .match({ _id: ObjectId(roomId) })
-        .project({
-            incrementFields: {
-                $arrayToObject: {
-                    $map: {
-                        input: "$members",
-                        as: "member",
-                        in: {
-                            k: {
-                                $concat: [
-                                    "unreadCountTable.",
-                                    { $toString: "$$member" }
-                                ]
-                            },
-                            v: 1
-                        }
-                    }
-                }
-            }
-        })
-        .exec().catch(next);
-
-    result = await Room.updateOne({ _id: roomId }, {
-        $set: {
-            latestContent: instance.message,
-        },
-        $inc: updateFields[0].incrementFields
-    }).catch(next);
-    noticeRoomChanges("update", roomId);
-    res.json(result);
-
+    postContent(req, res, next, 1);
 });
 // スタンプの送信
 router.post("/:id/stamp", async function (req, res, next) {
-    const roomId = req.params.id;
-    const sender = await Member.findOne({ _id: req.session.memberId });
-    const instance = {
-        roomId,
-        senderId: sender._id,
-        stamp: req.body.stamp,
-        contentType: 2
-    };
-    let result = await Content.create(instance).catch(next);
-    noticeContentChanges("insert", result._id);
-    const updateFields = await Room.aggregate()
-        .match({ _id: ObjectId(roomId) })
-        .project({
-            incrementFields: {
-                $arrayToObject: {
-                    $map: {
-                        input: "$members",
-                        as: "member",
-                        in: {
-                            k: {
-                                $concat: [
-                                    "unreadCountTable.",
-                                    { $toString: "$$member" }
-                                ]
-                            },
-                            v: 1
-                        }
-                    }
-                }
-            }
-        })
-        .exec().catch(next);
-    result = await Room.updateOne({ _id: roomId }, {
-        $set: {
-            latestContent: "スタンプが送信されました。",
-            $inc: updateFields[0].incrementFields
-        }
-    }).catch(next);
-    noticeRoomChanges("update", roomId);
-    res.json(result);
+    postContent(req, res, next, 2);
 });
 // 画像の送信
 router.post("/:id/image", async function (req, res, next) {
+    postContent(req, res, next, 3);
+});
+async function postContent (req, res, next, contentType) {
     const roomId = req.params.id;
     const sender = await Member.findOne({ _id: req.session.memberId });
     const instance = {
         roomId,
         senderId: sender._id,
-        image: req.body.image,
-        contentType: 3
+        contentType: contentType,
+        isHurry: req.body.isHurry
     };
+    if (contentType == 1) {
+        instance.message = req.body.message;
+    } else if (contentType == 2) {
+        instance.stamp = req.body.stamp;
+    } else if (contentType == 3) {
+        instance.image = req.body.image;
+    } else {
+        next();
+        return;
+    }
     let result = await Content.create(instance).catch(next);
     noticeContentChanges("insert", result._id);
     const updateFields = await Room.aggregate()
@@ -189,13 +122,28 @@ router.post("/:id/image", async function (req, res, next) {
         .exec().catch(next);
     result = await Room.updateOne({ _id: roomId }, {
         $set: {
-            latestContent: "画像が送信されました。"
+            latestContent: contentType == 1 ? instance.message : contentType == 2 ? "スタンプが送信されました。" : "画像が送信されました。"
         },
         $inc: updateFields[0].incrementFields
     }).catch(next);
+    if (req.body.isHurry) {
+        let members = await Room.aggregate()
+            .match({ _id: ObjectId(roomId) })
+            .project({
+                members: {
+                    $filter: {
+                        input: "$members",
+                        as: "member",
+                        cond: { $ne: [ "$$member", sender._id ] }
+                    }
+                }
+            })
+            .exec().catch(next);
+        mail.send(members[0].members, { type: 'hurrychat', url: 'https://ponzu.com/chat' });
+    }
     noticeRoomChanges("update", roomId);
     res.json(result);
-});
+}
 
 // 既読
 router.put("/:id/read", async function (req, res, next) {
