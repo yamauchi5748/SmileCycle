@@ -13,6 +13,7 @@
                                     v-model="editedItem.name"
                                     label="名前"
                                     counter="15"
+                                    :error-messages="errorMessage"
                                     :rules="memberRules.name"
                                 ></v-text-field>
                             </v-col>
@@ -111,18 +112,19 @@ export default {
         dialog: false,
         valid: false,
         editedId: null,
+        errorMessage: [],
         editedItem: {
             avatar: "",
-            name: "",
-            ruby: "",
-            tel: "",
-            mail: "",
-            companyId: "",
-            post: "",
-            department: "",
+            name: "管理者",
+            ruby: "aa",
+            tel: "090-0000-0000",
+            mail: "aa@aa.aa",
+            companyId: "aaa",
+            post: "aaa",
+            department: "愛媛笑門会",
             secretaryName: "",
             secretaryMail: "",
-            password: ""
+            password: "12345678"
         },
         defaultItem: {
             avatar: "",
@@ -207,7 +209,7 @@ export default {
             this.editedId = null;
             this.editedItem = Object.assign({}, this.defaultItem);
         },
-        save() {
+        async save() {
             if (
                 !(
                     this.editedItem.secretaryMail ||
@@ -217,10 +219,11 @@ export default {
                 delete this.editedItem.secretaryName;
                 delete this.editedItem.secretaryMail;
             }
+
             if (this.editedId) {
-                axios.post("members/" + this.editedId, this.editedItem);
+                await axios.post("members/" + this.editedId, this.editedItem);
             } else {
-                axios.post("members", this.editedItem);
+                await axios.post("members", this.editedItem);
             }
             this.close();
         }

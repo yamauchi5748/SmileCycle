@@ -11,12 +11,11 @@ router.get("/test", async function (req, res, next) {
 });
 // ログインしているユーザの情報を返す
 router.get("/", authorization, async function (req, res, next) {
-    debug("計測");
-    debug("開始");
     const memberId = req.session.memberId;
-    const member = await Member.findOne({ _id: ObjectId(memberId) }, { __v: 0 }).catch(next);
+    const member = await Member.findOne({ _id: ObjectId(memberId) }, { __v: 0, password: 0 }).catch(next);
     res.json(member);
 });
+const bcrypt = require('bcrypt');
 router.post("/", authorization, async function (req, res, next) {
     const id = req.session.memberId;
     const instance = req.body;
@@ -28,39 +27,6 @@ router.post("/", authorization, async function (req, res, next) {
     notifyChange("update", id);
     res.json(result);
 });
-async function notifyChange(operationType, id) {
-    const obj = {
-        operationType,
-        documentId: id,
-    }
-    if (operationType == "insert" || operationType == "update") {
-        const documents = await Member.aggregate()
-            .match({
-                _id: ObjectId(id)
-            })
-            .lookup({
-                from: "companies",
-                localField: "companyId",
-                foreignField: "_id",
-                as: "company"
-            })
-            .unwind({
-                path: "$company",
-                preserveNullAndEmptyArrays: true
-            })
-            .addFields({
-                companyName: "$company.name"
-            })
-            .project({
-                password: 0,
-                company: 0
-            })
-            .exec();
-        obj.document = documents[0];
-    } else if (operationType == "delete") {
-    }
-    io.emit("members", obj);
-}
 // ログインしているユーザの投稿したタイムラインを返す
 router.get("/timelines", authorization, async function (req, res, next) {
     const memberId = req.session.memberId;
@@ -115,4 +81,37 @@ router.get("/timelines", authorization, async function (req, res, next) {
         .exec().catch(next);
     res.json(result);
 });
+async function notifyChange(operationType, id) {
+    const obj = {
+        operationType,
+        documentId: id,
+    }
+    if (operationType == "insert" || operationType == "update") {
+        const documents = await Member.aggregate()
+            .match({
+                _id: ObjectId(id)
+            })
+            .lookup({
+                from: "companies",
+                localField: "companyId",
+                foreignField: "_id",
+                as: "company"
+            })
+            .unwind({
+                path: "$company",
+                preserveNullAndEmptyArrays: true
+            })
+            .addFields({
+                companyName: "$company.name"
+            })
+            .project({
+                password: 0,
+                company: 0
+            })
+            .exec();
+        obj.document = documents[0];
+    } else if (operationType == "delete") {
+    }
+    io.emit("members", obj);
+}
 module.exports = router;

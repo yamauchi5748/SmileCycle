@@ -72,10 +72,12 @@ module.exports = model("Member", Schema({
     notificationInterval: {
         type: Number,
         required: true,
-        enum: [0.5, 1, 2, 3, 4, 5, 12, 24]
+        enum: [0.5, 1, 2, 3, 4, 5, 12, 24],
+        default: 12
     },
     isNotification: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true
     }
 }));

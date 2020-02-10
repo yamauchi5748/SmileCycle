@@ -29,8 +29,11 @@ export const auth = {
     },
     user: {}
 }
+export const store = {
 
+}
 export async function watch(name, array, option = {}) {
+    if (!this.cashe) this.cashe = {};
     option = Object.assign({
         url: name,
         insert: function (array, change) {
@@ -63,7 +66,7 @@ export async function watch(name, array, option = {}) {
                 array.splice(index, 1);
             }
         }
-    }, option)
+    }, option);
     const { data } = await axios.get(option.url);
     console.log("get init data", data);
     data.forEach(instance => {

@@ -66,7 +66,10 @@
                                 </v-menu>
                             </v-col>
                             <v-col cols="12">
-                                <VSelectMembers v-model="editedItem.members" :rules="invitationRules.members"></VSelectMembers>
+                                <VSelectMembers
+                                    v-model="editedItem.members"
+                                    :rules="invitationRules.members"
+                                ></VSelectMembers>
                             </v-col>
                         </v-row>
                     </v-form>
@@ -76,7 +79,12 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="close">取り消し</v-btn>
-                <v-btn :disabled="!valid" color="blue darken-1" text @click="save">保存する</v-btn>
+                <v-btn
+                    :disabled="editedItem.members || !valid"
+                    color="blue darken-1"
+                    text
+                    @click="save"
+                >保存する</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

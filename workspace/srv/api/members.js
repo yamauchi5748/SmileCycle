@@ -1,7 +1,7 @@
 const { Member } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
 const { io } = require("../server");
 const debug = require("debug")("app:api-members")
