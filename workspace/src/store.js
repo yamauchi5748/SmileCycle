@@ -32,42 +32,45 @@ export const auth = {
 export const store = {
 
 }
+const cashe = {}
 export async function watch(name, array, option = {}) {
-    if (!this.cashe) this.cashe = {};
-    option = Object.assign({
-        url: name,
-        insert: function (array, change) {
-            const { documentId, document } = change;
-            Object.defineProperty(document, "id", {
-                value: documentId,
-                writable: false
-            });
-            array.splice(0, 0, document);
-        },
-        update: function (array, change) {
-            const { documentId, document } = change;
-            Object.defineProperty(document, "id", {
-                value: documentId,
-                writable: false
-            });
-            const index = array.findIndex(
-                instance => instance.id == documentId
-            );
-            if (index != -1) {
-                array.splice(index, 1, document);
+    cashe[name] = {
+        option: Object.assign({
+            url: name,
+            insert: function (array, change) {
+                const { documentId, document } = change;
+                Object.defineProperty(document, "id", {
+                    value: documentId,
+                    writable: false
+                });
+                array.splice(0, 0, document);
+            },
+            update: function (array, change) {
+                const { documentId, document } = change;
+                Object.defineProperty(document, "id", {
+                    value: documentId,
+                    writable: false
+                });
+                const index = array.findIndex(
+                    instance => instance.id == documentId
+                );
+                if (index != -1) {
+                    array.splice(index, 1, document);
+                }
+            },
+            delete: function (array, change) {
+                const { documentId } = change;
+                const index = array.findIndex(
+                    instance => instance.id == documentId
+                );
+                if (index != -1) {
+                    array.splice(index, 1);
+                }
             }
-        },
-        delete: function (array, change) {
-            const { documentId } = change;
-            const index = array.findIndex(
-                instance => instance.id == documentId
-            );
-            if (index != -1) {
-                array.splice(index, 1);
-            }
-        }
-    }, option);
-    const { data } = await axios.get(option.url);
+        }, option),
+        array
+    }
+    const { data } = await axios.get(cashe[name].option.url);
     console.log("get init data", data);
     data.forEach(instance => {
         Object.defineProperty(instance, "id", {
@@ -76,18 +79,21 @@ export async function watch(name, array, option = {}) {
         });
         delete instance._id;
     });
-    array.splice(0, 0, ...data);
+    cashe[name].array.splice(0, 0, ...data);
+    if (cashe[name].isInitialized) return;
     socket.on(name, change => {
         console.log(change);
         const operationType = change.operationType;
         if (operationType == "insert") {
-            option.insert(array, change);
+            cashe[name].option.insert(cashe[name].array, change);
         } else if (operationType == "update") {
-            option.update(array, change);
+            cashe[name].option.update(cashe[name].array, change);
         } else if (operationType == "delete") {
-            option.delete(array, change);
+            cashe[name].option.delete(cashe[name].array, change);
         } else {
             console.error("登録されていないoperationTypeがある");
         }
     });
+    cashe[name].isInitialized = true;
 }
+window.cashe = cashe;
