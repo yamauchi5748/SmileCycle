@@ -38,7 +38,7 @@ module.exports = model("Content", Schema({
         }
     },
     image: {
-        type: String,
+        type: ObjectId,
         required: function () {
             return this.contentType == 3;
         }

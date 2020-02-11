@@ -1,8 +1,10 @@
 const debug = require("debug")("app:server");
+const { Room, Image } = require("./model");
 const express = require("express");
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const fs = require("fs");
 
 module.exports = {
     http,
@@ -92,3 +94,18 @@ async function sendUnread(intervals) {
         .exec();
     mail.send(members, { type: "unreadchat", url: "https://aho.com/chat" });
 }
+
+// RedBull
+let deleteImages = schedule.scheduleJob("0 4 * * *", async function () {
+    let unusedImages = await Image.find({ isUsing: false });
+    let target = unusedImages.map(unusedImage => unusedImage._id);
+    debug(target);
+    for (let e of target) {
+        try {
+            fs.unlinkSync("images/" + e);
+        } catch (err) {
+            debug(err);
+        }
+    }
+    await Image.deleteMany({ isUsing: false });
+});

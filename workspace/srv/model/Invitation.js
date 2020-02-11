@@ -16,7 +16,7 @@ module.exports = model("Invitation", Schema({
         maxlength: 1000
     },
     images: {
-        type: [String],
+        type: [ObjectId],
         default: Array
     },
     members: {

@@ -2,11 +2,11 @@ const { Schema, model } = require("../mongoose");
 const { Types: { ObjectId } } = require("mongoose");
 module.exports = model("Stamp", Schema({
     tabImage: {
-        type: String,
+        type: ObjectId,
         required: true
     },
     stamps: {
-        type: [String],
+        type: [ObjectId],
         default: []
     },
     isAll: {

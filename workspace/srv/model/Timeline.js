@@ -20,7 +20,7 @@ module.exports = model("Timeline", Schema({
         maxlength: 1000
     },
     images: {
-        type: [String],
+        type: [ObjectId],
         default: []
     },
     commentsCount: {
