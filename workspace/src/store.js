@@ -9,7 +9,6 @@ export const axios = axiosBase.create({
     },
     responseType: "json"
 });
-window.socket = socket;
 
 export const auth = {
     async login(name, password) {
