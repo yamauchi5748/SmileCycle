@@ -2,7 +2,7 @@ const { Schema, model } = require("../mongoose");
 const { Types: { ObjectId } } = require("mongoose");
 module.exports = model("Room", Schema({
     image: {
-        type: String,
+        type: ObjectId,
         default: "thisisthetop"
     },
     name: {

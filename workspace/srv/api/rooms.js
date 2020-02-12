@@ -61,7 +61,7 @@ router.get("/:id/contents", async function (req, res, next) {
 
 router.post("/:id", async function (req, res, next) {
     const id = req.params.id;
-    const room = await Room.findById(ObjectId(id)).catch(next);
+    const room = await Room.findById(ObjectId(id)).exec().catch(next);
     await Image.updateOne({ _id: room.image }, { $set: { isUsing: false } }).catch(next);
     const instance = req.body;
     const memberId = req.session.memberId;

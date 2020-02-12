@@ -22,7 +22,7 @@ router.post("/", authorization, async function (req, res, next) {
     if (instance.password) {
         instance.password = bcrypt.hashSync(instance.password, 11);
     }
-    const target = await Member.findById(ObjectId(id)).catch(next);
+    const target = await Member.findById(ObjectId(id)).exec().catch(next);
     await Image.updateOne({ _id: target.avatar }, { $set: { isUsing: false } }).catch(next);
     const result = await Member.updateOne({ _id: id }, { $set: instance }).catch(next);
     await Image.updateOne({ _id: ObjectId(instance.avatar) }, { $set: { isUsing: true } }).catch(next);

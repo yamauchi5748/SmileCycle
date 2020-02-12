@@ -94,7 +94,7 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
     delete instance.created_at;
-    const old = await Invitation.findById(ObjectId(id)).catch(next);
+    const old = await Invitation.findById(ObjectId(id)).exec().catch(next);
     await Image.updateMany({ _id: { $in: old.images } }, { $set: { isUsing: false } }).catch(next);
     const result = await Invitation.updateOne({ _id: ObjectId(id) }, { $set: instance }).catch(next);
     await Image.updateMany({ _id: { $in: instance.images } }, { $set: { isUsing: true } }).catch(next);
@@ -112,7 +112,7 @@ router.put("/:id/status", adminOrMineAuthorization, async function (req, res, ne
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
-    const target = await Invitaion.findById(ObjectId(id)).catch(next);
+    const target = await Invitaion.findById(ObjectId(id)).exec().catch(next);
     const result = await Invitation.deleteOne({ _id: id }).catch(next);
     await Image.updateMany({ _id: { $in: target.images } }, { $set: { isUsing: false } }).catch(next);
     notifyChange("delete", id);
