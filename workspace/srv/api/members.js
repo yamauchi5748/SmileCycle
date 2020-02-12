@@ -51,7 +51,7 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
-    const target = await Member.findById(ObjectId(id)).catch(next);
+    const target = await Member.findById(ObjectId(id)).exec().catch(next);
     await Image.updateOne({ _id: target.avatar }, { $set: { isUsing: false } }).catch(next);
     const result = await Member.deleteOne({ _id: id }).catch(next);
     notifyChange("delete", id);

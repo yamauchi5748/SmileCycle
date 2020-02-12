@@ -37,7 +37,7 @@ router.post("/", adminAuthorization, async function (req, res, next) {
 router.post("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
-    const target = await Stamp.findById(ObjectId(id)).catch(next);
+    const target = await Stamp.findById(ObjectId(id)).exec().catch(next);
     let oldImages = target.stamps.slice();
     oldImages.push(target.tabImage);
     await Image.updateMany({ _id: { $in: oldImages } }, { $set: { isUsing: false } }).catch(next);
@@ -50,7 +50,7 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
-    const target = await Stamp.findById(ObjectId(id)).catch(next);
+    const target = await Stamp.findById(ObjectId(id)).exec().catch(next);
     let images = target.stamps.slice();
     images.push(target.tabImage);
     await Image.updateMany({ _id: { $in: images } }, { $set: { isUsing: false } }).catch(next);
