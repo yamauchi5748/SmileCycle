@@ -7,6 +7,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import router from "@/router";
 
 import moment from "moment";
+Vue.config.devtools = true;
 moment.locale("ja")
 Vue.filter('fromNow', function (date) {
     if (!date) return "";
