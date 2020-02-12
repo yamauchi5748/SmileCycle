@@ -1,5 +1,4 @@
-const { Member } = require("../model");
-const { Timeline } = require("../model");
+const { Member, Image, Timeline } = require("../model");
 const { Router } = require("express");
 const { authorization } = require("./util/authorization");
 const { io } = require("../server");
@@ -23,7 +22,10 @@ router.post("/", authorization, async function (req, res, next) {
     if (instance.password) {
         instance.password = bcrypt.hashSync(instance.password, 11);
     }
+    const target = await Member.findById(ObjectId(id)).catch(next);
+    await Image.updateOne({ _id: target.avatar }, { $set: { isUsing: false } }).catch(next);
     const result = await Member.updateOne({ _id: id }, { $set: instance }).catch(next);
+    await Image.updateOne({ _id: ObjectId(instance.avatar) }, { $set: { isUsing: true } }).catch(next);
     notifyChange("update", id);
     res.json(result);
 });

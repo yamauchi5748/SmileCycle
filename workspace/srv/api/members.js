@@ -1,4 +1,4 @@
-const { Member } = require("../model");
+const { Member, Image } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -51,6 +51,8 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
+    const target = await Member.findById(ObjectId(id)).catch(next);
+    await Image.updateOne({ _id: target.avatar }, { $set: { isUsing: false } }).catch(next);
     const result = await Member.deleteOne({ _id: id }).catch(next);
     notifyChange("delete", id);
     res.json(result);

@@ -1,4 +1,4 @@
-const { Room, Content, Member } = require("../model");
+const { Room, Content, Member, Image } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
@@ -21,6 +21,7 @@ router.post("/", async function (req, res, next) {
     instance.managerId = req.session.memberId;
     const result = await Room.create(instance).catch(next);
     noticeRoomChanges("insert", result._id);
+    await Image.updateOne({ _id: ObjectId(req.body.image) }, { $set: { isUsing: true } }).catch(next);
     res.json(result);
 });
 // roomのコンテンツが帰ってくる
@@ -60,9 +61,12 @@ router.get("/:id/contents", async function (req, res, next) {
 
 router.post("/:id", async function (req, res, next) {
     const id = req.params.id;
+    const room = await Room.findById(ObjectId(id)).catch(next);
+    await Image.updateOne({ _id: room.image }, { $set: { isUsing: false } }).catch(next);
     const instance = req.body;
     const memberId = req.session.memberId;
-    const result = await Room.updateOne({ _id: id, managerId: memberId }, { $set: instance }).catch(next);
+    const result = await Room.updateOne({ _id: ObjectId(id), managerId: memberId }, { $set: instance }).catch(next);
+    await Image.updateOne({ _id: ObjectId(instance.image) }, { $set: { isUsing: true } }).catch(next);
     noticeRoomChanges("update", id);
     res.json(result);
 });
@@ -93,6 +97,7 @@ async function postContent(req, res, next, contentType) {
         instance.stamp = req.body.stamp;
     } else if (contentType == 3) {
         instance.image = req.body.image;
+        await Image.updateOne({ _id: ObjectId(req.body.image) }, { $set: { isUsing: true } }).catch(next);
     } else {
         next();
         return;
@@ -181,16 +186,26 @@ router.put("/:id/read", async function (req, res, next) {
 router.put("/:id/exit", async function (req, res, next) {
     const id = req.params.id;
     const memberId = req.session.memberId;
-    let result = await Room.deleteOne({ _id: id, managerId: memberId }).catch(next);
+    let result = await Room.deleteOne({ _id: ObjectId(id), managerId: memberId }).catch(next);
     if (result.deletedCount == 0) {
-        result = await Room.updateOne({ _id: id }, {
+        result = await Room.updateOne({ _id: ObjectId(id) }, {
             $pull: {
                 members: req.session.memberId
             }
         }).catch(next);
         noticeRoomChanges("update", id);
     } else {
-        await Content.deleteMany({ roomId: id }).catch(next);
+        const images = await Content.aggregate()
+            .match({ roomId: ObjectId(id), contentType: 3 })
+            .group({
+                _id: null,
+                images: { $push: "$image" }
+            })
+            .exec().catch(next);
+        if (images.length > 0) {
+            await Image.updateMany({ _id: { $in: images[0].images } }, { $set: { isUsing: false } }).catch(next);
+        }
+        await Content.deleteMany({ roomId: ObjectId(id) }).catch(next);
         noticeRoomChanges("delete", id);
     }
     res.json(result);
@@ -198,8 +213,18 @@ router.put("/:id/exit", async function (req, res, next) {
 router.delete("/:id", async function (req, res, next) {
     const id = req.params.id;
     const memberId = req.session.memberId;
-    const result = await Room.deleteOne({ _id: id, managerId: memberId }).catch(next);
-    await Content.deleteMany({ roomId: id }).catch(next);
+    const result = await Room.deleteOne({ _id: ObjectId(id), managerId: memberId }).catch(next);
+    const images = await Content.aggregate()
+        .match({ roomId: ObjectId(id), contentType: 3 })
+        .group({
+            _id: null,
+            images: { $push: "$image" }
+        })
+        .exec().catch(next);
+    if (images.length > 0) {
+        await Image.updateMany({ _id: { $in: images[0].images } }, { $set: { isUsing: false } }).catch(next);
+    }
+    await Content.deleteMany({ roomId: ObjectId(id) }).catch(next);
     noticeRoomChanges("delete", id);
     res.json(result);
 });

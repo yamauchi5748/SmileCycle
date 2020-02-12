@@ -1,4 +1,4 @@
-const { Timeline, Comment, Member } = require("../model");
+const { Timeline, Comment, Member, Image } = require("../model");
 const { Router } = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const { adminAuthorization, adminOrMineAuthorization } = require("./util/authorization");
@@ -34,13 +34,17 @@ router.post("/", async function (req, res, next) {
         senderId: sender._id
     });
     const result = await Timeline.create(instance).catch(next);
+    await Image.updateMany({ _id: { $in: result.images } }, { $set: { isUsing: true } }).catch(next);
     noticeTimelineChanges("insert", result._id);
     res.json(result);
 });
 router.post("/:id", async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
+    const old = await Timeline.findById(ObjectId(id)).catch(next);
+    await Image.updateMany({ _id: { $in: old.images } }, { $set: { isUsing: false } }).catch(next);
     const result = await Timeline.updateOne({ _id: id }, { $set: instance }).catch(next);
+    await Image.updateMany({ _id: { $in: instance.images } }, { $set: { isUsing: true } }).catch(next);
     noticeTimelineChanges("update", id);
     res.json(result);
 });
@@ -92,7 +96,9 @@ router.post("/:id/comment", async function (req, res, next) {
 });
 router.delete("/:id", async function (req, res, next) {
     const id = req.params.id;
+    const target = await Timeline.findById(ObjectId(id)).catch(next);
     const result = await Timeline.deleteOne({ _id: id }).catch(next);
+    await Image.updateMany({ _id: { $in: target.images } }, { $set: { isUsing: false } }).catch(next);
     await Comment.deleteMany({ timelineId: id }).catch(next);
     noticeTimelineChanges("delete", id);
     res.json(result);

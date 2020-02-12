@@ -84,6 +84,7 @@ router.get("/admin", adminAuthorization, async function (req, res, next) {
 router.post("/", adminAuthorization, async function (req, res, next) {
     const instance = req.body;
     const result = await Invitation.create(instance).catch(next);
+    await Image.updateMany({ _id: { $in: result.images } }, { $set: { isUsing: true } }).catch(next);
     notifyChange("insert", result._id);
     const members = await Member.find({ _id: { $in: result.members } }).catch(next);
     mail.send(members, { type: 'invitation', url: 'https://ponzu.com/invitation' });
@@ -93,7 +94,10 @@ router.post("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
     const instance = req.body;
     delete instance.created_at;
-    const result = await Invitation.updateOne({ _id: id }, { $set: instance }).catch(next);
+    const old = await Invitation.findById(ObjectId(id)).catch(next);
+    await Image.updateMany({ _id: { $in: old.images } }, { $set: { isUsing: false } }).catch(next);
+    const result = await Invitation.updateOne({ _id: ObjectId(id) }, { $set: instance }).catch(next);
+    await Image.updateMany({ _id: { $in: instance.images } }, { $set: { isUsing: true } }).catch(next);
     notifyChange("update", id);
     res.json(result);
 });
@@ -108,7 +112,9 @@ router.put("/:id/status", adminOrMineAuthorization, async function (req, res, ne
 });
 router.delete("/:id", adminAuthorization, async function (req, res, next) {
     const id = req.params.id;
+    const target = await Invitaion.findById(ObjectId(id)).catch(next);
     const result = await Invitation.deleteOne({ _id: id }).catch(next);
+    await Image.updateMany({ _id: { $in: target.images } }, { $set: { isUsing: false } }).catch(next);
     notifyChange("delete", id);
     res.json(result);
 });
