@@ -47,7 +47,6 @@ let every = schedule.scheduleJob("*/30 * * * *", async function () {
         thirtyCount = 0;
     }
 });
-const { Room } = require("./model");
 async function sendUnread(intervals) {
     let members = await Room.aggregate()
         .project({
