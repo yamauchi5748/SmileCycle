@@ -2,7 +2,7 @@
     <v-list-item v-if="3 <= Object.keys(content).length" class="d-block">
         <div class="mb-2">
             <v-avatar size="32" color="grey">
-                <img :src="'/api/images/'+(content.avatar || 'avatar')" />
+                <img :src="'/api/images/'+(content.avatar || 'iamtheavatar')" />
             </v-avatar>
             <span class="ml-2 subtitle-2">{{content.name}}</span>
             <span class="ml-4 caption">{{content.created_at | fromNow}}</span>

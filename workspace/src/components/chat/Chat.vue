@@ -21,7 +21,7 @@
                         :to="{ name: 'chat-room', params: { id: room.id }}"
                     >
                         <v-list-item-avatar>
-                            <img :src="'/api/images/'+ (room.image || 'roomtop')" />
+                            <img :src="'/api/images/'+ (room.image || 'thisisthetop')" />
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>{{room.name}}</v-list-item-title>

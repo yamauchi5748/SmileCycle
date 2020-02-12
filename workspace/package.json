@@ -4,9 +4,9 @@
     "private": true,
     "scripts": {
         "serve:browse": "DEBUG=-* vue-cli-service serve",
-        "serve": "DEBUG=-* node ./srv/wwww.js",
+        "serve": "DEBUG=-* node ./srv/www.js",
         "serve:debug": "DEBUG=*,-engine* nodemon -L ./srv/www.js",
-        "build": "DEBUG=-* vue-cli-service build",
+        "build": "DEBUG=app* vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {

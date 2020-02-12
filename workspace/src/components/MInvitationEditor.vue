@@ -78,10 +78,10 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">取り消し</v-btn>
+                <v-btn color="accent" text @click="close">取り消し</v-btn>
                 <v-btn
-                    :disabled="editedItem.members || !valid"
-                    color="blue darken-1"
+                    :disabled="editedItem.members.length == 0 || !valid"
+                    color="accent"
                     text
                     @click="save"
                 >保存する</v-btn>

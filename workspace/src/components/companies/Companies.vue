@@ -2,7 +2,7 @@
     <v-container>
         <v-card class="elevation-1">
             <v-card-title>
-                会員一覧
+                会社一覧
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -12,11 +12,9 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
-            <ViewMember ref="viewer" />
             <v-data-table
-                @click:row="view"
                 :headers="headers"
-                :items="members"
+                :items="companies"
                 :search="search"
                 sort-by="department"
             >
@@ -32,68 +30,36 @@
 
 <script>
 import { watch } from "@/store";
-import ViewMember from "@/components/ViewMember";
-
 export default {
-    components: {
-        ViewMember
-    },
     data: () => ({
         search: "",
         headers: [
             {
-                text: "プロフ画像",
+                text: "会社名",
                 align: "center",
-                sortable: false,
-                value: "avatar"
-            },
-            {
-                text: "会員名",
-                align: "left",
                 sortable: true,
                 value: "name"
             },
             {
-                text: "ふりがな",
+                text: "電話番号",
                 align: "left",
                 sortable: true,
-                value: "ruby"
+                value: "tel"
             },
             {
-                text: "会社名",
+                text: "住所",
                 align: "left",
                 sortable: true,
-                value: "companyName"
-            },
-            {
-                text: "役職",
-                align: "left",
-                sortable: true,
-                value: "post"
-            },
-            {
-                text: "部門",
-                align: "left",
-                sortable: true,
-                value: "department"
+                value: "address"
             }
         ],
-        members: []
+        companies: []
     }),
     created() {
-        watch("members", this.members);
-    },
-    methods:{
-        view(member){
-            this.$refs.viewer.view(member);
-        }
+        watch("companies", this.companies);
     }
 };
 </script>
 
 <style>
-.max-height {
-    max-height: 600px;
-    overflow-y: scroll;
-}
 </style>

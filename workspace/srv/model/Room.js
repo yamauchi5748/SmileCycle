@@ -3,7 +3,7 @@ const { Types: { ObjectId } } = require("mongoose");
 module.exports = model("Room", Schema({
     image: {
         type: String,
-        default: "roomtop"
+        default: "thisisthetop"
     },
     name: {
         type: String,

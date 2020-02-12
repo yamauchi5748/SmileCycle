@@ -59,7 +59,7 @@ export default {
             },
             { title: "タイムライン", to: { name: "timelines" } },
             { title: "会員一覧", to: { name: "members" } },
-            // { title: "利用案内", to: { name: "help" } },
+            { title: "会社一覧", to: { name: "companies" } },
             { title: "プロフィール", to: { name: "profile" } }
         ]
     }),

@@ -28,10 +28,14 @@ export const auth = {
     },
     user: {}
 }
-export const store = {
-
-}
 const cashe = {}
+export function getWatchArray(name) {
+    try {
+        return cashe[name].array;
+    } catch (error) {
+        return null;
+    }
+}
 export async function watch(name, array, option = {}) {
     cashe[name] = {
         option: Object.assign({

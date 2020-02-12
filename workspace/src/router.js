@@ -12,7 +12,8 @@ import ProfileSettings from "@/components/profile/Settings";
 import Chat from "@/components/chat/Chat";
 import Invitations from "@/components/invitations/Invitations";
 import Timelines from "@/components/timelines/Timelines";
-import Members from "@/components/members/Members"
+import Members from "@/components/members/Members";
+import Companies from "@/components/companies/Companies";
 import Controls from "@/components/controls/Controls";
 import ControlsInvitations from "@/components/controls/Invitations"
 import ControlsTimeline from "@/components/controls/Timeline";
@@ -81,6 +82,11 @@ const router = new VueRouter({
                     path: "/members",
                     name: "members",
                     component: Members
+                },
+                {
+                    path: "/companies",
+                    name: "companies",
+                    component: Companies
                 },
                 {
                     path: "/controls",

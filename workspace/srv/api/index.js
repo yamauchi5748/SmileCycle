@@ -5,8 +5,6 @@ const router = express.Router();
 router.use(express.json());
 /*==== session ====*/
 const session = require("express-session");
-// const redis = require("redis");
-// const RedisStore = require("connect-redis")(session);
 router.use(session({
     secret: "secret",  // Secret Keyで暗号化し、改ざんを防ぐ
     resave: false,

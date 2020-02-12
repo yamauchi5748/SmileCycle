@@ -33,7 +33,7 @@
             </template>
             <template v-slot:item.avatar="{item}">
                 <v-avatar color="grey" size="40">
-                    <img :src="'/api/images/'+(item.avatar || 'avatar')" />
+                    <img :src="'/api/images/'+(item.avatar || 'iamtheavatar')" />
                 </v-avatar>
             </template>
             <template v-slot:header.data-table-select></template>
