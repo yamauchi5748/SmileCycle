@@ -115,16 +115,16 @@ export default {
         editedId: null,
         editedItem: {
             avatar: "69616d746865617661746172",
-            name: "管理者",
-            ruby: "aa",
-            tel: "090-0000-0000",
-            mail: "aa@aa.aa",
-            companyId: "aaa",
-            post: "aaa",
-            department: "愛媛笑門会",
+            name: "",
+            ruby: "",
+            tel: "",
+            mail: "",
+            companyId: "",
+            post: "",
+            department: "",
             secretaryName: "",
             secretaryMail: "",
-            password: "12345678"
+            password: ""
         },
         defaultItem: {
             avatar: "69616d746865617661746172",
