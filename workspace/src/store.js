@@ -27,6 +27,7 @@ export const auth = {
         });
     },
     user: {}
+
 }
 const cashe = {}
 export function getWatchArray(name) {
@@ -37,43 +38,45 @@ export function getWatchArray(name) {
     }
 }
 export async function watch(name, array, option = {}) {
-    cashe[name] = {
-        url: name,
-        option: Object.assign({
-            insert: function (array, change) {
-                const { documentId, document } = change;
-                Object.defineProperty(document, "id", {
-                    value: documentId,
-                    writable: false
-                });
-                array.splice(0, 0, document);
-            },
-            update: function (array, change) {
-                const { documentId, document } = change;
-                Object.defineProperty(document, "id", {
-                    value: documentId,
-                    writable: false
-                });
-                const index = array.findIndex(
-                    instance => instance.id == documentId
-                );
-                if (index != -1) {
-                    array.splice(index, 1, document);
+    cashe[name] = Object.assign(
+        cashe[name] || {},
+        {
+            option: Object.assign({
+                url: name,
+                insert: function (array, change) {
+                    const { documentId, document } = change;
+                    Object.defineProperty(document, "id", {
+                        value: documentId,
+                        writable: false
+                    });
+                    array.splice(0, 0, document);
+                },
+                update: function (array, change) {
+                    const { documentId, document } = change;
+                    Object.defineProperty(document, "id", {
+                        value: documentId,
+                        writable: false
+                    });
+                    const index = array.findIndex(
+                        instance => instance.id == documentId
+                    );
+                    if (index != -1) {
+                        array.splice(index, 1, document);
+                    }
+                },
+                delete: function (array, change) {
+                    const { documentId } = change;
+                    const index = array.findIndex(
+                        instance => instance.id == documentId
+                    );
+                    if (index != -1) {
+                        array.splice(index, 1);
+                    }
                 }
-            },
-            delete: function (array, change) {
-                const { documentId } = change;
-                const index = array.findIndex(
-                    instance => instance.id == documentId
-                );
-                if (index != -1) {
-                    array.splice(index, 1);
-                }
-            }
-        }, option),
-        array
-    };
-    const { data } = await axios.get(cashe[name].url);
+            }, option),
+            array
+        })
+    const { data } = await axios.get(cashe[name].option.url);
     console.log("get init data", data);
     data.forEach(instance => {
         Object.defineProperty(instance, "id", {

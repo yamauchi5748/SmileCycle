@@ -28,7 +28,7 @@
                     </v-list-item>
                     <v-list-item link @click="controlEditor('exitRoom',room)">
                         <v-list-item-title>退出</v-list-item-title>
-                    </v-list-item>  
+                    </v-list-item>
                     <v-list-item
                         v-show="user._id == room.managerId"
                         link
@@ -50,67 +50,73 @@
         >
             <message v-for="content in contents" :key="content._id" :content="content"></message>
         </v-list>
-        <v-textarea
-            v-model="message"
-            append-icon="mdi-face"
-            append-outer-icon="mdi-send"
-            :placeholder="placeholder"
-            @focus="isStampMenuDisplayed = false"
-            @click:append="isStampMenuDisplayed = !isStampMenuDisplayed"
-            @click:append-outer="sendMessage"
-            auto-grow
-            hide-details
-            outlined
-            dence
-            rows="1"
-            class="mb-2 mx-4 flex-grow-0 flex-shrink-0"
-        >
-            <template v-slot:prepend>
-                <v-icon
-                    @click="isHurry = !isHurry"
-                    :color="isHurry ? 'red':''"
-                    class="mr-2"
-                >mdi-email-alert</v-icon>
-                <v-icon @click="choseImage">mdi-camera-image</v-icon>
-                <input
-                    v-show="false"
-                    @change="onFileChange"
-                    ref="input"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                />
-            </template>
-        </v-textarea>
-        <v-card
-            v-show="isStampMenuDisplayed"
-            class="flex-grow-0 flex-shrink-0"
-            height="280"
-            style="overflow-y:scroll"
-        >
-            <v-tabs>
-                <v-tab v-for="stamp in stamps" :key="stamp._id">
-                    <img height="40" width="40" :src="'/api/images/' + stamp.tabImage" />
-                </v-tab>
-                <v-tab-item v-for="stamp in stamps" :key="stamp._id" class="d-flex flex-wrap">
-                    <v-img
-                        @click="sendStamp(name)"
-                        class="flex-grow-0 flex-shrink-0 ma-1"
-                        v-for="name in stamp.stamps"
-                        :key="name"
-                        height="65"
-                        width="65"
-                        :src="'/api/images/' + name"
-                    >
-                        <template v-slot:placeholder>
-                            <v-row class="fill-height ma-0" align="center" justify="center">
-                                <v-progress-circular indeterminate color="grey"></v-progress-circular>
-                            </v-row>
-                        </template>
-                    </v-img>
-                </v-tab-item>
-            </v-tabs>
-        </v-card>
+        <div class="d-flex flex-column flex-grow-0 flex-shrink-0">
+            <v-textarea
+                v-model="message"
+                append-icon="mdi-face"
+                append-outer-icon="mdi-send"
+                :placeholder="placeholder"
+                @focus="isStampMenuDisplayed = false"
+                @click:append="isStampMenuDisplayed = !isStampMenuDisplayed"
+                @click:append-outer="sendMessage"
+                auto-grow
+                hide-details
+                outlined
+                dence
+                rows="1"
+                class="mb-2 mx-4"
+            >
+                <template v-slot:prepend>
+                    <v-icon
+                        @click="isHurry = !isHurry"
+                        :color="isHurry ? 'red':''"
+                        class="mr-2"
+                    >mdi-email-alert</v-icon>
+                    <v-icon @click="choseImage">mdi-camera-image</v-icon>
+                    <input
+                        v-show="false"
+                        @change="onFileChange"
+                        ref="input"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                    />
+                </template>
+            </v-textarea>
+            <v-card v-show="isStampMenuDisplayed" class="flex-grow-0 flex-shrink-0">
+                <v-tabs v-model="tab">
+                    <v-tab v-for="stamp in stamps" :key="stamp._id">
+                        <img height="40" width="40" :src="'/api/images/' + stamp.tabImage" />
+                    </v-tab>
+                </v-tabs>
+                <v-tabs-items v-model="tab">
+                    <v-tab-item v-for="stamp in stamps" :key="stamp._id">
+                        <v-card
+                            class="d-flex flex-wrap"
+                            flat
+                            height="220"
+                            style="overflow-y:scroll"
+                        >
+                            <v-img
+                                @click="sendStamp(name)"
+                                class="flex-grow-0 flex-shrink-0 ma-1"
+                                v-for="name in stamp.stamps"
+                                :key="name"
+                                height="65"
+                                width="65"
+                                :src="'/api/images/' + name"
+                            >
+                                <template v-slot:placeholder>
+                                    <v-row class="fill-height ma-0" align="center" justify="center">
+                                        <v-progress-circular indeterminate color="grey"></v-progress-circular>
+                                    </v-row>
+                                </template>
+                            </v-img>
+                        </v-card>
+                    </v-tab-item>
+                </v-tabs-items>
+            </v-card>
+        </div>
     </div>
 </template>
 <script>
@@ -129,6 +135,7 @@ export default {
         MRoomEditor
     },
     data: () => ({
+        tab: null,
         isHurry: false,
         isStampMenuDisplayed: false,
         user: auth.user,
