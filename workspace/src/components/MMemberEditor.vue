@@ -114,7 +114,7 @@ export default {
         valid: false,
         editedId: null,
         editedItem: {
-            avatar: "iamtheavatar",
+            avatar: "69616d746865617661746172",
             name: "管理者",
             ruby: "aa",
             tel: "090-0000-0000",
@@ -127,7 +127,7 @@ export default {
             password: "12345678"
         },
         defaultItem: {
-            avatar: "iamtheavatar",
+            avatar: "69616d746865617661746172",
             name: "",
             ruby: "",
             tel: "",

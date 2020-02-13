@@ -3,7 +3,7 @@ const { Types: { ObjectId } } = require("mongoose");
 module.exports = model("Member", Schema({
     avatar: {
         type: ObjectId,
-        default: ObjectId("iamtheavatar")
+        default: ObjectId("69616d746865617661746172")
     },
     name: {
         type: String,

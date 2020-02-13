@@ -65,7 +65,7 @@ export default {
     data: () => ({
         dialog: false,
         viewItem: {
-            avatar: "iamtheavatar",
+            avatar: "69616d746865617661746172",
             name: "",
             ruby: "",
             tel: "",

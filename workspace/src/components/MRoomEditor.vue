@@ -64,12 +64,12 @@ export default {
         valid: false,
         editedId: "",
         editedItem: {
-            image: "",
+            image: "746869736973746865746f70",
             name: "",
             members: [auth.user._id]
         },
         defaultItem: {
-            image: "",
+            image: "746869736973746865746f70",
             name: "",
             members: [auth.user._id]
         },
@@ -92,7 +92,7 @@ export default {
             return this.editedId ? "ルーム編集" : "ルーム作成";
         },
         image() {
-            return this.editedItem.image || "thisisthetop";
+            return this.editedItem.image || "746869736973746865746f70";
         }
     },
 
