@@ -145,8 +145,9 @@ export default {
             const self = this;
             return {
                 name: [
-                    v => !!v,
-                    v => v && 2 <= v.length && v.length <= 15,
+                    v => !!v || "必須項目です。",
+                    v => (v && 2 <= v.length && v.length <= 15) ||
+                        "2文字以上15文字以下のみ",
                     v =>
                         !getWatchArray("members").find(
                             member =>
@@ -177,8 +178,14 @@ export default {
                     v => (v && v.length <= 50) || "1文字以上50文字以下のみ"
                 ],
                 department: [v => !!v || "必須項目です。"],
-                secretaryName: [],
-                secretaryMail: [],
+                secretaryName: [
+                    v => (!self.editedItem.secretaryMail && !v) || (!!self.editedItem.secretaryMail && !!v) || (!self.editedItem.secretaryMail && !!v) || "必須項目です。",
+                    v => (!self.editedItem.secretaryMail && !v) || (v && 2 <= v.length && v.length <= 15) || "2文字以上15文字以下のみ"
+                ],
+                secretaryMail: [
+                    v => (!self.editedItem.secretaryName && !v) || (!!self.editedItem.secretaryName && !!v) || (!self.editedItem.secretaryName && !!v) || "必須項目です。",
+                    v => (!self.editedItem.secretaryName && !v) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || "正しい形式で入力してください。"
+                ],
                 password: !self.editedId
                     ? [
                           v => !!v || "必須項目です。",
