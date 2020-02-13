@@ -7,14 +7,19 @@ const router = Router();
 
 router.post("/", async function (req, res, next) {
     const { name, password } = req.body;
+    debug(req.body);
     const member = await Member.findOne({ name }).catch(next);
-    if (bcrypt.compareSync(password, member.password)) {
-        debug(member)
+    if (member == null) {
+        let e = new Error("Name or password, or both, are incorrect.");
+        e.name = "AuthenticationError";
+        next(e);
+    } else if (bcrypt.compareSync(password, member.password)) {
+        debug(member);
         req.session.memberId = member._id;
         req.session.isAdmin = member.isAdmin;
         res.json({ result: true });
     } else {
-        let e = new Error("Password is incorrect.");
+        let e = new Error("Name or password, or both, are incorrect.");
         e.name = "AuthenticationError";
         next(e);
     }

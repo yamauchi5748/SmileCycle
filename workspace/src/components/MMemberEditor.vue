@@ -14,8 +14,6 @@
                                     label="名前"
                                     counter="15"
                                     :rules="rules.name"
-                                    :hint="hint.name"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -24,8 +22,6 @@
                                     label="ふりがな"
                                     counter="30"
                                     :rules="rules.ruby"
-                                    :hint="hint.ruby"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -34,8 +30,6 @@
                                     type="tel"
                                     label="電話番号"
                                     :rules="rules.tel"
-                                    :hint="hint.tel"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -44,8 +38,6 @@
                                     label="メールアドレス"
                                     counter="256"
                                     :rules="rules.mail"
-                                    :hint="hint.mail"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -53,8 +45,6 @@
                                     v-model="editedItem.companyId"
                                     label="会社"
                                     :rules="rules.companyId"
-                                    :hint="hint.companyId"
-                                    persistent-hint
                                 ></v-select-company>
                             </v-col>
                             <v-col cols="12">
@@ -63,8 +53,6 @@
                                     label="役職"
                                     counter="50"
                                     :rules="rules.post"
-                                    :hint="hint.post"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -73,8 +61,6 @@
                                     :items="['愛媛笑門会','東京笑門会','大阪笑門会','鎌倉笑門会']"
                                     label="部門"
                                     :rules="rules.department"
-                                    :hint="hint.department"
-                                    persistent-hint
                                 ></v-select>
                             </v-col>
                             <v-col cols="12">
@@ -82,8 +68,7 @@
                                     v-model="editedItem.secretaryName"
                                     label="秘書名"
                                     counter="15"
-                                    :hint="hint.secretaryName"
-                                    persistent-hint
+                                    :rules="rules.secretaryName"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -91,8 +76,7 @@
                                     v-model="editedItem.secretaryMail"
                                     label="秘書メールアドレス"
                                     counter="256"
-                                    :hint="hint.secretaryMail"
-                                    persistent-hint
+                                    :rules="rules.secretaryMail"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
@@ -102,8 +86,6 @@
                                     label="パスワード"
                                     counter="150"
                                     :rules="rules.password"
-                                    :hint="hint.password"
-                                    persistent-hint
                                 ></v-text-field>
                             </v-col>
                         </v-row>
@@ -195,6 +177,8 @@ export default {
                     v => (v && v.length <= 50) || "1文字以上50文字以下のみ"
                 ],
                 department: [v => !!v || "必須項目です。"],
+                secretaryName: [],
+                secretaryMail: [],
                 password: !self.editedId
                     ? [
                           v => !!v || "必須項目です。",
@@ -203,11 +187,6 @@ export default {
                               "8文字以上160文字以下のみ"
                       ]
                     : []
-            };
-        },
-        hint() {
-            return {
-                name: "必須項目です。\n2文字以上15文字以下のみ"
             };
         },
         formTitle() {

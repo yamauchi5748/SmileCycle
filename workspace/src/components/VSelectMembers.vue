@@ -1,7 +1,7 @@
 <template>
     <v-card class="elevation-1">
         <v-card-title>
-            会員選択
+            {{label || "会員選択"}}
             <v-spacer></v-spacer>
             <v-text-field
                 v-model="search"

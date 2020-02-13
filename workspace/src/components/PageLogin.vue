@@ -10,20 +10,23 @@
                                 <v-spacer />
                             </v-toolbar>
                             <v-card-text>
-                                <v-form>
-                                    <v-text-field
-                                        v-model="name"
-                                        label="氏名"
-                                        prepend-icon="mdi-account"
-                                        type="text"
-                                    />
-                                    <v-text-field
-                                        v-model="password"
-                                        label="パスワード"
-                                        prepend-icon="mdi-lock"
-                                        type="password"
-                                    />
-                                </v-form>
+                                <v-text-field
+                                    v-model="name"
+                                    label="氏名"
+                                    prepend-icon="mdi-account"
+                                    type="text"
+                                    :error="error"
+                                />
+                                <v-text-field
+                                    v-model="password"
+                                    label="パスワード"
+                                    prepend-icon="mdi-lock"
+                                    type="password"
+                                    :error="error"
+                                />
+                            </v-card-text>
+                            <v-card-text v-show="error" class="red--text">
+                                名前かパスワード又はその両方が違います。
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer />
@@ -43,15 +46,19 @@ export default {
     data: () => ({
         name: "管理者",
         password: "lkwjaoieu",
-        error_message: ""
+        error: false
     }),
     methods: {
         async login() {
             const {
                 data: { result }
-            } = await auth.login(this.name, this.password);
+            } = await auth.login(this.name, this.password).catch(() => {
+                this.error = true;
+            });
             if (result) {
                 this.$router.push({ name: "main" });
+            } else {
+                this.error = true;
             }
         }
     }

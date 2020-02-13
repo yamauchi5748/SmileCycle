@@ -67,6 +67,7 @@
                             </v-col>
                             <v-col cols="12">
                                 <VSelectMembers
+                                    label="招待会員選択"
                                     v-model="editedItem.members"
                                     :rules="invitationRules.members"
                                 ></VSelectMembers>
@@ -80,7 +81,7 @@
                 <v-spacer></v-spacer>
                 <v-btn color="accent" text @click="close">取り消し</v-btn>
                 <v-btn
-                    :disabled="editedItem.members.length == 0 || !valid"
+                    :disabled="!valid"
                     color="accent"
                     text
                     @click="save"

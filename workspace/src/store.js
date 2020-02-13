@@ -38,8 +38,8 @@ export function getWatchArray(name) {
 }
 export async function watch(name, array, option = {}) {
     cashe[name] = {
+        url: name,
         option: Object.assign({
-            url: name,
             insert: function (array, change) {
                 const { documentId, document } = change;
                 Object.defineProperty(document, "id", {
@@ -72,8 +72,8 @@ export async function watch(name, array, option = {}) {
             }
         }, option),
         array
-    }
-    const { data } = await axios.get(cashe[name].option.url);
+    };
+    const { data } = await axios.get(cashe[name].url);
     console.log("get init data", data);
     data.forEach(instance => {
         Object.defineProperty(instance, "id", {
@@ -84,6 +84,7 @@ export async function watch(name, array, option = {}) {
     });
     cashe[name].array.splice(0, 0, ...data);
     if (cashe[name].isInitialized) return;
+    console.log("初期化された");
     socket.on(name, change => {
         console.log(change);
         const operationType = change.operationType;
