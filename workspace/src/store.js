@@ -15,7 +15,10 @@ export const auth = {
         return await axios.post("/login", { name, password });
     },
     async logout() {
-        return await axios.post("/logout");
+        await axios.post("/logout");
+        this.isInitialized = false;
+        this.user = {};
+        return
     },
     isInitialized: false,
     async init() {
