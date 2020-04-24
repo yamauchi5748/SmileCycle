@@ -1,0 +1,218 @@
+
+###
+GET http://localhost:3000/api/me HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3000/api/me/test HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3000/api/me/timelines HTTP/1.1
+content-type: application/json
+
+
+###
+POST http://localhost:3000/api/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "管理者",
+    "password":"lkwjaoieu"
+}
+
+###
+POST http://localhost:3000/api/logout HTTP/1.1
+content-type: application/json
+
+{
+    "name": "名前",
+    "password":"unko"
+}
+
+###
+
+get http://localhost:3000/api/members HTTP/1.1
+content-type: application/json
+
+
+### 
+POST http://localhost:3000/api/members HTTP/1.1
+content-type: application/json
+
+{
+    "name": "名前",
+    "ruby": "ふりがな",
+    "tel":"090-0000-0000",
+    "mail":"kbc17a15@gmail.com",
+    "companyId":"5e2fa0d5154b974f7475e6bb",
+    "post":"運",
+    "password":"unko",
+    "department":"愛媛笑門会",
+    "isAdmin":true
+}
+
+###
+POST http://localhost:3000/api/members HTTP/1.1
+content-type: application/json
+
+{
+    "name": "一般",
+    "ruby": "ふりがな",
+    "tel":"090-0000-0000",
+    "mail":"kbc17a22@gmail.com",
+    "companyId":"5e2fa0d5154b974f7475e6ba",
+    "post":"運",
+    "password":"unko",
+    "department":"東京笑門会",
+    "isAdmin":true
+}
+
+
+###
+get http://localhost:3000/api/companies HTTP/1.1
+content-type: application/json
+
+
+###
+POST http://localhost:3000/api/companies HTTP/1.1
+content-type: application/json
+
+{
+    "name": "株式会社（株)",
+    "tel": "0120-333-906",
+    "address": "愛媛県松山市のどこか"
+}
+
+
+###
+POST http://localhost:3000/api/companies/5e28fb61dacbbd00510f39af HTTP/1.1
+content-type: application/json
+
+{
+    "name": "the company"
+}
+
+
+###
+DELETE http://localhost:3000/api/companies/5e28fb61dacbbd00510f39af HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3000/api/invitations HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3000/api/invitations/admin HTTP/1.1
+content-type: application/json
+
+
+###
+POST http://localhost:3000/api/invitations HTTP/1.1
+content-type: application/json
+
+{
+    "title": "hogふぇさふぁえｓふぁせ",
+    "text": "jaoiwjefjfojaw;eifjaoiwjfeoiajw;oie",
+    "images": [],
+    "members": ["5e3022021983570230cf95bb"],
+    "deadline_at": "11",
+    "statusTable": {"5e3022021983570230cf95bb": 2}
+}
+
+
+###
+POST http://localhost:3000/api/invitations/5e293931773e9e00908defa9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "hoge男の末路"
+}
+
+
+###
+PUT http://localhost:3000/api/invitations/5e2926d4ada3b51ddf42ecd0/status HTTP/1.1
+Content-Type: application/json
+
+{
+    "status": 
+}
+
+
+###
+DELETE http://localhost:3000/api/invitations/5e30b5686765ba178d0544c6 HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3000/api/timelines HTTP/1.1
+content-type: application/json
+
+
+###
+POST http://localhost:3000/api/timelines HTTP/1.1
+content-type: application/json
+
+{
+    "title": "hogeman",
+    "text": "jaoiwjefjfojaw;eifjaoiwjfeoiajw;oie"
+}
+
+###
+GET http://localhost:3000/api/timelines/5e31c19e2328291aa5bc4078/comment HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3000/api/timelines/5e31c19e2328291aa5bc4078/comment HTTP/1.1
+content-type: application/json
+
+{
+    "text": "jaoiwjefjfojaw;eifjaoiwjfeoiajw;oie"
+}
+
+
+###
+DELETE http://localhost:3000/api/timelines/5e30cdf624e1ce2402b102fc HTTP/1.1
+Content-Type: application/json
+
+
+###
+GET http://localhost:3000/api/rooms HTTP/1.1
+content-type: application/json
+
+
+###
+POST http://localhost:3000/api/rooms HTTP/1.1
+content-type: application/json
+
+{
+    "name":"うんこ",
+    "members":["5e31db4d72e7a7006521eea4"],
+    "managerId":"5e31db4d72e7a7006521eea4"
+}
+
+
+###
+PUT http://localhost:3000/api/rooms/5e30f4aede956233eb3ac831/read HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3000/api/rooms/5e30f4aede956233eb3ac831/contents HTTP/1.1
+Content-Type: application/json
+
+###
+POST http://localhost:3000/api/rooms/5e3ba9566e0fb101c0b12d31/message HTTP/1.1
+content-type: application/json
+
+{
+    "message":"うんれーど",
+    "isHurry": true
+}
+
+###
+GET http://localhost:3000/api/stamps HTTP/1.1
+content-type: application/json

@@ -1,6 +1,0 @@
-workspace/public/mix-manifest.json
-workspace/public/js/app.js
-workspace/public/css/app.css
-
-#laradock管理除外
-/laradock/*
