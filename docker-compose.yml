@@ -19,7 +19,7 @@ services:
         volumes:
           - ./mongo/data:/data
         ports:
-          - "27017:27017"
+          - "27018:27017"
         tty: true
         environment:
           - MONGO_INITDB_DATABASE=test
