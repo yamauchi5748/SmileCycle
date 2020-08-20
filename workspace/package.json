@@ -13,7 +13,7 @@
         "@mdi/font": "^3.6.95",
         "@vue/cli": "^4.2.2",
         "axios": "^0.19.2",
-        "bcrypt": "^3.0.8",
+        "bcrypt": "^5.0.0",
         "connect-history-api-fallback": "^1.6.0",
         "core-js": "^3.6.4",
         "debug": "^4.1.1",
