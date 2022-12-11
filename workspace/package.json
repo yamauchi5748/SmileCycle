@@ -17,7 +17,7 @@
         "connect-history-api-fallback": "^1.6.0",
         "core-js": "^3.6.4",
         "debug": "^4.1.1",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "express-session": "^1.17.0",
         "file-stream-rotator": "^0.5.7",
         "moment": "^2.24.0",
